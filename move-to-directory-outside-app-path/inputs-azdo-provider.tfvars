@@ -1,0 +1,2 @@
+azdoOrgPAT = ""
+azdoOrgServiceURL = ""
