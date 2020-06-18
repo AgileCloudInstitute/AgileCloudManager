@@ -20,9 +20,10 @@ initCommand='terraform init'
 applyCommand='terraform apply -auto-approve'
 applyFoundationCommand=applyCommand+getAzurermProviderInputs+getFoundationInputs
 
-#The following are relative to the current directory when you download the git repo
-pathToFoundationCalls = "../calls-to-modules/azure-pipelines-foundation-demo/"
-pathToAgentCalls = "../calls-to-modules/azure-pipelines-agent-vms-demo/"
+#Environment variable set during cloud-init instantiation
+acmRootDir=os.environ['ACM_ROOT_DIR']
+pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
+pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 applyAgentCommand=applyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
 
 print ('getFoundationInputs:', getFoundationInputs )
