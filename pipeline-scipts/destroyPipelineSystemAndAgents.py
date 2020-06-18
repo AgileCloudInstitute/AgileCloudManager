@@ -4,13 +4,13 @@ print("Inside installPipelineSystem.py script.")
 import sys 
 import deploymentFunctions as depfunc
 
-#/////////////////////////////////////////////////////////
-pathToAgentAutoInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-agent-vms-auto.tfvars'
-pathToAgentManualInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-agent-vms-manual.tfvars'
-pathToAzdoProviderInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-azdo-provider.tfvars'
-pathToAzurermProviderInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-azurerm-provider.tfvars'
-pathToFoundationInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-foundation-demo.tfvars'
-pathToAzdoProjectRepoBuildInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-project-repo-build.tfvars'
+#The following are created/populated when you run  setup.sh at the time you download this repo.
+pathToAgentAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-agent-vms-auto.tfvars'
+pathToAgentManualInputs='/home/aci-user/vars/agile-cloud-manager/inputs-agent-vms-manual.tfvars'
+pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
+pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
+pathToFoundationInputs='/home/aci-user/vars/agile-cloud-manager/inputs-foundation-demo.tfvars'
+pathToAzdoProjectRepoBuildInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build.tfvars'
 
 getAgentAutoInputs=' -var-file='+pathToAgentAutoInputs
 getAgentManualInputs=' -var-file='+pathToAgentManualInputs
@@ -23,8 +23,10 @@ initCommand='terraform init'
 destroyCommand='terraform destroy -auto-approve'
 destroyFoundationCommand=destroyCommand+getAzurermProviderInputs+getFoundationInputs
 
-pathToFoundationCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-foundation-demo\\"
-pathToAgentCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-agent-vms-demo\\"
+#Environment variable set during cloud-init instantiation
+acmRootDir=os.environ['ACM_ROOT_DIR']
+pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
+pathToAgentCalls = acmRootDir+"/calls-to-modules/azure-pipelines-agent-vms-demo/"
 destroyAgentCommand=destroyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
 #/////////////////////////////////////////////////////////
 
