@@ -4,11 +4,12 @@ print("Inside installPipelineSystem.py script.")
 import sys 
 import deploymentFunctions as depfunc
 
-pathToAgentAutoInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-agent-vms-auto.tfvars'
-pathToAgentManualInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-agent-vms-manual.tfvars'
-pathToAzurermProviderInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-azurerm-provider.tfvars'
-pathToFoundationInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-foundation-demo.tfvars'
-pathToAzdoProjectRepoBuildAutoInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-project-repo-build-auto.tfvars'
+#The following are created/populated when you run  setup.sh at the time you download this repo.
+pathToAgentAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-agent-vms-auto.tfvars'
+pathToAgentManualInputs='/home/aci-user/vars/agile-cloud-manager/inputs-agent-vms-manual.tfvars'
+pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
+pathToFoundationInputs='/home/aci-user/vars/agile-cloud-manager/inputs-foundation-demo.tfvars'
+pathToAzdoProjectRepoBuildAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-auto.tfvars'
 
 getAgentAutoInputs=' -var-file='+pathToAgentAutoInputs
 getAgentManualInputs=' -var-file='+pathToAgentManualInputs
@@ -19,8 +20,9 @@ initCommand='terraform init'
 applyCommand='terraform apply -auto-approve'
 applyFoundationCommand=applyCommand+getAzurermProviderInputs+getFoundationInputs
 
-pathToFoundationCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-foundation-demo\\"
-pathToAgentCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-agent-vms-demo\\"
+#The following are relative to the current directory when you download the git repo
+pathToFoundationCalls = "../calls-to-modules/azure-pipelines-foundation-demo/"
+pathToAgentCalls = "../calls-to-modules/azure-pipelines-agent-vms-demo/"
 applyAgentCommand=applyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
 
 print ('getFoundationInputs:', getFoundationInputs )
