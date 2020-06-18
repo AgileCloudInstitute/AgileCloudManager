@@ -9,6 +9,7 @@ Prerequisites include:
 Once you have assembled the pre-requisites, do the following in order to use this repository:  
   
 1.  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)  
-2.  Create a directory into which to clone repos and navigate into it by typing  `mkdir cloned-repos && cd cloned-repos`  
-  
+2.  Make sure that `git` is installed by typing `sudo yum install -y git`  
+3.  Create a directory into which to clone repos and navigate into it by typing  `mkdir cloned-repos && cd cloned-repos`  
+4.  Clone this repository by typing `https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
   
