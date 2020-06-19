@@ -1,6 +1,6 @@
 An automated system for orchestrating multi-cloud infrstructure as code using Terraform, Azure DevOps, and Azure Pipelines.  
   
-#Assemble the Prerequisites:  
+# Assemble the Prerequisites:  
   
 Prerequisites include:  
   
@@ -8,7 +8,7 @@ Prerequisites include:
 2.  Azure resources configured as described in the training that comes with this system, including an Azure DevOps organization, an Azure Application Registration, a Personal Access Token, etc.  
 3.  A VM or container into which to clone this repository.  Here, we will start with our own [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example) in order to keep things simple.  That means you need to follow the instructions to instantiate `terraform-aws-simple-example` or something comparable in order to proceed.  
   
-#Create the Infrastructure Orchestration System  
+# Create the Infrastructure Orchestration System  
   
 Once you have assembled the pre-requisites, do the following in order to use this repository:  
     
@@ -36,10 +36,13 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 
 9.  Create an Azure DevOps Project and import the sample repo and pipeline by... 
   
-#Destroy the Azure DevOps Project and its elements  
+# Destroy the Azure DevOps Project and its elements  
   
 1.  ...  
 2.  ...  
 
-#Destroy the Infrastructure Orchestration System  
+# Destroy the Infrastructure Orchestration System  
+  
+1.  ...  
+2.  ...  
   
