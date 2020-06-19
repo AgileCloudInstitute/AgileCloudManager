@@ -1,2 +1,15 @@
 #Manually enter the values for the input variables here, and then run a script to import them into the relevant tfvars files
-
+subscriptionId=
+tenantId=
+clientId=
+clientSecret=
+pipeAzureRegion=
+storageAccountNameTerraformBackend=
+storageContainerNameTerraformBackend=
+awsPublicAccessKey=
+awsSecretAccessKey=
+adminUser=
+adminPwd=
+pathToCloudInitScript=
+azdoOrgPAT=
+azdoOrgServiceURL=
