@@ -10,3 +10,8 @@ export ACM_ROOT_DIR=/home/aci-user/cloned-repos/agile-cloud-manager/
 echo 'export ACM_ROOT_DIR=/home/aci-user/cloned-repos/agile-cloud-manager/' >> /etc/environment
 echo 'export ACM_ROOT_DIR=/home/aci-user/cloned-repos/agile-cloud-manager/' >> /etc/bashrc
 echo 'export ACM_ROOT_DIR=/home/aci-user/cloned-repos/agile-cloud-manager/' >> /etc/profile
+
+#Install Python
+
+#Install azdo provider
+
