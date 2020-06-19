@@ -1,6 +1,6 @@
 
 module "azure-pipelines-foundation-demo" {
-  source = "..\\..\\modules\\azure-pipelines-foundation"
+  source = "../../modules/azure-pipelines-foundation"
 
   subscriptionId                     = "${var.subscriptionId}"
   tenantId                           = "${var.tenantId}"
