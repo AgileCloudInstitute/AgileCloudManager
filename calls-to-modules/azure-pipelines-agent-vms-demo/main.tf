@@ -1,6 +1,6 @@
 
 module "azure-pipelines-agent-vms-demo" {
-  source = "..\\..\\modules\\azure-pipelines-agent-vms"
+  source = "../../modules/azure-pipelines-agent-vms"
 
   subscriptionId                     = "${var.subscriptionId}"
   tenantId                           = "${var.tenantId}"
