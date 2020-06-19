@@ -10,7 +10,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
   
 1.  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)  
 2.  Navigate into directory into which to clone repos by typing  `cd cloned-repos`  
-3.  Clone this repository by typing `https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
+3.  Clone this repository by typing `git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
 4.  Run [scripts/setup.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setup.sh)
 5.  Enter the variables you assembled in the pre-requisite steps into the appropriate variable files that were just moved to `/home/aci-user/vars/agile-cloud-manager/`
 6.  Run [pipeline-scripts/installPipelineSystemAndAgents]{https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py}  
