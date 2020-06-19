@@ -13,9 +13,9 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 3.  Clone this repository by typing `git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
 4.  Run [scripts/setup.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setup.sh)  
     
-    cd scripts
+    cd scripts  
     chmod +x setup.sh  
-    sudo ./setup.sh
+    sudo ./setup.sh  
     
 5.  Enter the variables you assembled in the pre-requisite steps into the appropriate variable files that were just moved to `/home/aci-user/vars/agile-cloud-manager/`
 6.  Run [pipeline-scripts/installPipelineSystemAndAgents]{https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py}  
