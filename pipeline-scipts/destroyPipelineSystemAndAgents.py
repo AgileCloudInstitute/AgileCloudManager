@@ -1,6 +1,7 @@
 
 print("Inside installPipelineSystem.py script.")
 
+import os
 import sys 
 import deploymentFunctions as depfunc
 
