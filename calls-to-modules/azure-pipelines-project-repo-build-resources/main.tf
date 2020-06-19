@@ -1,6 +1,6 @@
 
 module "azure-pipelines-project-repo-build-resources" {
-  source = "..\\..\\modules\\azure-pipelines-project-repo-build-resources"
+  source = "../../modules/azure-pipelines-project-repo-build-resources"
 
   subscriptionId                       = "${var.subscriptionId}"
   tenantId                             = "${var.tenantId}"
