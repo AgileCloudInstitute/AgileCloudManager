@@ -27,20 +27,23 @@ fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.
 fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
 fileStartupScript = pathToVarFiles+'startup-script.sh'
 
-
 def getTheValue(lineToParse):
     print("lineToParse is: ", lineToParse)
-    lineToParse = lineToParse[lineToParse.lindex('=')+1:]
-    print("everything to the right of first quote is: ", lineToParse)
-    lineToParse = lineToParse[lineToParse.rindex('=')+1:]
-    print("everything to the left of last quote is: ", lineToParse)
+    lineToParse = lineToParse[lineToParse.find('=')+1:]
+    if "\"" in lineToParse:
+      if lineToParse.count('\"') >= 2:
+        lineToParse = lineToParse[lineToParse.find("\"")+1:]
+        lineToParse = lineToParse[:lineToParse.rfind("\"")]
+      if lineToParse.count('\"') == 1:
+        print("There is only a one quotation mark. ")
     return lineToParse
 
 def loadDataFromFile(fileName):
     print("inside deploymentFunctions.py script and loadDataFromFile(...,...,...) function.")
     print("fileName is: ", fileName)
 
-    for line in fileinput.input(fileName, inplace=1):
+    with open(fileName) as file_in:
+      for line in file_in:
         if 'subscriptionId' in line:
             subscriptionId = getTheValue(line)
             print("subscriptionId is: ", subscriptionId)
@@ -87,9 +90,14 @@ def loadDataFromFile(fileName):
 def validateVariableValues():
     print("Need to add some validation logic here.")  
 
-def updateVarFileAzureProvider():
-    print("Need to add something here to update this var file. ")
+def updateVarFileAzureProvider(fileName):
+    print("inside deploymentFunctions.py script and updateVarFileAzureProvider(...,...,...) function.")
+    print("fileName is: ", fileName)
 
+    with open(fileName) as file_in:
+      for line in file_in:
+        print("line is: ", line)
+    
 def updateVarFileAzureDevOpsProvider():
     print("Need to add something here to update this var file. ")
 
@@ -107,3 +115,5 @@ def updateVarFileAzurePipesAgentsStartUpScript():
 
 #Now call the functions
 loadDataFromFile(fileEnterUserInputHereOnly)
+
+updateVarFileAzureProvider(fileInputsAzdoProvider)
