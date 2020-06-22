@@ -15,16 +15,15 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)  
 2.  Navigate into directory into which to clone repos by typing  `cd cloned-repos`  
 3.  Clone this repository by typing `git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
-4.  Run [scripts/setup.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setup.sh)  
+4.  Run [scripts/setup.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setup.sh) by typing the following commands:   
     
-    cd scripts  
+    cd agile-cloud-manager/scripts/  
     chmod +x setup.sh  
     sudo ./setup.sh  
     
 5.  Enter the variables you assembled in the pre-requisite steps into [/home/aci-user/vars/agile-cloud-manager/enter-user-input-here-only.txt](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.txt) file.  Note this can be done by replacing the file with pre-set values by some automation you create separately if you need to do this repeatedly.   
-6.  Automatically transfer the input variable values by running [importTheInputVariables.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/importTheInputVariables.py)   
+6.  Automatically transfer the input variable values by running [importTheInputVariables.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/importTheInputVariables.py) while the terminal is still pointed to the same directory.  
     
-    cd scripts
     python3.7 importTheInputVariables.py  
 
 7.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
