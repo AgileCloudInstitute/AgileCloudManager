@@ -196,10 +196,83 @@ def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
             line = "awsSecretAccessKey=\""+awsSecretAccessKey+"\""
             print("line in middle is: ", line)
         print("line at end is: ", line)
-      print("Need to add something here to update this var file. ")
 
-def updateVarFileAzurePipesAgentsStartUpScript():
-    print("Need to add something here to update this var file. ")
+def updateVarFileAzurePipesAgentsStartUpScript(fileName):
+    print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgentStartupScript(...,...,...) function.")
+    print("fileName is: ", fileName)
+    with open(fileName, 'r+') as file_in:
+      for line in file_in:
+        print("line at start is: ", line)
+        if "export AZ_PASS=" in line:
+          if "echo" not in line:
+            print("This sets var for current session.")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          if "echo" in line:
+            print("This is one of several lines that will help set var to persist across sessions.  ")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          print("line at end is: ", line)
+        if "export AZ_CLIENT=" in line:
+          if "echo" not in line:
+            print("This sets var for current session.")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          if "echo" in line:
+            print("This is one of several lines that will help set var to persist across sessions.  ")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          print("line at end is: ", line)
+        if "export AZ_TENANT=" in line:
+          if "echo" not in line:
+            print("This sets var for current session.")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          if "echo" in line:
+            print("This is one of several lines that will help set var to persist across sessions.  ")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          print("line at end is: ", line)
+        if "export AZ_PAT=" in line:
+          if "echo" not in line:
+            print("This sets var for current session.")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          if "echo" in line:
+            print("This is one of several lines that will help set var to persist across sessions.  ")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          print("line at end is: ", line)
+        if "export AZ_SERVER=" in line:
+          if "echo" not in line:
+            print("This sets var for current session.")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          if "echo" in line:
+            print("This is one of several lines that will help set var to persist across sessions.  ")
+            print("index of equal sign in line is:  ", line.find('='))
+            print("length of line is:  ",len(line))
+            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            print("line in middle is: ", line)
+          print("line at end is: ", line)
 
 #Now call the functions
 loadDataFromFile(fileEnterUserInputHereOnly)
@@ -214,5 +287,5 @@ updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
 
 updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
 
-
+updateVarFileAzurePipesAgentsStartUpScript(fileStartupScript)
 
