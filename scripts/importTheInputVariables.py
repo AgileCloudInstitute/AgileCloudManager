@@ -174,3 +174,5 @@ loadDataFromFile(fileEnterUserInputHereOnly)
 updateVarFileAzureProvider(fileInputsAzurermProvider)
 
 updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
+
+updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
