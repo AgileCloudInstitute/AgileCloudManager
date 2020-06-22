@@ -17,15 +17,15 @@ azdoOrgServiceURL=''
 
 #Declare the directory and file name variables
 pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
-#= 'enter-user-input-here-only.txt'
-#= 'inputs-agent-vms-auto.tfvars'
-#= 'inputs-agent-vms-manual.tfvars'
-#= 'inputs-azdo-provider.tfvars'
-#= 'inputs-azurerm-provider.tfvars'
-#= 'inputs-foundation-demo.tfvars'
-#= 'inputs-project-repo-build-auto.tfvars'
-#= 'inputs-project-repo-build-manual.tfvars'
-#= 'startup-script.sh'
+fileEnterUserInputHereOnly = pathToVarFiles+'enter-user-input-here-only.txt'
+fileInputsAgentVmsAuto = pathToVarFiles+'inputs-agent-vms-auto.tfvars'
+fileInputsAgentVmsManual = pathToVarFiles+'inputs-agent-vms-manual.tfvars'
+fileInputsAzdoProvider = pathToVarFiles+'inputs-azdo-provider.tfvars'
+fileInputsAzurermProvider = pathToVarFiles+'inputs-azurerm-provider.tfvars'
+fileInputsFoundationDemo = pathToVarFiles+'inputs-foundation-demo.tfvars'
+fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.tfvars'
+fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
+fileStartupScript = pathToVarFiles+'startup-script.sh'
 
 
 def getTheValue(lineToParse):
@@ -105,3 +105,5 @@ def updateVarFileAzureDevOpsProjectRepoBuild():
 def updateVarFileAzurePipesAgentsStartUpScript():
     print("Need to add something here to update this var file. ")
 
+#Now call the functions
+loadDataFromFile(fileEnterUserInputHereOnly)
