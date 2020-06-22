@@ -1,3 +1,5 @@
+import fileinput
+import sys
 
 #Declare all the input variables
 subscriptionId=''
@@ -45,45 +47,59 @@ def loadDataFromFile(fileName):
     with open(fileName) as file_in:
       for line in file_in:
         if 'subscriptionId' in line:
+            global subscriptionId
             subscriptionId = getTheValue(line)
             print("subscriptionId is: ", subscriptionId)
         if 'tenantId' in line:
+            global tenantId
             tenantId = getTheValue(line)
             print("tenantId is: ", tenantId)
         if 'clientId' in line:
+            global clientId
             clientId = getTheValue(line)
             print("clientId is: ", clientId)
         if 'clientSecret' in line:
+            global clientSecret
             clientSecret = getTheValue(line)
             print("clientSecret is: ", clientSecret)
         if 'pipeAzureRegion' in line:
+            global pipeAzureRegion
             pipeAzureRegion = getTheValue(line)
             print("pipeAzureRegion is: ", pipeAzureRegion)
         if 'storageAccountNameTerraformBackend' in line:
+            global storageAccountNameTerraformBackend
             storageAccountNameTerraformBackend = getTheValue(line)
             print("storageAccountNameTerraformBackend is: ", storageAccountNameTerraformBackend)
         if 'storageContainerNameTerraformBackend' in line:
+            global storageContainerNameTerraformBackend
             storageContainerNameTerraformBackend = getTheValue(line)
             print("storageContainerNameTerraformBackend is: ", storageContainerNameTerraformBackend)
         if 'awsPublicAccessKey' in line:
+            global awsPublicAccessKey
             awsPublicAccessKey = getTheValue(line)
             print("awsPublicAccessKey is: ", awsPublicAccessKey)
         if 'awsSecretAccessKey' in line:
+            global awsSecretAccessKey
             awsSecretAccessKey = getTheValue(line)
             print("awsSecretAccessKey is: ", awsSecretAccessKey)
         if 'adminUser' in line:
+            global adminUser
             adminUser = getTheValue(line)
             print("adminUser is: ", adminUser)
         if 'adminPwd' in line:
+            global adminPwd
             adminPwd = getTheValue(line)
             print("adminPwd is: ", adminPwd)
         if 'pathToCloudInitScript' in line:
+            global pathToCloudInitScript
             pathToCloudInitScript = getTheValue(line)
             print("pathToCloudInitScript is: ", pathToCloudInitScript)
         if 'azdoOrgPAT' in line:
+            global azdoOrgPAT
             azdoOrgPAT = getTheValue(line)
             print("azdoOrgPAT is: ", azdoOrgPAT)
         if 'azdoOrgServiceURL' in line:
+            global azdoOrgServiceURL
             azdoOrgServiceURL = getTheValue(line)
             print("azdoOrgServiceURL is: ", azdoOrgServiceURL)
 
@@ -93,11 +109,16 @@ def validateVariableValues():
 def updateVarFileAzureProvider(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureProvider(...,...,...) function.")
     print("fileName is: ", fileName)
-
-    with open(fileName) as file_in:
+    with open(fileName, 'r+') as file_in:
       for line in file_in:
-        print("line is: ", line)
-    
+        print("line at start is: ", line)
+        if "azdoOrgPAT" in line:
+            line = "azdoOrgPAT=\""+azdoOrgPAT+"\""
+            print("line in middle is: ", line)
+        if "azdoOrgServiceURL" in line:
+            line = "azdoOrgServiceURL=\""+azdoOrgServiceURL+"\""
+        print("line at end is: ", line)
+
 def updateVarFileAzureDevOpsProvider():
     print("Need to add something here to update this var file. ")
 
