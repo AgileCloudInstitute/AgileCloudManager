@@ -159,9 +159,25 @@ def updateVarFileAzurePipesFoundation(fileName):
             print("line in middle is: ", line)
         print("line at end is: ", line)
 
-def updateVarFileAzurePipesAgents():
-    print("Need to add something here to update this var file. ")
-
+def updateVarFileAzurePipesAgents(fileName):
+    print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgents(...,...,...) function.")
+    print("fileName is: ", fileName)
+    with open(fileName, 'r+') as file_in:
+      for line in file_in:
+        print("line at start is: ", line)
+        if "adminUser" in line:
+            line = "adminUser=\""+adminUser+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+        if "adminPwd" in line:
+            line = "adminPwd=\""+adminPwd+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+        if "pathToCloudInitScript" in line:
+            line = "pathToCloudInitScript=\""+pathToCloudInitScript+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+  
 def updateVarFileAzureDevOpsProjectRepoBuild():
     print("Need to add something here to update this var file. ")
 
@@ -176,3 +192,6 @@ updateVarFileAzureProvider(fileInputsAzurermProvider)
 updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
 
 updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
+
+updateVarFileAzurePipesAgents(fileInputsAgentVmsManual )
+
