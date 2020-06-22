@@ -115,30 +115,49 @@ def updateVarFileAzureProvider(fileName):
         if "subscriptionId" in line:
             line = "subscriptionId=\""+subscriptionId+"\""
             print("line in middle is: ", line)
+        print("line at end is: ", line)
         if "tenantId" in line:
             line = "tenantId=\""+tenantId+"\""
+            print("line in middle is: ", line)
         print("line at end is: ", line)
         if "clientId" in line:
             line = "clientId=\""+clientId+"\""
+            print("line in middle is: ", line)
         print("line at end is: ", line)
         if "clientSecret" in line:
             line = "clientSecret=\""+clientSecret+"\""
+            print("line in middle is: ", line)
         print("line at end is: ", line)
 
-def updateVarFileAzureDevOpsProvider():
-    print("Need to add something here to update this var file. ")
+def updateVarFileAzureDevOpsProvider(fileName):
+    print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProvider(...,...,...) function.")
+    print("fileName is: ", fileName)
     with open(fileName, 'r+') as file_in:
       for line in file_in:
         print("line at start is: ", line)
         if "azdoOrgPAT" in line:
             line = "azdoOrgPAT=\""+azdoOrgPAT+"\""
             print("line in middle is: ", line)
+        print("line at end is: ", line)
         if "azdoOrgServiceURL" in line:
             line = "azdoOrgServiceURL=\""+azdoOrgServiceURL+"\""
+            print("line in middle is: ", line)
         print("line at end is: ", line)
 
-def updateVarFileAzurePipesFoundation():
-    print("Need to add something here to update this var file. ")
+def updateVarFileAzurePipesFoundation(fileName):
+    print("inside deploymentFunctions.py script and updateVarFileAzurePipesFoundation(...,...,...) function.")
+    print("fileName is: ", fileName)
+    with open(fileName, 'r+') as file_in:
+      for line in file_in:
+        print("line at start is: ", line)
+        if "storageAccountNameTerraformBackend" in line:
+            line = "storageAccountNameTerraformBackend=\""+storageAccountNameTerraformBackend+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+        if "pipeAzureRegion" in line:
+            line = "pipeAzureRegion=\""+pipeAzureRegion+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
 
 def updateVarFileAzurePipesAgents():
     print("Need to add something here to update this var file. ")
