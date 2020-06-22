@@ -178,8 +178,25 @@ def updateVarFileAzurePipesAgents(fileName):
             print("line in middle is: ", line)
         print("line at end is: ", line)
   
-def updateVarFileAzureDevOpsProjectRepoBuild():
-    print("Need to add something here to update this var file. ")
+def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
+    print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProjectRepoBuild(...,...,...) function.")
+    print("fileName is: ", fileName)
+    with open(fileName, 'r+') as file_in:
+      for line in file_in:
+        print("line at start is: ", line)
+        if "storageContainerNameTerraformBackend" in line:
+            line = "storageContainerNameTerraformBackend=\""+storageContainerNameTerraformBackend+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+        if "awsPublicAccessKey" in line:
+            line = "awsPublicAccessKey=\""+awsPublicAccessKey+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+        if "awsSecretAccessKey" in line:
+            line = "awsSecretAccessKey=\""+awsSecretAccessKey+"\""
+            print("line in middle is: ", line)
+        print("line at end is: ", line)
+      print("Need to add something here to update this var file. ")
 
 def updateVarFileAzurePipesAgentsStartUpScript():
     print("Need to add something here to update this var file. ")
@@ -193,5 +210,9 @@ updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
 
 updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
 
-updateVarFileAzurePipesAgents(fileInputsAgentVmsManual )
+updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
+
+updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
+
+
 
