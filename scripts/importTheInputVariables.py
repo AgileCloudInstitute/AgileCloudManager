@@ -110,200 +110,103 @@ def validateVariableValues():
 def updateVarFileAzureProvider(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureProvider(...,...,...) function.")
     print("fileName is: ", fileName)
-    with open(fileName, 'r+') as file_in:
-      for line in file_in:
-        print("line at start is: ", line)
+    for line in fileinput.input(fileName, inplace=True):
         if "subscriptionId" in line:
             line = "subscriptionId=\""+subscriptionId+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "tenantId" in line:
             line = "tenantId=\""+tenantId+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "clientId" in line:
             line = "clientId=\""+clientId+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "clientSecret" in line:
             line = "clientSecret=\""+clientSecret+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
+        print('{}'.format(line))
 
 def updateVarFileAzureDevOpsProvider(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProvider(...,...,...) function.")
     print("fileName is: ", fileName)
-    with open(fileName, 'r+') as file_in:
-      for line in file_in:
-        print("line at start is: ", line)
+    for line in fileinput.input(fileName, inplace=True):
         if "azdoOrgPAT" in line:
             line = "azdoOrgPAT=\""+azdoOrgPAT+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "azdoOrgServiceURL" in line:
             line = "azdoOrgServiceURL=\""+azdoOrgServiceURL+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
+        print('{}'.format(line))
 
 def updateVarFileAzurePipesFoundation(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesFoundation(...,...,...) function.")
     print("fileName is: ", fileName)
-    with open(fileName, 'r+') as file_in:
-      for line in file_in:
-        print("line at start is: ", line)
+    for line in fileinput.input(fileName, inplace=True):
         if "storageAccountNameTerraformBackend" in line:
             line = "storageAccountNameTerraformBackend=\""+storageAccountNameTerraformBackend+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "pipeAzureRegion" in line:
             line = "pipeAzureRegion=\""+pipeAzureRegion+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
+        print('{}'.format(line))
+
 
 def updateVarFileAzurePipesAgents(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgents(...,...,...) function.")
     print("fileName is: ", fileName)
-    with open(fileName, 'r+') as file_in:
-      for line in file_in:
-        print("line at start is: ", line)
+    for line in fileinput.input(fileName, inplace=True):
         if "adminUser" in line:
             line = "adminUser=\""+adminUser+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "adminPwd" in line:
             line = "adminPwd=\""+adminPwd+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "pathToCloudInitScript" in line:
             line = "pathToCloudInitScript=\""+pathToCloudInitScript+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
+        print('{}'.format(line))
   
 def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProjectRepoBuild(...,...,...) function.")
     print("fileName is: ", fileName)
-    with open(fileName, 'r+') as file_in:
-      for line in file_in:
-        print("line at start is: ", line)
+    for line in fileinput.input(fileName, inplace=True):
         if "storageContainerNameTerraformBackend" in line:
             line = "storageContainerNameTerraformBackend=\""+storageContainerNameTerraformBackend+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "awsPublicAccessKey" in line:
             line = "awsPublicAccessKey=\""+awsPublicAccessKey+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
         if "awsSecretAccessKey" in line:
             line = "awsSecretAccessKey=\""+awsSecretAccessKey+"\""
-            print("line in middle is: ", line)
-        print("line at end is: ", line)
+        print('{}'.format(line))
 
 def updateVarFileAzurePipesAgentsStartUpScript(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgentStartupScript(...,...,...) function.")
     print("fileName is: ", fileName)
-    with open(fileName, 'r+') as file_in:
-      for line in file_in:
-        #print("line at start is: ", line)
+    for line in fileinput.input(fileName, inplace=True):
+        trailingCharacters=len(line)-line.find('=')
         if "export AZ_PASS=" in line:
           if "echo" not in line:
-            print("This sets var for current session.")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 3:
               line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
-            print("line in middle is: ", line)
           if "echo" in line:
-            print("This is one of several lines that will help set var to persist across sessions.  ")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 25:
               line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
-            print("line in middle is: ", line)
-          #print("line at end is: ", line)
         if "export AZ_CLIENT=" in line:
           if "echo" not in line:
-            print("This sets var for current session.")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 3:
               line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
-            print("line in middle is: ", line)
           if "echo" in line:
-            print("This is one of several lines that will help set var to persist across sessions.  ")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 25:
               line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
-            print("line in middle is: ", line)
-          #print("line at end is: ", line)
         if "export AZ_TENANT=" in line:
           if "echo" not in line:
-            print("This sets var for current session.")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 3:
               line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
-            print("line in middle is: ", line)
           if "echo" in line:
-            print("This is one of several lines that will help set var to persist across sessions.  ")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 25:
               line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
-            print("line in middle is: ", line)
-          #print("line at end is: ", line)
         if "export AZ_PAT=" in line:
           if "echo" not in line:
-            print("This sets var for current session.")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 3:
               line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
-            print("line in middle is: ", line)
           if "echo" in line:
-            print("This is one of several lines that will help set var to persist across sessions.  ")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 25:
               line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
-            print("line in middle is: ", line)
-          #print("line at end is: ", line)
         if "export AZ_SERVER=" in line:
           if "echo" not in line:
-            print("This sets var for current session.")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 3:
               line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
-            print("line in middle is: ", line)
           if "echo" in line:
-            print("This is one of several lines that will help set var to persist across sessions.  ")
-            print("index of equal sign in line is:  ", line.find('='))
-            print("length of line is:  ",len(line))
-            trailingCharacters=len(line)-line.find('=')
-            print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 25:
               line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
-            print("line in middle is: ", line)
-          #print("line at end is: ", line)
+        print('{}'.format(line))
 
 #Now call the functions
 loadDataFromFile(fileEnterUserInputHereOnly)
