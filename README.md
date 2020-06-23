@@ -23,9 +23,11 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     source /etc/bashrc  
 
 5.  Enter the variables you assembled in the pre-requisite steps into [/home/aci-user/vars/agile-cloud-manager/enter-user-input-here-only.txt](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.txt) file.  Note this can be done by replacing the file with pre-set values by some automation you create separately if you need to do this repeatedly.   
-6.  Automatically transfer the input variable values by running [importTheInputVariables.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/importTheInputVariables.py) while the terminal is still pointed to the same directory.  
+6.  Automatically transfer the input variable values by running [importTheInputVariables.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/importTheInputVariables.py) while the terminal is still pointed to the same directory. And then run the script for setting local environment variables as follows:  
     
     python3 importTheInputVariables.py  
+    chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh
+
 
 7.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
     
