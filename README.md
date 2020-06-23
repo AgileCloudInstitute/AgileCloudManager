@@ -27,24 +27,30 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
     python3 importTheInputVariables.py  
     chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh
-
-
+    sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh
+    source /etc/bashrc  
+ 
 7.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
     
     cd ../pipeline-scripts  
-    python3.7 installPipelineSystemAndAgents.py  
+    python3 installPipelineSystemAndAgents.py  
 
 8.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
 
 9.  Create an Azure DevOps Project and import the sample repo and pipeline by... 
-  
-# Destroy the Azure DevOps Project and its elements  
-  
-1.  ...  
-2.  ...  
-
-# Destroy the Infrastructure Orchestration System  
-  
-1.  ...  
-2.  ...  
-  
+    
+# Destroy the Azure DevOps Project and its elements    
+    
+1.  ...    
+2.  ...    
+    
+# Destroy the Infrastructure Orchestration System    
+    
+1.  Log in the the VM from which you ran the agile-cloud-manager program to create the Agile Cloud Manager instance.  If you are continuing directly from the creation steps described above, you can do this from within the same Putty or SSH session as above.      
+2.  Point the terminal to the directory containing destroyPipelineSystemAndAgents.py and then run destroyPipelineSystemAndAgents.py by typing the following:    
+    
+    cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scripts   
+    python3 destroyPipelineSystemAndAgents.py    
+    
+3.  Validate that the infrastructure has been destroyed by examining the console output that printed while the destroyPipelineSystemAndAgents.py was running, by examining the Azure Portal see the infrastructure disappear, and by validating in the Azure DevOps Organization that the agent has moved offline.    
+    
