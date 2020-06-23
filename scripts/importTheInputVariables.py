@@ -211,7 +211,7 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
             if trailingCharacters < 3:
-              line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+              line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
             print("line in middle is: ", line)
           if "echo" in line:
             print("This is one of several lines that will help set var to persist across sessions.  ")
@@ -229,7 +229,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 3:
+              line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
             print("line in middle is: ", line)
           if "echo" in line:
             print("This is one of several lines that will help set var to persist across sessions.  ")
@@ -247,7 +248,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 3:
+              line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
             print("line in middle is: ", line)
           if "echo" in line:
             print("This is one of several lines that will help set var to persist across sessions.  ")
@@ -265,7 +267,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 3:
+              line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
             print("line in middle is: ", line)
           if "echo" in line:
             print("This is one of several lines that will help set var to persist across sessions.  ")
@@ -283,7 +286,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 3:
+              line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
             print("line in middle is: ", line)
           if "echo" in line:
             print("This is one of several lines that will help set var to persist across sessions.  ")
