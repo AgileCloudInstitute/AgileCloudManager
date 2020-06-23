@@ -219,7 +219,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 25:
+              line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
             print("line in middle is: ", line)
           #print("line at end is: ", line)
         if "export AZ_CLIENT=" in line:
@@ -238,7 +239,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 25:
+              line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
             print("line in middle is: ", line)
           #print("line at end is: ", line)
         if "export AZ_TENANT=" in line:
@@ -257,7 +259,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 25:
+              line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
             print("line in middle is: ", line)
           #print("line at end is: ", line)
         if "export AZ_PAT=" in line:
@@ -276,7 +279,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 25:
+              line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
             print("line in middle is: ", line)
           #print("line at end is: ", line)
         if "export AZ_SERVER=" in line:
@@ -295,7 +299,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 25:
+              line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
             print("line in middle is: ", line)
           #print("line at end is: ", line)
 
