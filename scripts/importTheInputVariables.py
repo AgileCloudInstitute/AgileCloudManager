@@ -28,6 +28,7 @@ fileInputsFoundationDemo = pathToVarFiles+'inputs-foundation-demo.tfvars'
 fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.tfvars'
 fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
 fileStartupScript = pathToVarFiles+'startup-script.sh'
+fileAzEnvVars = pathToVarFiles+'set-local-az-client-environment-vars.sh'
 
 def getTheValue(lineToParse):
     print("lineToParse is: ", lineToParse)
@@ -316,6 +317,7 @@ updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
 updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
 
 updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
-
+#This next function call is for the cloud-init startup script that will run on the Azure Pipelines agent that will be created.
 updateVarFileAzurePipesAgentsStartUpScript(fileStartupScript)
-
+#This next function call will set vars on the local machine to use with the az client
+updateVarFileAzurePipesAgentsStartUpScript(fileAzEnvVars)
