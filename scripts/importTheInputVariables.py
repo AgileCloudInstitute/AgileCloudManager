@@ -210,7 +210,8 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
             print("length of line is:  ",len(line))
             trailingCharacters=len(line)-line.find('=')
             print("trailingCharacters is:  ", trailingCharacters)
-            #line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
+            if trailingCharacters < 3:
+              line = line.replace("export AZ_PASS=","export AZ_PASS="+azdoOrgPAT)
             print("line in middle is: ", line)
           if "echo" in line:
             print("This is one of several lines that will help set var to persist across sessions.  ")
