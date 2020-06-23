@@ -28,7 +28,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 
 7.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
     
-    cd pipeline-scripts  
+    cd ../pipeline-scripts  
     python3.7 installPipelineSystemAndAgents.py  
 
 8.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
