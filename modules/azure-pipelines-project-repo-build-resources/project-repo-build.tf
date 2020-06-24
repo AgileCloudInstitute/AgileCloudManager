@@ -19,7 +19,7 @@ resource "azuredevops_git_repository" "repository" {
     #command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.remote_url} && git push -u origin --all"
     #USE THIS ONE: command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git push -u origin --all"
     command = "dir"
-    working_dir = "C:\\projects\\terraform\\azure-pipelines-system\\pipeline-scipts\\tmpRepoStorage\\terraform-aws-simple-example\\" 
+    working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/tmpRepoStorage/terraform-aws-simple-example/" 
   }  
 
 }
