@@ -26,6 +26,8 @@ cd /home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipeli
 [[ -d terraform.d/ ]] || mkdir terraform.d/
 [[ -d terraform.d/plugins/ ]] || mkdir terraform.d/plugins/
 [[ -d terraform.d/plugins/linux_amd64 ]] || mkdir terraform.d/plugins/linux_amd64
+chown aci-user:aci-user -R terraform.d/
+
 cd terraform.d/plugins/linux_amd64
 wget https://github.com/microsoft/terraform-provider-azuredevops/releases/download/v0.1.2/terraform-provider-azuredevops_linux_amd64.tar.gz
 tar xzf terraform-provider-azuredevops_linux_amd64.tar.gz
