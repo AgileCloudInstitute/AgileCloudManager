@@ -18,7 +18,7 @@ resource "azuredevops_git_repository" "repository" {
     #PAT example very easy:  https://stackoverflow.com/questions/53106546/cannot-clone-git-from-azure-devops-using-pat
     #command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.remote_url} && git push -u origin --all"
     #USE THIS ONE: command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git push -u origin --all"
-    command = "dir"
+    command = "ls -al"
     working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/tmpRepoStorage/terraform-aws-simple-example/" 
   }  
 
