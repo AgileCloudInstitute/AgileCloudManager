@@ -4,14 +4,14 @@ print("Inside installProjectRepoBuild.py script.")
 import sys 
 import deploymentFunctions as depfunc
 
-pathToTempRepoStorageParent='C:\\projects\\terraform\\azure-pipelines-system\\pipeline-scipts\\'
+pathToTempRepoStorageParent='/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/'
 tmpRepoStorageFolder='tmpRepoStorage'
 sourceRepo='https://github.com/AgileCloudInstitute/terraform-aws-simple-example.git'
 
-pathToAzdoProviderInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-azdo-provider.tfvars'
-pathToAzurermProviderInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-azurerm-provider.tfvars'
-pathToAzdoProjectRepoBuildAutoInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-project-repo-build-auto.tfvars'
-pathToAzdoProjectRepoBuildManualInputs='C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\inputs-project-repo-build-manual.tfvars'
+pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
+pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
+pathToAzdoProjectRepoBuildAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-auto.tfvars'
+pathToAzdoProjectRepoBuildManualInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-manual.tfvars'
 
 getAzdoProviderInputs=' -var-file='+pathToAzdoProviderInputs
 getAzurermProviderInputs=' -var-file='+pathToAzurermProviderInputs
@@ -21,7 +21,7 @@ getAzdoProjectRepoBuildManualInputs=' -var-file='+pathToAzdoProjectRepoBuildManu
 initCommand='terraform init'
 applyCommand='terraform apply -auto-approve'
 
-pathToProjectRepoBuildCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-project-repo-build-resources\\"
+pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
 applyProjectRepoBuildCommand=applyCommand+getAzdoProviderInputs+getAzdoProjectRepoBuildAutoInputs+getAzdoProjectRepoBuildManualInputs+getAzurermProviderInputs
 
 ##############################################################################################
