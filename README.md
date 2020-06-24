@@ -26,8 +26,8 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 6.  Automatically transfer the input variable values by running [importTheInputVariables.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/importTheInputVariables.py) while the terminal is still pointed to the same directory. And then run the script for setting local environment variables as follows:  
     
     python3 importTheInputVariables.py  
-    chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh
-    sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh
+    chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh  
+    sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh  
     source /etc/bashrc  
  
 7.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
@@ -37,8 +37,11 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 
 8.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
 
-9.  Create an Azure DevOps Project and import the sample repo and pipeline by... 
+# Create an Azure DevOps Project and import the sample repo and pipeline by... 
     
+1.  ...    
+2.  ...    
+        
 # Destroy the Azure DevOps Project and its elements    
     
 1.  ...    
