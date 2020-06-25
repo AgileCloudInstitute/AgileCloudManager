@@ -41,3 +41,6 @@ output "azuredevops_git_repository_size" { value = "${module.azure-pipelines-pro
 output "azuredevops_git_repository_ssh_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_git_repository_ssh_url}" }
 output "azuredevops_git_repository_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_git_repository_url}" }
 output "azuredevops_git_repository_web_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_git_repository_web_url}" }
+output "azuredevops_project_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_project_name}" }
+
+  
