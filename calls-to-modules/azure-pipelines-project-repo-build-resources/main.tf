@@ -12,6 +12,7 @@ module "azure-pipelines-project-repo-build-resources" {
   pipeKeyVaultName                     = "${var.pipeKeyVaultName}"
   azdoOrgPAT                           = "${var.azdoOrgPAT}"
   azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"
+  sourceRepo                           = "${var.sourceRepo}"
   awsPublicAccessKey                   = "${var.awsPublicAccessKey}"
   awsSecretAccessKey                   = "${var.awsSecretAccessKey}"
 }
@@ -27,6 +28,7 @@ variable "pipeResourceGroupName" { }
 variable "pipeKeyVaultName" { }
 variable "azdoOrgPAT" { }
 variable "azdoOrgServiceURL" { }
+variable "sourceRepo" { }
 variable "awsPublicAccessKey" { }
 variable "awsSecretAccessKey" { }
 
