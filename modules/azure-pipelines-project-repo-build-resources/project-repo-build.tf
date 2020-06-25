@@ -19,8 +19,8 @@ resource "azuredevops_git_repository" "repository" {
     #command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.remote_url} && git push -u origin --all"
     #USE THIS ONE: command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git push -u origin --all"
     # git remote -v  will determine if the remote is using ssh keys.  Though below make sure you are referencing the correct remote to return valid information.  
-    #command = "ls -al && git remote set-url origin ${azuredevops_git_repository.repository.remote_url} && git remote -v"
-    command = "ls -al && B64_PAT=$(echo \"pat:$AZ_PAT\" | base64) && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git -u http.extraHeader=\"Authorization: Bearer ${B64_PAT}\" push ${azuredevops_git_repository.repository.ssh_url} --al"
+    command = "ls -al"
+    #command = "ls -al && B64_PAT=$(echo \"pat:$AZ_PAT\" | base64) && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git -u http.extraHeader=\"Authorization: Bearer ${B64_PAT}\" push ${azuredevops_git_repository.repository.ssh_url} --al"
     working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/tmpRepoStorage/terraform-aws-simple-example/" 
   }  
 
