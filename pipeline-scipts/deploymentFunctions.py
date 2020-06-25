@@ -90,29 +90,29 @@ def changeLineInFile(fileName, searchTerm, valueToChange):
             line = searchTerm+"=\""+valueToChange+"\"\n"
         sys.stdout.write(line)
 
-def cloneSourceRepoToLocal(pathToTempRepoStorageParent, tmpRepoStorageFolder, sourceRepo):
-  print("inside deploymentFunctions.py script and cloneSourceToLocal(...) function. ")
-  newpath=pathToTempRepoStorageParent+tmpRepoStorageFolder
-  print("Test 1")
-  if not os.path.exists(newpath):
-    os.makedirs(newpath)
-  print("Test 2")
-  cloneCommand='git clone --progress '+sourceRepo
-  proc = subprocess.check_call(cloneCommand, stdout=subprocess.PIPE, shell=True, cwd=newpath, timeout=None)
-  print("Test 3")
+#def cloneSourceRepoToLocal(pathToTempRepoStorageParent, tmpRepoStorageFolder, sourceRepo):
+#  print("inside deploymentFunctions.py script and cloneSourceToLocal(...) function. ")
+#  newpath=pathToTempRepoStorageParent+tmpRepoStorageFolder
+#  print("Test 1")
+#  if not os.path.exists(newpath):
+#    os.makedirs(newpath)
+#  print("Test 2")
+#  cloneCommand='git clone --progress '+sourceRepo
+#  proc = subprocess.check_call(cloneCommand, stdout=subprocess.PIPE, shell=True, cwd=newpath, timeout=None)
+#  print("Test 3")
 	
-def destroyLocalCloneOfSourceRepo(pathToTempRepoStorageParent, tmpRepoStorageFolder):
-  print("inside deploymentFunctions.py script and destroyLocalCloneOfSourceRepo(...) function. ")
-  newpath=pathToTempRepoStorageParent+tmpRepoStorageFolder
-  print("newpath is: ", newpath)
-  deleteCommand="rmdir "+newpath+" /Q/S"
-  proc = subprocess.Popen( deleteCommand,cwd=pathToTempRepoStorageParent,stdout=subprocess.PIPE, shell=True)
-  success='false'
-  while True:
-    line = proc.stdout.readline()
-    if line:
-      thetext=line.decode('utf-8').rstrip('\r|\n')
-      decodedline=ansi_escape.sub('', thetext)
-      print(decodedline)
-    else:
-      break
+#def destroyLocalCloneOfSourceRepo(pathToTempRepoStorageParent, tmpRepoStorageFolder):
+#  print("inside deploymentFunctions.py script and destroyLocalCloneOfSourceRepo(...) function. ")
+#  newpath=pathToTempRepoStorageParent+tmpRepoStorageFolder
+#  print("newpath is: ", newpath)
+#  deleteCommand="rmdir "+newpath+" /Q/S"
+#  proc = subprocess.Popen( deleteCommand,cwd=pathToTempRepoStorageParent,stdout=subprocess.PIPE, shell=True)
+#  success='false'
+#  while True:
+#    line = proc.stdout.readline()
+#    if line:
+#      thetext=line.decode('utf-8').rstrip('\r|\n')
+#      decodedline=ansi_escape.sub('', thetext)
+#      print(decodedline)
+#    else:
+#      break
