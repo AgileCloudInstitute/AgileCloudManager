@@ -9,10 +9,9 @@ resource "azuredevops_project" "project" {
 
 resource "azuredevops_git_repository" "repository" {
   project_id = azuredevops_project.project.id
-  name       = "my-simple-repo"
+  name = "my-simple-repo"
   provisioner "local-exec" {
-    command = "ls -al"
-    #command = "ls -al && B64_PAT=$(echo \"pat:$AZ_PAT\" | base64) && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git -u http.extraHeader=\"Authorization: Bearer ${B64_PAT}\" push ${azuredevops_git_repository.repository.ssh_url} --al"
+    command = "ls -al && echo $AZ_PAT && echo ${azuredevops_git_repository.repository.ssh_url}"
     working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/" 
   }  
 }
