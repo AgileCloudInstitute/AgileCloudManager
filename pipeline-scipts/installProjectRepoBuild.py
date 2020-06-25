@@ -44,6 +44,11 @@ depfunc.runTerraformCommand(applyProjectRepoBuildCommand, pathToProjectRepoBuild
 
 print("Back in installProjectRepoBuild.py .")
 
+print("sourceRepo is: ", sourceRepo)
+print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
+print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_repository_name)
+
+
 ##############################################################################################
 ### Step Four: Destroy local cloned copy of source repo
 ##############################################################################################
