@@ -69,12 +69,12 @@ def runTerraformCommand(commandToRun, workingDir ):
           if "azuredevops_project_name" in decodedline:
             print("Found azuredevops_project_name!")
             global azuredevops_project_name
-            azuredevops_project_name=decodedline[8:]
+            azuredevops_project_name=decodedline[27:]
             print("azuredevops_project_name in deploymentFunctions.py is: ", azuredevops_project_name)
           if "azuredevops_git_repository_name" in decodedline:
             print("Found azuredevops_git_repository_name!")
             global azuredevops_git_repository_name
-            azuredevops_git_repository_name=decodedline[8:]
+            azuredevops_git_repository_name=decodedline[34:]
             print("azuredevops_git_repository_name in deploymentFunctions.py is: ", azuredevops_git_repository_name)
       else:
         break
