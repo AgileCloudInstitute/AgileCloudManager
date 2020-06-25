@@ -12,6 +12,8 @@ resourceGroupName = ''
 resourceGroupLocation = ''
 storageAccountNameTerraformBackend = ''
 pipeKeyVaultName = ''
+azuredevops_project_name = ''
+azuredevops_git_repository_name = ''
 
 def runTerraformCommand(commandToRun, workingDir ):
     print("Inside deploymentFunctions.py script and runTerraformCommand(..., ...) function. ")
@@ -63,6 +65,17 @@ def runTerraformCommand(commandToRun, workingDir ):
             global pipeKeyVaultName
             pipeKeyVaultName=decodedline[19:]
             print("pipeKeyVaultName in deploymentFunctions.py is: ", pipeKeyVaultName)
+
+          if "azuredevops_project_name" in decodedline:
+            print("Found azuredevops_project_name!")
+            global azuredevops_project_name
+            azuredevops_project_name=decodedline[8:]
+            print("azuredevops_project_name in deploymentFunctions.py is: ", azuredevops_project_name)
+          if "azuredevops_git_repository_name" in decodedline:
+            print("Found azuredevops_git_repository_name!")
+            global azuredevops_git_repository_name
+            azuredevops_git_repository_name=decodedline[8:]
+            print("azuredevops_git_repository_name in deploymentFunctions.py is: ", azuredevops_git_repository_name)
       else:
         break
 
