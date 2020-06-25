@@ -33,7 +33,7 @@ applyProjectRepoBuildCommand=applyCommand+getAzdoProviderInputs+getAzdoProjectRe
 ##############################################################################################
 ### Step Two: Clone the source repo
 ##############################################################################################
-depfunc.cloneSourceRepoToLocal(pathToTempRepoStorageParent,tmpRepoStorageFolder, sourceRepo)
+#depfunc.cloneSourceRepoToLocal(pathToTempRepoStorageParent,tmpRepoStorageFolder, sourceRepo)
 
 ##############################################################################################
 ### Step Three: Apply The azure-pipelines-project-repo-build module
