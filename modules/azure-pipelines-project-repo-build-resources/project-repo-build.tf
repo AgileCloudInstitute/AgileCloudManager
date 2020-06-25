@@ -10,12 +10,17 @@ resource "azuredevops_project" "project" {
 resource "azuredevops_git_repository" "repository" {
   project_id = azuredevops_project.project.id
   name = "my-simple-repo"
+  initialization {
+    init_type = "Uninitialized"
+  }
   provisioner "local-exec" {
     #command = "ls -al && echo $AZ_PAT && echo ${azuredevops_git_repository.repository.ssh_url}"
     command = "ls -al && echo ${azuredevops_git_repository.repository.name} && echo ${azuredevops_project.project.project_name}"
-    working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/" 
-  }  
+    working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/"
+  }
 }
+
+
 
 resource "azuredevops_build_definition" "build" {
   project_id = azuredevops_project.project.id
