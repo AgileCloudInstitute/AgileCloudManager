@@ -33,3 +33,4 @@ output "azuredevops_git_repository_size" { value = azuredevops_git_repository.re
 output "azuredevops_git_repository_ssh_url" { value = azuredevops_git_repository.repository.ssh_url }
 output "azuredevops_git_repository_url" { value = azuredevops_git_repository.repository.url }
 output "azuredevops_git_repository_web_url" { value = azuredevops_git_repository.repository.web_url }
+output "azuredevops_project_name" { value = azuredevops_project.project.project_name }
