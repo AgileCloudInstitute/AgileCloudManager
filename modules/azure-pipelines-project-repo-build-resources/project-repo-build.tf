@@ -10,20 +10,11 @@ resource "azuredevops_project" "project" {
 resource "azuredevops_git_repository" "repository" {
   project_id = azuredevops_project.project.id
   name       = "my-simple-repo"
-  initialization {
-    init_type = "Clean"
-  }
   provisioner "local-exec" {
-    #Use the following to set up git bash:  https://docs.microsoft.com/en-us/azure/devops/repos/git/use-ssh-keys-to-authenticate?view=azure-devops&tabs=current-page  
-    #PAT example very easy:  https://stackoverflow.com/questions/53106546/cannot-clone-git-from-azure-devops-using-pat
-    #command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.remote_url} && git push -u origin --all"
-    #USE THIS ONE: command = "dir && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git push -u origin --all"
-    # git remote -v  will determine if the remote is using ssh keys.  Though below make sure you are referencing the correct remote to return valid information.  
     command = "ls -al"
     #command = "ls -al && B64_PAT=$(echo \"pat:$AZ_PAT\" | base64) && git remote set-url origin ${azuredevops_git_repository.repository.ssh_url} && git -u http.extraHeader=\"Authorization: Bearer ${B64_PAT}\" push ${azuredevops_git_repository.repository.ssh_url} --al"
-    working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/tmpRepoStorage/terraform-aws-simple-example/" 
+    working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/" 
   }  
-
 }
 
 resource "azuredevops_build_definition" "build" {
