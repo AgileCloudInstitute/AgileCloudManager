@@ -15,7 +15,7 @@ resource "azuredevops_git_repository" "repository" {
   }
   provisioner "local-exec" {
     #command = "ls -al && echo $AZ_PAT && echo ${azuredevops_git_repository.repository.ssh_url}"
-    command = "ls -al && echo ${azuredevops_git_repository.repository.name} && echo ${azuredevops_project.project.project_name}"
+    command = "ls -al && echo ${azuredevops_git_repository.repository.name} && echo ${azuredevops_project.project.project_name} && echo ${var.sourceRepo} && echo ${var.azdoOrgServiceURL}"
     working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/"
   }
 }
