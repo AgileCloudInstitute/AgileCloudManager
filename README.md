@@ -37,7 +37,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 
 8.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
 
-# Create an Azure DevOps Project and import the sample repo and pipeline by... 
+# Create an Azure DevOps Project and import the sample repo and pipeline     
     
 1.  Run the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
     
@@ -46,6 +46,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     python3 installProjectRepoBuild.py   
     
 2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
+3.  Run the build pipeline from within the Azure DevOps portal and confirm that it created the deployable artifact from the newly imported repository.    
         
 # Destroy the Azure DevOps Project and its elements    
     
