@@ -13,3 +13,4 @@ adminPwd=
 pathToCloudInitScript=
 azdoOrgPAT=
 azdoOrgServiceURL=
+sourceRepo=
