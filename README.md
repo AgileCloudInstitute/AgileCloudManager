@@ -39,13 +39,22 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 
 # Create an Azure DevOps Project and import the sample repo and pipeline by... 
     
-1.  ...    
-2.  ...    
+1.  Run the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
+    
+    #Navigate to the same `pipeline-scripts` directory   
+    az extension add --name azure-devops
+    python3 installProjectRepoBuild.py   
+    
+2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
         
 # Destroy the Azure DevOps Project and its elements    
     
-1.  ...    
-2.  ...    
+1.  Run the pipeline task that calls the project-repo-build module withe the `destroy` command.   
+    
+    #From the same `pipeline-scripts` directory    
+    python3 destroyProjectRepoBuild.py   
+    
+2.  Validate that the project, repository, and build have been destroyed in the Azure Devops portal.        
     
 # Destroy the Infrastructure Orchestration System    
     
