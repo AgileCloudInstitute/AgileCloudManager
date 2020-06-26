@@ -18,18 +18,19 @@ cd /home/aci-user
 cd terraform-download
 wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
 unzip terraform_0.12.24_linux_amd64.zip
+chown aci-user:aci-user /home/aci-user/terraform-download
 #Move the terraform binary into a folder that is listed as part of the PATH variable.  
 mv terraform /usr/local/bin/
 
-#Install azdo provider
-cd /home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/
-[[ -d terraform.d/ ]] || mkdir terraform.d/
-[[ -d terraform.d/plugins/ ]] || mkdir terraform.d/plugins/
-[[ -d terraform.d/plugins/linux_amd64 ]] || mkdir terraform.d/plugins/linux_amd64
-chown aci-user:aci-user -R terraform.d/
+# #Install azdo provider
+# cd /home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/
+# [[ -d terraform.d/ ]] || mkdir terraform.d/
+# [[ -d terraform.d/plugins/ ]] || mkdir terraform.d/plugins/
+# [[ -d terraform.d/plugins/linux_amd64 ]] || mkdir terraform.d/plugins/linux_amd64
+# chown aci-user:aci-user -R terraform.d/
 
-cd terraform.d/plugins/linux_amd64
-wget https://github.com/microsoft/terraform-provider-azuredevops/releases/download/v0.1.2/terraform-provider-azuredevops_linux_amd64.tar.gz
-tar xzf terraform-provider-azuredevops_linux_amd64.tar.gz
-rm terraform-provider-azuredevops_linux_amd64.tar.gz
-cd /home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/
+# cd terraform.d/plugins/linux_amd64
+# wget https://github.com/microsoft/terraform-provider-azuredevops/releases/download/v0.1.2/terraform-provider-azuredevops_linux_amd64.tar.gz
+# tar xzf terraform-provider-azuredevops_linux_amd64.tar.gz
+# rm terraform-provider-azuredevops_linux_amd64.tar.gz
+# cd /home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/
