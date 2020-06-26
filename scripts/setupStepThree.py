@@ -212,6 +212,14 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
           if "echo" in line:
             if trailingCharacters < 25:
               line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
+
+        if "export AZURE_DEVOPS_EXT_PAT=" in line:
+          if "echo" not in line:
+            if trailingCharacters < 3:
+              line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
+          if "echo" in line:
+            if trailingCharacters < 25:
+              line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
         print('{}'.format(line))
 
 #Now call the functions
