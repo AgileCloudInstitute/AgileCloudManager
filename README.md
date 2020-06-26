@@ -15,17 +15,17 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)  
 2.  Navigate into directory into which to clone repos by typing  `cd cloned-repos`  
 3.  Clone this repository by typing `git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
-4.  Run [scripts/setup.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setup.sh) by typing the following commands:   
+4.  **SetupStepOne:**  Run [scripts/setupStepOne.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setupStepOne.sh) by typing the following commands:   
     
     cd agile-cloud-manager/scripts/  
-    chmod +x setup.sh  
-    sudo ./setup.sh  
+    chmod +x setupStepOne.sh  
+    sudo ./setupStepOne.sh  
     source /etc/bashrc  
-
-5.  Enter the variables you assembled in the pre-requisite steps into [/home/aci-user/vars/agile-cloud-manager/enter-user-input-here-only.txt](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.txt) file.  Note this can be done by replacing the file with pre-set values by some automation you create separately if you need to do this repeatedly.   
-6.  Automatically transfer the input variable values by running [importTheInputVariables.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/importTheInputVariables.py) while the terminal is still pointed to the same directory. And then run the script for setting local environment variables as follows:  
     
-    python3 importTheInputVariables.py  
+5.  **SetupStepTwo:**  Enter the variables you assembled in the pre-requisite steps into [/home/aci-user/vars/agile-cloud-manager/enter-user-input-here-only.txt](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.txt) file.  Note this can be done by replacing the file with pre-set values by some automation you create separately if you need to do this repeatedly.   
+6.  **SetupStepThree:**  Automatically transfer the input variable values by running [setupStepThree.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setupStepThree.py) while the terminal is still pointed to the same directory. And then run the script for setting local environment variables as follows:  
+    
+    python3 setupStepThree.py   
     chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh  
     sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh  
     source /etc/bashrc  
