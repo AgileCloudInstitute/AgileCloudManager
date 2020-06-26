@@ -16,6 +16,7 @@ adminPwd=''
 pathToCloudInitScript=''
 azdoOrgPAT=''
 azdoOrgServiceURL=''
+sourceRepo=''
 
 #Declare the directory and file name variables
 pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
@@ -103,6 +104,10 @@ def loadDataFromFile(fileName):
             global azdoOrgServiceURL
             azdoOrgServiceURL = getTheValue(line)
             print("azdoOrgServiceURL is: ", azdoOrgServiceURL)
+        if 'sourceRepo' in line:
+            global sourceRepo
+            sourceRepo = getTheValue(line)
+            print("sourceRepo is: ", sourceRepo)
 
 def validateVariableValues():
     print("Need to add some validation logic here.")  
@@ -141,7 +146,6 @@ def updateVarFileAzurePipesFoundation(fileName):
             line = "pipeAzureRegion=\""+pipeAzureRegion+"\""
         print('{}'.format(line))
 
-
 def updateVarFileAzurePipesAgents(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgents(...,...,...) function.")
     print("fileName is: ", fileName)
@@ -164,6 +168,8 @@ def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
             line = "awsPublicAccessKey=\""+awsPublicAccessKey+"\""
         if "awsSecretAccessKey" in line:
             line = "awsSecretAccessKey=\""+awsSecretAccessKey+"\""
+        if "sourceRepo" in line:
+            line = "sourceRepo=\""+sourceRepo+"\""
         print('{}'.format(line))
 
 def updateVarFileAzurePipesAgentsStartUpScript(fileName):
