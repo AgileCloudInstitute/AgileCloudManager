@@ -40,6 +40,12 @@ echo 'export AZ_SERVER=' >> /etc/environment
 echo 'export AZ_SERVER=' >> /etc/bashrc
 echo 'export AZ_SERVER=' >> /etc/profile
 
+#Set AZURE_DEVOPS_EXT_PAT environment variable.  Used by az devops cli extension.  Keeping this separate from $AZ_PAT to increase customizability.  
+export AZURE_DEVOPS_EXT_PAT=
+echo 'export AZURE_DEVOPS_EXT_PAT=' >> /etc/environment
+echo 'export AZURE_DEVOPS_EXT_PAT=' >> /etc/bashrc
+echo 'export AZURE_DEVOPS_EXT_PAT=' >> /etc/profile
+
 ###########################################################################################################
 #### Section Two:  wget the following block from a raw github url from this same repo.
 ###########################################################################################################
