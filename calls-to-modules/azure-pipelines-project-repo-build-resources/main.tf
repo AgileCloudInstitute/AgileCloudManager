@@ -32,7 +32,7 @@ variable "pipeKeyVaultName" { }
 variable "azdoOrgPAT" { }
 variable "azdoOrgServiceURL" { }
 variable "sourceRepo" { }
-variable "projectName" { default = "terraform-aws-simple-example" }
+variable "projectName" { default = "terraform-simple-pipeline-demo" }
 variable "repoName" { default = "terraform-aws-simple-example" }
 variable "buildName" { default = "terraform-aws-simple-example" }
 variable "awsPublicAccessKey" { }
