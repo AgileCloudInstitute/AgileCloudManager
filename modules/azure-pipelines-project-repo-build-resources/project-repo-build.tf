@@ -1,7 +1,7 @@
 #The Azure DevOps resources, including a project, a repository, and a build.
 
 resource "azuredevops_project" "project" {
-  project_name       = var.project_name
+  project_name       = var.projectName
   visibility         = "private"
   version_control    = "Git"
   work_item_template = "Agile"
@@ -9,7 +9,7 @@ resource "azuredevops_project" "project" {
 
 resource "azuredevops_git_repository" "repository" {
   project_id = azuredevops_project.project.id
-  name = var.repo_name
+  name = var.repoName
   initialization {
     init_type = "Uninitialized"
   }
@@ -23,7 +23,7 @@ resource "azuredevops_git_repository" "repository" {
 
 resource "azuredevops_build_definition" "build" {
   project_id = azuredevops_project.project.id
-  name       = var.build_name
+  name       = var.buildName
   ci_trigger {
     use_yaml = true
   }
