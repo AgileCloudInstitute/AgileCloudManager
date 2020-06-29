@@ -15,7 +15,10 @@ variable "pipeKeyVaultName" { }
 variable "azdoOrgPAT" { }
 variable "azdoOrgServiceURL" { }
 variable "sourceRepo" { }
-#Keeping the next two because we will add secrets definition later.  For now, the secrets have already been entered into the key vault in the foundation module deployment.
+variable "projectName" { }
+variable "repoName" { }
+variable "buildName" { }
+#Keeping the next two because we will add secrets definition later.  For now, the secrets have already been entered into the key vault.
 variable "awsPublicAccessKey" { }
 variable "awsSecretAccessKey" { }
 
