@@ -12,7 +12,10 @@ module "azure-pipelines-project-repo-build-resources" {
   pipeKeyVaultName                     = "${var.pipeKeyVaultName}"
   azdoOrgPAT                           = "${var.azdoOrgPAT}"
   azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"
-  sourceRepo                           = "${var.sourceRepo}"
+  sourceRepo                           = "${var.sourceRepo}"  
+  projectName                          = "${var.projectName}"  
+  repoName                             = "${var.repoName}"  
+  buildName                            = "${var.buildName}"  
   awsPublicAccessKey                   = "${var.awsPublicAccessKey}"
   awsSecretAccessKey                   = "${var.awsSecretAccessKey}"
 }
@@ -29,6 +32,9 @@ variable "pipeKeyVaultName" { }
 variable "azdoOrgPAT" { }
 variable "azdoOrgServiceURL" { }
 variable "sourceRepo" { }
+variable "projectName" { default = "terraform-aws-simple-example" }
+variable "repoName" { default = "terraform-aws-simple-example" }
+variable "buildName" { default = "terraform-aws-simple-example" }
 variable "awsPublicAccessKey" { }
 variable "awsSecretAccessKey" { }
 
