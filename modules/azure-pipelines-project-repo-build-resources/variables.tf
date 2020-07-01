@@ -38,3 +38,5 @@ output "azuredevops_git_repository_ssh_url" { value = azuredevops_git_repository
 output "azuredevops_git_repository_url" { value = azuredevops_git_repository.repository.url }
 output "azuredevops_git_repository_web_url" { value = azuredevops_git_repository.repository.web_url }
 output "azuredevops_project_name" { value = azuredevops_project.project.project_name }
+output "azuredevops_build_definition_id" { value = azuredevops_build_definition.build.id }
+output "azuredevops_organization_service_url" { value = var.azdoOrgServiceURL }
