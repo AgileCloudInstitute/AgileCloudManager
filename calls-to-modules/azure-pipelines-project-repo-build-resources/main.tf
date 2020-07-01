@@ -50,5 +50,5 @@ output "azuredevops_git_repository_ssh_url" { value = "${module.azure-pipelines-
 output "azuredevops_git_repository_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_git_repository_url}" }  
 output "azuredevops_git_repository_web_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_git_repository_web_url}" }  
 output "azuredevops_project_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_project_name}" }  
-output "azuredevops_build_definition_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_build_definition_id" }  
-output "azuredevops_organization_service_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_organization_service_url" }  
+output "azuredevops_build_definition_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_build_definition_id}" }  
+output "azuredevops_organization_service_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_organization_service_url}" }  
