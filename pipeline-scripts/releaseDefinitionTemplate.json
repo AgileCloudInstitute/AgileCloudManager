@@ -1,0 +1,87 @@
+{
+  "description": "null",
+  "isDeleted": "false",
+  "variables": {},
+  "variableGroups": [],
+  "environments": [
+    {
+      "name": "PROD",
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": "true",
+            "isNotificationOn": "false"
+          }
+        ]
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": "true",
+            "isNotificationOn": "false"
+          }
+        ]
+      },
+      "deployPhases": [
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "skipArtifactsDownload": "false",
+            "artifactsDownloadInput": {},
+            "demands": [],
+            "enableAccessToken": "false",
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 1,
+            "condition": "succeeded()",
+            "overrideInputs": {}
+          },
+          "rank": 1,
+          "phaseType": "agentBasedDeployment",
+          "name": "Run on agent",
+          "workflowTasks": []
+        }
+      ],
+      "retentionPolicy": {
+        "daysToKeep": 30,
+        "releasesToKeep": 3,
+        "retainBuild": "true"
+      }
+    }
+  ],
+  "artifacts":[
+    {
+      "sourceId":"null",
+      "type":"Build",
+      "artifactSourceDefinitionUrl":{
+        "id":"null",
+        "name":""
+      },
+      "alias":"null",
+      "definitionReference":{
+        "defaultVersionType":{"id":"latestType","name":"Latest"},
+        "definition":{
+          "id":"null",
+          "name":"null"
+        },
+        "IsMultiDefinitionType":{"id":"False","name":"False"},
+        "project":{
+          "id":"null",
+          "name":"null"
+        }
+      },
+      "isPrimary":true,
+      "isRetained":false
+    }
+  ],
+  "triggers": [],
+  "releaseNameFormat": "null",
+  "tags": [],
+  "properties": {},
+  "name": "null",
+  "projectReference": "null",
+  "_links": {}
+}
