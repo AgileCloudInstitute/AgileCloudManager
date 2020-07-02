@@ -1,21 +1,21 @@
-import requests  
-import os  
-import base64  
-import json   
+import requests
+import os
+import base64
+import json
 
-#Input variables will be received from terraform output, but are defined here as constants during development:  
+#Input variables will be received from terraform output, but are defined here as constants during development:
 azuredevops_project_id = ""
 azuredevops_organization_service_url = ""
-azuredevops_organization_name = azuredevops_organization_service_url.split("azure.com/",1)[1]  
+azuredevops_organization_name = azuredevops_organization_service_url.split("azure.com/",1)[1]
 azuredevops_organization_name = azuredevops_organization_name.replace("/","")
 azuredevops_release_definition_id = ""
-delete_comment = ""
+delete_comment = "Comment goes here. "
 
 print("azuredevops_project_id is: ", azuredevops_project_id)
 print("azuredevops_organization_name is: ", azuredevops_organization_name)
 print("azuredevops_release_definition_id is: ", azuredevops_release_definition_id)
 print("delete_comment is: ", delete_comment)
-  
+
 personal_access_token = ":"+os.environ["AZ_PAT"]
 headers = {}
 headers['Content-type'] = "application/json"
