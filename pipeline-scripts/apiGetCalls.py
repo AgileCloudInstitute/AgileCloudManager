@@ -53,10 +53,10 @@ getApiRequest(builddefinitions_url)
 
 #Get a list of builds
 #GET https://dev.azure.com/{organization}/{project}/_apis/build/builds?definitions={definitions}&queues={queues}&buildNumber={buildNumber}&minTime={minTime}&maxTime={maxTime}&requestedFor={requestedFor}&reasonFilter={reasonFilter}&statusFilter={statusFilter}&resultFilter={resultFilter}&tagFilters={tagFilters}&properties={properties}&$top={$top}&continuationToken={continuationToken}&maxBuildsPerDefinition={maxBuildsPerDefinition}&deletedFilter={deletedFilter}&queryOrder={queryOrder}&branchName={branchName}&buildIds={buildIds}&repositoryId={repositoryId}&repositoryType={repositoryType}&api-version=5.1
-buildds_url = ("https://dev.azure.com/%s/%s/_apis/build/builds?api-version=%s" % (azuredevops_organization_name, azuredevops_project_id, api_version))
+builds_url = ("https://dev.azure.com/%s/%s/_apis/build/builds?api-version=%s" % (azuredevops_organization_name, azuredevops_project_id, api_version))
 print("-------------------------------------------------------------")
 print("---- About to get list of Builds ----")
-getApiRequest(builddefinitions_url)
+getApiRequest(builds_url)
 
 
 #Get a list of Agent Pool Queues
