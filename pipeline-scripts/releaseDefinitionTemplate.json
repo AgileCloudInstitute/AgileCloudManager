@@ -5,7 +5,7 @@
   "variableGroups": [],
   "environments": [
     {
-      "name": "PROD",
+      "name": "set-from-calling-script",
       "preDeployApprovals": {
         "approvals": [
           {
@@ -24,25 +24,81 @@
           }
         ]
       },
-      "deployPhases": [
+      "deployPhases":[
         {
-          "deploymentInput": {
-            "parallelExecution": {
-              "parallelExecutionType": "none"
+          "deploymentInput":
+            {
+              "parallelExecution":{"parallelExecutionType":0},
+              "agentSpecification":null,
+              "skipArtifactsDownload":false,
+              "artifactsDownloadInput":{
+                "downloadInputs":[
+                  {
+                    "alias":"_name-of-build-with-underbar-placed-in-front",
+                    "artifactType":"Build",
+                    "artifactDownloadMode":"All",
+                    "artifactItems":[]
+                  }
+                ]
+              },
+              "queueId": "get-from-api-call",
+              "demands":[],
+              "enableAccessToken":false,
+              "timeoutInMinutes":0,
+              "jobCancelTimeoutInMinutes":1,
+              "condition":"succeeded()",
+              "overrideInputs":{}
             },
-            "skipArtifactsDownload": "false",
-            "artifactsDownloadInput": {},
-            "demands": [],
-            "enableAccessToken": "false",
-            "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 1,
-            "condition": "succeeded()",
-            "overrideInputs": {}
-          },
-          "rank": 1,
-          "phaseType": "agentBasedDeployment",
-          "name": "Run on agent",
-          "workflowTasks": []
+          "rank":1,
+          "phaseType":1,
+          "name":"Agent job",
+          "refName":null,
+          "workflowTasks":[
+            {
+              "environment":{},
+              "taskId":"1e244d32-2dd4-4165-96fb-b7441ca9331e",
+              "version":"1.*",
+              "name":"Azure Key Vault: get-vault-name-from-terraform-output",
+              "refName":"",
+              "enabled":true,
+              "alwaysRun":false,
+              "continueOnError":false,
+              "timeoutInMinutes":0,
+              "definitionType":"task",
+              "overrideInputs":{},
+              "condition":"succeeded()",
+              "inputs":{
+                "ConnectedServiceName":"service-principal-goes-here",
+                "KeyVaultName":"get-vault-name-from-terraform-output",
+                "SecretsFilter":"*",
+                "RunAsPreJob":"true"
+              }
+            },
+            {
+              "environment":{},
+              "taskId":"6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+              "version":"3.*",
+              "name":"Bash Script",
+              "refName":"",
+              "enabled":true,
+              "alwaysRun":false,
+              "continueOnError":false,
+              "timeoutInMinutes":0,
+              "definitionType":"task",
+              "overrideInputs":{},
+              "condition":"succeeded()",
+              "inputs":{
+                "targetType":"inline",
+                "filePath":"",
+                "arguments":"",
+                "script":"####CREATE SCRIPT\n\necho 'Hello from inside the bash script. '  \n",
+                "workingDirectory":"",
+                "failOnStderr":"false",
+                "noProfile":"true",
+                "noRc":"true"
+              }
+            }
+          ]
         }
       ],
       "retentionPolicy": {
@@ -78,7 +134,7 @@
     }
   ],
   "triggers": [],
-  "releaseNameFormat": "null",
+  "releaseNameFormat": "",
   "tags": [],
   "properties": {},
   "name": "null",
