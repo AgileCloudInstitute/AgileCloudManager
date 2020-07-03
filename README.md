@@ -46,7 +46,8 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     python3 installProjectRepoBuild.py   
     
 2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
-3.  Trigger the build pipeline by making a n inconsequential change to the README file for the `terraform-aws-simple-example` repo from within the Azure DevOps portal.  You are changing the copy that was just imported into your own Azure DevOps Organization, but you are only adding a couple spaces of white space to the README so that the functionality is not changed.  Then confirm that the build created the deployable artifact from the newly imported repository.    
+3.  Copy the output variables into a text editor so that they can be used in subsequent scripted steps.  This will be automated later.    
+4.  Trigger the build pipeline by making an inconsequential change to the README file for the `terraform-aws-simple-example` repo from within the Azure DevOps portal.  You are changing the copy that was just imported into your own Azure DevOps Organization, but you are only adding a couple spaces of white space to the README so that the functionality is not changed.  Then confirm that the build created the deployable artifact from the newly imported repository.    
         
 # Destroy the Azure DevOps Project and its elements    
     
