@@ -4,11 +4,11 @@ import base64
 import json
 
 #Input variables will be received from terraform output, but are defined here as constants during development:
+azuredevops_build_definition_id = ""
 azuredevops_git_repository_id = ""
 azuredevops_git_repository_name = ""
 azuredevops_project_id = ""
 azuredevops_project_name = ""
-azuredevops_build_definition_id = ""
 azuredevops_organization_service_url = ""
 
 azuredevops_organization_name = azuredevops_organization_service_url.split("azure.com/",1)[1]
@@ -58,6 +58,15 @@ print("-------------------------------------------------------------")
 print("---- About to get list of Builds ----")
 getApiRequest(builddefinitions_url)
 
+
+#Get a list of Agent Pool Queues
+api_version_p = "5.1-preview.1"
+queue_name = "Default"
+#GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
+queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (azuredevops_organization_name, azuredevops_project_id, queue_name, api_version_p))
+print("-------------------------------------------------------------")
+print("---- About to get list of Agent Pool Job Queues ----")
+getApiRequest(queues_url)
 
 #Get a list of artifacts for a given build
 #GET https://dev.azure.com/{organization}/{project}/_apis/build/builds/{buildId}/artifacts?api-version=5.1
