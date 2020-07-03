@@ -6,9 +6,12 @@ import json
 #Input variables will be received from terraform output, but are defined here as constants during development:
 azuredevops_project_id = ""
 azuredevops_organization_service_url = ""
+
 azuredevops_organization_name = azuredevops_organization_service_url.split("azure.com/",1)[1]
 azuredevops_organization_name = azuredevops_organization_name.replace("/","")
+
 azuredevops_release_definition_id = ""
+
 delete_comment = "Comment goes here. "
 
 print("azuredevops_project_id is: ", azuredevops_project_id)
