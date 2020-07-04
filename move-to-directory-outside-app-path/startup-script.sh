@@ -79,14 +79,14 @@ mv terraform /usr/local/bin/
 cd /home/azureuser
 
 
-echo "About to remove older versions of python"
-yum remove -y python
-
 echo "About to install python3"
 yum install -y python3
 yum install -y python3-setuptools
 easy_install-3.7 pip
 
+echo "About to enable python3 to be called by the python command "
+sudo rm /usr/bin/python
+sudo ln -s /usr/bin/python3 /usr/bin/python
 
 ##Install the Azure CLI using the following 3 steps:  
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
