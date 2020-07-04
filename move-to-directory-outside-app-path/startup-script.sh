@@ -78,17 +78,15 @@ unzip terraform_0.12.24_linux_amd64.zip
 mv terraform /usr/local/bin/
 cd /home/azureuser
 
-## Install Python 3.7 (Note: Next time try different location outside of PATH to see if it is added automatically to PATH.)
-#Install Python 3.7
-yum install -y gcc openssl-devel bzip2-devel libffi-devel
-cd /usr/local/bin/
-wget https://www.python.org/ftp/python/3.7.7/Python-3.7.7.tgz
-tar xzf Python-3.7.7.tgz
-cd Python-3.7.7
-./configure --enable-optimizations
-make altinstall
-rm /usr/local/bin/Python-3.7.7.tgz
-python3.7 -V
+
+echo "About to remove older versions of python"
+yum remove -y python
+
+echo "About to install python3"
+yum install -y python3
+yum install -y python3-setuptools
+easy_install-3.7 pip
+
 
 ##Install the Azure CLI using the following 3 steps:  
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
