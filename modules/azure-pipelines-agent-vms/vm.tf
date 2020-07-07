@@ -18,8 +18,10 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
     source_image_reference {
         publisher = "RedHat"
         offer     = "RHEL"
-        sku       = "7-RAW-CI"
-        version   = "7.6.2019072418"
+        #sku       = "7-RAW-CI"
+        #version   = "7.6.2019072418"
+        sku       = "8.2"
+        version   = "8.2.2020050811"
     }
 
     computer_name  = "myvm"
