@@ -155,7 +155,7 @@ EOF
 
 
 #Putting the next 3 lines at end of the cloud-init startup script because they were causing yum to break when they were run right after python3 was installed, earlier in this script. 
-echo "About to enable python3 to be called by the python command "
-rm /usr/bin/python
-ln -s /usr/bin/python3 /usr/bin/python
+#echo "About to enable python3 to be called by the python command "
+#rm /usr/bin/python
+#ln -s /usr/bin/python3 /usr/bin/python
 
