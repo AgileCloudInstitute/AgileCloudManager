@@ -82,9 +82,9 @@ cd /home/azureuser
 echo "About to install python3"
 yum install -y python3
 yum install -y python3-setuptools
-easy_install-3.7 pip
-
-
+dnf install python3-pip
+  
+  
 ##Install the Azure CLI using the following 3 steps:  
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 
@@ -114,8 +114,11 @@ cd agent-download
 #wget https://vstsagentpackage.azureedge.net/agent/2.166.4/vsts-agent-linux-x64-2.166.4.tar.gz
 #tar xvf vsts-agent-linux-x64-2.166.4.tar.gz
 #New agent replacement June 8 2020 as follows in next 2 lines:
-wget https://vstsagentpackage.azureedge.net/agent/2.169.1/vsts-agent-linux-x64-2.169.1.tar.gz
-tar xvf vsts-agent-linux-x64-2.169.1.tar.gz
+#wget https://vstsagentpackage.azureedge.net/agent/2.169.1/vsts-agent-linux-x64-2.169.1.tar.gz
+#tar xvf vsts-agent-linux-x64-2.169.1.tar.gz
+#New agent July 7, 2020 with next 2 lines
+wget https://vstsagentpackage.azureedge.net/agent/2.171.1/vsts-agent-linux-x64-2.171.1.tar.gz
+tar xvf vsts-agent-linux-x64-2.171.1.tar.gz
 
 chown -R azureuser:azureuser /home/azureuser/terraform-download
 chown -R azureuser:azureuser /home/azureuser/agent-download
@@ -148,14 +151,19 @@ sudo ./bin/installdependencies.sh
 echo "About to begin sleeping until the svc sh script has been found.  "
 while [ ! -f /home/azureuser/agent-download/svc.sh ]; do sleep 1; done
 echo "Finished sleeping because the svc sh file has now been found.  "
+echo "About to svc sh install "
 sudo ./svc.sh install
+echo "About to svc sh start "
 sudo ./svc.sh start
+echo "About to svc sh status "
 sudo ./svc.sh status
+echo "About to e o f "
 EOF
 
 
 #Putting the next 3 lines at end of the cloud-init startup script because they were causing yum to break when they were run right after python3 was installed, earlier in this script. 
-echo "About to enable python3 to be called by the python command "
-rm /usr/bin/python
-ln -s /usr/bin/python3 /usr/bin/python
+#echo "About to enable python3 to be called by the python command "
+#rm /usr/bin/python
+#ln -s /usr/bin/python3 /usr/bin/python
 
+echo "All done with cloud-init.  "
