@@ -3,7 +3,7 @@
 
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "myterraformvm" {
-    name                  = "myVM_"
+    name                  = "pipelineAgentVM"
     location              = data.azurerm_resource_group.pipeline-resources.location
     resource_group_name   = data.azurerm_resource_group.pipeline-resources.name
     network_interface_ids = [data.azurerm_network_interface.myterraformnic.id]
