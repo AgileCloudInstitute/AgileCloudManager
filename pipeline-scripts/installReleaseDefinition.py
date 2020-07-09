@@ -50,11 +50,10 @@ def getApiRequest(url):
     headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))
     r = requests.get(url, headers=headers)
     print("r.status_code is: ", r.status_code)
-    #print("r.json() is: ", r.json())
+    #Add some better error handling here to handle various response codes.  We are assuming that a 200 response is received in order to continue here.  
     return r.json()
-
-
-#Get a list of Agent Pool Queues
+  
+#Get the Agent Pool Queues whose name matches the search criteria.  This should only be one queue because name should be a unique key.  
 api_version_p = "5.1-preview.1"
 queue_name = "Default"
 #GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
@@ -63,5 +62,5 @@ print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pool Job Queues ----")
 queuesData = getApiRequest(queues_url)
 print("---------------------------------------------------------")
-print("queueId is: ", queuesData['id'])
-print("queuesData is: ", queuesData)
+#Using index 0 here because queue_name should be a unique key that brings only one result in this response
+print("queueId is: ", queuesData['value'][0]['id'])  
