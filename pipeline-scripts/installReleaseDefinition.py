@@ -78,7 +78,7 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
     headers['Content-type'] = "application/json"
     headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))
     api_version = "5.1"
-    url = ("https://vsrm.dev.azure.com/%s/%s/_apis/release/definitions?api-version=%s" % (azuredevops_organization_name, azuredevops_project_id, api_version))
+    url = ("https://vsrm.dev.azure.com/%s/%s/_apis/release/definitions?api-version=%s" % (azdo_organization_name, azdo_project_id, api_version))
     with open(templateFile, 'r') as json_file:
       print("json_file is: ", json_file)
       data = json.load(json_file)
