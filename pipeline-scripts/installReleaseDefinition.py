@@ -20,14 +20,16 @@ pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/c
 outputProjectRepoBuildCommand=applyCommand+getAzdoProviderInputs+getAzdoProjectRepoBuildAutoInputs+getAzdoProjectRepoBuildManualInputs+getAzurermProviderInputs
 
 ##############################################################################################
-### Step Three: Apply The azure-pipelines-project-repo-build module
+### Step One: Get The Outpur Variables From the azure-pipelines-project-repo-build module
 ##############################################################################################
 
 depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
 depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
 
 print("Back in installReleaseDefinition.py .")
-
-print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
+print("depfunc.azuredevops_build_definition_id is: ", depfunc.azuredevops_build_definition_id)
+print("depfunc.azuredevops_git_repository_id is: ", depfunc.azuredevops_git_repository_id)
 print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_repository_name)
-
+print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
+print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
+print("depfunc.azuredevops_organization_service_url is: ", depfunc.azuredevops_organization_service_url)
