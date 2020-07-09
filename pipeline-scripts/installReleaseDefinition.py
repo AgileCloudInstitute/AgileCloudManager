@@ -66,7 +66,7 @@ print("---------------------------------------------------------")
 #Using index 0 here because queue_name should be a unique key that brings only one result in this response
 poolQueueId = queuesData['value'][0]['id']
 print("poolQueueId is: ", poolQueueId)  
-artifactAlias = "_" + azuredevops_git_repository_name
+artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 
 
 ##############################################################################################
@@ -104,13 +104,13 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'id\'] is: ", data['artifacts'][0]['definitionReference']['project']['id'])
       print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['project']['name'])
       print("---------------------------------------------------------")
-      data['artifacts'][0]['sourceId'] = azuredevops_project_id + ":1"
-      data['artifacts'][0]['artifactSourceDefinitionUrl']['id'] = azuredevops_organization_service_url + azuredevops_project_name + "/_build?definitionId=" + str(azuredevops_build_definition_id)
+      data['artifacts'][0]['sourceId'] = azdo_project_id + ":1"
+      data['artifacts'][0]['artifactSourceDefinitionUrl']['id'] = azdo_organization_service_url + azdo_project_name + "/_build?definitionId=" + str(azdo_build_definition_id)
       data['artifacts'][0]['alias'] = artifactAlias
-      data['artifacts'][0]['definitionReference']['definition']['id'] = azuredevops_build_definition_id
-      data['artifacts'][0]['definitionReference']['definition']['name'] = azuredevops_git_repository_name
-      data['artifacts'][0]['definitionReference']['project']['id'] = azuredevops_project_id
-      data['artifacts'][0]['definitionReference']['project']['name'] = azuredevops_project_name
+      data['artifacts'][0]['definitionReference']['definition']['id'] = azdo_build_definition_id
+      data['artifacts'][0]['definitionReference']['definition']['name'] = azdo_git_repository_name
+      data['artifacts'][0]['definitionReference']['project']['id'] = azdo_project_id
+      data['artifacts'][0]['definitionReference']['project']['name'] = azdo_project_name
       print("---------------------------------------------------------")
       print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
       print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
