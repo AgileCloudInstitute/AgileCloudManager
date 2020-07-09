@@ -50,7 +50,8 @@ def getApiRequest(url):
     headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))
     r = requests.get(url, headers=headers)
     print("r.status_code is: ", r.status_code)
-    print("r.json() is: ", r.json())
+    #print("r.json() is: ", r.json())
+    return r.json()
 
 
 #Get a list of Agent Pool Queues
@@ -60,4 +61,7 @@ queue_name = "Default"
 queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name, api_version_p))
 print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pool Job Queues ----")
-getApiRequest(queues_url)
+queuesData = getApiRequest(queues_url)
+print("---------------------------------------------------------")
+print("queueId is: ", queuesData['id'])
+print("queuesData is: ", queuesData)
