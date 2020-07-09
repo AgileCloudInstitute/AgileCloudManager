@@ -37,6 +37,7 @@ print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_re
 print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
 print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
 print("depfunc.azuredevops_organization_service_url is: ", depfunc.azuredevops_organization_service_url)
+
 print("azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
 print("azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
 
@@ -69,7 +70,7 @@ print("queueId is: ", queuesData['value'][0]['id'])
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -113,4 +114,5 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("revised data is: ", data)
 
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url)
+
