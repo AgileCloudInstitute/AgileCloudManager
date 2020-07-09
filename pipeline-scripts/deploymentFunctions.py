@@ -18,7 +18,8 @@ azuredevops_git_repository_name = ''
 azuredevops_project_name = ''
 azuredevops_project_id = ''
 azuredevops_organization_service_url = ''
-
+azuredevops_key_vault_name = ''  
+  
 def runTerraformCommand(commandToRun, workingDir ):
     print("Inside deploymentFunctions.py script and runTerraformCommand(..., ...) function. ")
     print("commandToRun is: " +commandToRun)
@@ -94,6 +95,11 @@ def runTerraformCommand(commandToRun, workingDir ):
           global azuredevops_organization_service_url
           azuredevops_organization_service_url=decodedline[39:]
           print("azuredevops_organization_service_url in deploymentFunctions.py is: ", azuredevops_organization_service_url)
+        if "azuredevops_key_vault_name" in decodedline:
+          print("Found azuredevops_key_vault_name!")
+          global azuredevops_key_vault_name
+          azuredevops_key_vault_name=decodedline[39:]
+          print("azuredevops_key_vault_name in deploymentFunctions.py is: ", azuredevops_key_vault_name)
       else:
         break
 
