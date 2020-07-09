@@ -12,8 +12,12 @@ resourceGroupName = ''
 resourceGroupLocation = ''
 storageAccountNameTerraformBackend = ''
 pipeKeyVaultName = ''
-azuredevops_project_name = ''
+azuredevops_build_definition_id = ''
+azuredevops_git_repository_id = ''
 azuredevops_git_repository_name = ''
+azuredevops_project_name = ''
+azuredevops_project_id = ''
+azuredevops_organization_service_url = ''
 
 def runTerraformCommand(commandToRun, workingDir ):
     print("Inside deploymentFunctions.py script and runTerraformCommand(..., ...) function. ")
@@ -65,17 +69,36 @@ def runTerraformCommand(commandToRun, workingDir ):
             global pipeKeyVaultName
             pipeKeyVaultName=decodedline[19:]
             print("pipeKeyVaultName in deploymentFunctions.py is: ", pipeKeyVaultName)
-
-          if "azuredevops_project_name" in decodedline:
-            print("Found azuredevops_project_name!")
-            global azuredevops_project_name
-            azuredevops_project_name=decodedline[27:]
-            print("azuredevops_project_name in deploymentFunctions.py is: ", azuredevops_project_name)
+          if "azuredevops_build_definition_id" in decodedline:
+            print("Found azuredevops_build_definition_id!")
+            global azuredevops_build_definition_id
+            azuredevops_build_definition_id=decodedline[27:]
+            print("azuredevops_build_definition_id in deploymentFunctions.py is: ", azuredevops_build_definition_id)
+          if "azuredevops_git_repository_id" in decodedline:
+            print("Found azuredevops_git_repository_id!")
+            global azuredevops_git_repository_id
+            azuredevops_git_repository_id=decodedline[27:]
+            print("azuredevops_git_repository_id in deploymentFunctions.py is: ", azuredevops_git_repository_id)
           if "azuredevops_git_repository_name" in decodedline:
             print("Found azuredevops_git_repository_name!")
             global azuredevops_git_repository_name
             azuredevops_git_repository_name=decodedline[34:]
             print("azuredevops_git_repository_name in deploymentFunctions.py is: ", azuredevops_git_repository_name)
+          if "azuredevops_project_id" in decodedline:
+            print("Found azuredevops_project_id!")
+            global azuredevops_project_id
+            azuredevops_project_id=decodedline[27:]
+            print("azuredevops_project_id in deploymentFunctions.py is: ", azuredevops_project_id)
+          if "azuredevops_project_name" in decodedline:
+            print("Found azuredevops_project_name!")
+            global azuredevops_project_name
+            azuredevops_project_name=decodedline[27:]
+            print("azuredevops_project_name in deploymentFunctions.py is: ", azuredevops_project_name)
+          if "azuredevops_organization_service_url" in decodedline:
+            print("Found azuredevops_organization_service_url!")
+            global azuredevops_organization_service_url
+            azuredevops_organization_service_url=decodedline[27:]
+            print("azuredevops_organization_service_url in deploymentFunctions.py is: ", azuredevops_organization_service_url)
       else:
         break
 
