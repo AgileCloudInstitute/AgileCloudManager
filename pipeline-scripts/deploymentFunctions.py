@@ -19,7 +19,10 @@ azuredevops_project_name = ''
 azuredevops_project_id = ''
 azuredevops_organization_service_url = ''
 azuredevops_key_vault_name = ''  
-  
+
+azuredevops_organization_name = azuredevops_organization_service_url.split("azure.com/",1)[1]
+azuredevops_organization_name = azuredevops_organization_name.replace("/","")
+
 def runTerraformCommand(commandToRun, workingDir ):
     print("Inside deploymentFunctions.py script and runTerraformCommand(..., ...) function. ")
     print("commandToRun is: " +commandToRun)
