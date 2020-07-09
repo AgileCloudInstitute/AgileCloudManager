@@ -14,10 +14,9 @@ getAzdoProjectRepoBuildAutoInputs=' -var-file='+pathToAzdoProjectRepoBuildAutoIn
 getAzdoProjectRepoBuildManualInputs=' -var-file='+pathToAzdoProjectRepoBuildManualInputs
 
 initCommand='terraform init'
-outputCommand='terraform output '
 
 pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
-outputProjectRepoBuildCommand=outputCommand+getAzdoProviderInputs+getAzdoProjectRepoBuildAutoInputs+getAzdoProjectRepoBuildManualInputs+getAzurermProviderInputs
+outputProjectRepoBuildCommand='terraform output '
 
 ##############################################################################################
 ### Step One: Get The Outpur Variables From the azure-pipelines-project-repo-build module
