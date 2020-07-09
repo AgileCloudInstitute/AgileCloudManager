@@ -40,3 +40,4 @@ output "azuredevops_git_repository_web_url" { value = azuredevops_git_repository
 output "azuredevops_project_name" { value = azuredevops_project.project.project_name }
 output "azuredevops_build_definition_id" { value = azuredevops_build_definition.build.id }
 output "azuredevops_organization_service_url" { value = var.azdoOrgServiceURL }
+output "azuredevops_key_vault_name" { value = var.pipeKeyVaultName }  
