@@ -32,3 +32,4 @@ print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_re
 print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
 print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
 print("depfunc.azuredevops_organization_service_url is: ", depfunc.azuredevops_organization_service_url)
+print("azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
