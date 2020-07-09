@@ -25,80 +25,75 @@ def runTerraformCommand(commandToRun, workingDir ):
     print("workingDir is: " +workingDir)
 
     proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, shell=True)
-    inOutputs='false'
     while True:
       line = proc.stdout.readline()
       if line:
         thetext=line.decode('utf-8').rstrip('\r|\n')
         decodedline=ansi_escape.sub('', thetext)
-     
         print(decodedline)
         if "Outputs:" in decodedline:  
           print("Reached \"Outputs\" section: ")
           print("decodedline is: " +decodedline)
-          inOutputs='true'
-        if 'true' in inOutputs:
-          if "storageAccountDiagName" in decodedline:
-            print("Found storageAccountDiagName!")
-            global storName
-            storName=decodedline[25:]
-            print("storName in deploymentFunctions.py is: ", storName)
-          if "nicName" in decodedline:
-            print("Found nicName!")
-            global nicName
-            nicName=decodedline[10:]
-            print("nicName in deploymentFunctions.py is: ", nicName)
-
-          if "pipes_resource_group_name" in decodedline:
-            print("Found resourceGroupName!")
-            global resourceGroupName
-            resourceGroupName=decodedline[28:]
-            print("resourceGroupName in deploymentFunctions.py is: ", resourceGroupName)
-          if "pipes_resource_group_region" in decodedline:
-            print("Found resourceGroupLocation!")
-            global resourceGroupLocation
-            resourceGroupLocation=decodedline[30:]
-            print("resourceGroupLocation in deploymentFunctions.py is: ", resourceGroupLocation)
-          if "pipes_storage_account_name" in decodedline:
-            print("Found storageAccountNameTerraformBackend!")
-            global storageAccountNameTerraformBackend
-            storageAccountNameTerraformBackend=decodedline[29:]
-            print("storageAccountNameTerraformBackend in deploymentFunctions.py is: ", storageAccountNameTerraformBackend)
-          if "pipeKeyVaultName" in decodedline:
-            print("Found pipeKeyVaultName!")
-            global pipeKeyVaultName
-            pipeKeyVaultName=decodedline[19:]
-            print("pipeKeyVaultName in deploymentFunctions.py is: ", pipeKeyVaultName)
-          if "azuredevops_build_definition_id" in decodedline:
-            print("Found azuredevops_build_definition_id!")
-            global azuredevops_build_definition_id
-            azuredevops_build_definition_id=decodedline[27:]
-            print("azuredevops_build_definition_id in deploymentFunctions.py is: ", azuredevops_build_definition_id)
-          if "azuredevops_git_repository_id" in decodedline:
-            print("Found azuredevops_git_repository_id!")
-            global azuredevops_git_repository_id
-            azuredevops_git_repository_id=decodedline[27:]
-            print("azuredevops_git_repository_id in deploymentFunctions.py is: ", azuredevops_git_repository_id)
-          if "azuredevops_git_repository_name" in decodedline:
-            print("Found azuredevops_git_repository_name!")
-            global azuredevops_git_repository_name
-            azuredevops_git_repository_name=decodedline[34:]
-            print("azuredevops_git_repository_name in deploymentFunctions.py is: ", azuredevops_git_repository_name)
-          if "azuredevops_project_id" in decodedline:
-            print("Found azuredevops_project_id!")
-            global azuredevops_project_id
-            azuredevops_project_id=decodedline[27:]
-            print("azuredevops_project_id in deploymentFunctions.py is: ", azuredevops_project_id)
-          if "azuredevops_project_name" in decodedline:
-            print("Found azuredevops_project_name!")
-            global azuredevops_project_name
-            azuredevops_project_name=decodedline[27:]
-            print("azuredevops_project_name in deploymentFunctions.py is: ", azuredevops_project_name)
-          if "azuredevops_organization_service_url" in decodedline:
-            print("Found azuredevops_organization_service_url!")
-            global azuredevops_organization_service_url
-            azuredevops_organization_service_url=decodedline[27:]
-            print("azuredevops_organization_service_url in deploymentFunctions.py is: ", azuredevops_organization_service_url)
+        if "storageAccountDiagName" in decodedline:
+          print("Found storageAccountDiagName!")
+          global storName
+          storName=decodedline[25:]
+          print("storName in deploymentFunctions.py is: ", storName)
+        if "nicName" in decodedline:
+          print("Found nicName!")
+          global nicName
+          nicName=decodedline[10:]
+          print("nicName in deploymentFunctions.py is: ", nicName)
+        if "pipes_resource_group_name" in decodedline:
+          print("Found resourceGroupName!")
+          global resourceGroupName
+          resourceGroupName=decodedline[28:]
+          print("resourceGroupName in deploymentFunctions.py is: ", resourceGroupName)
+        if "pipes_resource_group_region" in decodedline:
+          print("Found resourceGroupLocation!")
+          global resourceGroupLocation
+          resourceGroupLocation=decodedline[30:]
+          print("resourceGroupLocation in deploymentFunctions.py is: ", resourceGroupLocation)
+        if "pipes_storage_account_name" in decodedline:
+          print("Found storageAccountNameTerraformBackend!")
+          global storageAccountNameTerraformBackend
+          storageAccountNameTerraformBackend=decodedline[29:]
+          print("storageAccountNameTerraformBackend in deploymentFunctions.py is: ", storageAccountNameTerraformBackend)
+        if "pipeKeyVaultName" in decodedline:
+          print("Found pipeKeyVaultName!")
+          global pipeKeyVaultName
+          pipeKeyVaultName=decodedline[19:]
+          print("pipeKeyVaultName in deploymentFunctions.py is: ", pipeKeyVaultName)
+        if "azuredevops_build_definition_id" in decodedline:
+          print("Found azuredevops_build_definition_id!")
+          global azuredevops_build_definition_id
+          azuredevops_build_definition_id=decodedline[34:]
+          print("azuredevops_build_definition_id in deploymentFunctions.py is: ", azuredevops_build_definition_id)
+        if "azuredevops_git_repository_id" in decodedline:
+          print("Found azuredevops_git_repository_id!")
+          global azuredevops_git_repository_id
+          azuredevops_git_repository_id=decodedline[32:]
+          print("azuredevops_git_repository_id in deploymentFunctions.py is: ", azuredevops_git_repository_id)
+        if "azuredevops_git_repository_name" in decodedline:
+          print("Found azuredevops_git_repository_name!")
+          global azuredevops_git_repository_name
+          azuredevops_git_repository_name=decodedline[34:]
+          print("azuredevops_git_repository_name in deploymentFunctions.py is: ", azuredevops_git_repository_name)
+        if "azuredevops_project_id" in decodedline:
+          print("Found azuredevops_project_id!")
+          global azuredevops_project_id
+          azuredevops_project_id=decodedline[25:]
+          print("azuredevops_project_id in deploymentFunctions.py is: ", azuredevops_project_id)
+        if "azuredevops_project_name" in decodedline:
+          print("Found azuredevops_project_name!")
+          global azuredevops_project_name
+          azuredevops_project_name=decodedline[27:]
+          print("azuredevops_project_name in deploymentFunctions.py is: ", azuredevops_project_name)
+        if "azuredevops_organization_service_url" in decodedline:
+          print("Found azuredevops_organization_service_url!")
+          global azuredevops_organization_service_url
+          azuredevops_organization_service_url=decodedline[39:]
+          print("azuredevops_organization_service_url in deploymentFunctions.py is: ", azuredevops_organization_service_url)
       else:
         break
 
@@ -112,30 +107,3 @@ def changeLineInFile(fileName, searchTerm, valueToChange):
         if searchTerm in line:
             line = searchTerm+"=\""+valueToChange+"\"\n"
         sys.stdout.write(line)
-
-#def cloneSourceRepoToLocal(pathToTempRepoStorageParent, tmpRepoStorageFolder, sourceRepo):
-#  print("inside deploymentFunctions.py script and cloneSourceToLocal(...) function. ")
-#  newpath=pathToTempRepoStorageParent+tmpRepoStorageFolder
-#  print("Test 1")
-#  if not os.path.exists(newpath):
-#    os.makedirs(newpath)
-#  print("Test 2")
-#  cloneCommand='git clone --progress '+sourceRepo
-#  proc = subprocess.check_call(cloneCommand, stdout=subprocess.PIPE, shell=True, cwd=newpath, timeout=None)
-#  print("Test 3")
-	
-#def destroyLocalCloneOfSourceRepo(pathToTempRepoStorageParent, tmpRepoStorageFolder):
-#  print("inside deploymentFunctions.py script and destroyLocalCloneOfSourceRepo(...) function. ")
-#  newpath=pathToTempRepoStorageParent+tmpRepoStorageFolder
-#  print("newpath is: ", newpath)
-#  deleteCommand="rmdir "+newpath+" /Q/S"
-#  proc = subprocess.Popen( deleteCommand,cwd=pathToTempRepoStorageParent,stdout=subprocess.PIPE, shell=True)
-#  success='false'
-#  while True:
-#    line = proc.stdout.readline()
-#    if line:
-#      thetext=line.decode('utf-8').rstrip('\r|\n')
-#      decodedline=ansi_escape.sub('', thetext)
-#      print(decodedline)
-#    else:
-#      break
