@@ -64,13 +64,15 @@ print("---- About to get list of Agent Pool Job Queues ----")
 queuesData = getApiRequest(queues_url)
 print("---------------------------------------------------------")
 #Using index 0 here because queue_name should be a unique key that brings only one result in this response
-print("queueId is: ", queuesData['value'][0]['id'])  
+poolQueueId = queuesData['value'][0]['id']
+print("poolQueueId is: ", poolQueueId)  
+artifactAlias = "_" + azuredevops_git_repository_name
 
 
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, pq_id, artifact_alias):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -84,6 +86,15 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("name is: ", data['name'])
       data['name'] = 'Create AWS Simple Example'
       print("name is now: ", data['name'])
+      print("environment name is: ", data['environments'][0]['name'])
+      data['environments'][0]['name'] = 'Name of environment from user-supplied script'
+      print("environment name is now: ", data['environments'][0]['name'])
+      print("alias is: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
+      data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'] = artifact_alias
+      print("alias is now: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
+      print("queueId is: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
+      data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'] = pq_id
+      print("queueId is now: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
       print("---------------------------------------------------------")
       print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
       print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
@@ -95,7 +106,7 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("---------------------------------------------------------")
       data['artifacts'][0]['sourceId'] = azuredevops_project_id + ":1"
       data['artifacts'][0]['artifactSourceDefinitionUrl']['id'] = azuredevops_organization_service_url + azuredevops_project_name + "/_build?definitionId=" + str(azuredevops_build_definition_id)
-      data['artifacts'][0]['alias'] = "_" + azuredevops_git_repository_name
+      data['artifacts'][0]['alias'] = artifactAlias
       data['artifacts'][0]['definitionReference']['definition']['id'] = azuredevops_build_definition_id
       data['artifacts'][0]['definitionReference']['definition']['name'] = azuredevops_git_repository_name
       data['artifacts'][0]['definitionReference']['project']['id'] = azuredevops_project_id
@@ -114,5 +125,4 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("revised data is: ", data)
 
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url)
-
+createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias)
