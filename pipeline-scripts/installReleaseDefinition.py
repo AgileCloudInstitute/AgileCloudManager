@@ -57,7 +57,7 @@ def getApiRequest(url):
 api_version_p = "5.1-preview.1"
 queue_name = "Default"
 #GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
-queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (azuredevops_organization_name, azuredevops_project_id, queue_name, api_version_p))
+queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name, api_version_p))
 print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pool Job Queues ----")
 getApiRequest(queues_url)
