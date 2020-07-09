@@ -20,8 +20,15 @@ azuredevops_project_id = ''
 azuredevops_organization_service_url = ''
 azuredevops_key_vault_name = ''  
 
-azuredevops_organization_name_prep = azuredevops_organization_service_url.split("azure.com/",1)[1]
-azuredevops_organization_name = azuredevops_organization_name_prep.replace("/","")
+azuredevops_organization_name = ''
+
+def updateOrganizationName():
+    global azuredevops_organization_name
+    if len(azuredevops_organization_service_url) >2:  
+        azuredevops_organization_name_prep = azuredevops_organization_service_url.split("azure.com/",1)[1]
+        azuredevops_organization_name = azuredevops_organization_name_prep.replace("/","")
+    print("azuredevops_organization_name in deploymentFunctions.py is: ", azuredevops_organization_name)
+    #return azuredevops_organization_name
 
 def runTerraformCommand(commandToRun, workingDir ):
     print("Inside deploymentFunctions.py script and runTerraformCommand(..., ...) function. ")
@@ -98,6 +105,7 @@ def runTerraformCommand(commandToRun, workingDir ):
           global azuredevops_organization_service_url
           azuredevops_organization_service_url=decodedline[39:]
           print("azuredevops_organization_service_url in deploymentFunctions.py is: ", azuredevops_organization_service_url)
+          updateOrganizationName()
         if "azuredevops_key_vault_name" in decodedline:
           print("Found azuredevops_key_vault_name!")
           global azuredevops_key_vault_name
