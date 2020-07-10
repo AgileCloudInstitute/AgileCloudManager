@@ -56,6 +56,26 @@
           "workflowTasks":[
             {
               "environment":{},
+              "taskId":"1e244d32-2dd4-4165-96fb-b7441ca9331e",
+              "version":"1.*",
+              "name":"Azure Key Vault: testvlt789",
+              "refName":"",
+              "enabled":true,
+              "alwaysRun":false,
+              "continueOnError":false,
+              "timeoutInMinutes":0,
+              "definitionType":"task",
+              "overrideInputs":{},
+              "condition":"succeeded()",
+              "inputs":{
+                "ConnectedServiceName":"service-principal-goes-here",
+                "KeyVaultName":"testvlt789",
+                "SecretsFilter":"*",
+                "RunAsPreJob":"true"
+              }
+            },
+            {
+              "environment":{},
               "taskId":"6392f95f-7e76-4a18-b3c7-7f078d2f7700",
               "version":"0.*",
               "name":"Run a Python script",
