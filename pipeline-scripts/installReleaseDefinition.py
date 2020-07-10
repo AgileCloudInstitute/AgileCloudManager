@@ -89,12 +89,12 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("environment name is: ", data['environments'][0]['name'])
       data['environments'][0]['name'] = 'Name of environment from user-supplied script'
       print("environment name is now: ", data['environments'][0]['name'])
-      print("alias is: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
+      print("alias is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
       data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'] = artifact_alias
-      print("alias is now: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
-      print("queueId is: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
+      print("alias is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
+      print("queueId is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
       data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'] = pq_id
-      print("queueId is now: ", ['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
+      print("queueId is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
       print("---------------------------------------------------------")
       print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
       print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
@@ -119,6 +119,25 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("[\'artifacts\'][\'definitionReference\'][\'definition\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['definition']['name'])
       print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'id\'] is: ", data['artifacts'][0]['definitionReference']['project']['id'])
       print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['project']['name'])
+
+      print("-------------------------------------------------------------------")
+      myIdx = 0
+      for item in data['environments'][0]['deployPhases'][0]['workflowTasks']:
+          #print("item is: ", item)
+          print("item[taskId] is: ", item['taskId'])
+          print("name of task is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'])
+          if item['taskId'] == '6392f95f-7e76-4a18-b3c7-7f078d2f7700':
+            print("This is a Python script task. ")
+          if item['taskId'] == '6c731c3c-3c68-459a-a5c9-bde6e6595b5b':
+            print("This is a Bash script task. ")
+          if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
+            print("This is a Key Vault script task.  ")
+            print("ConnectedServiceName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'])
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = "CHANGED!!  YEAH!!"
+            print("KeyVaultName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'])
+          myIdx += 1
+      print("-------------------------------------------------------------------")
+
       print("---------------------------------------------------------")
       print("url is: ", url)
       print("---------------------------------------------------------")
