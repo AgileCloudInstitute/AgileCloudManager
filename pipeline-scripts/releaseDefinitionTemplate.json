@@ -97,30 +97,30 @@
                 "failOnStderr":"false"
               }
             },
-            {
-              "environment":{},
-              "taskId":"6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
-              "version":"3.*",
-              "name":"Bash Script",
-              "refName":"",
-              "enabled":true,
-              "alwaysRun":false,
-              "continueOnError":false,
-              "timeoutInMinutes":0,
-              "definitionType":"task",
-              "overrideInputs":{},
-              "condition":"succeeded()",
-              "inputs":{
-                "targetType":"inline",
-                "filePath":"",
-                "arguments":"",
-                "script":"####CREATE SCRIPT\n\necho 'Hello from inside the bash script. '  \n",
-                "workingDirectory":"",
-                "failOnStderr":"false",
-                "noProfile":"true",
-                "noRc":"true"
-              }
-            }
+						{
+							"environment":{},
+							"taskId":"6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+							"version":"3.*",
+							"name":"Bash Script",
+							"refName":"",
+							"enabled":true,
+							"alwaysRun":false,
+							"continueOnError":false,
+							"timeoutInMinutes":0,
+							"definitionType":"task",
+							"overrideInputs":{},
+							"condition":"succeeded()",
+							"inputs":{
+								"targetType":"filePath",
+								"filePath":"$(System.DefaultWorkingDirectory)/_terraform-aws-simple-example/drop/pipeline-scripts/bashExample.sh",
+								"arguments":"",
+								"script":"",
+								"workingDirectory":"",
+								"failOnStderr":"false",
+								"noProfile":"true",
+								"noRc":"true"
+							}
+						}
           ]
         }
       ],
