@@ -142,6 +142,9 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("url is: ", url)
       print("---------------------------------------------------------")
       print("revised data is: ", data)
-
+    r = requests.post(url, data=json.dumps(data), headers=headers)
+    print("r.status_code is: ", r.status_code)
+    print("r.json() is: ", r.json())
+    
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
 createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias)
