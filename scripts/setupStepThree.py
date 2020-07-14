@@ -172,6 +172,10 @@ def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProjectRepoBuild(...,...,...) function.")
     print("fileName is: ", fileName)
     for line in fileinput.input(fileName, inplace=True):
+        if "subscriptionName" in line:
+            line = "subscriptionName=\""+subscriptionName+"\""
+        if "clientName" in line:
+            line = "clientName=\""+clientName+"\""
         if "storageContainerNameTerraformBackend" in line:
             line = "storageContainerNameTerraformBackend=\""+storageContainerNameTerraformBackend+"\""
         if "awsPublicAccessKey" in line:
