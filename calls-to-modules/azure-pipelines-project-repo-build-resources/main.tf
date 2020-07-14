@@ -2,27 +2,30 @@
 module "azure-pipelines-project-repo-build-resources" {
   source = "../../modules/azure-pipelines-project-repo-build-resources"
 
-  subscriptionId                       = "${var.subscriptionId}"
-  tenantId                             = "${var.tenantId}"
-  clientId                             = "${var.clientId}"
-  clientSecret                         = "${var.clientSecret}"
-  storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"
-  storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"
-  pipeResourceGroupName                = "${var.pipeResourceGroupName}"
-  pipeKeyVaultName                     = "${var.pipeKeyVaultName}"
-  azdoOrgPAT                           = "${var.azdoOrgPAT}"
-  azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"
+  subscriptionName                     = "${var.subscriptionName}"  
+  subscriptionId                       = "${var.subscriptionId}"  
+  tenantId                             = "${var.tenantId}"  
+  clientId                             = "${var.clientId}"  
+  clientSecret                         = "${var.clientSecret}"  
+  storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"  
+  storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"  
+  pipeResourceGroupName                = "${var.pipeResourceGroupName}"  
+  pipeKeyVaultName                     = "${var.pipeKeyVaultName}"  
+  azdoOrgPAT                           = "${var.azdoOrgPAT}"  
+  azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"  
   sourceRepo                           = "${var.sourceRepo}"  
   projectName                          = "${var.projectName}"  
   repoName                             = "${var.repoName}"  
   buildName                            = "${var.buildName}"  
-  awsPublicAccessKey                   = "${var.awsPublicAccessKey}"
-  awsSecretAccessKey                   = "${var.awsSecretAccessKey}"
+  awsPublicAccessKey                   = "${var.awsPublicAccessKey}"  
+  awsSecretAccessKey                   = "${var.awsSecretAccessKey}"  
 }
 
-variable "subscriptionId" { }
-variable "tenantId" { }
+variable "subscriptionName" { }  
+variable "subscriptionId" { }  
+variable "tenantId" { }  
 #The client referred to is an App Registration we created for the subscription.
+variable "clientName" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "storageAccountNameTerraformBackend" { }
