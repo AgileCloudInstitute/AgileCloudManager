@@ -5,6 +5,7 @@ module "azure-pipelines-project-repo-build-resources" {
   subscriptionName                     = "${var.subscriptionName}"  
   subscriptionId                       = "${var.subscriptionId}"  
   tenantId                             = "${var.tenantId}"  
+  clientName                           = "${var.clientName}"  
   clientId                             = "${var.clientId}"  
   clientSecret                         = "${var.clientSecret}"  
   storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"  
