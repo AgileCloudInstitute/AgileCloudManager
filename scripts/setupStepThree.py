@@ -2,8 +2,10 @@ import fileinput
 import sys
 
 #Declare all the input variables
+subscriptionName=''
 subscriptionId=''
 tenantId=''
+clientName=''
 clientId=''
 clientSecret=''
 pipeAzureRegion=''
@@ -48,6 +50,10 @@ def loadDataFromFile(fileName):
 
     with open(fileName) as file_in:
       for line in file_in:
+        if 'subscriptionName' in line:
+            global subscriptionName
+            subscriptionName = getTheValue(line)
+            print("subscriptionName is: ", subscriptionName)
         if 'subscriptionId' in line:
             global subscriptionId
             subscriptionId = getTheValue(line)
@@ -56,6 +62,10 @@ def loadDataFromFile(fileName):
             global tenantId
             tenantId = getTheValue(line)
             print("tenantId is: ", tenantId)
+        if 'clientName' in line:
+            global clientName
+            clientName = getTheValue(line)
+            print("clientName is: ", clientName)
         if 'clientId' in line:
             global clientId
             clientId = getTheValue(line)
