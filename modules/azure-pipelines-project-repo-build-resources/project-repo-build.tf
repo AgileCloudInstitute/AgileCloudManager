@@ -19,8 +19,6 @@ resource "azuredevops_git_repository" "repository" {
   }
 }
 
-
-
 resource "azuredevops_build_definition" "build" {
   project_id = azuredevops_project.project.id
   name       = var.buildName
@@ -36,3 +34,17 @@ resource "azuredevops_build_definition" "build" {
     yml_path    = "azure-pipelines.yml"
   }
 }
+
+resource "azuredevops_serviceendpoint_azurerm" "endpointazure" {
+  project_id            = azuredevops_project.project.id
+  service_endpoint_name = var.clientName  
+  description = "Managed by Terraform" 
+  credentials {
+    serviceprincipalid  = var.clientId  
+    serviceprincipalkey = var.clientSecret  
+  }
+  azurerm_spn_tenantid      = var.tenantId  
+  azurerm_subscription_id   = var.subscriptionId  
+  azurerm_subscription_name = var.subscriptionName  
+}
+
