@@ -3,21 +3,23 @@
 ####################################################################################################################
 
 ###The following are for 2nd iteration
-variable "subscriptionId" { }
-variable "tenantId" { }
-#The client referred to is an App Registration we created for the subscription.
-variable "clientId" { }
-variable "clientSecret" { }
-variable "storageAccountNameTerraformBackend" { }
-variable "storageContainerNameTerraformBackend" { }
-variable "pipeResourceGroupName" { }
-variable "pipeKeyVaultName" { }
-variable "azdoOrgPAT" { }
-variable "azdoOrgServiceURL" { }
-variable "sourceRepo" { }
-variable "projectName" { }
-variable "repoName" { }
-variable "buildName" { }
+variable "subscriptionName" { }  
+variable "subscriptionId" { }  
+variable "tenantId" { }  
+#The client referred to is an App Registration we created for the subscription.  
+variable "clientName" { }  
+variable "clientId" { }  
+variable "clientSecret" { }  
+variable "storageAccountNameTerraformBackend" { }  
+variable "storageContainerNameTerraformBackend" { }  
+variable "pipeResourceGroupName" { }  
+variable "pipeKeyVaultName" { }  
+variable "azdoOrgPAT" { }  
+variable "azdoOrgServiceURL" { }  
+variable "sourceRepo" { }  
+variable "projectName" { }  
+variable "repoName" { }  
+variable "buildName" { }  
 #Keeping the next two because we will add secrets definition later.  For now, the secrets have already been entered into the key vault.
 variable "awsPublicAccessKey" { }
 variable "awsSecretAccessKey" { }
