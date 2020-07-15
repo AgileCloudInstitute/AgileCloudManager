@@ -59,7 +59,7 @@ api_version = "5.1"
 #Get a list of agent pools.
 #agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?api-version=%s" % (azuredevops_organization_name, api_version))
 poolName="Default"
-agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?poolName=%s&api-version=%s" % (azuredevops_organization_name, poolName, api_version))
+agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?poolName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, poolName, api_version))
 
 print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pools ----")
