@@ -94,10 +94,9 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("alias is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
       data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'] = artifact_alias
       print("alias is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
-      print("agentId is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['agentId'])
-      data['environments'][0]['deployPhases'][0]['deploymentInput']['agentId'] = 9
-      #pl_id
-      print("agentId is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['agentId'])
+      print("poolId is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['poolId'])
+      data['environments'][0]['deployPhases'][0]['deploymentInput']['poolId'] = pl_id
+      print("poolId is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['poolId'])
       print("---------------------------------------------------------")
       print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
       print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
