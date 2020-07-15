@@ -41,7 +41,7 @@
                   }
                 ]
               },
-              "agentId": "get-from-api-call",
+              "poolId": "get-from-api-call",
               "demands":[],
               "enableAccessToken":false,
               "timeoutInMinutes":0,
