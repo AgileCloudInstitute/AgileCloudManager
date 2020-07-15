@@ -42,9 +42,9 @@ print("azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
 print("azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
 
 ##############################################################################################
-### Step Two: Get The queueId from the agent pool that will be used by the release definition.
+### Step Two: Get The poolId from the agent pool that will be used by the release definition.
 ##############################################################################################
-def getApiRequest(url):
+def getApiRequest(url):  
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -149,4 +149,4 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
     print("r.json() is: ", r.json())
     
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias)
+createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolId, artifactAlias)
