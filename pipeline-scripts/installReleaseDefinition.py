@@ -53,26 +53,27 @@ def getApiRequest(url):
     print("r.status_code is: ", r.status_code)
     #Add some better error handling here to handle various response codes.  We are assuming that a 200 response is received in order to continue here.  
     return r.json()
-  
-#Get the Agent Pool Queues whose name matches the search criteria.  This should only be one queue because name should be a unique key.  
-api_version_p = "5.1-preview.1"
-queue_name = "Default"
-#GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
-queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name, api_version_p))
-print("-------------------------------------------------------------")
-print("---- About to get list of Agent Pool Job Queues ----")
-queuesData = getApiRequest(queues_url)
-print("---------------------------------------------------------")
-#Using index 0 here because queue_name should be a unique key that brings only one result in this response
-poolQueueId = queuesData['value'][0]['id']
-print("poolQueueId is: ", poolQueueId)  
-artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 
+#Set variables to be shared across API calls.  These will be imported from terraform output variables.
+api_version = "5.1"
+#Get a list of agent pools.
+#agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?api-version=%s" % (azuredevops_organization_name, api_version))
+poolName="Default"
+agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?poolName=%s&api-version=%s" % (azuredevops_organization_name, poolName, api_version))
+
+print("-------------------------------------------------------------")
+print("---- About to get list of Agent Pools ----")
+poolsData = getApiRequest(agentpools_url)
+print("---------------------------------------------------------")
+#Using index 0 here because pool_name should be a unique key that brings only one result in this response
+poolId = poolsData['value'][0]['id']
+print("poolId is: ", poolId)  
+artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, pq_id, artifact_alias):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, pl_id, artifact_alias):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -92,9 +93,9 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("alias is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
       data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'] = artifact_alias
       print("alias is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
-      print("queueId is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
-      data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'] = pq_id
-      print("queueId is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
+      print("poolId is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['poolId'])
+      data['environments'][0]['deployPhases'][0]['deploymentInput']['poolId'] = pl_id
+      print("poolId is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['poolId'])
       print("---------------------------------------------------------")
       print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
       print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
