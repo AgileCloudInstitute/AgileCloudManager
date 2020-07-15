@@ -64,6 +64,7 @@ agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?poolName
 print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pools ----")
 poolsData = getApiRequest(agentpools_url)
+print("poolsData is: ", poolsData)
 print("---------------------------------------------------------")
 #Using index 0 here because pool_name should be a unique key that brings only one result in this response
 poolId = poolsData['value'][0]['id']
