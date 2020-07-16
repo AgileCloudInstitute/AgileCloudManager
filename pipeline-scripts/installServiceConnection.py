@@ -93,9 +93,9 @@ def createServiceConnectionApiRequest(templateFile, azdo_organization_name, azdo
       print("url is: ", url)
       print("---------------------------------------------------------")
       print("revised data is: ", data)
-    #r = requests.post(url, data=json.dumps(data), headers=headers)
-    #print("r.status_code is: ", r.status_code)
-    #print("r.json() is: ", r.json())
+    r = requests.post(url, data=json.dumps(data), headers=headers)
+    print("r.status_code is: ", r.status_code)
+    print("r.json() is: ", r.json())
     
 jsonTemplateFile = 'serviceConnectionTemplate.json'
 createServiceConnectionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_name)
