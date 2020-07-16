@@ -10,6 +10,7 @@ variable "tenantId" { }
 variable "clientName" { }  
 variable "clientId" { }  
 variable "clientSecret" { }  
+variable "serviceConnectionName" { } 
 variable "storageAccountNameTerraformBackend" { }  
 variable "storageContainerNameTerraformBackend" { }  
 variable "pipeResourceGroupName" { }  
@@ -43,3 +44,6 @@ output "azuredevops_project_name" { value = azuredevops_project.project.project_
 output "azuredevops_build_definition_id" { value = azuredevops_build_definition.build.id }
 output "azuredevops_organization_service_url" { value = var.azdoOrgServiceURL }
 output "azuredevops_key_vault_name" { value = var.pipeKeyVaultName }  
+output "azuredevops_subscription_name" { value = var.subscriptionName }  
+output "azuredevops_client_name" { value = var.clientName }  
+output "azuredevops_service_connection_name" { value = var.serviceConnectionName }  
