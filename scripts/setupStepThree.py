@@ -8,6 +8,7 @@ tenantId=''
 clientName=''
 clientId=''
 clientSecret=''
+serviceConnectionName=''
 pipeAzureRegion=''
 storageAccountNameTerraformBackend=''
 storageContainerNameTerraformBackend=''
@@ -74,6 +75,10 @@ def loadDataFromFile(fileName):
             global clientSecret
             clientSecret = getTheValue(line)
             print("clientSecret is: ", clientSecret)
+        if 'serviceConnectionName' in line:
+            global serviceConnectionName
+            serviceConnectionName = getTheValue(line)
+            print("serviceConnectionName is: ", serviceConnectionName)
         if 'pipeAzureRegion' in line:
             global pipeAzureRegion
             pipeAzureRegion = getTheValue(line)
@@ -176,6 +181,8 @@ def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
             line = "subscriptionName=\""+subscriptionName+"\""
         if "clientName" in line:
             line = "clientName=\""+clientName+"\""
+        if "serviceConnectionName" in line:
+            line = "serviceConnectionName=\""+serviceConnectionName+"\""
         if "storageContainerNameTerraformBackend" in line:
             line = "storageContainerNameTerraformBackend=\""+storageContainerNameTerraformBackend+"\""
         if "awsPublicAccessKey" in line:
