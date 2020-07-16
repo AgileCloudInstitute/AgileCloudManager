@@ -59,3 +59,6 @@ output "azuredevops_project_name" { value = "${module.azure-pipelines-project-re
 output "azuredevops_build_definition_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_build_definition_id}" }  
 output "azuredevops_organization_service_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_organization_service_url}" }  
 output "azuredevops_key_vault_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_key_vault_name}" }  
+output "azuredevops_subscription_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_subscription_name}" }  
+output "azuredevops_client_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_client_name}" }  
+output "azuredevops_service_connection_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_service_connection_name}" }  
