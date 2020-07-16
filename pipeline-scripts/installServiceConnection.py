@@ -63,6 +63,28 @@ def createServiceConnectionApiRequest(templateFile, azdo_organization_name, azdo
       print("data[serviceEndpointProjectReferences][0][projectReference][id] is: ", data['serviceEndpointProjectReferences'][0]['projectReference']['id'])
       print("data[serviceEndpointProjectReferences][0][projectReference][name] is: ", data['serviceEndpointProjectReferences'][0]['projectReference']['name'])
       print("---------------------------------------------------------")
+      print("About to reset the variable values.")
+      data['authorization']['parameters']['serviceprincipalid'] = service_principal_id
+      data['authorization']['parameters']['serviceprincipalkey'] = service_principal_key
+      data['authorization']['parameters']['tenantid'] = tenant_id
+      data['description'] = "Service Connection Managed by Terraform"
+      data['name'] = depfunc.azuredevops_service_connection_name
+      data['serviceEndpointProjectReferences'][0]['description'] = "Project reference managed by Terraform."  
+      data['serviceEndpointProjectReferences'][0]['name'] = depfunc.azuredevops_service_connection_name
+      data['serviceEndpointProjectReferences'][0]['projectReference']['id'] = depfunc.azuredevops_project_id 
+      data['serviceEndpointProjectReferences'][0]['projectReference']['name'] = depfunc.azuredevops_project_name
+
+      print("---------------------------------------------------------")
+      print("revised data[authorization][parameters][serviceprincipalid] is: ", data['authorization']['parameters']['serviceprincipalid'])
+      print("revised data[authorization][parameters][serviceprincipalkey] is: ", data['authorization']['parameters']['serviceprincipalkey'])
+      print("revised data[authorization][parameters][tenantid] is: ", data['authorization']['parameters']['tenantid'])
+      print("revised data[description] is: ", data['description'])
+      print("revised data[name] is: ", data['name'])
+      print("revised data[serviceEndpointProjectReferences][0][description] is: ", data['serviceEndpointProjectReferences'][0]['description'])
+      print("revised data[serviceEndpointProjectReferences][0][name] is: ", data['serviceEndpointProjectReferences'][0]['name'])
+      print("revised data[serviceEndpointProjectReferences][0][projectReference][id] is: ", data['serviceEndpointProjectReferences'][0]['projectReference']['id'])
+      print("revised data[serviceEndpointProjectReferences][0][projectReference][name] is: ", data['serviceEndpointProjectReferences'][0]['projectReference']['name'])
+      print("---------------------------------------------------------")
       print("url is: ", url)
       print("---------------------------------------------------------")
       #print("revised data is: ", data)
