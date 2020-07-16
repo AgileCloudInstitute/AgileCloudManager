@@ -6,6 +6,7 @@ tenantId=
 clientName=
 clientId=
 clientSecret=
+serviceConnectionName=
 pipeAzureRegion=
 storageAccountNameTerraformBackend=
 storageContainerNameTerraformBackend=
