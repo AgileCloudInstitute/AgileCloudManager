@@ -8,6 +8,7 @@ module "azure-pipelines-project-repo-build-resources" {
   clientName                           = "${var.clientName}"  
   clientId                             = "${var.clientId}"  
   clientSecret                         = "${var.clientSecret}"  
+  serviceConnectionName                = "${var.serviceConnectionName}"  
   storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"  
   storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"  
   pipeResourceGroupName                = "${var.pipeResourceGroupName}"  
@@ -29,6 +30,7 @@ variable "tenantId" { }
 variable "clientName" { }
 variable "clientId" { }
 variable "clientSecret" { }
+variable "serviceConnectionName" { }
 variable "storageAccountNameTerraformBackend" { }
 variable "storageContainerNameTerraformBackend" { }
 variable "pipeResourceGroupName" { }
