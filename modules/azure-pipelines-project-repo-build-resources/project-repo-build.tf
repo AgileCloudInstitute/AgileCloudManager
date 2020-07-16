@@ -35,18 +35,18 @@ resource "azuredevops_build_definition" "build" {
   }
 }
 
-resource "azuredevops_serviceendpoint_azurerm" "endpointazure" {
-  project_id            = azuredevops_project.project.id
-  service_endpoint_name = var.clientName  
-  description = "Managed by Terraform" 
-  credentials {
-    serviceprincipalid  = var.clientId  
-    serviceprincipalkey = var.clientSecret  
-  }
-  azurerm_spn_tenantid      = var.tenantId  
-  azurerm_subscription_id   = var.subscriptionId  
-  azurerm_subscription_name = var.subscriptionName  
-}
+#resource "azuredevops_serviceendpoint_azurerm" "endpointazure" {
+#  project_id            = azuredevops_project.project.id
+#  service_endpoint_name = var.clientName  
+#  description = "Managed by Terraform" 
+#  credentials {
+#    serviceprincipalid  = var.clientId  
+#    serviceprincipalkey = var.clientSecret  
+#  }
+#  azurerm_spn_tenantid      = var.tenantId  
+#  azurerm_subscription_id   = var.subscriptionId  
+#  azurerm_subscription_name = var.subscriptionName  
+#}
 
 #The following version is what the documentation calls "automated".  We are commenting this out because we want to pass in one that already has permissions as above.
 #resource "azuredevops_serviceendpoint_azurerm" "endpointazure" {
