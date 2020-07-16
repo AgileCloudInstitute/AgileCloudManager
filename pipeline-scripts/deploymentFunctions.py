@@ -19,6 +19,9 @@ azuredevops_project_name = ''
 azuredevops_project_id = ''
 azuredevops_organization_service_url = ''
 azuredevops_key_vault_name = ''  
+azuredevops_subscription_name = ''    
+azuredevops_client_name = ''    
+azuredevops_service_connection_name = ''    
 
 azuredevops_organization_name = ''
 
@@ -111,6 +114,21 @@ def runTerraformCommand(commandToRun, workingDir ):
           global azuredevops_key_vault_name
           azuredevops_key_vault_name=decodedline[39:]
           print("azuredevops_key_vault_name in deploymentFunctions.py is: ", azuredevops_key_vault_name)
+        if "azuredevops_subscription_name" in decodedline:
+          print("Found azuredevops_subscription_name!")
+          global azuredevops_subscription_name
+          azuredevops_subscription_name=decodedline[39:]
+          print("azuredevops_subscription_name in deploymentFunctions.py is: ", azuredevops_subscription_name)
+        if "azuredevops_client_name" in decodedline:
+          print("Found azuredevops_client_name!")
+          global azuredevops_client_name
+          azuredevops_client_name=decodedline[39:]
+          print("azuredevops_client_name in deploymentFunctions.py is: ", azuredevops_client_name)
+        if "azuredevops_service_connection_name" in decodedline:
+          print("Found azuredevops_service_connection_name!")
+          global azuredevops_service_connection_name
+          azuredevops_service_connection_name=decodedline[39:]
+          print("azuredevops_service_connection_name in deploymentFunctions.py is: ", azuredevops_service_connection_name)
       else:
         break
 
