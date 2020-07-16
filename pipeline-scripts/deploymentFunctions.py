@@ -118,22 +118,22 @@ def runTerraformCommand(commandToRun, workingDir ):
         if "azuredevops_subscription_name" in decodedline:
           print("Found azuredevops_subscription_name!")
           global azuredevops_subscription_name
-          azuredevops_subscription_name=decodedline[39:]
+          azuredevops_subscription_name=decodedline[32:]
           print("azuredevops_subscription_name in deploymentFunctions.py is: ", azuredevops_subscription_name)
         if "azuredevops_subscription_id" in decodedline:
           print("Found azuredevops_subscription_id!")
           global azuredevops_subscription_id
-          azuredevops_subscription_id=decodedline[39:]
+          azuredevops_subscription_id=decodedline[30:]
           print("azuredevops_subscription_id in deploymentFunctions.py is: ", azuredevops_subscription_id)
         if "azuredevops_client_name" in decodedline:
           print("Found azuredevops_client_name!")
           global azuredevops_client_name
-          azuredevops_client_name=decodedline[39:]
+          azuredevops_client_name=decodedline[26:]
           print("azuredevops_client_name in deploymentFunctions.py is: ", azuredevops_client_name)
         if "azuredevops_service_connection_name" in decodedline:
           print("Found azuredevops_service_connection_name!")
           global azuredevops_service_connection_name
-          azuredevops_service_connection_name=decodedline[39:]
+          azuredevops_service_connection_name=decodedline[38:]
           print("azuredevops_service_connection_name in deploymentFunctions.py is: ", azuredevops_service_connection_name)
       else:
         break
