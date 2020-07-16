@@ -6,7 +6,7 @@ import json
 import deploymentFunctions as depfunc  
   
 initCommand='terraform init'
-
+  
 pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
 outputProjectRepoBuildCommand='terraform output '
 
@@ -56,6 +56,8 @@ def createServiceConnectionApiRequest(templateFile, azdo_organization_name, azdo
       print("data[authorization][parameters][serviceprincipalid] is: ", data['authorization']['parameters']['serviceprincipalid'])
       print("data[authorization][parameters][serviceprincipalkey] is: ", data['authorization']['parameters']['serviceprincipalkey'])
       print("data[authorization][parameters][tenantid] is: ", data['authorization']['parameters']['tenantid'])
+      print("data['data']['subscriptionId'] is: ", data['data']['subscriptionId']) 
+      print("data['data']['subscriptionName'] is: ", data['data']['subscriptionName'])
       print("data[description] is: ", data['description'])
       print("data[name] is: ", data['name'])
       print("data[serviceEndpointProjectReferences][0][description] is: ", data['serviceEndpointProjectReferences'][0]['description'])
@@ -67,17 +69,20 @@ def createServiceConnectionApiRequest(templateFile, azdo_organization_name, azdo
       data['authorization']['parameters']['serviceprincipalid'] = service_principal_id
       data['authorization']['parameters']['serviceprincipalkey'] = service_principal_key
       data['authorization']['parameters']['tenantid'] = tenant_id
+      data['data']['subscriptionId'] = depfunc.azuredevops_subscription_id
+      data['data']['subscriptionName'] = depfunc.azuredevops_subscription_name
       data['description'] = "Service Connection Managed by Terraform"
       data['name'] = depfunc.azuredevops_service_connection_name
       data['serviceEndpointProjectReferences'][0]['description'] = "Project reference managed by Terraform."  
       data['serviceEndpointProjectReferences'][0]['name'] = depfunc.azuredevops_service_connection_name
       data['serviceEndpointProjectReferences'][0]['projectReference']['id'] = depfunc.azuredevops_project_id 
       data['serviceEndpointProjectReferences'][0]['projectReference']['name'] = depfunc.azuredevops_project_name
-
       print("---------------------------------------------------------")
       print("revised data[authorization][parameters][serviceprincipalid] is: ", data['authorization']['parameters']['serviceprincipalid'])
       print("revised data[authorization][parameters][serviceprincipalkey] is: ", data['authorization']['parameters']['serviceprincipalkey'])
       print("revised data[authorization][parameters][tenantid] is: ", data['authorization']['parameters']['tenantid'])
+      print("revised data['data']['subscriptionId'] is: ", data['data']['subscriptionId'])
+      print("revised data['data']['subscriptionName'] is: ", data['data']['subscriptionName'])
       print("revised data[description] is: ", data['description'])
       print("revised data[name] is: ", data['name'])
       print("revised data[serviceEndpointProjectReferences][0][description] is: ", data['serviceEndpointProjectReferences'][0]['description'])
