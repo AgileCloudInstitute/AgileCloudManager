@@ -21,32 +21,23 @@ print("Back in installServiceConnection.py .")
 print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
 print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
 print("depfunc.azuredevops_organization_service_url is: ", depfunc.azuredevops_organization_service_url)
-print("azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
+print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
+print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
+print("depfunc.azuredevops_subscription_id is: ", depfunc.azuredevops_subscription_id)
+print("depfunc.azuredevops_client_name is: ", depfunc.azuredevops_client_name)
+print("depfunc.azuredevops_service_connection_name is: ", depfunc.azuredevops_service_connection_name)
+
 
 ####Integrate all of the following variables into the preceding output processing from the terraform output.  
-###//azuredevops_project_id = ""
-###//azuredevops_project_name = ""
-###//azuredevops_organization_service_url = ""
-###//azuredevops_organization_name = azuredevops_organization_service_url.split("azure.com/",1)[1]
-###//azuredevops_organization_name = azuredevops_organization_name.replace("/","")
-###//..service_principal_id = ""
-###//..service_principal_name = "" 
-###//..service_connection_name = ""
-###//..tenant_id = "" 
-###//..subscription_id = ""
-###//..subscription_name = ""
+service_principal_id = os.environ["AZ_CLIENT"]
+service_principal_key = os.environ["AZ_PASS"]
+tenant_id = os.environ["AZ_TENANT"]
 
-###print("azuredevops_project_id is: ", azuredevops_project_id)
-###print("azuredevops_project_name is: ", azuredevops_project_name)
-###print("azuredevops_organization_service_url is: ", azuredevops_organization_service_url)
-###print("azuredevops_organization_name is: ", azuredevops_organization_name)
-###print("service_principal_id is: ", service_principal_id)
-###print("service_principal_name is: ", service_principal_name)
-###print("service_connection_name is: ", service_connection_name)
-###print("tenant_id is: ", tenant_id)
-###print("subscription_id is: ", subscription_id)
-###print("subscription_name is: ", subscription_name)
+print("service_principal_id is: ", service_principal_id)
+print("service_principal_key is: ", service_principal_key)
+print("tenant_id is: ", tenant_id)
 
+   
 ##############################################################################################
 ### Step Two: Create Service Connection By Making API Call.
 ##############################################################################################
@@ -67,10 +58,10 @@ def createServiceConnectionApiRequest(templateFile, azdo_organization_name, azdo
       print("data[authorization][parameters][tenantid] is: ", data['authorization']['parameters']['tenantid'])
       print("data[description] is: ", data['description'])
       print("data[name] is: ", data['name'])
-      print("data[serviceEndpointProjectReferences][0][description] is: ", data['serviceEndpointProjectReferences'][0]['description'])
-      print("data[serviceEndpointProjectReferences][0][name] is: ", data['serviceEndpointProjectReferences'][0]['name'])
-      print("data[serviceEndpointProjectReferences][0][projectReference][id] is: ", data['serviceEndpointProjectReferences'][0]['projectReference']['id'])
-      print("data[serviceEndpointProjectReferences][0][projectReference][name] is: ", data['serviceEndpointProjectReferences'][0]['projectReference']['name'])
+      print("data[serviceEndpointProjectReferences][description] is: ", data['serviceEndpointProjectReferences']['description'])
+      print("data[serviceEndpointProjectReferences][name] is: ", data['serviceEndpointProjectReferences']['name'])
+      print("data[serviceEndpointProjectReferences][projectReference][id] is: ", data['serviceEndpointProjectReferences']['projectReference']['id'])
+      print("data[serviceEndpointProjectReferences][projectReference][name] is: ", data['serviceEndpointProjectReferences']['projectReference']['name'])
       print("---------------------------------------------------------")
       print("url is: ", url)
       print("---------------------------------------------------------")
