@@ -63,3 +63,5 @@ output "azuredevops_subscription_name" { value = "${module.azure-pipelines-proje
 output "azuredevops_subscription_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_subscription_id}" }  
 output "azuredevops_client_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_client_name}" }  
 output "azuredevops_service_connection_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_service_connection_name}" }  
+
+output "azuredevops_service_connection_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_service_connection_id}" }  
