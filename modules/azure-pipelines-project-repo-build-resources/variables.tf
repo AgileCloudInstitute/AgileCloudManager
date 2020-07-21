@@ -48,3 +48,6 @@ output "azuredevops_subscription_name" { value = var.subscriptionName }
 output "azuredevops_subscription_id" { value = var.subscriptionId }  
 output "azuredevops_client_name" { value = var.clientName }  
 output "azuredevops_service_connection_name" { value = var.serviceConnectionName }  
+
+output "azuredevops_service_connection_id" { value = azuredevops_serviceendpoint_azurerm.endpointazure.id }
+
