@@ -148,8 +148,7 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
           if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
             print("This is a Key Vault script task.  ")
             print("ConnectedServiceName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'])
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = "ThirdIterationInfra"
-            #os.environ["AZ_CLIENT"]
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = os.environ["AZ_CLIENT"]
             print("KeyVaultName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'])
           myIdx += 1
       print("-------------------------------------------------------------------")
