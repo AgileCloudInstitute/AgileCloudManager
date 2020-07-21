@@ -89,7 +89,7 @@ artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id, scriptInputVars):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -145,8 +145,12 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
           print("name of task is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'])
           if item['taskId'] == '6392f95f-7e76-4a18-b3c7-7f078d2f7700':
             print("This is a Python script task. ")
+            print("About to set the variables to be imported into the script.")
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['arguments'] = scriptInputVars            
           if item['taskId'] == '6c731c3c-3c68-459a-a5c9-bde6e6595b5b':
             print("This is a Bash script task. ")
+            print("About to set the variables to be imported into the script.")
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['arguments'] = scriptInputVars            
           if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
             print("This is a Key Vault script task.  ")
             print("ConnectedServiceName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'])
@@ -164,4 +168,5 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
     print("r.json() is: ", r.json())
     
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id)
+myScriptInputVars = "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)"
+createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id, myScriptInputVars)
