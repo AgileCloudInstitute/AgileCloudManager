@@ -38,8 +38,10 @@ print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
 print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
 print("depfunc.azuredevops_organization_service_url is: ", depfunc.azuredevops_organization_service_url)
 
-print("azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
-print("azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
+print("depfunc.azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
+print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
+
+print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_service_connection_id)
 
 ##############################################################################################
 ### Step Two: Get The poolId from the agent pool that will be used by the release definition.
@@ -87,7 +89,7 @@ artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -148,7 +150,7 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
           if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
             print("This is a Key Vault script task.  ")
             print("ConnectedServiceName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'])
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = os.environ["AZ_CLIENT"]
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = azdo_service_connection_id
             print("KeyVaultName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'])
           myIdx += 1
       print("-------------------------------------------------------------------")
@@ -162,4 +164,4 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
     print("r.json() is: ", r.json())
     
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias)
+createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id)
