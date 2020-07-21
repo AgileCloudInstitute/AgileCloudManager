@@ -23,6 +23,7 @@ azuredevops_subscription_name = ''
 azuredevops_subscription_id = ''
 azuredevops_client_name = ''    
 azuredevops_service_connection_name = ''    
+azuredevops_service_connection_id = ''  
 
 azuredevops_organization_name = ''
 
@@ -135,6 +136,12 @@ def runTerraformCommand(commandToRun, workingDir ):
           global azuredevops_service_connection_name
           azuredevops_service_connection_name=decodedline[38:]
           print("azuredevops_service_connection_name in deploymentFunctions.py is: ", azuredevops_service_connection_name)
+azuredevops_service_connection_id
+        if "azuredevops_service_connection_id" in decodedline:
+          print("Found azuredevops_service_connection_id!")
+          global azuredevops_service_connection_id
+          azuredevops_service_connection_id=decodedline[38:]
+          print("azuredevops_service_connection_id in deploymentFunctions.py is: ", azuredevops_service_connection_id)
       else:
         break
 
