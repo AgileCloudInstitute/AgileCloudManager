@@ -183,6 +183,8 @@ def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
             line = "clientName=\""+clientName+"\""
         if "serviceConnectionName" in line:
             line = "serviceConnectionName=\""+serviceConnectionName+"\""
+        if "storageAccountNameTerraformBackend" in line:
+            line = "storageAccountNameTerraformBackend=\""+storageAccountNameTerraformBackend+"\""
         if "storageContainerNameTerraformBackend" in line:
             line = "storageContainerNameTerraformBackend=\""+storageContainerNameTerraformBackend+"\""
         if "awsPublicAccessKey" in line:
