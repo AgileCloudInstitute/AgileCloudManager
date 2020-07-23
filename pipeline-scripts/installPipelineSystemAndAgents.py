@@ -65,15 +65,21 @@ print("Back in installPipelineSystem.py .")
 
 #### Next create the auto output for the project-repo-build input file:
 
-print("storageAccountNameTerraformBackend in installPipelineSystem.py is: ", depfunc.storageAccountNameTerraformBackend)
-valueToChange=depfunc.storageAccountNameTerraformBackend
-searchTermAgentInputs="storageAccountNameTerraformBackend"
+print("pipeSubnetId in installPipelineSystem.py is: ", depfunc.pipeSubnetId)
+valueToChange=depfunc.pipeSubnetId
+searchTermAgentInputs="pipeSubnetId"
 depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
 print("Back in installPipelineSystem.py .")
 
 print("pipeResourceGroupName in installPipelineSystem.py is: ", depfunc.resourceGroupName)
 valueToChange=depfunc.resourceGroupName
 searchTermAgentInputs="pipeResourceGroupName"
+depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
+print("Back in installPipelineSystem.py .")
+
+print("pipeResourceGroupRegion in installPipelineSystem.py is: ", depfunc.resourceGroupLocation)
+valueToChange=depfunc.resourceGroupLocation
+searchTermAgentInputs="pipeResourceGroupRegion"
 depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
 print("Back in installPipelineSystem.py .")
 
