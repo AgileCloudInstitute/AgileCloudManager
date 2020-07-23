@@ -1,3 +1,2 @@
 ### Input Variables
-storageAccountNameTerraformBackend = ""
 pipeAzureRegion      = ""
