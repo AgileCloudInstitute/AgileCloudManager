@@ -1,10 +1,9 @@
 #The terraform backend will be located in this storage container, which will be placed in the imported storage account.
 
 resource "azurerm_storage_account" "terraformBknd" {
-  name                = var.storageAccountNameTerraformBackend
-  resource_group_name = var.pipeResourceGroupName
-
-  location                 = ??
+  name                     = var.storageAccountNameTerraformBackend
+  resource_group_name      = var.pipeResourceGroupName
+  location                 = var.pipeResourceGroupRegion
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
@@ -12,7 +11,7 @@ resource "azurerm_storage_account" "terraformBknd" {
     #CHANGE THE FOLLOWING TO "Deny" FOR PRODUCTION.
     default_action             = "Allow"
     #ip_rules                   = [var.myRemoteIP, azurerm_public_ip.myterraformpublicip.ip_address]
-    virtual_network_subnet_ids = [??]
+    virtual_network_subnet_ids = [var.pipeSubnetId]
   }
 
   tags = {
