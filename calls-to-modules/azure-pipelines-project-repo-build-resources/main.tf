@@ -11,6 +11,8 @@ module "azure-pipelines-project-repo-build-resources" {
   serviceConnectionName                = "${var.serviceConnectionName}"  
   storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"  
   storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"  
+  pipeSubnetId                         = "${var.pipeSubnetId}"
+  pipeResourceGroupRegion              = "${var.pipeResourceGroupRegion}"
   pipeResourceGroupName                = "${var.pipeResourceGroupName}"  
   pipeKeyVaultName                     = "${var.pipeKeyVaultName}"  
   azdoOrgPAT                           = "${var.azdoOrgPAT}"  
@@ -33,6 +35,8 @@ variable "clientSecret" { }
 variable "serviceConnectionName" { }
 variable "storageAccountNameTerraformBackend" { }
 variable "storageContainerNameTerraformBackend" { }
+variable "pipeSubnetId" { }
+variable "pipeResourceGroupRegion" { }
 variable "pipeResourceGroupName" { }
 variable "pipeKeyVaultName" { }
 variable "azdoOrgPAT" { }
