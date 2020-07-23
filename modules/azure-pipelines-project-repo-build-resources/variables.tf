@@ -13,6 +13,8 @@ variable "clientSecret" { }
 variable "serviceConnectionName" { } 
 variable "storageAccountNameTerraformBackend" { }  
 variable "storageContainerNameTerraformBackend" { }  
+variable "pipeSubnetId" { }  
+variable "pipeResourceGroupRegion" { }  
 variable "pipeResourceGroupName" { }  
 variable "pipeKeyVaultName" { }  
 variable "azdoOrgPAT" { }  
