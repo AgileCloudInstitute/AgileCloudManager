@@ -155,8 +155,6 @@ def updateVarFileAzurePipesFoundation(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesFoundation(...,...,...) function.")
     print("fileName is: ", fileName)
     for line in fileinput.input(fileName, inplace=True):
-        if "storageAccountNameTerraformBackend" in line:
-            line = "storageAccountNameTerraformBackend=\""+storageAccountNameTerraformBackend+"\""
         if "pipeAzureRegion" in line:
             line = "pipeAzureRegion=\""+pipeAzureRegion+"\""
         print('{}'.format(line))
