@@ -2,6 +2,7 @@
 ### Input Variables
 ###############################################################################################
 
-storageAccountNameTerraformBackend=""
+pipeSubnetId=""
+pipeResourceGroupRegion=""
 pipeResourceGroupName=""
 pipeKeyVaultName=""
