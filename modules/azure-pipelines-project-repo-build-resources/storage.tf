@@ -6,7 +6,9 @@ resource "azurerm_storage_account" "terraformBknd" {
   location                 = var.pipeResourceGroupRegion
   account_tier             = "Standard"
   account_replication_type = "LRS"
-
+  #Setting the following for now to allow creation of storage containers for terraform backends using terraform.  Make this more secure before going to PROD.
+  allow_blob_public_access = true
+  
   network_rules {
     #CHANGE THE FOLLOWING TO "Deny" FOR PRODUCTION.
     default_action             = "Allow"
