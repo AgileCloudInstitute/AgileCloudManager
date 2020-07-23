@@ -21,4 +21,4 @@ resource "random_id" "randomId" {
     byte_length = 8
 }
 
-#Note: A storage account for each Terraform Backend will be created separately by each pipeline.
+#Note: A storage account for each Terraform Backend will be created separately when each AZDO pipeline is attached to this.
