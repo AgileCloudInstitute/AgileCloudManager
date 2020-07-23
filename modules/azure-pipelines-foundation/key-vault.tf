@@ -70,20 +70,3 @@ resource "azurerm_key_vault_secret" "clientSecret" {
   tags = { environment = "Testing" }
   depends_on = [azurerm_key_vault_access_policy.userCreatedSP]
 }
-
-resource "azurerm_key_vault_secret" "storageAccountNameTerraformBackend" {
-  name         = "storageAccountNameTerraformBackend"
-  value        = var.storageAccountNameTerraformBackend
-  key_vault_id = azurerm_key_vault.infraPipes.id
-  tags = { environment = "Testing" }
-  depends_on = [azurerm_key_vault_access_policy.userCreatedSP]
-}
-
-resource "azurerm_key_vault_secret" "terraBackendKey" {
-  name         = "terra-backend-key"
-  value        = azurerm_storage_account.terraformBknd.primary_access_key
-  key_vault_id = azurerm_key_vault.infraPipes.id
-  tags = { environment = "Testing" }
-  depends_on = [azurerm_key_vault_access_policy.userCreatedSP]
-}
-
