@@ -12,6 +12,7 @@ resourceGroupName = ''
 resourceGroupLocation = ''
 storageAccountNameTerraformBackend = ''
 pipeKeyVaultName = ''
+pipeSubnetId = '' 
 azuredevops_build_definition_id = ''
 azuredevops_git_repository_id = ''
 azuredevops_git_repository_name = ''
@@ -80,6 +81,11 @@ def runTerraformCommand(commandToRun, workingDir ):
           global pipeKeyVaultName
           pipeKeyVaultName=decodedline[19:]
           print("pipeKeyVaultName in deploymentFunctions.py is: ", pipeKeyVaultName)
+        if "pipes_subnet_id" in decodedline:
+          print("Found pipes_subnet_id!")
+          global pipeSubnetId
+          pipeSubnetId=decodedline[18:]
+          print("pipeSubnetId in deploymentFunctions.py is: ", pipeSubnetId)
         if "azuredevops_build_definition_id" in decodedline:
           print("Found azuredevops_build_definition_id!")
           global azuredevops_build_definition_id
