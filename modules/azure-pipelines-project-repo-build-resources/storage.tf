@@ -28,6 +28,7 @@ resource "azurerm_storage_container" "terraformBknd" {
   storage_account_name  = azurerm_storage_account.terraformBknd.name
   #Lock down the following line when this is ready to be made more secure.  See this link: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources?tabs=dotnet
   container_access_type = "container"
+  depends_on = [azurerm_storage_account.terraformBknd]
 }
 
 #resource "azurerm_storage_container" "terraformBkndAZDO" {
