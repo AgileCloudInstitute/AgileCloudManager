@@ -5,6 +5,7 @@ import sys
 import os 
 import shutil
 import base64
+import requests
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 storName = ''
