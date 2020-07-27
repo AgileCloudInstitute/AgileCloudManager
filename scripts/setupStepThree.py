@@ -28,8 +28,8 @@ azdoOrgServiceURL=''
 sourceRepo=''
 
 #Declare the directory and file name variables
+fileEnterUserInputHereOnly = "/home/aci-user/staging/enter-user-input-here-only.txt"
 pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
-fileEnterUserInputHereOnly = pathToVarFiles+'enter-user-input-here-only.txt'
 fileInputsAgentVmsAuto = pathToVarFiles+'inputs-agent-vms-auto.tfvars'
 fileInputsAgentVmsManual = pathToVarFiles+'inputs-agent-vms-manual.tfvars'
 fileInputsAzdoProvider = pathToVarFiles+'inputs-azdo-provider.tfvars'
@@ -307,3 +307,4 @@ runShellCommand(cmdChownVarFileAzureDevOpsProjectRepoBuild, varsDir )
 runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 
+#Add another line to lock down the /home/aci-user/staging/enter-user-input-here-only.txt file by changing its ownership to root
