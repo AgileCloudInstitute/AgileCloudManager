@@ -160,3 +160,27 @@ def changeLineInFile(fileName, searchTerm, valueToChange):
         if searchTerm in line:
             line = searchTerm+"=\""+valueToChange+"\"\n"
         sys.stdout.write(line)
+
+def getPoolQueueIdApiRequest(orgName, projId, qName):  
+    print("inside deploymentFunctions.py script and getPoolQueueIdApiRequest(...,...,...) function.")
+    #Assemble headers  
+    personal_access_token = ":"+os.environ["AZ_PAT"]  
+    headers = {}  
+    headers['Content-type'] = "application/json"  
+    headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))  
+    #Assemble the endpoint URL
+    #Get the Agent Pool Queues whose name matches the search criteria.  This should only be one queue because name should be a unique key.  
+    api_version_p = "5.1-preview.1"
+    #GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
+    queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (orgName, projId, qName, api_version_p))
+    print("-------------------------------------------------------------")
+    #Make the request    
+    r = requests.get(queues_url, headers=headers)
+    print("r.status_code is: ", r.status_code)
+    #Add some better error handling here to handle various response codes.  We are assuming that a 200 response is received in order to continue here.  
+    myQueuesData = r.json()
+    print("myQueuesData is: ", myQueuesData)
+    #Using index 0 here because queue_name should be a unique key that brings only one result in this response
+    poolQueueId = myQueuesData['value'][0]['id']
+    return poolQueueId
+
