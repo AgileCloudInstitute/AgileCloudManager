@@ -59,31 +59,23 @@ def getApiRequest(url):
 #Get the Agent Pool Queues whose name matches the search criteria.  This should only be one queue because name should be a unique key.  
 #Set variables to be shared across API calls.  These will be imported from terraform output variables.
 api_version_p = "5.1-preview.1"
-api_version = "5.1"
 queue_name = "Default"
-#Get a list of agent pools.
+#Get a list of agent pool Queues
 #GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
-#agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?api-version=%s" % (azuredevops_organization_name, api_version))
 queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name, api_version_p))
-#poolName="Default"
-#agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?poolName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, poolName, api_version))
-#print("-------------------------------------------------------------")
 print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pool Job Queues ----")
-print("---- About to get list of Agent Pools ----")
 queuesData = getApiRequest(queues_url)
 print("queuesData is: ", queuesData)
 print("---------------------------------------------------------")
-#poolsData = getApiRequest(agentpools_url)
-#print("poolsData is: ", poolsData)
 print("---------------------------------------------------------")
 #Using index 0 here because queue_name should be a unique key that brings only one result in this response
-#Using index 0 here because pool_name should be a unique key that brings only one result in this response
 poolQueueId = queuesData['value'][0]['id']
-#poolId = poolsData['value'][0]['id']
 print("poolQueueId is: ", poolQueueId)  
-#print("poolId is: ", poolId)  
 print("---------------------------------------------------------")
+
+
+#This next line is entirely separate from the preceding logic
 artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 
 ##############################################################################################
