@@ -2,7 +2,6 @@
 
 [[ -d /home/aci-user/vars ]] || mkdir /home/aci-user/vars
 [[ -d /home/aci-user/vars/agile-cloud-manager ]] || mkdir /home/aci-user/vars/agile-cloud-manager
-#mkdir /home/aci-user/vars/agile-cloud-manager
 cp -a /home/aci-user/cloned-repos/agile-cloud-manager/move-to-directory-outside-app-path/. /home/aci-user/vars/agile-cloud-manager/
 
 #Set ACM_ROOT_DIR environment variable:
@@ -58,3 +57,5 @@ sudo rpm -ivh --nodeps azure-cli-2.8.0-1.el7.x86_64.rpm
 #Install the azure-devops extension of the az-cli
 az extension add --name azure-devops
 
+#Install requests module for python to use with API calls
+sudo pip3 install requests
