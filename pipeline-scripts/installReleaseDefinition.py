@@ -43,9 +43,9 @@ print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organiza
 
 print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_service_connection_id)
 
-##############################################################################################
-### Step Two: Get The poolId from the agent pool that will be used by the release definition.
-##############################################################################################
+#########################################################################################################
+### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
+#########################################################################################################
 def getApiRequest(url):  
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
@@ -74,15 +74,15 @@ print("---- About to get list of Agent Pools ----")
 queuesData = getApiRequest(queues_url)
 print("queuesData is: ", queuesData)
 print("---------------------------------------------------------")
-poolsData = getApiRequest(agentpools_url)
-print("poolsData is: ", poolsData)
+#poolsData = getApiRequest(agentpools_url)
+#print("poolsData is: ", poolsData)
 print("---------------------------------------------------------")
 #Using index 0 here because queue_name should be a unique key that brings only one result in this response
 #Using index 0 here because pool_name should be a unique key that brings only one result in this response
 poolQueueId = queuesData['value'][0]['id']
-poolId = poolsData['value'][0]['id']
+#poolId = poolsData['value'][0]['id']
 print("poolQueueId is: ", poolQueueId)  
-print("poolId is: ", poolId)  
+#print("poolId is: ", poolId)  
 print("---------------------------------------------------------")
 artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 
