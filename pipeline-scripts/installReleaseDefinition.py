@@ -46,36 +46,14 @@ print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_serv
 #########################################################################################################
 ### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
 #########################################################################################################
-def getPoolQueueIdApiRequest(orgName, projId, qName):  
-    #Assemble headers  
-    personal_access_token = ":"+os.environ["AZ_PAT"]  
-    headers = {}  
-    headers['Content-type'] = "application/json"  
-    headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))  
-    #Assemble the endpoint URL
-    #Get the Agent Pool Queues whose name matches the search criteria.  This should only be one queue because name should be a unique key.  
-    api_version_p = "5.1-preview.1"
-    #GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
-    queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (orgName, projId, qName, api_version_p))
-    print("-------------------------------------------------------------")
-    #Make the request    
-    r = requests.get(queues_url, headers=headers)
-    print("r.status_code is: ", r.status_code)
-    #Add some better error handling here to handle various response codes.  We are assuming that a 200 response is received in order to continue here.  
-    myQueuesData = r.json()
-    print("myQueuesData is: ", myQueuesData)
-    #Using index 0 here because queue_name should be a unique key that brings only one result in this response
-    poolQueueId = myQueuesData['value'][0]['id']
-    return poolQueueId
-
 queue_name = "Default"
-poolQueueId = getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
+poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
 print("poolQueueId is: ", poolQueueId)  
 print("---------------------------------------------------------")
 
 
 
-#This next line is entirely separate from the preceding logic
+#This next line is entirely separate from the preceding stuff
 artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 
 ##############################################################################################
