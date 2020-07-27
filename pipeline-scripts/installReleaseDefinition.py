@@ -59,7 +59,7 @@ artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id, scriptInputVars):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id, scriptInputVars, releaseDefName, environName ):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -71,14 +71,14 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       data = json.load(json_file)
       print("---------------------------------------------------------")
       print("name is: ", data['name'])
-      data['name'] = 'Create AWS Simple Example'
+      data['name'] = releaseDefName
       print("name is now: ", data['name'])
       print("variables is: ", data['variables'])
       data['variables'] = {"aws-region":{"value":"us-west-2"}}
       print("variables is now: ", data['variables'])
 
       print("environment name is: ", data['environments'][0]['name'])
-      data['environments'][0]['name'] = 'Name of environment from user-supplied script'
+      data['environments'][0]['name'] = environName 
       print("environment name is now: ", data['environments'][0]['name'])
       print("alias is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
       data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'] = artifact_alias
@@ -143,4 +143,6 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
     
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
 myScriptInputVars = "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)"
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id, myScriptInputVars)
+releaseDefinitionName = 'Create AWS Simple Example'
+environmentName = 'Name of environment from user-supplied script'
+createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id, myScriptInputVars, releaseDefinitionName, environmentName)
