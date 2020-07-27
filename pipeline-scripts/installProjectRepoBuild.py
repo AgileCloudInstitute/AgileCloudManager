@@ -53,3 +53,31 @@ print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_re
 ### Step Four: Destroy local cloned copy of source repo
 ##############################################################################################
 #depfunc.destroyLocalCloneOfSourceRepo(pathToTempRepoStorageParent,tmpRepoStorageFolder)
+
+
+
+##############################################################################################
+### Step Five:  Install azure devops extension for az client
+##############################################################################################
+import subprocess
+import re
+
+ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+
+def runShellCommand(commandToRun, workingDir ):
+    print("Inside runShellCommand(..., ...) function. ")
+    print("commandToRun is: " +commandToRun)
+    print("workingDir is: " +workingDir)
+
+    proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, shell=True)
+    while True:
+      line = proc.stdout.readline()
+      if line:
+        thetext=line.decode('utf-8').rstrip('\r|\n')
+        decodedline=ansi_escape.sub('', thetext)
+        print(decodedline)
+      else:
+        break
+  
+addExteensionCommand = 'az extension add --name azure-devops'
+runShellCommand(addExteensionCommand, 'None')
