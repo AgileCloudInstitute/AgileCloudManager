@@ -187,7 +187,9 @@ def getPoolQueueIdApiRequest(orgName, projId, qName):
     poolQueueId = myQueuesData['value'][0]['id']
     return poolQueueId
 
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id, scriptInputVars, releaseDefName, environName ):
+def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, 
+                                      azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id, 
+                                      scriptInputVars, releaseDefName, environName ):
     personal_access_token = ":"+os.environ["AZ_PAT"]
     headers = {}
     headers['Content-type'] = "application/json"
@@ -225,7 +227,7 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       print("---------------------------------------------------------")
       data['artifacts'][0]['sourceId'] = azdo_project_id + ":1"
       data['artifacts'][0]['artifactSourceDefinitionUrl']['id'] = azdo_organization_service_url + azdo_project_name + "/_build?definitionId=" + str(azdo_build_definition_id)
-      data['artifacts'][0]['alias'] = artifactAlias
+      data['artifacts'][0]['alias'] = artifact_alias
       data['artifacts'][0]['definitionReference']['definition']['id'] = azdo_build_definition_id
       data['artifacts'][0]['definitionReference']['definition']['name'] = azdo_git_repository_name
       data['artifacts'][0]['definitionReference']['project']['id'] = azdo_project_id
