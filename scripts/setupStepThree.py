@@ -268,8 +268,9 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
 #First do some provisioning
 chmodCommand = "chmod +x setupStepOne.sh"
 scriptsDir = "/home/aci-user/cloned-repos/agile-cloud-manager/scripts/" 
+setupCommand = "sudo ./setupStepOne.sh"
 runShellCommand(chmodCommand, scriptsDir)
-runShellCommand(setupStepOne.sh, scriptsDir)
+runShellCommand(setupCommand, scriptsDir)
 
 #Second load data and update var files
 loadDataFromFile(fileEnterUserInputHereOnly)
