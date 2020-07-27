@@ -65,9 +65,9 @@ queue_name = "Default"
 #GET https://dev.azure.com/{organization}/{project}/_apis/distributedtask/queues?queueName={queueName}&actionFilter={actionFilter}&api-version=5.1-preview.1
 #agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?api-version=%s" % (azuredevops_organization_name, api_version))
 queues_url = ("https://dev.azure.com/%s/%s/_apis/distributedtask/queues?queueName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name, api_version_p))
-poolName="Default"
+#poolName="Default"
 #agentpools_url = ("https://dev.azure.com/%s/_apis/distributedtask/pools?poolName=%s&api-version=%s" % (depfunc.azuredevops_organization_name, poolName, api_version))
-print("-------------------------------------------------------------")
+#print("-------------------------------------------------------------")
 print("-------------------------------------------------------------")
 print("---- About to get list of Agent Pool Job Queues ----")
 print("---- About to get list of Agent Pools ----")
