@@ -1,5 +1,11 @@
 import fileinput
 import sys
+import subprocess
+import re
+#import os 
+#import shutil
+
+ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
 #Declare all the input variables
 subscriptionName=''
@@ -32,8 +38,23 @@ fileInputsFoundationDemo = pathToVarFiles+'inputs-foundation-demo.tfvars'
 fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.tfvars'
 fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
 fileStartupScript = pathToVarFiles+'startup-script.sh'
-fileAzEnvVars = pathToVarFiles+'set-local-az-client-environment-vars.sh'
+fileAzEnvVars = pathToVarFiles+'set-local-az-client-environment-vars.sh'  
+  
+def runShellCommand(commandToRun, workingDir ):
+    print("Inside runShellCommand(..., ...) function. ")
+    print("commandToRun is: " +commandToRun)
+    print("workingDir is: " +workingDir)
 
+    proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, shell=True)
+    while True:
+      line = proc.stdout.readline()
+      if line:
+        thetext=line.decode('utf-8').rstrip('\r|\n')
+        decodedline=ansi_escape.sub('', thetext)
+        print(decodedline)
+      else:
+        break
+  
 def getTheValue(lineToParse):
     print("lineToParse is: ", lineToParse)
     lineToParse = lineToParse[lineToParse.find('=')+1:]
@@ -244,18 +265,45 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
         print('{}'.format(line))
 
 #Now call the functions
+#First do some provisioning
+chmodCommand = "chmod +x setupStepOne.sh"
+scriptsDir = "/home/aci-user/cloned-repos/agile-cloud-manager/scripts/" 
+runShellCommand(chmodCommand, scriptsDir)
+runShellCommand(setupStepOne.sh, scriptsDir)
+
+#Second load data and update var files
 loadDataFromFile(fileEnterUserInputHereOnly)
-
 updateVarFileAzureProvider(fileInputsAzurermProvider)
-
 updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
-
 updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
-
 updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
-
 updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
 #This next function call is for the cloud-init startup script that will run on the Azure Pipelines agent that will be created.
 updateVarFileAzurePipesAgentsStartUpScript(fileStartupScript)
 #This next function call will set vars on the local machine to use with the az client
 updateVarFileAzurePipesAgentsStartUpScript(fileAzEnvVars)
+
+#Third set local environment variables
+varsDir = "/home/aci-user/vars/agile-cloud-manager/"
+newChmodCommand = "chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
+setVarsCommand = "sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
+runShellCommand(newChmodCommand, varsDir )
+runShellCommand(setVarsCommand, varsDir )
+
+#Fourth chown all the files to aci-user to avoid risk of being owned by root
+cmdChownVarFileAzureProvider = "sudo chown aci-user:aci-user " + fileInputsAzurermProvider
+cmdChownVarFileAzureDevOpsProvider = "sudo chown aci-user:aci-user " + fileInputsAzdoProvider
+cmdChownVarFileAzurePipesFoundation = "sudo chown aci-user:aci-user " + fileInputsFoundationDemo
+cmdChownVarFileAzurePipesAgents = "sudo chown aci-user:aci-user " + fileInputsAgentVmsManual
+cmdChownVarFileAzureDevOpsProjectRepoBuild = "sudo chown aci-user:aci-user " + fileInputsProjectRepoBuildManual
+cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileStartupScript
+cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileAzEnvVars
+
+runShellCommand(cmdChownVarFileAzureProvider, varsDir )
+runShellCommand(cmdChownVarFileAzureDevOpsProvider, varsDir )
+runShellCommand(cmdChownVarFileAzurePipesFoundation, varsDir )
+runShellCommand(cmdChownVarFileAzurePipesAgents, varsDir )
+runShellCommand(cmdChownVarFileAzureDevOpsProjectRepoBuild, varsDir )
+runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
+runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
+
