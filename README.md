@@ -12,42 +12,46 @@ Prerequisites include:
   
 Once you have assembled the pre-requisites, do the following in order to use this repository:  
     
-1.  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)  
-2.  Navigate into directory into which to clone repos by typing  `cd cloned-repos`  
-3.  Clone this repository by typing `git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git`  
-4.  **SetupStepOne:**  Run [scripts/setupStepOne.sh](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setupStepOne.sh) by typing the following commands:   
+1.  **Log In To Dev Server:**  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)    
     
-    cd agile-cloud-manager/scripts/  
-    chmod +x setupStepOne.sh  
-    sudo ./setupStepOne.sh  
+2.  **Clone this Repository:**  Navigate into the target directory and clone the repo by typing:    
+    
+    cd cloned-repos    
+    git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git    
+    
+3.  **Import Config Variables:**  Enter the variables you assembled in the pre-requisite steps into a new file you will create in `/home/aci-user/staging/enter-user-input-here-only.txt` which follows the exact list of variables and syntax given in [this template file from the repository](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.txt) .  
+  
+    vi /home/aci-user/staging/enter-user-input-here-only.txt
+    #Then enter the values for each listed variable.  
+    #Then save the file.  
+    #Note this can be done by some automation you create separately if you need to do this repeatedly.   
+  
+5.  **Run the Setup Script:**  
+    
+    cd /home/aci-user/cloned-repos/agile-cloud-manager/scripts/
+    sudo python3 setupStepThree.py   
     source /etc/bashrc  
     
-5.  **SetupStepTwo:**  Enter the variables you assembled in the pre-requisite steps into [/home/aci-user/vars/agile-cloud-manager/enter-user-input-here-only.txt](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.txt) file.  Note this can be done by replacing the file with pre-set values by some automation you create separately if you need to do this repeatedly.   
-6.  **SetupStepThree:**  Automatically transfer the input variable values by running [setupStepThree.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/scripts/setupStepThree.py) while the terminal is still pointed to the same directory. And then run the script for setting local environment variables as follows:  
+#  Create the foundation of the infrastructure for the Azure Pipelines implementation   
     
-    python3 setupStepThree.py   
-    chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh  
-    sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh  
-    source /etc/bashrc  
- 
-7.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
+1.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
     
-    cd ../pipeline-scripts  
+    cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scripts  
     python3 installPipelineSystemAndAgents.py  
-
-8.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
+  
+2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
 
 # Create an Azure DevOps Project and import the sample repo and pipeline     
     
 1.  Run the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
     
-    #Navigate to the same `pipeline-scripts` directory   
-    az extension add --name azure-devops    
+    #Navigate to the same `pipeline-scripts` directory if you are not already there  
+    cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scripts    
     python3 installProjectRepoBuild.py   
     
 2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
-3.  Copy the output variables into a text editor so that they can be used in subsequent scripted steps.  This will be automated later.    
-4.  Trigger the build pipeline by making an inconsequential change to the README file for the `terraform-aws-simple-example` repo from within the Azure DevOps portal.  You are changing the copy that was just imported into your own Azure DevOps Organization, but you are only adding a couple spaces of white space to the README so that the functionality is not changed.  Then confirm that the build created the deployable artifact from the newly imported repository.    
+    
+3.  Trigger the build pipeline by making an inconsequential change to the README file for the `terraform-aws-simple-example` repo from within the Azure DevOps portal.  You are changing the copy that was just imported into your own Azure DevOps Organization, but you are only adding a couple spaces of white space to the README so that the functionality is not changed.  Then confirm that the build created the deployable artifact from the newly imported repository.    
         
 # Destroy the Azure DevOps Project and its elements    
     
