@@ -5,7 +5,6 @@ import requests
 import os
 import base64
 import json
-
 import deploymentFunctions as depfunc  
   
 pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
@@ -51,98 +50,13 @@ poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_
 print("poolQueueId is: ", poolQueueId)  
 print("---------------------------------------------------------")
 
-
-
-#This next line is entirely separate from the preceding stuff
-artifactAlias = "_" + depfunc.azuredevops_git_repository_name
-
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo_project_id, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, azdo_organization_service_url, queue_id, artifact_alias, azdo_service_connection_id, scriptInputVars, releaseDefName, environName ):
-    personal_access_token = ":"+os.environ["AZ_PAT"]
-    headers = {}
-    headers['Content-type'] = "application/json"
-    headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))
-    api_version = "5.1"
-    url = ("https://vsrm.dev.azure.com/%s/%s/_apis/release/definitions?api-version=%s" % (azdo_organization_name, azdo_project_id, api_version))
-    with open(templateFile, 'r') as json_file:
-      print("json_file is: ", json_file)
-      data = json.load(json_file)
-      print("---------------------------------------------------------")
-      print("name is: ", data['name'])
-      data['name'] = releaseDefName
-      print("name is now: ", data['name'])
-      print("variables is: ", data['variables'])
-      data['variables'] = {"aws-region":{"value":"us-west-2"}}
-      print("variables is now: ", data['variables'])
-
-      print("environment name is: ", data['environments'][0]['name'])
-      data['environments'][0]['name'] = environName 
-      print("environment name is now: ", data['environments'][0]['name'])
-      print("alias is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
-      data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'] = artifact_alias
-      print("alias is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['artifactsDownloadInput']['downloadInputs'][0]['alias'])
-      print("queueId is: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
-      data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'] = queue_id
-      print("queueId is now: ", data['environments'][0]['deployPhases'][0]['deploymentInput']['queueId'])
-      print("---------------------------------------------------------")
-      print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
-      print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
-      print("[\'artifacts\'][\'alias\'] is: ", data['artifacts'][0]['alias'])
-      print("[\'artifacts\'][\'definitionReference\'][\'definition\'][\'id\'] is: ", data['artifacts'][0]['definitionReference']['definition']['id'])
-      print("[\'artifacts\'][\'definitionReference\'][\'definition\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['definition']['name'])
-      print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'id\'] is: ", data['artifacts'][0]['definitionReference']['project']['id'])
-      print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['project']['name'])
-      print("---------------------------------------------------------")
-      data['artifacts'][0]['sourceId'] = azdo_project_id + ":1"
-      data['artifacts'][0]['artifactSourceDefinitionUrl']['id'] = azdo_organization_service_url + azdo_project_name + "/_build?definitionId=" + str(azdo_build_definition_id)
-      data['artifacts'][0]['alias'] = artifactAlias
-      data['artifacts'][0]['definitionReference']['definition']['id'] = azdo_build_definition_id
-      data['artifacts'][0]['definitionReference']['definition']['name'] = azdo_git_repository_name
-      data['artifacts'][0]['definitionReference']['project']['id'] = azdo_project_id
-      data['artifacts'][0]['definitionReference']['project']['name'] = azdo_project_name
-      print("---------------------------------------------------------")
-      print("[\'artifacts\'][\'sourceId\'] is: ", data['artifacts'][0]['sourceId'])
-      print("[\'artifacts\'][\'artifactSourceDefinitionUrl\'][\'id\'] is: ", data['artifacts'][0]['artifactSourceDefinitionUrl']['id'])
-      print("[\'artifacts\'][\'alias\'] is: ", data['artifacts'][0]['alias'])
-      print("[\'artifacts\'][\'definitionReference\'][\'definition\'][\'id\'] is: ", data['artifacts'][0]['definitionReference']['definition']['id'])
-      print("[\'artifacts\'][\'definitionReference\'][\'definition\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['definition']['name'])
-      print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'id\'] is: ", data['artifacts'][0]['definitionReference']['project']['id'])
-      print("[\'artifacts\'][\'definitionReference\'][\'project\'][\'name\'] is: ", data['artifacts'][0]['definitionReference']['project']['name'])
-
-      print("-------------------------------------------------------------------")
-      myIdx = 0
-      for item in data['environments'][0]['deployPhases'][0]['workflowTasks']:
-          #print("item is: ", item)
-          print("item[taskId] is: ", item['taskId'])
-          print("name of task is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'])
-          if item['taskId'] == '6392f95f-7e76-4a18-b3c7-7f078d2f7700':
-            print("This is a Python script task. ")
-            print("About to set the variables to be imported into the script.")
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['arguments'] = scriptInputVars            
-          if item['taskId'] == '6c731c3c-3c68-459a-a5c9-bde6e6595b5b':
-            print("This is a Bash script task. ")
-            print("About to set the variables to be imported into the script.")
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['arguments'] = scriptInputVars            
-          if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
-            print("This is a Key Vault script task.  ")
-            print("ConnectedServiceName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'])
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = azdo_service_connection_id
-            print("KeyVaultName is: ", data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'])
-          myIdx += 1
-      print("-------------------------------------------------------------------")
-
-      print("---------------------------------------------------------")
-      print("url is: ", url)
-      print("---------------------------------------------------------")
-      print("revised data is: ", data)
-    r = requests.post(url, data=json.dumps(data), headers=headers)
-    print("r.status_code is: ", r.status_code)
-    print("r.json() is: ", r.json())
-    
+artifactAlias = "_" + depfunc.azuredevops_git_repository_name
 jsonTemplateFile = 'releaseDefinitionTemplate.json'
 myScriptInputVars = "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)"
 releaseDefinitionName = 'Create AWS Simple Example'
 environmentName = 'Name of environment from user-supplied script'
-createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id, myScriptInputVars, releaseDefinitionName, environmentName)
+rCode = depfunc.createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_organization_service_url, poolQueueId, artifactAlias, depfunc.azuredevops_service_connection_id, myScriptInputVars, releaseDefinitionName, environmentName)
+print("response code from create release definition API call is: ", rCode)
