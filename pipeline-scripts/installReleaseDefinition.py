@@ -104,7 +104,7 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
       data['name'] = 'Create AWS Simple Example'
       print("name is now: ", data['name'])
       print("variables is: ", data['variables'])
-      data['variables'] = {"aws-region":{"value":"West-US"}}
+      data['variables'] = {"aws-region":{"value":"us-west"}}
       print("variables is now: ", data['variables'])
 
       print("environment name is: ", data['environments'][0]['name'])
