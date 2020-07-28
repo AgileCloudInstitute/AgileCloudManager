@@ -58,7 +58,7 @@
               "environment":{},
               "taskId":"1e244d32-2dd4-4165-96fb-b7441ca9331e",
               "version":"1.*",
-              "name":"Azure Key Vault: testvlt789",
+              "name":"",
               "refName":"",
               "enabled":true,
               "alwaysRun":false,
@@ -69,7 +69,7 @@
               "condition":"succeeded()",
               "inputs":{
                 "ConnectedServiceName":"service-principal-goes-here",
-                "KeyVaultName":"testvlt789",
+                "KeyVaultName":"",
                 "SecretsFilter":"*",
                 "RunAsPreJob":"true"
               }
