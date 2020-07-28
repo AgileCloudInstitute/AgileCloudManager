@@ -25,6 +25,33 @@ pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/c
 applyProjectRepoBuildCommand=applyCommand+getAzdoProviderInputs+getAzdoProjectRepoBuildAutoInputs+getAzdoProjectRepoBuildManualInputs+getAzurermProviderInputs
 
 ##############################################################################################
+### Step One:  Install azure devops extension for az client
+##############################################################################################
+import subprocess
+import re
+
+ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+
+def runShellCommand(commandToRun, workingDir ):
+    print("Inside runShellCommand(..., ...) function. ")
+    print("commandToRun is: " +commandToRun)
+    print("workingDir is: " +workingDir)
+
+    proc = subprocess.Popen( commandToRun,stdout=subprocess.PIPE, shell=True)
+    while True:
+      line = proc.stdout.readline()
+      if line:
+        thetext=line.decode('utf-8').rstrip('\r|\n')
+        decodedline=ansi_escape.sub('', thetext)
+        print(decodedline)
+      else:
+        break
+  
+addExteensionCommand = 'az extension add --name azure-devops'
+runShellCommand(addExteensionCommand)
+
+
+##############################################################################################
 ### Step One: Check to make sure that the azure devops terraform provider has been installed
 ##############################################################################################
 
@@ -56,28 +83,3 @@ print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_re
 
 
 
-##############################################################################################
-### Step Five:  Install azure devops extension for az client
-##############################################################################################
-import subprocess
-import re
-
-ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-
-def runShellCommand(commandToRun, workingDir ):
-    print("Inside runShellCommand(..., ...) function. ")
-    print("commandToRun is: " +commandToRun)
-    print("workingDir is: " +workingDir)
-
-    proc = subprocess.Popen( commandToRun,stdout=subprocess.PIPE, shell=True)
-    while True:
-      line = proc.stdout.readline()
-      if line:
-        thetext=line.decode('utf-8').rstrip('\r|\n')
-        decodedline=ansi_escape.sub('', thetext)
-        print(decodedline)
-      else:
-        break
-  
-addExteensionCommand = 'az extension add --name azure-devops'
-runShellCommand(addExteensionCommand)
