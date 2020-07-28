@@ -69,7 +69,7 @@ def runShellCommand(commandToRun, workingDir ):
     print("commandToRun is: " +commandToRun)
     print("workingDir is: " +workingDir)
 
-    proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, shell=True)
+    proc = subprocess.Popen( commandToRun,stdout=subprocess.PIPE, shell=True)
     while True:
       line = proc.stdout.readline()
       if line:
@@ -80,4 +80,4 @@ def runShellCommand(commandToRun, workingDir ):
         break
   
 addExteensionCommand = 'az extension add --name azure-devops'
-runShellCommand(addExteensionCommand, 'None')
+runShellCommand(addExteensionCommand)
