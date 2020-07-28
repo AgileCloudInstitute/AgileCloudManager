@@ -6,6 +6,11 @@
   "environments": [
       {
           "name": "set-from-calling-script"
+          "retentionPolicy": {
+              "daysToKeep": 30,
+              "releasesToKeep": 3,
+              "retainBuild": "true"
+          }
       }
   ],
   "artifacts":[],
