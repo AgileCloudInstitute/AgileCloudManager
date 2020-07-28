@@ -250,10 +250,14 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
           if item['taskId'] == '6392f95f-7e76-4a18-b3c7-7f078d2f7700':
             print("This is a Python script task. ")
             print("About to set the variables to be imported into the script.")
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'] = "Python script"
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['scriptPath'] = "$(System.DefaultWorkingDirectory)/_terraform-aws-simple-example/drop/pipeline-scripts/createSimpleExample.py"
             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['arguments'] = scriptInputVars            
           if item['taskId'] == '6c731c3c-3c68-459a-a5c9-bde6e6595b5b':
             print("This is a Bash script task. ")
             print("About to set the variables to be imported into the script.")
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'] = "Run a Bash Script"
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['filePath'] = "$(System.DefaultWorkingDirectory)/_terraform-aws-simple-example/drop/pipeline-scripts/bashExample.sh"
             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['arguments'] = scriptInputVars            
           if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
             print("This is a Key Vault script task.  ")
