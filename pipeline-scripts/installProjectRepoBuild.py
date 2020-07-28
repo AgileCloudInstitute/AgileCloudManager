@@ -32,12 +32,12 @@ import re
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
-def runShellCommand(commandToRun, workingDir ):
+def runShellCommand(commandToRun):
     print("Inside runShellCommand(..., ...) function. ")
     print("commandToRun is: " +commandToRun)
     print("workingDir is: " +workingDir)
 
-    proc = subprocess.Popen( commandToRun,stdout=subprocess.PIPE, shell=True)
+    proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, shell=True)
     while True:
       line = proc.stdout.readline()
       if line:
