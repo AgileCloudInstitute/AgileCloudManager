@@ -3,7 +3,11 @@
   "isDeleted": "false",
   "variables": {},
   "variableGroups": [],
-  "environments": [],
+  "environments": [
+      {
+          "name": "set-from-calling-script"
+      }
+  ],
   "artifacts":[],
   "triggers": [],
   "releaseNameFormat": "",
