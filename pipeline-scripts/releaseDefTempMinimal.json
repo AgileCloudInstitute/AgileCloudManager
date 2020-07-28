@@ -5,7 +5,7 @@
   "variableGroups": [],
   "environments": [
       {
-          "name": "set-from-calling-script"
+          "name": "set-from-calling-script", 
           "retentionPolicy": {
               "daysToKeep": 30,
               "releasesToKeep": 3,
