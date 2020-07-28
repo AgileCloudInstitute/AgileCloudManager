@@ -81,5 +81,3 @@ print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_re
 ##############################################################################################
 #depfunc.destroyLocalCloneOfSourceRepo(pathToTempRepoStorageParent,tmpRepoStorageFolder)
 
-
-
