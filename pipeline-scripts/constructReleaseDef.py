@@ -32,3 +32,14 @@ print("--------------------------------------------------------")
 print("revised environmentData is: ", environmentData)
 print("--------------------------------------------------------")
 
+
+releaseDefData = json.load(open('releaseDefConstructorTemplate.json', 'r'))
+print("releaseDefData is: ", releaseDefData)
+releaseDefData['name']
+releaseDefData['description']
+releaseDefData['environments'] = [environmentData]
+print("--------------------------------------------------------")
+print("revised releaseDefData is: ", releaseDefData)
+print("--------------------------------------------------------")
+
+
