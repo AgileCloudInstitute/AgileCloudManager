@@ -5,10 +5,10 @@ description: Description of release definition from YAML
 environments:
   - name: Dev environment
     deployPhases:
-	  - name: First Job
-	    workflowTasks: 
-		  - name: Python task example
-		    type: Python
-			scriptPath: value for scriptPath will go here
-			arguments: the arguments will go here
-			workingDirectory: the workingDirectory will go here
+      - name: First Job
+        workflowTasks: 
+        - name: Python task example
+          type: Python
+          scriptPath: value for scriptPath will go here
+          arguments: the arguments will go here
+          workingDirectory: the workingDirectory will go here
