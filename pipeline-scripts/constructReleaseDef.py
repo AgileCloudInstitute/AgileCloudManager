@@ -1,11 +1,18 @@
 import json
 import yaml
-
+import re
 
 with open('createTerraformSimpleAWS.yaml') as f:
     my_dict = yaml.safe_load(f)
     for keyname, valueStr in my_dict.items():
-        print(keyname, 'corresponds to', valueStr)
+        if re.match("name", keyname):
+            print('name of release definition is: ', valueStr)
+        if re.match("description", keyname):
+            print('description of release definition is: ', valueStr)
+        if re.match("environments", keyname):
+            print("Inside environments block. ")
+            for keyn, valu in valueStr.items():
+                print(keyn, " is: ", valu)
 
 print("--------------------------------------------------------")
 
