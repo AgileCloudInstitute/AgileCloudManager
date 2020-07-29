@@ -4,7 +4,6 @@ import re
 
 with open('createTerraformSimpleAWS.yaml') as f:
   my_dict = yaml.safe_load(f)
-  new_dict = {}
   for item in my_dict:
     print("item is: ", item)
     if re.match("name", item):
@@ -52,57 +51,6 @@ with open('createTerraformSimpleAWS.yaml') as f:
                         print("workingDirectory is: ", task.get(task_item))  
       print("--------------------------------------------------------")
 
-
-
-
-        name = item['name']
-        new_dict[name] = item
-
-    
-    for i in my_dict.keys():
-        if re.match("name", i):
-            print("name is: ", my_dict.get(i))
-        if re.match("description", i):
-            print("description is: ", my_dict.get(i))
-        if re.match("environments", i):
-            print("Inside environments block. ")
-#            environments = i['environments']
-            new_dict = {item['name']:item for item in data}
-new_dict[environments] = i
-            for j in new_dict.keys():
-                print("iterating keys inside environment")
-                print(j, " is: ", new_dict.get(j))
-
-//////////////////////////////////
-
-new_dict = {}
-for item in data:
-   name = item['name']
-   new_dict[name] = item
-
-    for keyname, valueStr in my_dict.items():
-        if re.match("name", keyname):
-            print('name of release definition is: ', valueStr)
-        if re.match("description", keyname):
-            print('description of release definition is: ', valueStr)
-        if re.match("environments", keyname):
-            print("Inside environments block. ")
-            for keyn in my_dict[keyname].keys():
-                print("keyn is: ", keyn)
-
-
-dict.get('Education', "Never")                
-
-for i in d.keys():
-    print i
-    for j in d[i].keys():
-        print j
-
-for i in d:
-    print i
-    for j in d[i]:
-        print j
-//////////////////////////////////////////////////////////////////////
 print("--------------------------------------------------------")
 
 pythonTaskData = json.load(open('pythonTaskTemplate.json', 'r'))  
