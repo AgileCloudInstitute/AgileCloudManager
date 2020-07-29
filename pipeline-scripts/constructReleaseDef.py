@@ -23,4 +23,12 @@ print("--------------------------------------------------------")
 print("revised deployPhaseData is: ", deployPhaseData)
 print("--------------------------------------------------------")
 
+environmentData = json.load(open('environmentTemplate.json', 'r'))
+print("environmentData is: ", environmentData)
+environmentData['name'] = 'new name of environment'
+environmentData['deployPhases'] = [deployPhaseData]  
+print("--------------------------------------------------------")
+
+print("revised environmentData is: ", environmentData)
+print("--------------------------------------------------------")
 
