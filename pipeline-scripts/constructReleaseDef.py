@@ -1,7 +1,14 @@
 import json
+import yaml
 
-pythonTaskData = json.load(open('pythonTaskTemplate.json', 'r'))
 
+with open('createTerraformSimpleAWS.yaml') as f:
+    my_dict = yaml.safe_load(f)
+    for keyname, valueStr in my_dict.items():
+        print(keyname, 'corresponds to', valueStr)
+  
+pythonTaskData = json.load(open('pythonTaskTemplate.json', 'r'))  
+  
 print("pythonTaskData is: ", pythonTaskData)
 print("--------------------------------------------------------")
 
