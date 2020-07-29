@@ -35,8 +35,8 @@ print("--------------------------------------------------------")
 
 releaseDefData = json.load(open('releaseDefConstructorTemplate.json', 'r'))
 print("releaseDefData is: ", releaseDefData)
-releaseDefData['name']
-releaseDefData['description']
+releaseDefData['name'] = 'new release def name'
+releaseDefData['description'] = 'new release def description'
 releaseDefData['environments'] = [environmentData]
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
