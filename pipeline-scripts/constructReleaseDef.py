@@ -13,8 +13,8 @@ print("--------------------------------------------------------")
 
 print("revised pythonTaskData is: ", pythonTaskData)
 print("--------------------------------------------------------")
-print("deployPhaseData is: ", deployPhaseData)
 deployPhaseData = json.load(open('deployPhaseTemplate.json', 'r'))
+print("deployPhaseData is: ", deployPhaseData)
 
 deployPhaseData['name'] = 'new name for deployment phase'
 deployPhaseData['workflowTasks'][0] = pythonTaskData
