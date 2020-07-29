@@ -1,14 +1,26 @@
 import json
 
-data = json.load(open('pythonTaskTemplate.json', 'r'))
+pythonTaskData = json.load(open('pythonTaskTemplate.json', 'r'))
 
-print("data is: ", data)
+print("pythonTaskData is: ", pythonTaskData)
+print("--------------------------------------------------------")
 
-data['name'] = 'new name'
-data['inputs']['scriptPath'] = 'new path'
-data['inputs']['arguments'] = 'new arguments'
-data['inputs']['workingDirectory'] = 'new working directory'
+pythonTaskData['name'] = 'new name'
+pythonTaskData['inputs']['scriptPath'] = 'new path'
+pythonTaskData['inputs']['arguments'] = 'new arguments'
+pythonTaskData['inputs']['workingDirectory'] = 'new working directory'
+print("--------------------------------------------------------")
 
-print("revised data is: ", data)
+print("revised pythonTaskData is: ", pythonTaskData)
+print("--------------------------------------------------------")
+print("deployPhaseData is: ", deployPhaseData)
+deployPhaseData = json.load(open('deployPhaseTemplate.json', 'r'))
+
+deployPhaseData['name'] = 'new name for deployment phase'
+deployPhaseData['workflowTasks'][0] = pythonTaskData
+print("--------------------------------------------------------")
+
+print("revised deployPhaseData is: ", deployPhaseData)
+print("--------------------------------------------------------")
 
 
