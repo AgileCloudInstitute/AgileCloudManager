@@ -12,12 +12,19 @@ releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemp
 
 with open(yamlFile) as f:
   releaseDef_dict = yaml.safe_load(f)
+  ############################################################################
+  ################# START TRANSLATION OF RELEASE DEFINITION ##################
+  ############################################################################
+  releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
+  print("releaseDefData is: ", releaseDefData)
   for item in releaseDef_dict:
     print("item is: ", item)
     if re.match("name", item):
-      print("name is: ", releaseDef_dict.get(item))
+      #print("name is: ", releaseDef_dict.get(item))
+      releaseDefData['name'] = releaseDef_dict.get(item)
     if re.match("description", item):
-      print("description is: ", releaseDef_dict.get(item))
+      #print("description is: ", releaseDef_dict.get(item))
+      releaseDefData['description'] = releaseDef_dict.get(item)
     if re.match("environments", item):
       print("Inside environments block. ")
       print("environments item is: ", item)
@@ -126,21 +133,8 @@ with open(yamlFile) as f:
           print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
       print("--------------------------------------------------------")
       print("revised environmentsDataList is: ", environmentsDataList)
-print("--------------------------------------------------------")
-
-
-
-
-
-
-
-
-
-releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
-print("releaseDefData is: ", releaseDefData)
-releaseDefData['name'] = 'new release def name'
-releaseDefData['description'] = 'new release def description'
-releaseDefData['environments'] = [environmentData]
-print("--------------------------------------------------------")
-print("revised releaseDefData is: ", releaseDefData)
-print("--------------------------------------------------------")
+  releaseDefData['environments'] = environmentsDataList
+  print("--------------------------------------------------------")
+  print("revised releaseDefData is: ", releaseDefData)
+  print("--------------------------------------------------------")
+  
