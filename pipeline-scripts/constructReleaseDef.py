@@ -8,6 +8,7 @@ jsonFragmentDir = '../releases/json-fragments/'
 pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
 deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
 environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
+releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 
 with open(yamlFile) as f:
   releaseDef_dict = yaml.safe_load(f)
@@ -105,8 +106,7 @@ print("revised environmentData is: ", environmentData)
 print("--------------------------------------------------------")
 
 
-
-releaseDefData = json.load(open('releaseDefConstructorTemplate.json', 'r'))
+releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
 print("releaseDefData is: ", releaseDefData)
 releaseDefData['name'] = 'new release def name'
 releaseDefData['description'] = 'new release def description'
