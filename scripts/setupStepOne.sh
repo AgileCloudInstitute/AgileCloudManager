@@ -59,3 +59,5 @@ az extension add --name azure-devops
 
 #Install requests module for python to use with API calls
 sudo pip3 install requests
+#Install pyyaml module that will ally Python to translate user-supplied yaml into API calls
+sudo pip3 install pyyaml
