@@ -131,7 +131,7 @@ def getEnvironmentsDataList(environmentsList):
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
 
-getReleaseDefData(yamlInputFile):
+def getReleaseDefData(yamlInputFile):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
     ############################################################################
