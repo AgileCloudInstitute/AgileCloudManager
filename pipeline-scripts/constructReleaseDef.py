@@ -80,6 +80,41 @@ def getDeploymentPhaseData(phase_idx, deployPhase):
       deployPhaseData['workflowTasks'] = taskDataList
   return deployPhaseData
 
+def getEnvironmentData(env_idx, environment):
+  ############################################################################
+  ################## START TRANSLATION OF EACH ENVIRONMENT ###################
+  ############################################################################
+  environmentData = json.load(open(environmentTemplateFile, 'r'))
+  print("environmentData is: ", environmentData)
+  print("--------- Gonna print a new environment item ----------------")
+  print(env_idx, ": ", environment) 
+  print("--------- Gonna decompose the environment item ----------------")
+  for env_item in environment:
+    print(env_idx, ": ", "env_item is: ", env_item)
+    if re.match("name", env_item):
+      #print(env_idx, ": ", "name is: ", environment.get(env_item))
+      environmentData['name'] = environment.get(env_item)
+    if re.match("deployPhases", env_item):
+      deployPhaseList = environment.get(env_item)
+      print("len deployPhaseList is: ", deployPhaseList)
+      deployPhaseDataList = []
+      for phase_idx, deployPhase in enumerate(deployPhaseList):  
+        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase)
+        if phase_idx == (len(deployPhaseList)-1):
+          print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
+          ############################################################################
+          ################# END TRANSLATION OF EACH DEPLOYMENT PHASE #################
+          ############################################################################
+          print("--------------------------------------------------------")
+          print("revised deployPhaseData is: ", deployPhaseData)
+          print("--------------------------------------------------------")
+        deployPhaseDataList.append(deployPhaseData)
+      print("--------------------------------------------------------")
+      print("deployPhaseDataList is:", deployPhaseDataList)
+      print("--------------------------------------------------------")
+      environmentData['deployPhases'] = deployPhaseDataList 
+  return environmentData
+
 
 with open(yamlFile) as f:
   releaseDef_dict = yaml.safe_load(f)
@@ -103,39 +138,8 @@ with open(yamlFile) as f:
       environmentsList = releaseDef_dict.get(item)
       print("len environmentsList is: ", len(environmentsList))
       environmentsDataList = []
-      for env_idx, environment in enumerate(environmentsList):
-        ############################################################################
-        ################## START TRANSLATION OF EACH ENVIRONMENT ###################
-        ############################################################################
-        environmentData = json.load(open(environmentTemplateFile, 'r'))
-        print("environmentData is: ", environmentData)
-        print("--------- Gonna print a new environment item ----------------")
-        print(env_idx, ": ", environment) 
-        print("--------- Gonna decompose the environment item ----------------")
-        for env_item in environment:
-          print(env_idx, ": ", "env_item is: ", env_item)
-          if re.match("name", env_item):
-            #print(env_idx, ": ", "name is: ", environment.get(env_item))
-            environmentData['name'] = environment.get(env_item)
-          if re.match("deployPhases", env_item):
-            deployPhaseList = environment.get(env_item)
-            print("len deployPhaseList is: ", deployPhaseList)
-            deployPhaseDataList = []
-            for phase_idx, deployPhase in enumerate(deployPhaseList):  
-              deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase)
-              if phase_idx == (len(deployPhaseList)-1):
-                print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
-                ############################################################################
-                ################# END TRANSLATION OF EACH DEPLOYMENT PHASE #################
-                ############################################################################
-                print("--------------------------------------------------------")
-                print("revised deployPhaseData is: ", deployPhaseData)
-                print("--------------------------------------------------------")
-              deployPhaseDataList.append(deployPhaseData)
-            print("--------------------------------------------------------")
-            print("deployPhaseDataList is:", deployPhaseDataList)
-            print("--------------------------------------------------------")
-            environmentData['deployPhases'] = deployPhaseDataList 
+      for env_idx, environment in enumerate(environmentsList):env_idx, environment
+        environmentData = getEnvironmentData(env_idx, environment)
         print("--------------------------------------------------------")
         print("revised environmentData is: ", environmentData)
         environmentsDataList.append(environmentData)
