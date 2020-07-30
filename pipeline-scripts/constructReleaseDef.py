@@ -115,44 +115,54 @@ def getEnvironmentData(env_idx, environment):
       environmentData['deployPhases'] = deployPhaseDataList 
   return environmentData
 
+def getEnvironmentsDataList(environmentsList):
+  print("len environmentsList is: ", len(environmentsList))
+  environmentsDataList = []
+  for env_idx, environment in enumerate(environmentsList):
+    environmentData = getEnvironmentData(env_idx, environment)
+    print("--------------------------------------------------------")
+    print("revised environmentData is: ", environmentData)
+    environmentsDataList.append(environmentData)
+    print("--------------------------------------------------------")
+    ############################################################################
+    ################### END TRANSLATION OF EACH ENVIRONMENT ####################
+    ############################################################################
+    if env_idx == (len(environmentsList)-1):
+      print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
+  return environmentsDataList
 
-with open(yamlFile) as f:
-  releaseDef_dict = yaml.safe_load(f)
-  ############################################################################
-  ################# START TRANSLATION OF RELEASE DEFINITION ##################
-  ############################################################################
-  releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
-  print("releaseDefData is: ", releaseDefData)
-  for item in releaseDef_dict:
-    print("item is: ", item)
-    if re.match("name", item):
-      #print("name is: ", releaseDef_dict.get(item))
-      releaseDefData['name'] = releaseDef_dict.get(item)
-    if re.match("description", item):
-      #print("description is: ", releaseDef_dict.get(item))
-      releaseDefData['description'] = releaseDef_dict.get(item)
-    if re.match("environments", item):
-      print("Inside environments block. ")
-      print("environments item is: ", item)
-      print("environments get(item) is: ", releaseDef_dict.get(item))
-      environmentsList = releaseDef_dict.get(item)
-      print("len environmentsList is: ", len(environmentsList))
-      environmentsDataList = []
-      for env_idx, environment in enumerate(environmentsList):
-        environmentData = getEnvironmentData(env_idx, environment)
+getReleaseDefData(yamlInputFile):
+  with open(yamlInputFile) as f:
+    releaseDef_dict = yaml.safe_load(f)
+    ############################################################################
+    ################# START TRANSLATION OF RELEASE DEFINITION ##################
+    ############################################################################
+    releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
+    print("releaseDefData is: ", releaseDefData)
+    for item in releaseDef_dict:
+      print("item is: ", item)
+      if re.match("name", item):
+        #print("name is: ", releaseDef_dict.get(item))
+        releaseDefData['name'] = releaseDef_dict.get(item)
+      if re.match("description", item):
+        #print("description is: ", releaseDef_dict.get(item))
+        releaseDefData['description'] = releaseDef_dict.get(item)
+      if re.match("environments", item):
+        print("Inside environments block. ")
+        print("environments item is: ", item)
+        print("environments get(item) is: ", releaseDef_dict.get(item))
+        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item))
         print("--------------------------------------------------------")
-        print("revised environmentData is: ", environmentData)
-        environmentsDataList.append(environmentData)
-        print("--------------------------------------------------------")
-        ############################################################################
-        ################### END TRANSLATION OF EACH ENVIRONMENT ####################
-        ############################################################################
-        if env_idx == (len(environmentsList)-1):
-          print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
-      print("--------------------------------------------------------")
-      print("revised environmentsDataList is: ", environmentsDataList)
-  releaseDefData['environments'] = environmentsDataList
-  print("--------------------------------------------------------")
-  print("revised releaseDefData is: ", releaseDefData)
-  print("--------------------------------------------------------")
+        print("revised environmentsDataList is: ", environmentsDataList)
+    releaseDefData['environments'] = environmentsDataList
+    return releaseDefData
+
   
+######################################################################################
+### Call the preceding functions
+######################################################################################
+
+releaseDefData = getReleaseDefData(yamlFile)
+print("--------------------------------------------------------")
+print("revised releaseDefData is: ", releaseDefData)
+print("--------------------------------------------------------")
