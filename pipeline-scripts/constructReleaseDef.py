@@ -25,18 +25,23 @@ with open(yamlFile) as f:
       environmentsList = releaseDef_dict.get(item)
       print("len environmentsList is: ", len(environmentsList))
       for env_idx, environment in enumerate(environmentsList):
-      # Using for loop 
-      #for environment in my_dict.get(item): 
+        ############################################################################
+        ################## START TRANSLATION OF EACH ENVIRONMENT ###################
+        ############################################################################
+        environmentData = json.load(open(environmentTemplateFile, 'r'))
+        print("environmentData is: ", environmentData)
         print("--------- Gonna print a new environment item ----------------")
         print(env_idx, ": ", environment) 
         print("--------- Gonna decompose the environment item ----------------")
         for env_item in environment:
           print(env_idx, ": ", "env_item is: ", env_item)
           if re.match("name", env_item):
-            print(env_idx, ": ", "name is: ", environment.get(env_item))
+            #print(env_idx, ": ", "name is: ", environment.get(env_item))
+            environmentData['name'] = environment.get(env_item)
           if re.match("deployPhases", env_item):
             deployPhaseList = environment.get(env_item)
             print("len deployPhaseList is: ", deployPhaseList)
+            deployPhaseDataList = []
             for phase_idx, deployPhase in enumerate(deployPhaseList):  
               ############################################################################
               ################ START TRANSLATION OF EACH DEPLOYMENT PHASE ################
@@ -95,15 +100,26 @@ with open(yamlFile) as f:
                   print("--------------------------------------------------------")
                   print("taskDataList is: ", taskDataList)
                   print("--------------------------------------------------------")
+                  deployPhaseData['workflowTasks'] = taskDataList
               if phase_idx == (len(deployPhaseList)-1):
                 print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
                 ############################################################################
                 ################# END TRANSLATION OF EACH DEPLOYMENT PHASE #################
                 ############################################################################
-                deployPhaseData['workflowTasks'] = taskDataList
                 print("--------------------------------------------------------")
                 print("revised deployPhaseData is: ", deployPhaseData)
                 print("--------------------------------------------------------")
+              deployPhaseDataList.append(deployPhaseData)
+            print("--------------------------------------------------------")
+            print("deployPhaseDataList is:", deployPhaseDataList)
+            print("--------------------------------------------------------")
+            environmentData['deployPhases'] = deployPhaseDataList 
+        print("--------------------------------------------------------")
+        print("revised environmentData is: ", environmentData)
+        print("--------------------------------------------------------")
+        ############################################################################
+        ################### END TRANSLATION OF EACH ENVIRONMENT ####################
+        ############################################################################
         if env_idx == (len(environmentsList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
       print("--------------------------------------------------------")
@@ -115,13 +131,6 @@ print("--------------------------------------------------------")
 
 
 
-environmentData = json.load(open(environmentTemplateFile, 'r'))
-print("environmentData is: ", environmentData)
-environmentData['name'] = 'new name of environment'
-environmentData['deployPhases'] = [deployPhaseData]  
-print("--------------------------------------------------------")
-print("revised environmentData is: ", environmentData)
-print("--------------------------------------------------------")
 
 
 releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
