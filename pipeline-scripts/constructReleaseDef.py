@@ -40,6 +40,24 @@ def getPythonTaskData(task):
       pythonTaskData['inputs']['workingDirectory'] = task.get(task_item)
   return pythonTaskData
 
+def getWorkflowTasksList(workflowTasksList):
+  print("len workflowTasksList is: ", len(workflowTasksList))
+  taskDataList = []
+  for task_idx, task in enumerate(workflowTasksList):
+    if task['type'] == 'Python':
+      print("############ TYPE IS PYTHON ############")
+      taskData = getPythonTaskData(task)
+      print("--------------------------------------------------------")
+      print("revised pythonTaskData is: ", taskData)
+      taskDataList.append(taskData)
+      print("--------------------------------------------------------")
+    ############################################################################
+    ####################### END TRANSLATION OF EACH TASK #######################
+    ############################################################################
+    if task_idx == (len(workflowTasksList)-1):
+      print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
+  return taskDataList
+
 with open(yamlFile) as f:
   releaseDef_dict = yaml.safe_load(f)
   ############################################################################
@@ -95,22 +113,7 @@ with open(yamlFile) as f:
                   #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
                   deployPhaseData['name'] = deployPhase.get(depPhase_item)
                 if re.match("workflowTasks", depPhase_item):  
-                  workflowTasksList = deployPhase.get(depPhase_item)
-                  print("len workflowTasksList is: ", len(workflowTasksList))
-                  taskDataList = []
-                  for task_idx, task in enumerate(workflowTasksList):
-                    if task['type'] == 'Python':
-                      print("############ TYPE IS PYTHON ############")
-                      taskData = getPythonTaskData(task)
-                      print("--------------------------------------------------------")
-                      print("revised pythonTaskData is: ", taskData)
-                      taskDataList.append(taskData)
-                      print("--------------------------------------------------------")
-                    ############################################################################
-                    ####################### END TRANSLATION OF EACH TASK #######################
-                    ############################################################################
-                    if task_idx == (len(workflowTasksList)-1):
-                      print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
+                  taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
                   print("--------------------------------------------------------")
                   print("taskDataList is: ", taskDataList)
                   print("--------------------------------------------------------")
