@@ -2,7 +2,7 @@ import json
 import yaml
 import re
 
-with open('createTerraformSimpleAWS.yaml') as f:
+with open('../releases/yaml-definitions/createTerraformSimpleAWS.yaml') as f:
   releaseDef_dict = yaml.safe_load(f)
   for item in releaseDef_dict:
     print("item is: ", item)
