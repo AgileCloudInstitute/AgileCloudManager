@@ -2,7 +2,14 @@ import json
 import yaml
 import re
 
-with open('../releases/yaml-definitions/createTerraformSimpleAWS.yaml') as f:
+yamlDir = '../releases/yaml-definitions/'
+yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+jsonFragmentDir = '../releases/json-fragments/' 
+pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
+deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
+environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
+
+with open(yamlFile) as f:
   releaseDef_dict = yaml.safe_load(f)
   for item in releaseDef_dict:
     print("item is: ", item)
@@ -65,37 +72,38 @@ with open('../releases/yaml-definitions/createTerraformSimpleAWS.yaml') as f:
       print("--------------------------------------------------------")
 print("--------------------------------------------------------")
 
-pythonTaskData = json.load(open('pythonTaskTemplate.json', 'r'))  
-  
+
+pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
 print("pythonTaskData is: ", pythonTaskData)
 print("--------------------------------------------------------")
-
 pythonTaskData['name'] = 'new name'
 pythonTaskData['inputs']['scriptPath'] = 'new path'
 pythonTaskData['inputs']['arguments'] = 'new arguments'
 pythonTaskData['inputs']['workingDirectory'] = 'new working directory'
 print("--------------------------------------------------------")
-
 print("revised pythonTaskData is: ", pythonTaskData)
 print("--------------------------------------------------------")
-deployPhaseData = json.load(open('deployPhaseTemplate.json', 'r'))
-print("deployPhaseData is: ", deployPhaseData)
 
+
+
+deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
+print("deployPhaseData is: ", deployPhaseData)
 deployPhaseData['name'] = 'new name for deployment phase'
 deployPhaseData['workflowTasks'] = [pythonTaskData]
 print("--------------------------------------------------------")
-
 print("revised deployPhaseData is: ", deployPhaseData)
 print("--------------------------------------------------------")
 
-environmentData = json.load(open('environmentTemplate.json', 'r'))
+
+
+environmentData = json.load(open(environmentTemplateFile, 'r'))
 print("environmentData is: ", environmentData)
 environmentData['name'] = 'new name of environment'
 environmentData['deployPhases'] = [deployPhaseData]  
 print("--------------------------------------------------------")
-
 print("revised environmentData is: ", environmentData)
 print("--------------------------------------------------------")
+
 
 
 releaseDefData = json.load(open('releaseDefConstructorTemplate.json', 'r'))
@@ -106,5 +114,3 @@ releaseDefData['environments'] = [environmentData]
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
-
-
