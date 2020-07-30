@@ -38,13 +38,19 @@ with open(yamlFile) as f:
             deployPhaseList = environment.get(env_item)
             print("len deployPhaseList is: ", deployPhaseList)
             for phase_idx, deployPhase in enumerate(deployPhaseList):  
+              ############################################################################
+              ################ START TRANSLATION OF EACH DEPLOYMENT PHASE ################
+              ############################################################################
+              deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
+              print("deployPhaseData is: ", deployPhaseData)
               print("--------- Gonna print a new deployment phase ----------------")
               print(phase_idx, ": ", deployPhase)
               print("--------- Gonna decompose the deployment phase ----------------")
-              for depPhase_item in deployPhase:
+              for depPhase_item in deployPhase:  
                 print(phase_idx, ": ", "depPhase_item is: ", depPhase_item)
                 if re.match("name", depPhase_item):  
-                  print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
+                  #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
+                  deployPhaseData['name'] = deployPhase.get(depPhase_item)
                 if re.match("workflowTasks", depPhase_item):  
                   workflowTasksList = deployPhase.get(depPhase_item)
                   print("len workflowTasksList is: ", len(workflowTasksList))
@@ -91,6 +97,13 @@ with open(yamlFile) as f:
                   print("--------------------------------------------------------")
               if phase_idx == (len(deployPhaseList)-1):
                 print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
+                ############################################################################
+                ################# END TRANSLATION OF EACH DEPLOYMENT PHASE #################
+                ############################################################################
+                deployPhaseData['workflowTasks'] = taskDataList
+                print("--------------------------------------------------------")
+                print("revised deployPhaseData is: ", deployPhaseData)
+                print("--------------------------------------------------------")
         if env_idx == (len(environmentsList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
       print("--------------------------------------------------------")
@@ -99,14 +112,6 @@ print("--------------------------------------------------------")
 
 
 
-
-deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
-print("deployPhaseData is: ", deployPhaseData)
-deployPhaseData['name'] = 'new name for deployment phase'
-deployPhaseData['workflowTasks'] = [pythonTaskData]
-print("--------------------------------------------------------")
-print("revised deployPhaseData is: ", deployPhaseData)
-print("--------------------------------------------------------")
 
 
 
