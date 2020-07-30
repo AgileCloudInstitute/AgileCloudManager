@@ -10,7 +10,7 @@ deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
 environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
 releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 
-def getPythonTaskData(task):
+def getPythonTaskData(task_idx, task):
   ############################################################################
   ###################### START TRANSLATION OF EACH TASK ######################
   ############################################################################
@@ -46,7 +46,7 @@ def getWorkflowTasksList(workflowTasksList):
   for task_idx, task in enumerate(workflowTasksList):
     if task['type'] == 'Python':
       print("############ TYPE IS PYTHON ############")
-      taskData = getPythonTaskData(task)
+      taskData = getPythonTaskData(task_idx, task)
       print("--------------------------------------------------------")
       print("revised pythonTaskData is: ", taskData)
       taskDataList.append(taskData)
