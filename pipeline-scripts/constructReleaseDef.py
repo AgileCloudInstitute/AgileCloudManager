@@ -49,21 +49,41 @@ with open(yamlFile) as f:
                   workflowTasksList = deployPhase.get(depPhase_item)
                   print("len workflowTasksList is: ", workflowTasksList)
                   for task_idx, task in enumerate(workflowTasksList):
+                    ############################################################################
+                    ###################### START TRANSLATION OF EACH TASK ######################
+                    ############################################################################
+
+                    pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
+                    print("pythonTaskData is: ", pythonTaskData)
+                    print("--------------------------------------------------------")
+
                     print("--------- Gonna print a new workflow task ----------------")  
                     print(task_idx, ": ", task)  
                     print("--------- Gonna decompose the workflow task ----------------")  
                     for task_item in task:  
                       print(task_idx, ": ", "task_item is: ", task_item)  
                       if re.match("name", task_item):  
-                        print(task_idx, ": ", "name is: ", task.get(task_item))  
+                        #print(task_idx, ": ", "name is: ", task.get(task_item))  
+                        pythonTaskData['name'] = task.get(task_item)
                       if re.match("type", task_item):  
-                        print(task_idx, ": ", "type is: ", task.get(task_item))  
+                        print(task_idx, ": ", "type is: ", task.get(task_item))
+                        if re.match("Python", task.get(task_item)): 
+                          pythonTaskData['taskId'] = '6392f95f-7e76-4a18-b3c7-7f078d2f7700'
                       if re.match("scriptPath", task_item):  
-                        print(task_idx, ": ", "scriptPath is: ", task.get(task_item))  
+                        #print(task_idx, ": ", "scriptPath is: ", task.get(task_item))
+                        pythonTaskData['inputs']['scriptPath'] = task.get(task_item)
                       if re.match("arguments", task_item):  
-                        print(task_idx, ": ", "arguments is: ", task.get(task_item))  
+                        #print(task_idx, ": ", "arguments is: ", task.get(task_item))  
+                        pythonTaskData['inputs']['arguments'] = task.get(task_item)
                       if re.match("workingDirectory", task_item):  
-                        print(task_idx, ": ", "workingDirectory is: ", task.get(task_item))  
+                        #print(task_idx, ": ", "workingDirectory is: ", task.get(task_item))  
+                        pythonTaskData['inputs']['workingDirectory'] = task.get(task_item)
+                    print("--------------------------------------------------------")
+                    print("revised pythonTaskData is: ", pythonTaskData)
+                    print("--------------------------------------------------------")
+                    ############################################################################
+                    ####################### END TRANSLATION OF EACH TASK #######################
+                    ############################################################################
                     if task_idx == (len(workflowTasksList)-1):
                       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
               if phase_idx == (len(deployPhaseList)-1):
@@ -74,16 +94,6 @@ with open(yamlFile) as f:
 print("--------------------------------------------------------")
 
 
-pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
-print("pythonTaskData is: ", pythonTaskData)
-print("--------------------------------------------------------")
-pythonTaskData['name'] = 'new name'
-pythonTaskData['inputs']['scriptPath'] = 'new path'
-pythonTaskData['inputs']['arguments'] = 'new arguments'
-pythonTaskData['inputs']['workingDirectory'] = 'new working directory'
-print("--------------------------------------------------------")
-print("revised pythonTaskData is: ", pythonTaskData)
-print("--------------------------------------------------------")
 
 
 
