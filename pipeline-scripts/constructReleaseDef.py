@@ -14,43 +14,46 @@ with open('createTerraformSimpleAWS.yaml') as f:
       print("Inside environments block. ")
       print("environments item is: ", item)
       print("environments get(item) is: ", my_dict.get(item))
+      environmentsList = my_dict.get(item)
+      for env_idx, environment in enumerate(environmentsList):
       # Using for loop 
-      for environment in my_dict.get(item): 
+      #for environment in my_dict.get(item): 
         print("--------- Gonna print a new environment item ----------------")
-        print(environment) 
+        print(env_idx, ": ", environment) 
         print("--------- Gonna decompose the environment item ----------------")
         for env_item in environment:
-          print("env_item is: ", env_item)
+          print(env_idx, ": ", "env_item is: ", env_item)
           if re.match("name", env_item):
-            print("name is: ", environment.get(env_item))
+            print(env_idx, ": ", "name is: ", environment.get(env_item))
           if re.match("deployPhases", env_item):
-            for deployPhase in environment.get(env_item):  
+            deployPhaseList = environment.get(env_item)
+            for phase_idx, deployPhase in enumerate(deployPhaseList):  
               print("--------- Gonna print a new deployment phase ----------------")
-              print(deployPhase)
+              print(phase_idx, ": ", deployPhase)
               print("--------- Gonna decompose the deployment phase ----------------")
               for depPhase_item in deployPhase:
-                print("depPhase_item is: ", depPhase_item)
+                print(phase_idx, ": ", "depPhase_item is: ", depPhase_item)
                 if re.match("name", depPhase_item):  
-                  print("name is: ", deployPhase.get(depPhase_item))  
+                  print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
                 if re.match("workflowTasks", depPhase_item):  
-                  for task in deployPhase.get(depPhase_item):   
+                  workflowTasksList = deployPhase.get(depPhase_item)
+                  for task_idx, task in enumerate(workflowTasksList):
                     print("--------- Gonna print a new workflow task ----------------")  
-                    print(task)  
+                    print(task_idx, ": ", task)  
                     print("--------- Gonna decompose the workflow task ----------------")  
                     for task_item in task:  
-                      print("task_item is: ", task_item)  
+                      print(task_idx, ": ", "task_item is: ", task_item)  
                       if re.match("name", task_item):  
-                        print("name is: ", task.get(task_item))  
+                        print(task_idx, ": ", "name is: ", task.get(task_item))  
                       if re.match("type", task_item):  
-                        print("type is: ", task.get(task_item))  
+                        print(task_idx, ": ", "type is: ", task.get(task_item))  
                       if re.match("scriptPath", task_item):  
-                        print("scriptPath is: ", task.get(task_item))  
+                        print(task_idx, ": ", "scriptPath is: ", task.get(task_item))  
                       if re.match("arguments", task_item):  
-                        print("arguments is: ", task.get(task_item))  
+                        print(task_idx, ": ", "arguments is: ", task.get(task_item))  
                       if re.match("workingDirectory", task_item):  
-                        print("workingDirectory is: ", task.get(task_item))  
+                        print(task_idx, ": ", "workingDirectory is: ", task.get(task_item))  
       print("--------------------------------------------------------")
-
 print("--------------------------------------------------------")
 
 pythonTaskData = json.load(open('pythonTaskTemplate.json', 'r'))  
