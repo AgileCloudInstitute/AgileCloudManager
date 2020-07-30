@@ -47,16 +47,15 @@ with open(yamlFile) as f:
                   print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
                 if re.match("workflowTasks", depPhase_item):  
                   workflowTasksList = deployPhase.get(depPhase_item)
-                  print("len workflowTasksList is: ", workflowTasksList)
+                  print("len workflowTasksList is: ", len(workflowTasksList))
+                  taskDataList = []
                   for task_idx, task in enumerate(workflowTasksList):
                     ############################################################################
                     ###################### START TRANSLATION OF EACH TASK ######################
                     ############################################################################
-
                     pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
                     print("pythonTaskData is: ", pythonTaskData)
                     print("--------------------------------------------------------")
-
                     print("--------- Gonna print a new workflow task ----------------")  
                     print(task_idx, ": ", task)  
                     print("--------- Gonna decompose the workflow task ----------------")  
@@ -80,12 +79,16 @@ with open(yamlFile) as f:
                         pythonTaskData['inputs']['workingDirectory'] = task.get(task_item)
                     print("--------------------------------------------------------")
                     print("revised pythonTaskData is: ", pythonTaskData)
+                    taskDataList.append(pythonTaskData)
                     print("--------------------------------------------------------")
                     ############################################################################
                     ####################### END TRANSLATION OF EACH TASK #######################
                     ############################################################################
                     if task_idx == (len(workflowTasksList)-1):
                       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
+                  print("--------------------------------------------------------")
+                  print("taskDataList is: ", taskDataList)
+                  print("--------------------------------------------------------")
               if phase_idx == (len(deployPhaseList)-1):
                 print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
         if env_idx == (len(environmentsList)-1):
