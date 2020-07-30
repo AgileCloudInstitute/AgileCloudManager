@@ -138,7 +138,7 @@ with open(yamlFile) as f:
       environmentsList = releaseDef_dict.get(item)
       print("len environmentsList is: ", len(environmentsList))
       environmentsDataList = []
-      for env_idx, environment in enumerate(environmentsList):env_idx, environment
+      for env_idx, environment in enumerate(environmentsList):
         environmentData = getEnvironmentData(env_idx, environment)
         print("--------------------------------------------------------")
         print("revised environmentData is: ", environmentData)
