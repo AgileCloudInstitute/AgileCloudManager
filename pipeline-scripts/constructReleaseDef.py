@@ -58,6 +58,29 @@ def getWorkflowTasksList(workflowTasksList):
       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
   return taskDataList
 
+def getDeploymentPhaseData(phase_idx, deployPhase):
+  ############################################################################
+  ################ START TRANSLATION OF EACH DEPLOYMENT PHASE ################
+  ############################################################################
+  deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
+  print("deployPhaseData is: ", deployPhaseData)
+  print("--------- Gonna print a new deployment phase ----------------")
+  print(phase_idx, ": ", deployPhase)
+  print("--------- Gonna decompose the deployment phase ----------------")
+  for depPhase_item in deployPhase:  
+    print(phase_idx, ": ", "depPhase_item is: ", depPhase_item)
+    if re.match("name", depPhase_item):  
+      #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
+      deployPhaseData['name'] = deployPhase.get(depPhase_item)
+    if re.match("workflowTasks", depPhase_item):  
+      taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
+      print("--------------------------------------------------------")
+      print("taskDataList is: ", taskDataList)
+      print("--------------------------------------------------------")
+      deployPhaseData['workflowTasks'] = taskDataList
+  return deployPhaseData
+
+
 with open(yamlFile) as f:
   releaseDef_dict = yaml.safe_load(f)
   ############################################################################
@@ -99,25 +122,7 @@ with open(yamlFile) as f:
             print("len deployPhaseList is: ", deployPhaseList)
             deployPhaseDataList = []
             for phase_idx, deployPhase in enumerate(deployPhaseList):  
-              ############################################################################
-              ################ START TRANSLATION OF EACH DEPLOYMENT PHASE ################
-              ############################################################################
-              deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
-              print("deployPhaseData is: ", deployPhaseData)
-              print("--------- Gonna print a new deployment phase ----------------")
-              print(phase_idx, ": ", deployPhase)
-              print("--------- Gonna decompose the deployment phase ----------------")
-              for depPhase_item in deployPhase:  
-                print(phase_idx, ": ", "depPhase_item is: ", depPhase_item)
-                if re.match("name", depPhase_item):  
-                  #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
-                  deployPhaseData['name'] = deployPhase.get(depPhase_item)
-                if re.match("workflowTasks", depPhase_item):  
-                  taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
-                  print("--------------------------------------------------------")
-                  print("taskDataList is: ", taskDataList)
-                  print("--------------------------------------------------------")
-                  deployPhaseData['workflowTasks'] = taskDataList
+              deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase)
               if phase_idx == (len(deployPhaseList)-1):
                 print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
                 ############################################################################
