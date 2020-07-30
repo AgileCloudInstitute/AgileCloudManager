@@ -24,6 +24,7 @@ with open(yamlFile) as f:
       print("environments get(item) is: ", releaseDef_dict.get(item))
       environmentsList = releaseDef_dict.get(item)
       print("len environmentsList is: ", len(environmentsList))
+      environmentsDataList = []
       for env_idx, environment in enumerate(environmentsList):
         ############################################################################
         ################## START TRANSLATION OF EACH ENVIRONMENT ###################
@@ -116,6 +117,7 @@ with open(yamlFile) as f:
             environmentData['deployPhases'] = deployPhaseDataList 
         print("--------------------------------------------------------")
         print("revised environmentData is: ", environmentData)
+        environmentsDataList.append(environmentData)
         print("--------------------------------------------------------")
         ############################################################################
         ################### END TRANSLATION OF EACH ENVIRONMENT ####################
@@ -123,6 +125,7 @@ with open(yamlFile) as f:
         if env_idx == (len(environmentsList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
       print("--------------------------------------------------------")
+      print("revised environmentsDataList is: ", environmentsDataList)
 print("--------------------------------------------------------")
 
 
