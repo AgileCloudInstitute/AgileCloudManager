@@ -3,18 +3,18 @@ import yaml
 import re
 
 with open('createTerraformSimpleAWS.yaml') as f:
-  my_dict = yaml.safe_load(f)
-  for item in my_dict:
+  releaseDef_dict = yaml.safe_load(f)
+  for item in releaseDef:
     print("item is: ", item)
     if re.match("name", item):
-      print("name is: ", my_dict.get(item))
+      print("name is: ", releaseDef.get(item))
     if re.match("description", item):
-      print("description is: ", my_dict.get(item))
+      print("description is: ", releaseDef.get(item))
     if re.match("environments", item):
       print("Inside environments block. ")
       print("environments item is: ", item)
-      print("environments get(item) is: ", my_dict.get(item))
-      environmentsList = my_dict.get(item)
+      print("environments get(item) is: ", releaseDef.get(item))
+      environmentsList = releaseDef.get(item)
       for env_idx, environment in enumerate(environmentsList):
       # Using for loop 
       #for environment in my_dict.get(item): 
