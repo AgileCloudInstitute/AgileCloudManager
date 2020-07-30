@@ -15,6 +15,7 @@ with open('createTerraformSimpleAWS.yaml') as f:
       print("environments item is: ", item)
       print("environments get(item) is: ", releaseDef.get(item))
       environmentsList = releaseDef.get(item)
+      print("len environmentsList is: ", len(environmentsList))
       for env_idx, environment in enumerate(environmentsList):
       # Using for loop 
       #for environment in my_dict.get(item): 
@@ -27,6 +28,7 @@ with open('createTerraformSimpleAWS.yaml') as f:
             print(env_idx, ": ", "name is: ", environment.get(env_item))
           if re.match("deployPhases", env_item):
             deployPhaseList = environment.get(env_item)
+            print("len deployPhaseList is: ", deployPhaseList)
             for phase_idx, deployPhase in enumerate(deployPhaseList):  
               print("--------- Gonna print a new deployment phase ----------------")
               print(phase_idx, ": ", deployPhase)
@@ -37,6 +39,7 @@ with open('createTerraformSimpleAWS.yaml') as f:
                   print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
                 if re.match("workflowTasks", depPhase_item):  
                   workflowTasksList = deployPhase.get(depPhase_item)
+                  print("len workflowTasksList is: ", workflowTasksList)
                   for task_idx, task in enumerate(workflowTasksList):
                     print("--------- Gonna print a new workflow task ----------------")  
                     print(task_idx, ": ", task)  
@@ -53,6 +56,12 @@ with open('createTerraformSimpleAWS.yaml') as f:
                         print(task_idx, ": ", "arguments is: ", task.get(task_item))  
                       if re.match("workingDirectory", task_item):  
                         print(task_idx, ": ", "workingDirectory is: ", task.get(task_item))  
+                    if task_idx == (len(workflowTasksList)-1):
+                      print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
+              if phase_idx == (len(deployPhaseList)-1):
+                print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
+        if env_idx == (len(environmentsList)-1):
+          print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
       print("--------------------------------------------------------")
 print("--------------------------------------------------------")
 
