@@ -28,15 +28,15 @@ Once you have assembled the pre-requisites, do the following in order to use thi
   
 5.  **Run the Setup Script:**  
     
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/scripts/      
-      sudo python3 setupStepThree.py      
+      cd /home/aci-user/cloned-repos/agile-cloud-manager/setup/      
+      sudo python3 setup.py      
       source /etc/bashrc     
     
 #  Create the foundation of the infrastructure for the Azure Pipelines implementation   
     
-1.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-scripts/installPipelineSystemAndAgents](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-scipts/installPipelineSystemAndAgents.py)   
+1.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-tasks/installPipelineSystemAndAgents.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installPipelineSystemAndAgents.py)   
     
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scripts     
+      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
       python3 installPipelineSystemAndAgents.py     
   
 2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
@@ -45,8 +45,8 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 1.  Run the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
     
-      #Navigate to the same `pipeline-scripts` directory if you are not already there    
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scripts      
+      #Navigate to the same `pipeline-tasks` directory if you are not already there    
+      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks      
       python3 installProjectRepoBuild.py     
     
 2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
@@ -57,7 +57,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 1.  Run the pipeline task that calls the project-repo-build module withe the `destroy` command.   
     
-      #From the same `pipeline-scripts` directory      
+      #From the same `pipeline-tasks` directory      
       python3 destroyProjectRepoBuild.py     
     
 2.  Validate that the project, repository, and build have been destroyed in the Azure Devops portal.        
@@ -67,7 +67,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Log in the the VM from which you ran the agile-cloud-manager program to create the Agile Cloud Manager instance.  If you are continuing directly from the creation steps described above, you can do this from within the same Putty or SSH session as above.      
 2.  Point the terminal to the directory containing destroyPipelineSystemAndAgents.py and then run destroyPipelineSystemAndAgents.py by typing the following:    
     
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scripts     
+      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
       python3 destroyPipelineSystemAndAgents.py      
     
 3.  Validate that the infrastructure has been destroyed by examining the console output that printed while the destroyPipelineSystemAndAgents.py was running, by examining the Azure Portal see the infrastructure disappear, and by validating in the Azure DevOps Organization that the agent has moved offline.    
