@@ -2,8 +2,6 @@ import fileinput
 import sys
 import subprocess
 import re
-#import os 
-#import shutil
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
@@ -266,9 +264,9 @@ def updateVarFileAzurePipesAgentsStartUpScript(fileName):
 
 #Now call the functions
 #First do some provisioning
-chmodCommand = "chmod +x setupStepOne.sh"
-scriptsDir = "/home/aci-user/cloned-repos/agile-cloud-manager/scripts/" 
-setupCommand = "sudo ./setupStepOne.sh"
+chmodCommand = "chmod +x provisioning.sh"
+scriptsDir = "/home/aci-user/cloned-repos/agile-cloud-manager/setup/" 
+setupCommand = "sudo ./provisioning.sh"
 runShellCommand(chmodCommand, scriptsDir)
 runShellCommand(setupCommand, scriptsDir)
 
