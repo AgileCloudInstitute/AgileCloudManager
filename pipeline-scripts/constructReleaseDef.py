@@ -2,18 +2,13 @@ import json
 import yaml
 import re
 
-yamlDir = '../releases/yaml-definitions/'
-yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
 jsonFragmentDir = '../releases/json-fragments/' 
-pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
-deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
-environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
-releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 
 def getPythonTaskData(task_idx, task):
   ############################################################################
   ###################### START TRANSLATION OF EACH TASK ######################
   ############################################################################
+  pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
   pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
   print("pythonTaskData is: ", pythonTaskData)
   print("--------------------------------------------------------")
@@ -58,7 +53,7 @@ def getWorkflowTasksList(workflowTasksList):
       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
   return taskDataList
 
-def getDeploymentPhaseData(phase_idx, deployPhase):
+def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile):
   ############################################################################
   ################ START TRANSLATION OF EACH DEPLOYMENT PHASE ################
   ############################################################################
@@ -80,7 +75,7 @@ def getDeploymentPhaseData(phase_idx, deployPhase):
       deployPhaseData['workflowTasks'] = taskDataList
   return deployPhaseData
 
-def getEnvironmentData(env_idx, environment):
+def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile):
   ############################################################################
   ################## START TRANSLATION OF EACH ENVIRONMENT ###################
   ############################################################################
@@ -99,7 +94,7 @@ def getEnvironmentData(env_idx, environment):
       print("len deployPhaseList is: ", deployPhaseList)
       deployPhaseDataList = []
       for phase_idx, deployPhase in enumerate(deployPhaseList):  
-        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase)
+        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile)
         if phase_idx == (len(deployPhaseList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
           ############################################################################
@@ -115,11 +110,11 @@ def getEnvironmentData(env_idx, environment):
       environmentData['deployPhases'] = deployPhaseDataList 
   return environmentData
 
-def getEnvironmentsDataList(environmentsList):
+def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPhaseTemplateFile):
   print("len environmentsList is: ", len(environmentsList))
   environmentsDataList = []
   for env_idx, environment in enumerate(environmentsList):
-    environmentData = getEnvironmentData(env_idx, environment)
+    environmentData = getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile)
     print("--------------------------------------------------------")
     print("revised environmentData is: ", environmentData)
     environmentsDataList.append(environmentData)
@@ -131,7 +126,7 @@ def getEnvironmentsDataList(environmentsList):
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
 
-def getReleaseDefData(yamlInputFile):
+def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
     ############################################################################
@@ -151,7 +146,7 @@ def getReleaseDefData(yamlInputFile):
         print("Inside environments block. ")
         print("environments item is: ", item)
         print("environments get(item) is: ", releaseDef_dict.get(item))
-        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item))
+        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), environmentTemplateFile, deployPhaseTemplateFile)
         print("--------------------------------------------------------")
         print("revised environmentsDataList is: ", environmentsDataList)
     releaseDefData['environments'] = environmentsDataList
@@ -161,8 +156,15 @@ def getReleaseDefData(yamlInputFile):
 ######################################################################################
 ### Call the preceding functions
 ######################################################################################
+yamlDir = '../releases/yaml-definitions/'
+yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
+environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
+releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 
-releaseDefData = getReleaseDefData(yamlFile)
+
+
+releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile)
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
