@@ -52,13 +52,12 @@ def getWorkflowTasksList(workflowTasksList):
       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
   return taskDataList
 
-def getDeploymentInput(deploymentInput, poolQueueId):
+def getDeploymentInput(poolQueueId):
+  #This will later need to receive the user-supplied YAML fragment as input when the params are changed to allow the YAML to specify artifacts, etc.
   depInputTemplateFile = jsonFragmentDir + 'deploymentInputTemplate.json'  
   depInputData = json.load(open(depInputTemplateFile, 'r'))  
   print("depInputData is: ", depInputData)
   print("--------------------------------------------------------")
-  print("--------- Gonna print the yaml deploymentInput ----------------")  
-  print("deploymentInput is: : ", deploymentInput)  
   print("---- Inside queueId block ----")  
   depInputData['queueId'] = poolQueueId
   return depInputData
@@ -70,7 +69,7 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, pool
   print(phase_idx, ": ", deployPhase)
   print("--------- Gonna decompose the deployment phase ----------------")
   #Handling deployment input individually here because its inputs are from an API call and not from YAML now.  This will change later when artifact info will later be brought in from YAML.
-  depInput = getDeploymentInput(deployPhase.get(depPhase_item), poolQueueId)
+  depInput = getDeploymentInput(poolQueueId)
   deployPhaseData['deploymentInput'] = depInput 
   #Now iterate the YAML input
   for depPhase_item in deployPhase:  
