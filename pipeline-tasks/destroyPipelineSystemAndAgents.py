@@ -1,4 +1,3 @@
-
 print("Inside installPipelineSystem.py script.")
 
 import os
@@ -29,17 +28,6 @@ acmRootDir=os.environ['ACM_ROOT_DIR']
 pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
 pathToAgentCalls = acmRootDir+"/calls-to-modules/azure-pipelines-agent-vms-demo/"
 destroyAgentCommand=destroyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
-#/////////////////////////////////////////////////////////
-
-#pathToFoundationInputs = 'C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\azure-pipelines-foundation\\inputs.tfvars'
-#pathToAgentInputs = 'C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\azure-pipelines-agent-vms\\inputs.tfvars'
-#initCommand='terraform init'
-#destroyCommand='terraform destroy -auto-approve -var-file='
-#destroyFoundationCommand=destroyCommand+pathToFoundationInputs
-
-#pathToFoundationCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-foundation-demo\\"
-#pathToAgentCalls = "C:\\projects\\terraform\\azure-pipelines-system\\calls-to-modules\\azure-pipelines-agent-vms-demo\\"
-#destroyAgentCommand=destroyCommand+pathToAgentInputs
 
 print ('pathToFoundationInputs:', pathToFoundationInputs )
 print ('pathToAgentAutoInputs:', pathToAgentAutoInputs )
