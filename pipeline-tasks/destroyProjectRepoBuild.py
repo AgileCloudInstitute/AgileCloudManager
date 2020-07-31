@@ -1,14 +1,13 @@
-
-print("Inside destroyProjectRepoBuild.py script.")
-
-import sys 
-import deploymentFunctions as depfunc
-
+print("Inside destroyProjectRepoBuild.py script.")  
+  
+import sys  
+import deploymentFunctions as depfunc  
+  
 pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
 pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
 pathToAzdoProjectRepoBuildAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-auto.tfvars'
 pathToAzdoProjectRepoBuildManualInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-manual.tfvars'
-
+  
 getAzdoProviderInputs=' -var-file='+pathToAzdoProviderInputs
 getAzurermProviderInputs=' -var-file='+pathToAzurermProviderInputs
 getAzdoProjectRepoBuildAutoInputs=' -var-file='+pathToAzdoProjectRepoBuildAutoInputs
