@@ -52,7 +52,18 @@ def getWorkflowTasksList(workflowTasksList):
       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
   return taskDataList
 
-def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile):
+def getDeploymentInput(deploymentInput, poolQueueId):
+  depInputTemplateFile = jsonFragmentDir + 'deploymentInputTemplate.json'  
+  depInputData = json.load(open(depInputTemplateFile, 'r'))  
+  print("depInputData is: ", depInputData)
+  print("--------------------------------------------------------")
+  print("--------- Gonna print the yaml deploymentInput ----------------")  
+  print("deploymentInput is: : ", deploymentInput)  
+  print("---- Inside queueId block ----")  
+  depInputData['queueId'] = poolQueueId
+  return depInputData
+    
+def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId):
   deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
   print("deployPhaseData is: ", deployPhaseData)
   print("--------- Gonna print a new deployment phase ----------------")
@@ -63,6 +74,9 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile):
     if re.match("name", depPhase_item):  
       #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
       deployPhaseData['name'] = deployPhase.get(depPhase_item)
+    if re.match("deploymentInput", depPhase_item):  
+      depInput = getDeploymentInput(deployPhase.get(depPhase_item), poolQueueId)
+      deployPhaseData['deploymentInput'] = depInput 
     if re.match("workflowTasks", depPhase_item):  
       taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
       print("--------------------------------------------------------")
@@ -71,7 +85,7 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile):
       deployPhaseData['workflowTasks'] = taskDataList
   return deployPhaseData
 
-def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile):
+def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId):
   environmentData = json.load(open(environmentTemplateFile, 'r'))
   print("environmentData is: ", environmentData)
   print("--------- Gonna print a new environment item ----------------")
@@ -87,7 +101,7 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
       print("len deployPhaseList is: ", deployPhaseList)
       deployPhaseDataList = []
       for phase_idx, deployPhase in enumerate(deployPhaseList):  
-        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile)
+        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId)
         if phase_idx == (len(deployPhaseList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
           print("--------------------------------------------------------")
@@ -100,11 +114,11 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
       environmentData['deployPhases'] = deployPhaseDataList 
   return environmentData
 
-def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPhaseTemplateFile):
+def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId):
   print("len environmentsList is: ", len(environmentsList))
   environmentsDataList = []
   for env_idx, environment in enumerate(environmentsList):
-    environmentData = getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile)
+    environmentData = getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
     print("--------------------------------------------------------")
     print("revised environmentData is: ", environmentData)
     environmentsDataList.append(environmentData)
@@ -113,7 +127,7 @@ def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPha
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
 
-def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile):
+def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
     releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
@@ -130,7 +144,7 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
         print("Inside environments block. ")
         print("environments item is: ", item)
         print("environments get(item) is: ", releaseDef_dict.get(item))
-        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), environmentTemplateFile, deployPhaseTemplateFile)
+        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
         print("--------------------------------------------------------")
         print("revised environmentsDataList is: ", environmentsDataList)
     releaseDefData['environments'] = environmentsDataList
@@ -148,23 +162,10 @@ def createReleaseDefinitionApiRequest(data, azdo_organization_name, azdo_project
     print("r.status_code is: ", respCode)
     print("r.json() is: ", r.json())
     return respCode
-  
-######################################################################################
-### Step One: Convert YAML definition to JSON data
-######################################################################################
-yamlDir = '../release-definitions/yaml-definition-files/'
-yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
-deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
-environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
-releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 
-releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile)
-print("--------------------------------------------------------")
-print("revised releaseDefData is: ", releaseDefData)
-print("--------------------------------------------------------")
 
 ##############################################################################################
-### Step Two: Get The Output Variables From the azure-pipelines-project-repo-build module
+### Step One: Get The Output Variables From the azure-pipelines-project-repo-build module
 ##############################################################################################
 initCommand='terraform init'
 pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
@@ -173,13 +174,51 @@ outputProjectRepoBuildCommand='terraform output '
 depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
 depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
 
-print("Back in installReleaseDefMinimal.py .")
+print("Back in constructReleaseDef.py .")
 print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
 print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
 
-##############################################################################################
-### Step Three: Create Release Definition By Making API Call.
-##############################################################################################
-rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+#########################################################################################################
+### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
+#########################################################################################################
+queue_name = "Default"
+poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
+print("poolQueueId is: ", poolQueueId)  
+print("---------------------------------------------------------")
 
-print("response code from create release definition API call is: ", rCode)
+######################################################################################
+### Step Three: Convert YAML definition to JSON data
+######################################################################################
+yamlDir = '../release-definitions/yaml-definition-files/'
+yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
+environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
+releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
+
+releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
+print("--------------------------------------------------------")
+print("revised releaseDefData is: ", releaseDefData)
+print("--------------------------------------------------------")
+
+# Shutting off everything below temporarily, until we get the releaseDefData constructed properly
+
+# ##############################################################################################
+# ### Step Two: Get The Output Variables From the azure-pipelines-project-repo-build module
+# ##############################################################################################
+# initCommand='terraform init'
+# pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
+# outputProjectRepoBuildCommand='terraform output '
+
+# depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
+# depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
+
+# print("Back in installReleaseDefMinimal.py .")
+# print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
+# print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
+
+# ##############################################################################################
+# ### Step Three: Create Release Definition By Making API Call.
+# ##############################################################################################
+# rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+
+# print("response code from create release definition API call is: ", rCode)
