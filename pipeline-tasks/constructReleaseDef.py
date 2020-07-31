@@ -199,26 +199,10 @@ releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, 
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
+  
+##############################################################################################
+### Step Four: Create Release Definition By Making API Call.
+##############################################################################################
+rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
 
-# Shutting off everything below temporarily, until we get the releaseDefData constructed properly
-
-# ##############################################################################################
-# ### Step Two: Get The Output Variables From the azure-pipelines-project-repo-build module
-# ##############################################################################################
-# initCommand='terraform init'
-# pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
-# outputProjectRepoBuildCommand='terraform output '
-
-# depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
-# depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
-
-# print("Back in installReleaseDefMinimal.py .")
-# print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
-# print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
-
-# ##############################################################################################
-# ### Step Three: Create Release Definition By Making API Call.
-# ##############################################################################################
-# rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
-
-# print("response code from create release definition API call is: ", rCode)
+print("response code from create release definition API call is: ", rCode)
