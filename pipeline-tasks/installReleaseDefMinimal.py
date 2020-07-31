@@ -55,7 +55,8 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
 ##############################################################################################
 ### Step Three: Create Release Definition By Making API Call.
 ##############################################################################################
-jsonTemplateFile = 'releaseDefTempMinimal.json'
+jsonTemplateFile = '/home/aci-user/cloned-repos/agile-cloud-manager/release-definitions/json-fragments/releaseDefTempMinimal.json'
+#'releaseDefTempMinimal.json'
 releaseDefinitionName = 'Name of minimal release Definition'
 releaseDefinitionDescription = 'Description of minimal release definition.'
 rCode = createReleaseDefinitionApiRequest(jsonTemplateFile, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id , releaseDefinitionName, releaseDefinitionDescription)
