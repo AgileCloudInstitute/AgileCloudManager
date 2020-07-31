@@ -5,9 +5,6 @@ import re
 jsonFragmentDir = '../release-definitions/json-fragments/' 
 
 def getPythonTaskData(task_idx, task):
-  ############################################################################
-  ###################### START TRANSLATION OF EACH TASK ######################
-  ############################################################################
   pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
   pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
   print("pythonTaskData is: ", pythonTaskData)
@@ -46,17 +43,11 @@ def getWorkflowTasksList(workflowTasksList):
       print("revised pythonTaskData is: ", taskData)
       taskDataList.append(taskData)
       print("--------------------------------------------------------")
-    ############################################################################
-    ####################### END TRANSLATION OF EACH TASK #######################
-    ############################################################################
     if task_idx == (len(workflowTasksList)-1):
       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
   return taskDataList
 
 def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile):
-  ############################################################################
-  ################ START TRANSLATION OF EACH DEPLOYMENT PHASE ################
-  ############################################################################
   deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
   print("deployPhaseData is: ", deployPhaseData)
   print("--------- Gonna print a new deployment phase ----------------")
@@ -76,9 +67,6 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile):
   return deployPhaseData
 
 def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile):
-  ############################################################################
-  ################## START TRANSLATION OF EACH ENVIRONMENT ###################
-  ############################################################################
   environmentData = json.load(open(environmentTemplateFile, 'r'))
   print("environmentData is: ", environmentData)
   print("--------- Gonna print a new environment item ----------------")
@@ -97,9 +85,6 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
         deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile)
         if phase_idx == (len(deployPhaseList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
-          ############################################################################
-          ################# END TRANSLATION OF EACH DEPLOYMENT PHASE #################
-          ############################################################################
           print("--------------------------------------------------------")
           print("revised deployPhaseData is: ", deployPhaseData)
           print("--------------------------------------------------------")
@@ -119,9 +104,6 @@ def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPha
     print("revised environmentData is: ", environmentData)
     environmentsDataList.append(environmentData)
     print("--------------------------------------------------------")
-    ############################################################################
-    ################### END TRANSLATION OF EACH ENVIRONMENT ####################
-    ############################################################################
     if env_idx == (len(environmentsList)-1):
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
@@ -129,9 +111,6 @@ def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPha
 def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
-    ############################################################################
-    ################# START TRANSLATION OF RELEASE DEFINITION ##################
-    ############################################################################
     releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
     print("releaseDefData is: ", releaseDefData)
     for item in releaseDef_dict:
