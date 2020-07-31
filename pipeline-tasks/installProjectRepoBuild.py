@@ -4,7 +4,7 @@ print("Inside installProjectRepoBuild.py script.")
 import sys 
 import deploymentFunctions as depfunc
 
-pathToTempRepoStorageParent='/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-scipts/'
+pathToTempRepoStorageParent='/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/'
 tmpRepoStorageFolder='tmpRepoStorage'
 sourceRepo='https://github.com/AgileCloudInstitute/terraform-aws-simple-example.git'
 
