@@ -9,6 +9,6 @@ environments:
         workflowTasks: 
         - name: Python task example
           type: Python
-          scriptPath: value for scriptPath will go here
-          arguments: the arguments will go here
-          workingDirectory: the workingDirectory will go here
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-simple-example/drop/pipeline-scripts/createSimpleExample.py"
+          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)"
+          workingDirectory: ""
