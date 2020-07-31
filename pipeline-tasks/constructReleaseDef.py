@@ -69,14 +69,15 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, pool
   print("--------- Gonna print a new deployment phase ----------------")
   print(phase_idx, ": ", deployPhase)
   print("--------- Gonna decompose the deployment phase ----------------")
+  #Handling deployment input individually here because its inputs are from an API call and not from YAML now.  This will change later when artifact info will later be brought in from YAML.
+  depInput = getDeploymentInput(deployPhase.get(depPhase_item), poolQueueId)
+  deployPhaseData['deploymentInput'] = depInput 
+  #Now iterate the YAML input
   for depPhase_item in deployPhase:  
     print(phase_idx, ": ", "depPhase_item is: ", depPhase_item)
     if re.match("name", depPhase_item):  
       #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
       deployPhaseData['name'] = deployPhase.get(depPhase_item)
-    if re.match("deploymentInput", depPhase_item):  
-      depInput = getDeploymentInput(deployPhase.get(depPhase_item), poolQueueId)
-      deployPhaseData['deploymentInput'] = depInput 
     if re.match("workflowTasks", depPhase_item):  
       taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
       print("--------------------------------------------------------")
