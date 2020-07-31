@@ -2,5 +2,6 @@
               "rank":1,
               "phaseType":1,
               "name":"name of job goes here",
+              "deploymentInput":{},
               "workflowTasks":[]
             }
