@@ -1,6 +1,11 @@
 import json
 import yaml
 import re
+import sys  
+import requests
+import os
+import base64
+import deploymentFunctions as depfunc  
 
 jsonFragmentDir = '../release-definitions/json-fragments/' 
 
@@ -131,9 +136,21 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
     releaseDefData['environments'] = environmentsDataList
     return releaseDefData
 
+def createReleaseDefinitionApiRequest(data, azdo_organization_name, azdo_project_id):
+    personal_access_token = ":"+os.environ["AZ_PAT"]
+    headers = {}
+    headers['Content-type'] = "application/json"
+    headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))
+    api_version = "5.1"
+    url = ("https://vsrm.dev.azure.com/%s/%s/_apis/release/definitions?api-version=%s" % (azdo_organization_name, azdo_project_id, api_version))
+    r = requests.post(url, data=json.dumps(data), headers=headers)
+    respCode = r.status_code
+    print("r.status_code is: ", respCode)
+    print("r.json() is: ", r.json())
+    return respCode
   
 ######################################################################################
-### Call the preceding functions
+### Step One: Convert YAML definition to JSON data
 ######################################################################################
 yamlDir = '../release-definitions/yaml-definition-files/'
 yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
@@ -141,9 +158,28 @@ deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
 environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
 releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 
-
-
 releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile)
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
+
+##############################################################################################
+### Step Two: Get The Output Variables From the azure-pipelines-project-repo-build module
+##############################################################################################
+initCommand='terraform init'
+pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
+outputProjectRepoBuildCommand='terraform output '
+
+depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
+depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
+
+print("Back in installReleaseDefMinimal.py .")
+print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
+print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
+
+##############################################################################################
+### Step Three: Create Release Definition By Making API Call.
+##############################################################################################
+rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+
+print("response code from create release definition API call is: ", rCode)
