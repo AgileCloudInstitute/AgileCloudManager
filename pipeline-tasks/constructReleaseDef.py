@@ -2,7 +2,7 @@ import json
 import yaml
 import re
 
-jsonFragmentDir = '../releases/json-fragments/' 
+jsonFragmentDir = '../release-definitions/json-fragments/' 
 
 def getPythonTaskData(task_idx, task):
   ############################################################################
@@ -156,7 +156,7 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
 ######################################################################################
 ### Call the preceding functions
 ######################################################################################
-yamlDir = '../releases/yaml-definitions/'
+yamlDir = '../release-definitions/yaml-definition-files/'
 yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
 deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
 environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
