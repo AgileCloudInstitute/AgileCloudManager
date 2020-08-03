@@ -79,7 +79,7 @@ def getDeploymentInput(poolQueueId, deploymentInput):
             print("artifact_item is: ", artifact_item)  
             print("--------------------------------------------------------")  
             if re.match("alias", artifact_item):  
-              artifactData['alias'] = artifactsList.get(artifact_item)  
+              artifactData['alias'] = artifact.get(artifact_item)  
           downloadInputsList.append(artifactData)  
   depInputData['artifactsDownloadInput'] = "{\"downloadInputs\":" + downloadInputsList + "}"  
   print("---- Inside queueId block ----")  
