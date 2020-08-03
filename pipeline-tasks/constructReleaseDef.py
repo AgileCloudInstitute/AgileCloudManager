@@ -58,11 +58,13 @@ def getDeploymentInput(poolQueueId, deploymentInput):
   depInputData = json.load(open(depInputTemplateFile, 'r'))  
   print("depInputData is: ", depInputData)  
   print("--------------------------------------------------------")  
+  print("deploymentInput inside getDeploymentInput() is: ", deploymentInput)
+  print("--------------------------------------------------------")  
   downloadInputsList = []  
   for dep_item in deploymentInput:  
     if re.match("artifactsDownloadInput", dep_item):  
       artifactsList = deployPhase.get(dep_item)  
-      print("artifactsList is: ", artifactsList)
+      print("artifactsList is: ", artifactsList)  
       print("--------------------------------------------------------")  
       print("depInputData is: ", depInputData)  
       print("--------------------------------------------------------")  
@@ -95,6 +97,7 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, pool
       #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
       deployPhaseData['name'] = deployPhase.get(depPhase_item)
     if re.match("deploymentInput", depPhase_item):  
+      
       depInput = getDeploymentInput(poolQueueId, depPhase_item)  
       deployPhaseData['deploymentInput'] = depInput  
     if re.match("workflowTasks", depPhase_item):  
@@ -111,17 +114,20 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
   print("--------- Gonna print a new environment item ----------------")
   print(env_idx, ": ", environment) 
   print("--------- Gonna decompose the environment item ----------------")
-  for env_item in environment:
-    print(env_idx, ": ", "env_item is: ", env_item)
-    if re.match("name", env_item):
-      #print(env_idx, ": ", "name is: ", environment.get(env_item))
-      environmentData['name'] = environment.get(env_item)
-    if re.match("deployPhases", env_item):
-      deployPhaseList = environment.get(env_item)
-      print("len deployPhaseList is: ", deployPhaseList)
-      deployPhaseDataList = []
+  for env_item in environment:  
+    print(env_idx, ": ", "env_item is: ", env_item)  
+    if re.match("name", env_item):  
+      #print(env_idx, ": ", "name is: ", environment.get(env_item))  
+      environmentData['name'] = environment.get(env_item)  
+    if re.match("deployPhases", env_item):  
+      deployPhaseList = environment.get(env_item)  
+      print("len deployPhaseList is: ", len(deployPhaseList))  
+      deployPhaseDataList = []  
       for phase_idx, deployPhase in enumerate(deployPhaseList):  
-        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId)
+        print("-----------------------------------------------------------")  
+        print("deployPhase in getEnvironmentData() is: ", deployPhase)  
+        print("-----------------------------------------------------------")
+        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId)  
         if phase_idx == (len(deployPhaseList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
           print("--------------------------------------------------------")
