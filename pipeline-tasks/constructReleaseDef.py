@@ -82,10 +82,10 @@ def getDeploymentInput(poolQueueId, deploymentInput):
               artifactData['alias'] = artifact.get(artifact_item)  
           downloadInputsList.append(artifactData)  
         dinputsData = {"downloadInputs": []}
-        json_dinputsData = json.dumps(dinputsData)
+        json_dinputsData = json.loads(dinputsData)
         print("json_dinputsData is: ", json_dinputsData)
         print("--------------------------------------------------------")  
-        #print("json_dinputsData['downloadInputs'] is: ", json_dinputsData['downloadInputs'])
+        print("json_dinputsData['downloadInputs'] is: ", json_dinputsData['downloadInputs'])
         for no in json_dinputsData['downloadInputs']:
           print("no is: ", no)
         print("--------------------------------------------------------")  
