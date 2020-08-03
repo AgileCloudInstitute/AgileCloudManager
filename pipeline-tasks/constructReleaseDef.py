@@ -85,7 +85,9 @@ def getDeploymentInput(poolQueueId, deploymentInput):
         json_dinputsData = json.dumps(dinputsData)
         print("json_dinputsData is: ", json_dinputsData)
         print("--------------------------------------------------------")  
-        print("json_dinputsData['downloadInputs'] is: ", json_dinputsData['downloadInputs'])
+        #print("json_dinputsData['downloadInputs'] is: ", json_dinputsData['downloadInputs'])
+        for no in json_dinputsData['downloadInputs']:
+          print("no is: ", no)
         print("--------------------------------------------------------")  
         dloadInputsList = json.dumps(downloadInputsList)
         print("revised downloadInputsList is: ", dloadInputsList)
