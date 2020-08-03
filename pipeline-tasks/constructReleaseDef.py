@@ -56,28 +56,29 @@ def getDeploymentInput(poolQueueId, deploymentInput):
   #This will later need to receive the user-supplied YAML fragment as input when the params are changed to allow the YAML to specify artifacts, etc.  
   depInputTemplateFile = jsonFragmentDir + 'deploymentInputTemplate.json'  
   depInputData = json.load(open(depInputTemplateFile, 'r'))  
-  print("depInputData is: ", depInputData)  
+  print("depInputData inside getDeploymentInput() is: ", depInputData)  
   print("--------------------------------------------------------")  
   print("deploymentInput inside getDeploymentInput() is: ", deploymentInput)
   print("--------------------------------------------------------")  
   downloadInputsList = []  
-  for dep_item in deploymentInput:  
-    print("dep_item is: ", dep_item)
-    if re.match("artifactsDownloadInput", dep_item):  
-      artifactsList = deployPhase.get(dep_item)  
-      print("artifactsList is: ", artifactsList)  
-      print("--------------------------------------------------------")  
-      print("depInputData is: ", depInputData)  
-      print("--------------------------------------------------------")  
-      for artifact in artifactsList:  
-        print("artifact is: ", artifact)
+  for dInput in deploymentInput:  
+    for dep_item in dInput:
+      print("dep_item is: ", dep_item)
+      if re.match("artifactsDownloadInput", dep_item):  
+        artifactsList = deployPhase.get(dep_item)  
+        print("artifactsList is: ", artifactsList)  
         print("--------------------------------------------------------")  
-        artifactDownloadInputTemplateFile = jsonFragmentDir + 'downloadInputArtifactTemplate.json'  
-        artifactData = json.load(open(artifactDownloadInputTemplateFile, 'r'))  
-        if re.match("alias", artifact):  
-          artifactData['alias'] = artifactsList.get(artifact)  
-          downloadInputsList.append(artifactData)  
-      depInputData['artifactsDownloadInput'] = "{\"downloadInputs\":" + downloadInputsList + "}"  
+        print("depInputData is: ", depInputData)  
+        print("--------------------------------------------------------")  
+        for artifact in artifactsList:  
+          print("artifact is: ", artifact)
+          print("--------------------------------------------------------")  
+          artifactDownloadInputTemplateFile = jsonFragmentDir + 'downloadInputArtifactTemplate.json'  
+          artifactData = json.load(open(artifactDownloadInputTemplateFile, 'r'))  
+          if re.match("alias", artifact):  
+            artifactData['alias'] = artifactsList.get(artifact)  
+            downloadInputsList.append(artifactData)  
+  depInputData['artifactsDownloadInput'] = "{\"downloadInputs\":" + downloadInputsList + "}"  
   print("---- Inside queueId block ----")  
   depInputData['queueId'] = poolQueueId
   print("--------------------------------------------------------")  
