@@ -97,8 +97,7 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, pool
       #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
       deployPhaseData['name'] = deployPhase.get(depPhase_item)
     if re.match("deploymentInput", depPhase_item):  
-      
-      depInput = getDeploymentInput(poolQueueId, depPhase_item)  
+      depInput = getDeploymentInput(poolQueueId, deployPhase.get(depPhase_item))  
       deployPhaseData['deploymentInput'] = depInput  
     if re.match("workflowTasks", depPhase_item):  
       taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
