@@ -6,9 +6,9 @@ import requests
 import os
 import base64
 import deploymentFunctions as depfunc  
-
+  
 jsonFragmentDir = '../release-definitions/json-fragments/' 
-
+  
 def getPythonTaskData(task_idx, task):  
   pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
   pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
@@ -84,6 +84,8 @@ def getDeploymentInput(poolQueueId, deploymentInput):
         dinputsData = {"downloadInputs": []}
         json_dinputsData = json.dumps(dinputsData)
         print("json_dinputsData is: ", json_dinputsData)
+        print("--------------------------------------------------------")  
+        print("json_dinputsData['downloadInputs'] is: ", json_dinputsData['downloadInputs'])
         print("--------------------------------------------------------")  
         dloadInputsList = json.dumps(downloadInputsList)
         print("revised downloadInputsList is: ", dloadInputsList)
