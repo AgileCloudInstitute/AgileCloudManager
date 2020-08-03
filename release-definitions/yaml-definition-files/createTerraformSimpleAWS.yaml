@@ -8,7 +8,7 @@ environments:
       - name: First Job
         deploymentInput: 
         - artifactsDownloadInput:
-          -alias: _terraform-aws-simple-example
+          - alias: _terraform-aws-simple-example
         workflowTasks: 
         - name: Python task example
           type: Python
