@@ -81,7 +81,7 @@ def getDeploymentInput(poolQueueId, deploymentInput):
             if re.match("alias", artifact_item):  
               artifactData['alias'] = artifact.get(artifact_item)  
           downloadInputsList.append(artifactData)  
-        dinputsData = {"downloadInputs": {}}
+        dinputsData = {"downloadInputs": []}
         json_dinputsData = json.dumps(dinputsData)
         print("json_dinputsData is: ", json_dinputsData)
         print("--------------------------------------------------------")  
