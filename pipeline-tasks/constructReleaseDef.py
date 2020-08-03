@@ -82,20 +82,20 @@ def getDeploymentInput(poolQueueId, deploymentInput):
               artifactData['alias'] = artifact.get(artifact_item)  
           downloadInputsList.append(artifactData)  
         dinputsData = {"downloadInputs": []}
-        json_dinputsData = json.loads(dinputsData)
-        print("json_dinputsData is: ", json_dinputsData)
+        #json_dinputsData = json.loads(dinputsData)
+        print("dinputsData is: ", dinputsData)
         print("--------------------------------------------------------")  
-        print("json_dinputsData['downloadInputs'] is: ", json_dinputsData['downloadInputs'])
-        for no in json_dinputsData['downloadInputs']:
-          print("no is: ", no)
+        print("dinputsData['downloadInputs'] is: ", dinputsData['downloadInputs'])
+        #for no in json_dinputsData['downloadInputs']:
+        #  print("no is: ", no)
         print("--------------------------------------------------------")  
-        dloadInputsList = json.dumps(downloadInputsList)
-        print("revised downloadInputsList is: ", dloadInputsList)
+        #dloadInputsList = json.dumps(downloadInputsList)
+        print("revised downloadInputsList is: ", downloadInputsList)
         print("--------------------------------------------------------") 
-        json_dinputsData['downloadInputs'] = dloadInputsList
-        print("revised json_dinputsData is: ", json_dinputsData)
+        dinputsData['downloadInputs'] = downloadInputsList
+        print("revised dinputsData is: ", dinputsData)
         print("--------------------------------------------------------")  
-  depInputData['artifactsDownloadInput'] = json_dinputsData
+  depInputData['artifactsDownloadInput'] = dinputsData
   print("---- Inside queueId block ----")  
   depInputData['queueId'] = poolQueueId
   print("--------------------------------------------------------")  
