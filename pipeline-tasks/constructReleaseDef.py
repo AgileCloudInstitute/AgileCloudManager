@@ -83,7 +83,6 @@ def getDeploymentInput(poolQueueId, deploymentInput):
           downloadInputsList.append(artifactData)  
         dinputsData = {"downloadInputs": {}}
         json_dinputsData = json.dumps(dinputsData)
-        json_dinputsData['downloadInputs']
         print("json_dinputsData[\'downloadInputs\'] is: ", json_dinputsData['downloadInputs'])
         print("--------------------------------------------------------")  
         json_dinputsData['downloadInputs'] = downloadInputsList
