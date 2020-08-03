@@ -62,6 +62,7 @@ def getDeploymentInput(poolQueueId, deploymentInput):
   print("--------------------------------------------------------")  
   downloadInputsList = []  
   for dep_item in deploymentInput:  
+    print("dep_item is: ", dep_item)
     if re.match("artifactsDownloadInput", dep_item):  
       artifactsList = deployPhase.get(dep_item)  
       print("artifactsList is: ", artifactsList)  
