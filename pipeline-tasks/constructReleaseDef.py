@@ -9,7 +9,7 @@ import deploymentFunctions as depfunc
 
 jsonFragmentDir = '../release-definitions/json-fragments/' 
 
-def getPythonTaskData(task_idx, task):
+def getPythonTaskData(task_idx, task):  
   pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
   pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
   print("pythonTaskData is: ", pythonTaskData)
@@ -71,13 +71,16 @@ def getDeploymentInput(poolQueueId, deploymentInput):
         print("depInputData is: ", depInputData)  
         print("--------------------------------------------------------")  
         for artifact in artifactsList:  
-          print("artifact is: ", artifact)
+          print("artifact is: ", artifact)  
           print("--------------------------------------------------------")  
           artifactDownloadInputTemplateFile = jsonFragmentDir + 'downloadInputArtifactTemplate.json'  
           artifactData = json.load(open(artifactDownloadInputTemplateFile, 'r'))  
-          if re.match("alias", artifact):  
-            artifactData['alias'] = artifactsList.get(artifact)  
-            downloadInputsList.append(artifactData)  
+          for artifact_item in artifact:
+            print("artifact_item is: ", artifact_item)  
+            print("--------------------------------------------------------")  
+            if re.match("alias", artifact_item):  
+              artifactData['alias'] = artifactsList.get(artifact_item)  
+          downloadInputsList.append(artifactData)  
   depInputData['artifactsDownloadInput'] = "{\"downloadInputs\":" + downloadInputsList + "}"  
   print("---- Inside queueId block ----")  
   depInputData['queueId'] = poolQueueId
