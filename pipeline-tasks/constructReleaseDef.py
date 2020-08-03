@@ -52,31 +52,51 @@ def getWorkflowTasksList(workflowTasksList):
       print("////////////////// FINISHED PROCESSING THE LAST TASK \\\\\\\\\\\\\\\\\\\\\\")
   return taskDataList
 
-def getDeploymentInput(poolQueueId):
-  #This will later need to receive the user-supplied YAML fragment as input when the params are changed to allow the YAML to specify artifacts, etc.
+def getDeploymentInput(poolQueueId, deploymentInput):  
+  #This will later need to receive the user-supplied YAML fragment as input when the params are changed to allow the YAML to specify artifacts, etc.  
   depInputTemplateFile = jsonFragmentDir + 'deploymentInputTemplate.json'  
   depInputData = json.load(open(depInputTemplateFile, 'r'))  
-  print("depInputData is: ", depInputData)
-  print("--------------------------------------------------------")
+  print("depInputData is: ", depInputData)  
+  print("--------------------------------------------------------")  
+  downloadInputsList = []  
+  for dep_item in deploymentInput:  
+    if re.match("artifactsDownloadInput", dep_item):  
+      artifactsList = deployPhase.get(dep_item)  
+      print("artifactsList is: ", artifactsList)
+      print("--------------------------------------------------------")  
+      print("depInputData is: ", depInputData)  
+      print("--------------------------------------------------------")  
+      for artifact in artifactsList:  
+        print("artifact is: ", artifact)
+        print("--------------------------------------------------------")  
+        artifactDownloadInputTemplateFile = jsonFragmentDir + 'downloadInputArtifactTemplate.json'  
+        artifactData = json.load(open(artifactDownloadInputTemplateFile, 'r'))  
+        if re.match("alias", artifact):  
+          artifactData['alias'] = artifactsList.get(artifact)  
+          downloadInputsList.append(artifactData)  
+      depInputData['artifactsDownloadInput'] = "{\"downloadInputs\":" + downloadInputsList + "}"  
   print("---- Inside queueId block ----")  
   depInputData['queueId'] = poolQueueId
+  print("--------------------------------------------------------")  
+  print("revised depInputData about to be returned is: ", depInputData)
+  print("--------------------------------------------------------")  
   return depInputData
-    
+  
 def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId):
   deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
   print("deployPhaseData is: ", deployPhaseData)
   print("--------- Gonna print a new deployment phase ----------------")
   print(phase_idx, ": ", deployPhase)
   print("--------- Gonna decompose the deployment phase ----------------")
-  #Handling deployment input individually here because its inputs are from an API call and not from YAML now.  This will change later when artifact info will later be brought in from YAML.
-  depInput = getDeploymentInput(poolQueueId)
-  deployPhaseData['deploymentInput'] = depInput 
   #Now iterate the YAML input
   for depPhase_item in deployPhase:  
     print(phase_idx, ": ", "depPhase_item is: ", depPhase_item)
     if re.match("name", depPhase_item):  
       #print(phase_idx, ": ", "name is: ", deployPhase.get(depPhase_item))  
       deployPhaseData['name'] = deployPhase.get(depPhase_item)
+    if re.match("deploymentInput", depPhase_item):  
+      depInput = getDeploymentInput(poolQueueId, depPhase_item)  
+      deployPhaseData['deploymentInput'] = depInput  
     if re.match("workflowTasks", depPhase_item):  
       taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
       print("--------------------------------------------------------")
@@ -200,9 +220,9 @@ print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
   
-##############################################################################################
-### Step Four: Create Release Definition By Making API Call.
-##############################################################################################
-rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+# ##############################################################################################
+# ### Step Four: Create Release Definition By Making API Call.
+# ##############################################################################################
+# rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
 
-print("response code from create release definition API call is: ", rCode)
+# print("response code from create release definition API call is: ", rCode)
