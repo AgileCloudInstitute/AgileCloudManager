@@ -123,7 +123,7 @@ def runTerraformCommand(commandToRun, workingDir ):
         if "azuredevops_key_vault_name" in decodedline:
           print("Found azuredevops_key_vault_name!")
           global azuredevops_key_vault_name
-          azuredevops_key_vault_name=decodedline[39:]
+          azuredevops_key_vault_name=decodedline[29:]
           print("azuredevops_key_vault_name in deploymentFunctions.py is: ", azuredevops_key_vault_name)
         if "azuredevops_subscription_name" in decodedline:
           print("Found azuredevops_subscription_name!")
