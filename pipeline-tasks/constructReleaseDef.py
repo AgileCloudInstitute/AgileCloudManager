@@ -191,7 +191,9 @@ def getVariablesData(variablesYAML):
   lastIndex = len(variablesYAML)-1
   idx = 0
   varJsonListItems = ""
+  print("variablesYAML is: ", variablesYAML)
   for var in variablesYAML:
+    print("var is: ", var)
     if re.match("aws-region", var):
       print("aws-region is: ", releaseDef_dict.get(var))
       varJSON = " \"aws-region\":{ \"value\":\""+releaseDef_dict.get(var)+"\"}"
