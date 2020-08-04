@@ -204,7 +204,9 @@ def getVariablesData(variablesYAML):
         if idx < lastIndex:
           varJsonListItems = varJsonListItems + ", "
     idx += 1  
-  varOutputData = "{ " + varJsonListItems + " }"
+  varOutputString = "{ " + varJsonListItems + " }"
+  varOutputString = varOutputString.replace(" ", "")
+  varOutputData = json.loads(varOutputString)
   print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"")
   print("varOutputData is: ", varOutputData)
   print("/////////////////////////////////////////////////////////")
