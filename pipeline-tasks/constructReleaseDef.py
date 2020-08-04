@@ -47,18 +47,16 @@ def getKeyVaultTaskData():
     if re.match("name", task_item):  
       #print(task_idx, ": ", "name is: ", task.get(task_item))  
       keyVaultTaskData['name'] = task.get(task_item)
-  
-['name'] = "Azure Key Vault: testvlt789"
-['inputs']['ConnectedServiceName'] = azdo_service_connection_id
-['inputs']['KeyVaultName'] = "testvlt789"
-  
-  
-  
-            if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'] = "Azure Key Vault: testvlt789"
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = azdo_service_connection_id
-            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'] = "testvlt789"
-
+#   
+# ['name'] = "Azure Key Vault: testvlt789"
+# ['inputs']['ConnectedServiceName'] = azdo_service_connection_id
+# ['inputs']['KeyVaultName'] = "testvlt789"
+#   
+#             if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
+#             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'] = "Azure Key Vault: testvlt789"
+#             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = azdo_service_connection_id
+#             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'] = "testvlt789"
+# 
 
 def getWorkflowTasksList(workflowTasksList):
   print("len workflowTasksList is: ", len(workflowTasksList))
