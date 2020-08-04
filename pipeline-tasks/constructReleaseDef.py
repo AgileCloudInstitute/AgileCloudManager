@@ -32,9 +32,6 @@ def getPythonTaskData(task_idx, task):
     if re.match("arguments", task_item):  
       #print(task_idx, ": ", "arguments is: ", task.get(task_item))  
       pythonTaskData['inputs']['arguments'] = task.get(task_item)
-    if re.match("workingDirectory", task_item):  
-      #print(task_idx, ": ", "workingDirectory is: ", task.get(task_item))  
-      pythonTaskData['inputs']['workingDirectory'] = task.get(task_item)
   return pythonTaskData
 
 def getWorkflowTasksList(workflowTasksList):
@@ -190,6 +187,26 @@ def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, pro
   print("-----------------------------------------------------------------")
   return artifactsDataList
 
+def getVariablesData(variablesYAML):
+  lastIndex = len(variablesYAML)-1
+  idx = 0
+  varJsonListItems = ""
+  for var in variablesYAML:
+    if re.match("aws-region", item):
+      print("aws-region is: ", releaseDef_dict.get(item))
+      varJSON = " \"aws-region"\:{ \"value\":\""+releaseDef_dict.get(item)+"\"}"
+      varJsonListItems = varJsonListItems + varJSON
+      #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
+      if idx < lastIndex:
+        varJsonListItems = varJsonListItems + ", "
+    idx += 1  
+  varOutputData = "{ " + varJsonListItems + " }"
+  print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\")
+  print("varOutputData is: ", varOutputData)
+  print("/////////////////////////////////////////////////////////")
+  #{"aws-region":{"value":"us-west-2"}}
+  return varOutputData
+
 def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
@@ -211,6 +228,14 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
         print("--------------------------------------------------------")
         print("revised environmentsDataList is: ", environmentsDataList)
         releaseDefData['environments'] = environmentsDataList
+      if re.match("variables", item):
+        print("Inside variables block. ")
+        print("variables item is: ", item)
+        print("variables get(item) is: ", releaseDef_dict.get(item))
+        variablesData = getVariablesData(releaseDef_dict.get(item))
+        print("--------------------------------------------------------")
+        print("revised variablesData is: ", variablesData)
+        releaseDefData['variables'] = variablesData
     #Processing artifacts from terraform output and not from YAML under current configuration.  This can be adjusted based on your organization's policies.  
     print("Inside the artifacts block.  ")
     artifactsDataList = getArtifactsDataList(artifactsTemplateFile, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name)
