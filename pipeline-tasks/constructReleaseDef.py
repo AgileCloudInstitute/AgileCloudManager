@@ -169,7 +169,7 @@ def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPha
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
 
-def getArtifactsDataList(releaseDef_dict.get(item), artifactsTemplateFile, project_id, org_service_url, project_name, build_definition_id, git_repository_name):
+def getArtifactsDataList(item, artifactsTemplateFile, project_id, org_service_url, project_name, build_definition_id, git_repository_name):
   #Note: This will be separated into two functions later to facilitate creation of multiple artifacts.  This now is simplified for demonstration.  
   artifactsDataList = [] 
   artifactsData = json.load(open(artifactsTemplateFile, 'r'))
