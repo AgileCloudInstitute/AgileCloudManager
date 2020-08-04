@@ -2,6 +2,8 @@
 # Defines a release definition
 name: Release definition from YAML
 description: Description of release definition from YAML
+variables:
+  - aws-region: us-west-2
 environments:
   - name: Dev environment
     deployPhases:
@@ -14,4 +16,3 @@ environments:
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-simple-example/drop/pipeline-scripts/createSimpleExample.py"
           arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)"
-          workingDirectory: ""
