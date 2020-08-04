@@ -192,15 +192,17 @@ def getVariablesData(variablesYAML):
   idx = 0
   varJsonListItems = ""
   print("variablesYAML is: ", variablesYAML)
-  for var in variablesYAML:
-    print("var is: ", var)
-    if re.match("aws-region", var):
-      print("aws-region is: ", releaseDef_dict.get(var))
-      varJSON = " \"aws-region\":{ \"value\":\""+releaseDef_dict.get(var)+"\"}"
-      varJsonListItems = varJsonListItems + varJSON
-      #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
-      if idx < lastIndex:
-        varJsonListItems = varJsonListItems + ", "
+  for pair in variablesYAML:
+    print("pair is: ", pair)
+    for var in pair:
+      print("var is: ", var)  
+      if re.match("aws-region", var):
+        print("aws-region is: ", pair.get(var))
+        varJSON = " \"aws-region\":{ \"value\":\""+pair.get(var)+"\"}"
+        varJsonListItems = varJsonListItems + varJSON
+        #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
+        if idx < lastIndex:
+          varJsonListItems = varJsonListItems + ", "
     idx += 1  
   varOutputData = "{ " + varJsonListItems + " }"
   print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"")
