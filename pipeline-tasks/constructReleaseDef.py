@@ -169,7 +169,7 @@ def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPha
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
 
-def getArtifactsDataList(item, artifactsTemplateFile, project_id, org_service_url, project_name, build_definition_id, git_repository_name):
+def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, project_name, build_definition_id, git_repository_name):
   #Note: This will be separated into two functions later to facilitate creation of multiple artifacts.  This now is simplified for demonstration.  
   artifactsDataList = [] 
   artifactsData = json.load(open(artifactsTemplateFile, 'r'))
@@ -211,10 +211,10 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
         print("--------------------------------------------------------")
         print("revised environmentsDataList is: ", environmentsDataList)
         releaseDefData['environments'] = environmentsDataList
-      if re.match("artifacts", item):
-        print("Inside the artifacts block.  ")
-        artifactsDataList = getArtifactsDataList(releaseDef_dict.get(item), artifactsTemplateFile, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name)
-        releaseDefData['artifacts'] = artifactsDataList
+    #Processing artifacts from terraform output and not from YAML under current configuration.  This can be adjusted based on your organization's policies.  
+    print("Inside the artifacts block.  ")
+    artifactsDataList = getArtifactsDataList(artifactsTemplateFile, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name)
+    releaseDefData['artifacts'] = artifactsDataList
     return releaseDefData
 
 def createReleaseDefinitionApiRequest(data, azdo_organization_name, azdo_project_id):
