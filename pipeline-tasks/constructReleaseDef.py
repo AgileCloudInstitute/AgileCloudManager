@@ -169,7 +169,28 @@ def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPha
       print("////////////////// FINISHED PROCESSING THE LAST ENVIRONMENT \\\\\\\\\\\\\\\\\\\\\\")
   return environmentsDataList
 
-def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId):
+def getArtifactsDataList(releaseDef_dict.get(item), artifactsTemplateFile, project_id, org_service_url, project_name, build_definition_id, git_repository_name):
+  #Note: This will be separated into two functions later to facilitate creation of multiple artifacts.  This now is simplified for demonstration.  
+  artifactsDataList = [] 
+  artifactsData = json.load(open(artifactsTemplateFile, 'r'))
+  print("-----------------------------------------------------------------")
+  print("artifactsData is: ", artifactsData)
+  print("-----------------------------------------------------------------")
+  artifactAlias = "_" + git_repository_name
+  artifactsData['sourceId'] = project_id + ":1"
+  artifactsData['artifactSourceDefinitionUrl']['id'] = org_service_url + project_name + "/_build?definitionId=" + str(build_definition_id)
+  artifactsData['alias'] = artifact_alias
+  artifactsData['definitionReference']['definition']['id'] = build_definition_id
+  artifactsData['definitionReference']['definition']['name'] = git_repository_name
+  artifactsData['definitionReference']['project']['id'] = project_id
+  artifactsData['definitionReference']['project']['name'] = project_name
+  artifactsDataList.append(artifactsData)
+  print("-----------------------------------------------------------------")
+  print("revised artifactsDataList is: ", artifactsDataList)
+  print("-----------------------------------------------------------------")
+  return artifactsDataList
+
+def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
     releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
@@ -189,7 +210,11 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
         environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
         print("--------------------------------------------------------")
         print("revised environmentsDataList is: ", environmentsDataList)
-    releaseDefData['environments'] = environmentsDataList
+        releaseDefData['environments'] = environmentsDataList
+      if re.match("artifacts", item):
+        print("Inside the artifacts block.  ")
+        artifactsDataList = getArtifactsDataList(releaseDef_dict.get(item), artifactsTemplateFile, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name)
+        releaseDefData['artifacts'] = artifactsDataList
     return releaseDefData
 
 def createReleaseDefinitionApiRequest(data, azdo_organization_name, azdo_project_id):
@@ -236,12 +261,14 @@ yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
 deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
 environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
 releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
+artifactsTemplateFile = jsonFragmentDir + 'artifactsTemplate.json'
 
-releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
+releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name)
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
-  
+
+
 # ##############################################################################################
 # ### Step Four: Create Release Definition By Making API Call.
 # ##############################################################################################
