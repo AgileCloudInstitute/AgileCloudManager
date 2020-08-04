@@ -176,7 +176,7 @@ def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, pro
   print("-----------------------------------------------------------------")
   print("artifactsData is: ", artifactsData)
   print("-----------------------------------------------------------------")
-  artifactAlias = "_" + git_repository_name
+  artifact_alias = "_" + git_repository_name
   artifactsData['sourceId'] = project_id + ":1"
   artifactsData['artifactSourceDefinitionUrl']['id'] = org_service_url + project_name + "/_build?definitionId=" + str(build_definition_id)
   artifactsData['alias'] = artifact_alias
