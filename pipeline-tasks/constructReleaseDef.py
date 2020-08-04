@@ -34,6 +34,32 @@ def getPythonTaskData(task_idx, task):
       pythonTaskData['inputs']['arguments'] = task.get(task_item)
   return pythonTaskData
 
+def getKeyVaultTaskData():
+  keyVaultTaskTemplateFile = jsonFragmentDir + 'keyVaultTaskTemplate.json'
+  keyVaultTaskData = json.load(open(keyVaultTaskTemplateFile, 'r'))  
+  print("keyVaultTaskData is: ", keyVaultTaskData)
+  print("--------------------------------------------------------")
+  print("--------- Gonna print a new workflow task ----------------")  
+  print(task_idx, ": ", task)  
+  print("--------- Gonna decompose the workflow task ----------------")  
+  for task_item in task:  
+    print(task_idx, ": ", "task_item is: ", task_item)  
+    if re.match("name", task_item):  
+      #print(task_idx, ": ", "name is: ", task.get(task_item))  
+      keyVaultTaskData['name'] = task.get(task_item)
+  
+['name'] = "Azure Key Vault: testvlt789"
+['inputs']['ConnectedServiceName'] = azdo_service_connection_id
+['inputs']['KeyVaultName'] = "testvlt789"
+  
+  
+  
+            if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'] = "Azure Key Vault: testvlt789"
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = azdo_service_connection_id
+            data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'] = "testvlt789"
+
+
 def getWorkflowTasksList(workflowTasksList):
   print("len workflowTasksList is: ", len(workflowTasksList))
   taskDataList = []
@@ -275,34 +301,37 @@ depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuil
 print("Back in constructReleaseDef.py .")
 print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
 print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
-
-#########################################################################################################
-### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
-#########################################################################################################
-queue_name = "Default"
-poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
-print("poolQueueId is: ", poolQueueId)  
-print("---------------------------------------------------------")
-
-######################################################################################
-### Step Three: Convert YAML definition to JSON data
-######################################################################################
-yamlDir = '../release-definitions/yaml-definition-files/'
-yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
-deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
-environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
-releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
-artifactsTemplateFile = jsonFragmentDir + 'artifactsTemplate.json'
-
-releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name)
-print("--------------------------------------------------------")
-print("revised releaseDefData is: ", releaseDefData)
-print("--------------------------------------------------------")
+print("depfunc.azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
+print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_service_connection_id)
 
 
-##############################################################################################
-### Step Four: Create Release Definition By Making API Call.
-##############################################################################################
-rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+# #########################################################################################################
+# ### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
+# #########################################################################################################
+# queue_name = "Default"
+# poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
+# print("poolQueueId is: ", poolQueueId)  
+# print("---------------------------------------------------------")
 
-print("response code from create release definition API call is: ", rCode)
+# ######################################################################################
+# ### Step Three: Convert YAML definition to JSON data
+# ######################################################################################
+# yamlDir = '../release-definitions/yaml-definition-files/'
+# yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+# deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
+# environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
+# releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
+# artifactsTemplateFile = jsonFragmentDir + 'artifactsTemplate.json'
+
+# releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name)
+# print("--------------------------------------------------------")
+# print("revised releaseDefData is: ", releaseDefData)
+# print("--------------------------------------------------------")
+
+
+# ##############################################################################################
+# ### Step Four: Create Release Definition By Making API Call.
+# ##############################################################################################
+# rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+
+# print("response code from create release definition API call is: ", rCode)
