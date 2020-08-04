@@ -6,7 +6,9 @@ import requests
 import os
 import base64
 import deploymentFunctions as depfunc  
-  
+
+YamlReleaseDefFile=sys.argv[1] 
+print("YamlReleaseDefFile is: ", YamlReleaseDefFile)
 jsonFragmentDir = '../release-definitions/json-fragments/' 
   
 def getPythonTaskData(task_idx, task):  
@@ -309,7 +311,8 @@ print("---------------------------------------------------------")
 ### Step Three: Convert YAML definition to JSON data
 ######################################################################################
 yamlDir = '../release-definitions/yaml-definition-files/'
-yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+#yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+yamlFile = yamlDir + YamlReleaseDefFile
 deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
 environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
 releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
