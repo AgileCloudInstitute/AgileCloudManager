@@ -34,33 +34,28 @@ def getPythonTaskData(task_idx, task):
       pythonTaskData['inputs']['arguments'] = task.get(task_item)
   return pythonTaskData
 
-def getKeyVaultTaskData():
+def getKeyVaultTaskData(key_vault_name, key_vault_service_connection_id):  
   keyVaultTaskTemplateFile = jsonFragmentDir + 'keyVaultTaskTemplate.json'
   keyVaultTaskData = json.load(open(keyVaultTaskTemplateFile, 'r'))  
   print("keyVaultTaskData is: ", keyVaultTaskData)
   print("--------------------------------------------------------")
   print("--------- Gonna print a new workflow task ----------------")  
-  print(task_idx, ": ", task)  
-  print("--------- Gonna decompose the workflow task ----------------")  
-  for task_item in task:  
-    print(task_idx, ": ", "task_item is: ", task_item)  
-    if re.match("name", task_item):  
-      #print(task_idx, ": ", "name is: ", task.get(task_item))  
-      keyVaultTaskData['name'] = task.get(task_item)
-#   
-# ['name'] = "Azure Key Vault: testvlt789"
-# ['inputs']['ConnectedServiceName'] = azdo_service_connection_id
-# ['inputs']['KeyVaultName'] = "testvlt789"
-#   
-#             if item['taskId'] == '1e244d32-2dd4-4165-96fb-b7441ca9331e':
-#             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['name'] = "Azure Key Vault: testvlt789"
-#             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['ConnectedServiceName'] = azdo_service_connection_id
-#             data['environments'][0]['deployPhases'][0]['workflowTasks'][myIdx]['inputs']['KeyVaultName'] = "testvlt789"
-# 
+  keyVaultTaskData['name'] = "Azure Key Vault: " + key_vault_name
+  keyVaultTaskData['inputs']['ConnectedServiceName'] = key_vault_service_connection_id
+  keyVaultTaskData['inputs']['KeyVaultName'] = key_vault_name
+  # the task id from the template file should be: '1e244d32-2dd4-4165-96fb-b7441ca9331e':
+  print("keyVaultTaskData is: ", keyVaultTaskData)
+  print("-----------------------------------------------------------")
+  return keyVaultTaskData
 
-def getWorkflowTasksList(workflowTasksList):
+def getWorkflowTasksList(workflowTasksList, key_vault_name, key_vault_service_connection_id):
   print("len workflowTasksList is: ", len(workflowTasksList))
   taskDataList = []
+  if len(key_vault_name) > 3:
+    print("--------------------------------------------------------")
+    taskData = getKeyVaultTaskData(key_vault_name, key_vault_service_connection_id)
+    taskDataList.append(taskData)
+    print("--------------------------------------------------------")
   for task_idx, task in enumerate(workflowTasksList):
     if task['type'] == 'Python':
       print("############ TYPE IS PYTHON ############")
@@ -122,7 +117,7 @@ def getDeploymentInput(poolQueueId, deploymentInput):
   print("--------------------------------------------------------")  
   return depInputData
   
-def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId):
+def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id):
   deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
   print("deployPhaseData is: ", deployPhaseData)
   print("--------- Gonna print a new deployment phase ----------------")
@@ -138,14 +133,14 @@ def getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, pool
       depInput = getDeploymentInput(poolQueueId, deployPhase.get(depPhase_item))  
       deployPhaseData['deploymentInput'] = depInput  
     if re.match("workflowTasks", depPhase_item):  
-      taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item))
+      taskDataList = getWorkflowTasksList(deployPhase.get(depPhase_item), key_vault_name, key_vault_service_connection_id)
       print("--------------------------------------------------------")
       print("taskDataList is: ", taskDataList)
       print("--------------------------------------------------------")
       deployPhaseData['workflowTasks'] = taskDataList
   return deployPhaseData
 
-def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId):
+def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id):
   environmentData = json.load(open(environmentTemplateFile, 'r'))
   print("environmentData is: ", environmentData)
   print("--------- Gonna print a new environment item ----------------")
@@ -164,7 +159,7 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
         print("-----------------------------------------------------------")  
         print("deployPhase in getEnvironmentData() is: ", deployPhase)  
         print("-----------------------------------------------------------")
-        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId)  
+        deployPhaseData = getDeploymentPhaseData(phase_idx, deployPhase, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id)  
         if phase_idx == (len(deployPhaseList)-1):
           print("////////////////// FINISHED PROCESSING THE LAST DEPLOYMENT PHASE \\\\\\\\\\\\\\\\\\\\\\")
           print("--------------------------------------------------------")
@@ -177,11 +172,11 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
       environmentData['deployPhases'] = deployPhaseDataList 
   return environmentData
 
-def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId):
+def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id):
   print("len environmentsList is: ", len(environmentsList))
   environmentsDataList = []
   for env_idx, environment in enumerate(environmentsList):
-    environmentData = getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
+    environmentData = getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id)
     print("--------------------------------------------------------")
     print("revised environmentData is: ", environmentData)
     environmentsDataList.append(environmentData)
@@ -237,7 +232,7 @@ def getVariablesData(variablesYAML):
   #{"aws-region":{"value":"us-west-2"}}
   return varOutputData
 
-def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name):
+def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azdo_project_id, azdo_organization_service_url, azdo_project_name, azdo_build_definition_id, azdo_git_repository_name, key_vault_name, key_vault_service_connection_id):
   with open(yamlInputFile) as f:
     releaseDef_dict = yaml.safe_load(f)
     releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
@@ -254,7 +249,7 @@ def getReleaseDefData(yamlInputFile, releaseDefConstructorTemplateFile, environm
         print("Inside environments block. ")
         print("environments item is: ", item)
         print("environments get(item) is: ", releaseDef_dict.get(item))
-        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), environmentTemplateFile, deployPhaseTemplateFile, poolQueueId)
+        environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), environmentTemplateFile, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id)
         print("--------------------------------------------------------")
         print("revised environmentsDataList is: ", environmentsDataList)
         releaseDefData['environments'] = environmentsDataList
@@ -302,29 +297,28 @@ print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organiza
 print("depfunc.azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
 print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_service_connection_id)
 
+#########################################################################################################
+### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
+#########################################################################################################
+queue_name = "Default"
+poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
+print("poolQueueId is: ", poolQueueId)  
+print("---------------------------------------------------------")
 
-# #########################################################################################################
-# ### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
-# #########################################################################################################
-# queue_name = "Default"
-# poolQueueId = depfunc.getPoolQueueIdApiRequest(depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id, queue_name)
-# print("poolQueueId is: ", poolQueueId)  
-# print("---------------------------------------------------------")
+######################################################################################
+### Step Three: Convert YAML definition to JSON data
+######################################################################################
+yamlDir = '../release-definitions/yaml-definition-files/'
+yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
+deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
+environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
+releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
+artifactsTemplateFile = jsonFragmentDir + 'artifactsTemplate.json'
 
-# ######################################################################################
-# ### Step Three: Convert YAML definition to JSON data
-# ######################################################################################
-# yamlDir = '../release-definitions/yaml-definition-files/'
-# yamlFile = yamlDir + 'createTerraformSimpleAWS.yaml'
-# deployPhaseTemplateFile = jsonFragmentDir + 'deployPhaseTemplate.json'
-# environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
-# releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
-# artifactsTemplateFile = jsonFragmentDir + 'artifactsTemplate.json'
-
-# releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name)
-# print("--------------------------------------------------------")
-# print("revised releaseDefData is: ", releaseDefData)
-# print("--------------------------------------------------------")
+releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_key_vault_name, depfunc.azuredevops_service_connection_id)
+print("--------------------------------------------------------")
+print("revised releaseDefData is: ", releaseDefData)
+print("--------------------------------------------------------")
 
 
 # ##############################################################################################
