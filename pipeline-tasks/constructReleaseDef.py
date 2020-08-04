@@ -269,9 +269,9 @@ print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
 
 
-# ##############################################################################################
-# ### Step Four: Create Release Definition By Making API Call.
-# ##############################################################################################
-# rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
+##############################################################################################
+### Step Four: Create Release Definition By Making API Call.
+##############################################################################################
+rCode = createReleaseDefinitionApiRequest(releaseDefData, depfunc.azuredevops_organization_name, depfunc.azuredevops_project_id)
 
-# print("response code from create release definition API call is: ", rCode)
+print("response code from create release definition API call is: ", rCode)
