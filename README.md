@@ -51,7 +51,19 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
     
-3.  Trigger the build pipeline by making an inconsequential change to the README file for the `terraform-aws-simple-example` repo from within the Azure DevOps portal.  You are changing the copy that was just imported into your own Azure DevOps Organization, but you are only adding a couple spaces of white space to the README so that the functionality is not changed.  Then confirm that the build created the deployable artifact from the newly imported repository.    
+      #Manually trigger a build by navigating into one of the files in the `terraform-aws-simple-example` Azure Repo that was just imported and adding one character of white space and then clicking the "commit" button.  
+      #Confirm that the build was triggered by navigating to the Pipelines control panel and seeing that a build was just run.  
+        
+# Create two Release Definitions
+        
+      #Navigate to the same `pipeline-tasks` directory if you are not already there        
+      #Type the following two commands to create two Release Definitions, noting that the yaml files are in the `release-definitions/yaml-definition-files/` directory.        
+      python3 constructReleaseDef.py createTerraformSimpleAWS.yaml       
+      python3 constructReleaseDef.py destroyTerraformSimpleAWS.yaml       
+      #Confirm in the console that each of the commands produced a 200 HTTP response code.  Then navigate to the Azure Devops Portal to view the Release Definitions.  
+      #Manually Trigger the "Create Terraform AWS Simple Example Release" in the Azure Devops Portal and confirm that the infrastructure was created in AWS.  Note that you must click the manual "Deploy" button in the release the way the definition is currently configured.        
+      #Then Manually trigger the "Destroy Terraform AWS Simple Example Release" in the Azure Devops Portal and confirm that the same infrastructure was destroyed in AWS. Again note that you must manually click on the "Deploy" button on the release the way the definition is currently configured.         
+  
         
 # Destroy the Azure DevOps Project and its elements    
     
