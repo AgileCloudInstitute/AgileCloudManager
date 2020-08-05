@@ -1,4 +1,3 @@
-
 print("Inside installProjectRepoBuild.py script.")
 
 import sys 
@@ -6,7 +5,6 @@ import deploymentFunctions as depfunc
 
 pathToTempRepoStorageParent='/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/'
 tmpRepoStorageFolder='tmpRepoStorage'
-sourceRepo='https://github.com/AgileCloudInstitute/terraform-aws-simple-example.git'
 
 pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
 pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
@@ -51,18 +49,7 @@ runShellCommand(addExteensionCommand)
 
 
 ##############################################################################################
-### Step One: Check to make sure that the azure devops terraform provider has been installed
-##############################################################################################
-
-#NEED TO ADD THIS.
-
-##############################################################################################
-### Step Two: Clone the source repo
-##############################################################################################
-#depfunc.cloneSourceRepoToLocal(pathToTempRepoStorageParent,tmpRepoStorageFolder, sourceRepo)
-
-##############################################################################################
-### Step Three: Apply The azure-pipelines-project-repo-build module
+### Step Two: Apply The azure-pipelines-project-repo-build module
 ##############################################################################################
 
 depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
@@ -70,13 +57,6 @@ depfunc.runTerraformCommand(applyProjectRepoBuildCommand, pathToProjectRepoBuild
 
 print("Back in installProjectRepoBuild.py .")
 
-print("sourceRepo is: ", sourceRepo)
 print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
 print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_repository_name)
-
-
-##############################################################################################
-### Step Four: Destroy local cloned copy of source repo
-##############################################################################################
-#depfunc.destroyLocalCloneOfSourceRepo(pathToTempRepoStorageParent,tmpRepoStorageFolder)
 
