@@ -64,6 +64,9 @@ Once you have assembled the pre-requisites, do the following in order to use thi
       #Manually Trigger the "Create Terraform AWS Simple Example Release" in the Azure Devops Portal and confirm that the infrastructure was created in AWS.  Note that you must click the manual "Deploy" button in the release the way the definition is currently configured.        
       #Then Manually trigger the "Destroy Terraform AWS Simple Example Release" in the Azure Devops Portal and confirm that the same infrastructure was destroyed in AWS. Again note that you must manually click on the "Deploy" button on the release the way the definition is currently configured.         
   
+# Delete both Release Definitions  
+  
+      #In the Azure Devops Portal, manually delete both of the two Release Definitions that you created in the preceding step.  This is necessary before deleting the Project, Repository, and Build objects in the next step.        
         
 # Destroy the Azure DevOps Project and its elements    
     
