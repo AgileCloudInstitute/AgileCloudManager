@@ -3,8 +3,6 @@ print("Inside installProjectRepoBuild.py script.")
 import sys 
 import deploymentFunctions as depfunc
 
-pathToTempRepoStorageParent='/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/'
-
 pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
 pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
 pathToAzdoProjectRepoBuildAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-auto.tfvars'
