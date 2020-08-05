@@ -193,6 +193,8 @@ def updateVarFileAzurePipesAgents(fileName):
 def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProjectRepoBuild(...,...,...) function.")
     print("fileName is: ", fileName)
+    repoName='check-setup-py-for-error'
+    buildName='check-setup-py-for-error'
     for line in fileinput.input(fileName, inplace=True):
         if "subscriptionName" in line:
             line = "subscriptionName=\""+subscriptionName+"\""
@@ -210,6 +212,18 @@ def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
             line = "awsSecretAccessKey=\""+awsSecretAccessKey+"\""
         if "sourceRepo" in line:
             line = "sourceRepo=\""+sourceRepo+"\""
+        if "repoName" in line:
+            fragment=sourceRepo[sourceRepo.rfind('/')+1:]
+            repoName=fragment.split('.')[0]
+            line = "repoName=\""+repoName+"\""
+        if "buildName" in line:
+            fragment=sourceRepo[sourceRepo.rfind('/')+1:]
+            buildName=fragment.split('.')[0]
+            line = "buildName=\""+buildName+"\""
+        if "projectName" in line:
+            fragment=sourceRepo[sourceRepo.rfind('/')+1:]
+            repoName=fragment.split('.')[0]
+            line = "projectName=\""+repoName+"-project"+"\""
         print('{}'.format(line))
 
 def updateVarFileAzurePipesAgentsStartUpScript(fileName):
