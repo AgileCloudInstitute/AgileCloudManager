@@ -4,7 +4,6 @@ import sys
 import deploymentFunctions as depfunc
 
 pathToTempRepoStorageParent='/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/'
-tmpRepoStorageFolder='tmpRepoStorage'
 
 pathToAzdoProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azdo-provider.tfvars'
 pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
