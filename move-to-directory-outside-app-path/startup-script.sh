@@ -83,7 +83,13 @@ echo "About to install python3"
 yum install -y python3
 yum install -y python3-setuptools
 dnf install python3-pip
-  
+
+#Have to install epel using rpm because yum could not see epel-release
+echo "About to install ansible, epel, and telnet"
+sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install -y telnet
+sudo yum -y install ansible
+
   
 ##Install the Azure CLI using the following 3 steps:  
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
