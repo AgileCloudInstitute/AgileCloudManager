@@ -16,6 +16,9 @@ variable "tenantId" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
+variable "s3BucketNameTF" { }
+variable "dynamoDbTableNameTF" { }
+variable "s3KeyNameTF" { }
 
 ##Output variables
 output "pipes_resource_group_name" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_name}" }
@@ -25,3 +28,13 @@ output "nicName" { value = "${module.azure-pipelines-foundation-demo.nicName}" }
 output "storageAccountDiagName" { value = "${module.azure-pipelines-foundation-demo.storageAccountDiagName}" }
 output "pipeKeyVaultName" { value = "${module.azure-pipelines-foundation-demo.pipeKeyVaultName}" }
 output "currentConfig" { value = "${module.azure-pipelines-foundation-demo.currentConfig}" }
+
+##Backend
+terraform {
+  backend "s3" {
+    bucket         = var.s3BucketNameTF
+    key            = var.s3KeyNameTF
+    region         = var.pipeAzureRegion
+    dynamodb_table = var.dynamoDbTableNameTF
+  }
+}
