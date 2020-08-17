@@ -1,0 +1,34 @@
+#Manually enter the values for the input variables here, and then run a script to import them into the relevant tfvars files
+--- 
+meta: 
+  subscriptionName: 
+  subscriptionId: 
+  tenantId: 
+  pipeAzureRegion: 
+  storageAccountNameTerraformBackend: 
+  storageContainerNameTerraformBackend: 
+  azdoOrgServiceURL: 
+connection: 
+  clientName: 
+  clientId: 
+  clientSecret: 
+  serviceConnectionName: 
+  azdoOrgPAT: 
+agents:
+  adminUser: 
+  adminPwd: 
+  pathToCloudInitScript: 
+importProjectRepoBuild: 
+  - name: 
+    awsPublicAccessKey: 
+    awsSecretAccessKey: 
+    sourceRepo: 
+    s3BucketNameTF: 
+    dynamoDbTableNameTF: 
+    moduleKeys: 
+      - name: 
+        value: 
+      - name: 
+        value: 
+      - name: 
+        value: 
