@@ -5,37 +5,37 @@ import re
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
-#Declare all the input variables
-subscriptionName=''
-subscriptionId=''
-tenantId=''
-clientName=''
-clientId=''
-clientSecret=''
-serviceConnectionName=''
-pipeAzureRegion=''
-storageAccountNameTerraformBackend=''
-storageContainerNameTerraformBackend=''
-awsPublicAccessKey=''
-awsSecretAccessKey=''
-adminUser=''
-adminPwd=''
-pathToCloudInitScript=''
-azdoOrgPAT=''
-azdoOrgServiceURL=''
-sourceRepo=''
+# #Declare all the input variables
+# subscriptionName=''
+# subscriptionId=''
+# tenantId=''
+# clientName=''
+# clientId=''
+# clientSecret=''
+# serviceConnectionName=''
+# pipeAzureRegion=''
+# storageAccountNameTerraformBackend=''
+# storageContainerNameTerraformBackend=''
+# awsPublicAccessKey=''
+# awsSecretAccessKey=''
+# adminUser=''
+# adminPwd=''
+# pathToCloudInitScript=''
+# azdoOrgPAT=''
+# azdoOrgServiceURL=''
+# sourceRepo=''
 
-#Declare the directory and file name variables
-fileEnterUserInputHereOnly = "/home/aci-user/staging/enter-user-input-here-only.txt"
+# #Declare the directory and file name variables
+fileEnterUserInputHereOnly = "/home/aci-user/staging/enter-user-input-here-only.yaml"
 pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
-fileInputsAgentVmsAuto = pathToVarFiles+'inputs-agent-vms-auto.tfvars'
-fileInputsAgentVmsManual = pathToVarFiles+'inputs-agent-vms-manual.tfvars'
-fileInputsAzdoProvider = pathToVarFiles+'inputs-azdo-provider.tfvars'
-fileInputsAzurermProvider = pathToVarFiles+'inputs-azurerm-provider.tfvars'
-fileInputsFoundationDemo = pathToVarFiles+'inputs-foundation-demo.tfvars'
-fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.tfvars'
-fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
-fileStartupScript = pathToVarFiles+'startup-script.sh'
+# fileInputsAgentVmsAuto = pathToVarFiles+'inputs-agent-vms-auto.tfvars'
+# fileInputsAgentVmsManual = pathToVarFiles+'inputs-agent-vms-manual.tfvars'
+# fileInputsAzdoProvider = pathToVarFiles+'inputs-azdo-provider.tfvars'
+# fileInputsAzurermProvider = pathToVarFiles+'inputs-azurerm-provider.tfvars'
+# fileInputsFoundationDemo = pathToVarFiles+'inputs-foundation-demo.tfvars'
+# fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.tfvars'
+# fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
+# fileStartupScript = pathToVarFiles+'startup-script.sh'
 fileAzEnvVars = pathToVarFiles+'set-local-az-client-environment-vars.sh'  
   
 def runShellCommand(commandToRun, workingDir ):
@@ -284,17 +284,111 @@ setupCommand = "sudo ./provisioning.sh"
 runShellCommand(chmodCommand, scriptsDir)
 runShellCommand(setupCommand, scriptsDir)
 
-#Second load data and update var files
-loadDataFromFile(fileEnterUserInputHereOnly)
-updateVarFileAzureProvider(fileInputsAzurermProvider)
-updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
-updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
-updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
-updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
-#This next function call is for the cloud-init startup script that will run on the Azure Pipelines agent that will be created.
-updateVarFileAzurePipesAgentsStartUpScript(fileStartupScript)
-#This next function call will set vars on the local machine to use with the az client
-updateVarFileAzurePipesAgentsStartUpScript(fileAzEnvVars)
+# #Second load data and update var files
+# loadDataFromFile(fileEnterUserInputHereOnly)
+# updateVarFileAzureProvider(fileInputsAzurermProvider)
+# updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
+# updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
+# updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
+# updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
+# #This next function call is for the cloud-init startup script that will run on the Azure Pipelines agent that will be created.
+# updateVarFileAzurePipesAgentsStartUpScript(fileStartupScript)
+# #This next function call will set vars on the local machine to use with the az client
+# updateVarFileAzurePipesAgentsStartUpScript(fileAzEnvVars)
+
+###################################################################################################################################
+###################################################################################################################################
+### Now add the new stuff
+
+def setEnvironmentVars(yamlInputFile, setEnvironmentVarsFile):
+  print("inside deploymentFunctions.py script and setEnvironmentVars(...,...,...) function.")
+  #First declare the variables
+  clientSecret = ''
+  clientId = ''
+  tenantId = ''
+  azdoOrgPAT = ''
+  azdoOrgServiceURL = ''
+  #Now populate the variables
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("meta", item):
+        metaItems = topLevel_dict.get(item)
+        for metaItem in metaItems: 
+          if re.match("tenantId", metaItem):
+            tenantId = metaItems.get(metaItem)
+            print("tenantId is: ", tenantId)
+          if re.match("azdoOrgServiceURL", metaItem):
+            azdoOrgServiceURL = metaItems.get(metaItem)
+            print("azdoOrgServiceURL is: ", azdoOrgServiceURL)
+      if re.match("connection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("clientId", connectionItem):
+            clientId = connectionItems.get(connectionItem)
+            print("clientId is: ", clientId)
+          if re.match("clientSecret", connectionItem):
+            clientSecret = connectionItems.get(connectionItem)
+            print("clientSecret is: ", clientSecret)
+          if re.match("azdoOrgPAT", connectionItem):
+            azdoOrgPAT = connectionItems.get(connectionItem)
+            print("azdoOrgPAT is: ", azdoOrgPAT)
+  #Now put the vars into the target file
+  print("setEnvironmentVarsFile is: ", setEnvironmentVarsFile)
+  for line in fileinput.input(setEnvironmentVarsFile, inplace=True):
+    trailingCharacters=len(line)-line.find('=')
+    if "export AZ_PASS=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
+    if "export AZ_CLIENT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
+    if "export AZ_TENANT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
+    if "export AZ_PAT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
+    if "export AZ_SERVER=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
+    if "export AZURE_DEVOPS_EXT_PAT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
+    print('{}'.format(line))
+
+#######################################################################################################
+
+setEnvironmentVars(fileEnterUserInputHereOnly, setEnvironmentVarsFile)
+
+
+### Finished adding the new stuff
+###################################################################################################################################
+###################################################################################################################################
 
 #Third set local environment variables
 varsDir = "/home/aci-user/vars/agile-cloud-manager/"
@@ -303,21 +397,21 @@ setVarsCommand = "sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-clie
 runShellCommand(newChmodCommand, varsDir )
 runShellCommand(setVarsCommand, varsDir )
 
-#Fourth chown all the files to aci-user to avoid risk of being owned by root
-cmdChownVarFileAzureProvider = "sudo chown aci-user:aci-user " + fileInputsAzurermProvider
-cmdChownVarFileAzureDevOpsProvider = "sudo chown aci-user:aci-user " + fileInputsAzdoProvider
-cmdChownVarFileAzurePipesFoundation = "sudo chown aci-user:aci-user " + fileInputsFoundationDemo
-cmdChownVarFileAzurePipesAgents = "sudo chown aci-user:aci-user " + fileInputsAgentVmsManual
-cmdChownVarFileAzureDevOpsProjectRepoBuild = "sudo chown aci-user:aci-user " + fileInputsProjectRepoBuildManual
-cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileStartupScript
+# #Fourth chown all the files to aci-user to avoid risk of being owned by root
+# cmdChownVarFileAzureProvider = "sudo chown aci-user:aci-user " + fileInputsAzurermProvider
+# cmdChownVarFileAzureDevOpsProvider = "sudo chown aci-user:aci-user " + fileInputsAzdoProvider
+# cmdChownVarFileAzurePipesFoundation = "sudo chown aci-user:aci-user " + fileInputsFoundationDemo
+# cmdChownVarFileAzurePipesAgents = "sudo chown aci-user:aci-user " + fileInputsAgentVmsManual
+# cmdChownVarFileAzureDevOpsProjectRepoBuild = "sudo chown aci-user:aci-user " + fileInputsProjectRepoBuildManual
+# cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileStartupScript
 cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileAzEnvVars
 
-runShellCommand(cmdChownVarFileAzureProvider, varsDir )
-runShellCommand(cmdChownVarFileAzureDevOpsProvider, varsDir )
-runShellCommand(cmdChownVarFileAzurePipesFoundation, varsDir )
-runShellCommand(cmdChownVarFileAzurePipesAgents, varsDir )
-runShellCommand(cmdChownVarFileAzureDevOpsProjectRepoBuild, varsDir )
-runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
+# runShellCommand(cmdChownVarFileAzureProvider, varsDir )
+# runShellCommand(cmdChownVarFileAzureDevOpsProvider, varsDir )
+# runShellCommand(cmdChownVarFileAzurePipesFoundation, varsDir )
+# runShellCommand(cmdChownVarFileAzurePipesAgents, varsDir )
+# runShellCommand(cmdChownVarFileAzureDevOpsProjectRepoBuild, varsDir )
+# runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 
-#Add another line to lock down the /home/aci-user/staging/enter-user-input-here-only.txt file by changing its ownership to root
+#Add another line to lock down the /home/aci-user/staging/enter-user-input-here-only.yaml file by changing its ownership to root
