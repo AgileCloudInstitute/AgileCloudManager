@@ -279,3 +279,91 @@ def createReleaseDefinitionApiRequest(templateFile, azdo_organization_name, azdo
     print("r.json() is: ", r.json())
     return respCode
    
+###################################################################################################################################33
+#####################################################################################################################################
+### Now add the new stuff
+
+def setEnvironmentVars(yamlInputFile, setEnvironmentVarsFile):
+  print("inside deploymentFunctions.py script and setEnvironmentVars(...,...,...) function.")
+  #First declare the variables
+  clientSecret = ''
+  clientId = ''
+  tenantId = ''
+  azdoOrgPAT = ''
+  azdoOrgServiceURL = ''
+  #Now populate the variables
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("meta", item):
+        metaItems = topLevel_dict.get(item)
+        for metaItem in metaItems: 
+          if re.match("tenantId", metaItem):
+            tenantId = metaItems.get(metaItem)
+            print("tenantId is: ", tenantId)
+          if re.match("azdoOrgServiceURL", metaItem):
+            azdoOrgServiceURL = metaItems.get(metaItem)
+            print("azdoOrgServiceURL is: ", azdoOrgServiceURL)
+      if re.match("connection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("clientId", connectionItem):
+            clientId = connectionItems.get(connectionItem)
+            print("clientId is: ", clientId)
+          if re.match("clientSecret", connectionItem):
+            clientSecret = connectionItems.get(connectionItem)
+            print("clientSecret is: ", clientSecret)
+          if re.match("azdoOrgPAT", connectionItem):
+            azdoOrgPAT = connectionItems.get(connectionItem)
+            print("azdoOrgPAT is: ", azdoOrgPAT)
+  #Now put the vars into the target file
+  print("setEnvironmentVarsFile is: ", setEnvironmentVarsFile)
+  for line in fileinput.input(setEnvironmentVarsFile, inplace=True):
+    trailingCharacters=len(line)-line.find('=')
+    if "export AZ_PASS=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
+    if "export AZ_CLIENT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
+    if "export AZ_TENANT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
+    if "export AZ_PAT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
+    if "export AZ_SERVER=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
+    if "export AZURE_DEVOPS_EXT_PAT=" in line:
+      if "echo" not in line:
+        if trailingCharacters < 3:
+          line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
+      if "echo" in line:
+        if trailingCharacters < 25:
+          line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
+    print('{}'.format(line))
+
+### End of the new stuff
+#####################################################################################################################################
+#####################################################################################################################################
