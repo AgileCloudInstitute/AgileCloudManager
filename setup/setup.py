@@ -383,7 +383,7 @@ def setEnvironmentVars(yamlInputFile, setEnvironmentVarsFile):
 
 #######################################################################################################
 
-setEnvironmentVars(fileEnterUserInputHereOnly, setEnvironmentVarsFile)
+setEnvironmentVars(fileEnterUserInputHereOnly, fileAzEnvVars)
 
 
 ### Finished adding the new stuff
