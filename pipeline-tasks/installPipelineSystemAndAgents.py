@@ -22,7 +22,7 @@ foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secr
 initCommand='terraform init'
 applyCommand='terraform apply -auto-approve'
 # applyFoundationCommand=applyCommand+getAzurermProviderInputs+getFoundationInputs
-foundationVars = getFoundationInputs(myYamlInputFile, foundationSecretsFile)
+foundationVars = depfunc.getFoundationInputs(myYamlInputFile, foundationSecretsFile)
 applyFoundationCommand=applyCommand+foundationVars
 
 #Environment variable set during cloud-init instantiation
