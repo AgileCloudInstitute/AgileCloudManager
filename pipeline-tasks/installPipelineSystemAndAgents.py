@@ -31,8 +31,8 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 # pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 # applyAgentCommand=applyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
 
-print ('getFoundationInputs:', getFoundationInputs )
-print ('getAgentAutoInputs:', getAgentAutoInputs )
+#print ('getFoundationInputs:', getFoundationInputs )
+#print ('getAgentAutoInputs:', getAgentAutoInputs )
 
 ##############################################################################################
 ### Step One: Apply The azure-pipelines-foundation-demo module
