@@ -7,6 +7,7 @@ import shutil
 import base64
 import requests
 import json
+import yaml
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 storName = ''
