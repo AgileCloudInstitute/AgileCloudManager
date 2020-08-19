@@ -416,6 +416,38 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
   print("varsString is: ", varsString)
   return varsString
 
+def getFoundationBackendConfig(yamlInputFile):
+  varsString = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("meta", item):
+        metaItems = topLevel_dict.get(item)
+        for metaItem in metaItems: 
+          if re.match("pipeAzureRegion", metaItem):
+            print(metaItem, " is: ", metaItems.get(metaItem))
+            varsString = varsString + " -backend-config \"region=" + metaItems.get(metaItem) +"\""  
+      if re.match("importProjectRepoBuild", item):
+        projectRepoBuildCollections = topLevel_dict.get(item)
+        for projectRepoBuild in projectRepoBuildCollections:
+          for projectRepoBuildItem in projectRepoBuild: 
+            if re.match("s3BucketNameTF", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              varsString = varsString + " -backend-config \"bucket=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
+            if re.match("dynamoDbTableNameTF", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              varsString = varsString + " -backend-config \"dynamodb_table=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
+            if re.match("moduleKeys", projectRepoBuildItem):
+              #print("-----------------------------------------------")
+              #print("-----------------------------------------------")
+              moduleKeysCollection = projectRepoBuild.get(projectRepoBuildItem)
+              for moduleKey in moduleKeysCollection:
+                if re.match(moduleKey.get("name"), "s3KeyNameTF_Foundation"):
+                  print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
+                  varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
+  print("varsString is: ", varsString)
+  return varsString
+
 ### End of the new stuff
 #####################################################################################################################################
 #####################################################################################################################################
