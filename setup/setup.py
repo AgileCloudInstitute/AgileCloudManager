@@ -3,6 +3,12 @@ import sys
 import subprocess
 import re
 
+import pip
+failed = pip.main(["install", requests])
+print("status of requests install: ", failed)
+failed = pip.main(["install", pyyaml])
+print("status of pyyaml install: ", pyyaml)
+
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
 # #Declare all the input variables
