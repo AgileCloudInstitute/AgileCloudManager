@@ -429,12 +429,6 @@ def getFoundationBackendConfig(yamlInputFile):
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
-      if re.match("meta", item):
-        metaItems = topLevel_dict.get(item)
-        for metaItem in metaItems: 
-          if re.match("pipeAzureRegion", metaItem):
-            print(metaItem, " is: ", metaItems.get(metaItem))
-            varsString = varsString + " -backend-config \"region=" + metaItems.get(metaItem) +"\""  
       if re.match("importProjectRepoBuild", item):
         projectRepoBuildCollections = topLevel_dict.get(item)
         for projectRepoBuild in projectRepoBuildCollections:
@@ -442,6 +436,9 @@ def getFoundationBackendConfig(yamlInputFile):
             if re.match("s3BucketNameTF", projectRepoBuildItem):
               print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
               varsString = varsString + " -backend-config \"bucket=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
+            if re.match("s3BucketRegionTF", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              varsString = varsString + " -backend-config \"region=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
             if re.match("dynamoDbTableNameTF", projectRepoBuildItem):
               print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
               varsString = varsString + " -backend-config \"dynamodb_table=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
