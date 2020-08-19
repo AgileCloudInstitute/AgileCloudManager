@@ -35,15 +35,17 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 # pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 # applyAgentCommand=applyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
 
-#print ('getFoundationInputs:', getFoundationInputs )
+print ('foundationVars is: :', foundationVars )
 #print ('getAgentAutoInputs:', getAgentAutoInputs )
 
 ##############################################################################################
 ### Step One: Apply The azure-pipelines-foundation-demo module
 ##############################################################################################
 depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
+#Can we get away with removing the cred file here yet?  We are removing it so that credentials can be passed into apply separately.
+os.remove(awsCredFile)
 #UNCOMMENT THE NEXT LINE.
-#depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
+depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
 
 # ### Now create the auto output of input variables for the agent-vms-demo module
 # print("storName in installPipelineSystem.py is: ", depfunc.storName)
