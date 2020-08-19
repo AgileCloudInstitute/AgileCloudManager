@@ -5,8 +5,16 @@ import sys
 import os 
 import shutil
 import base64
+import json 
+
+#Adding these next 5 lines to avert an error that occurs when this is imported into setup.py.  There should be a better way of handling the pip installs than adding the double check as follows:
+import pip
+failed = pip.main(["install", 'requests'])
+print("status of requests install: ", failed)
+failed = pip.main(["install", 'pyyaml'])
+print("status of pyyaml install: ", failed)
+
 import requests
-import json
 import yaml
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
