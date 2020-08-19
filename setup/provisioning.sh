@@ -44,7 +44,8 @@ sudo rpm -ivh --nodeps azure-cli-2.8.0-1.el7.x86_64.rpm
 #Install the azure-devops extension of the az-cli
 az extension add --name azure-devops
 
+#Commenting out the next ones because pip install is being done inside setup.py now instead.
 #Install requests module for python to use with API calls
-sudo pip3 install requests
+#sudo pip3 install requests
 #Install pyyaml module that will ally Python to translate user-supplied yaml into API calls
-sudo pip3 install pyyaml
+#sudo pip3 install pyyaml
