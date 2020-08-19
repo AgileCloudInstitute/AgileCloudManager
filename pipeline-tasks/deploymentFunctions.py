@@ -426,6 +426,8 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
 
 def getFoundationBackendConfig(yamlInputFile):
   varsString = ''
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
@@ -433,6 +435,12 @@ def getFoundationBackendConfig(yamlInputFile):
         projectRepoBuildCollections = topLevel_dict.get(item)
         for projectRepoBuild in projectRepoBuildCollections:
           for projectRepoBuildItem in projectRepoBuild: 
+            if re.match("awsPublicAccessKey", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              awsPublicAccessKey = projectRepoBuild.get(projectRepoBuildItem)
+            if re.match("awsSecretAccessKey", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              awsSecretAccessKey = projectRepoBuild.get(projectRepoBuildItem)
             if re.match("s3BucketNameTF", projectRepoBuildItem):
               print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
               varsString = varsString + " -backend-config \"bucket=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
@@ -450,6 +458,14 @@ def getFoundationBackendConfig(yamlInputFile):
                 if re.match(moduleKey.get("name"), "s3KeyNameTF_Foundation"):
                   print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
                   varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
+  if (len(awsPublicAccessKey) > 3) AND (len(awsSecretAccessKey) > 3):  
+    with open('/home/aci-user/.aws/credentials', "w") as file:
+      lineToAdd = '[default]'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey
+      file.write(lineToAdd)
   print("varsString is: ", varsString)
   return varsString
 
