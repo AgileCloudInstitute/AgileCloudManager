@@ -424,7 +424,7 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
   print("varsString is: ", varsString)
   return varsString
 
-def getFoundationBackendConfig(yamlInputFile):
+def getFoundationBackendConfig(yamlInputFile, awsCredFile):
   varsString = ''
   awsPublicAccessKey = ''
   awsSecretAccessKey = ''
@@ -459,7 +459,7 @@ def getFoundationBackendConfig(yamlInputFile):
                   print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
                   varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
   if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
-    with open('/home/aci-user/.aws/credentials', "w") as file:
+    with open(awsCredFile, "w") as file:
       lineToAdd = '[default]\n'
       file.write(lineToAdd)
       lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
