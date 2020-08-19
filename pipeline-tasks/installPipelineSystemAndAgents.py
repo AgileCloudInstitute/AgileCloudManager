@@ -19,7 +19,10 @@ foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secr
 # getAzurermProviderInputs=' -var-file='+pathToAzurermProviderInputs
 # getFoundationInputs=' -var-file='+pathToFoundationInputs
 
-initCommand='terraform init'
+initCommand='terraform init '
+backendConfig = depfunc.getFoundationBackendConfig(myYamlInputFile)
+initBackendCommand = initCommand + backendConfig
+
 applyCommand='terraform apply -auto-approve'
 # applyFoundationCommand=applyCommand+getAzurermProviderInputs+getFoundationInputs
 foundationVars = depfunc.getFoundationInputs(myYamlInputFile, foundationSecretsFile)
