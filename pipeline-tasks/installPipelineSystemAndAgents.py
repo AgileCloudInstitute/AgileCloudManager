@@ -19,6 +19,7 @@ foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secr
 # getAzurermProviderInputs=' -var-file='+pathToAzurermProviderInputs
 # getFoundationInputs=' -var-file='+pathToFoundationInputs
 
+#The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/aci-user/.aws/credentials'
 initCommand='terraform init '
 backendConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
@@ -43,7 +44,7 @@ print ('foundationVars is: :', foundationVars )
 ##############################################################################################
 depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
 #Can we get away with removing the cred file here yet?  We are removing it so that credentials can be passed into apply separately.
-os.remove(awsCredFile)
+#os.remove(awsCredFile)
 #UNCOMMENT THE NEXT LINE.
 depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
 
