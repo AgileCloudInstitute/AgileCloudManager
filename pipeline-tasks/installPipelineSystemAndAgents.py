@@ -41,7 +41,8 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 ### Step One: Apply The azure-pipelines-foundation-demo module
 ##############################################################################################
 depfunc.runTerraformCommand(initCommand, pathToFoundationCalls)
-depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
+#UNCOMMENT THE NEXT LINE.
+#depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
 
 # ### Now create the auto output of input variables for the agent-vms-demo module
 # print("storName in installPipelineSystem.py is: ", depfunc.storName)
