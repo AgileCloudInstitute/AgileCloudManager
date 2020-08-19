@@ -400,27 +400,9 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
           if re.match("clientSecret", connectionItem):
             print(connectionItem, " is: ", connectionItems.get(connectionItem))
             with open(foundationSecretsFile, "w") as file:
-              lineToAdd = connectionItem+"=\""+connectionItems.get(connectionItem) +"\"/n"
+              lineToAdd = connectionItem+"=\""+connectionItems.get(connectionItem) +"\"\n"
               file.write(lineToAdd)
-              varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""  
-      if re.match("importProjectRepoBuild", item):
-        projectRepoBuildCollections = topLevel_dict.get(item)
-        for projectRepoBuild in projectRepoBuildCollections:
-          for projectRepoBuildItem in projectRepoBuild: 
-            if re.match("s3BucketNameTF", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              varsString = varsString + " -var=\""+ projectRepoBuildItem + "=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
-            if re.match("dynamoDbTableNameTF", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              varsString = varsString + " -var=\""+ projectRepoBuildItem + "=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
-            if re.match("moduleKeys", projectRepoBuildItem):
-              print("-----------------------------------------------")
-              print("-----------------------------------------------")
-              moduleKeysCollection = projectRepoBuild.get(projectRepoBuildItem)
-              for moduleKey in moduleKeysCollection:
-                if re.match(moduleKey.get("name"), "s3KeyNameTF_Foundation"):
-                  print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
-                  varsString = varsString + " -var=\""+ moduleKey.get("name") + "=" + moduleKey.get("value") +"\""  
+              varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""
   print("varsString is: ", varsString)
   return varsString
 
