@@ -400,7 +400,7 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
           if re.match("clientSecret", connectionItem):
             print(connectionItem, " is: ", connectionItems.get(connectionItem))
             with open(foundationSecretsFile, "w") as file:
-              lineToAdd = connectionItem+"="+connectionItems.get(connectionItem)
+              lineToAdd = connectionItem+"=\""+connectionItems.get(connectionItem) +"\"/n"
               file.write(lineToAdd)
               varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""  
       if re.match("importProjectRepoBuild", item):
