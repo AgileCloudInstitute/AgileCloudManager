@@ -19,8 +19,9 @@ foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secr
 # getAzurermProviderInputs=' -var-file='+pathToAzurermProviderInputs
 # getFoundationInputs=' -var-file='+pathToFoundationInputs
 
+awsCredFile = '/home/aci-user/.aws/credentials'
 initCommand='terraform init '
-backendConfig = depfunc.getFoundationBackendConfig(myYamlInputFile)
+backendConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
 initBackendCommand = initCommand + backendConfig
 
 applyCommand='terraform apply -auto-approve'
@@ -40,7 +41,7 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 ##############################################################################################
 ### Step One: Apply The azure-pipelines-foundation-demo module
 ##############################################################################################
-depfunc.runTerraformCommand(initCommand, pathToFoundationCalls)
+depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
 #UNCOMMENT THE NEXT LINE.
 #depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
 
