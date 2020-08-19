@@ -458,7 +458,7 @@ def getFoundationBackendConfig(yamlInputFile):
                 if re.match(moduleKey.get("name"), "s3KeyNameTF_Foundation"):
                   print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
                   varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
-  if (len(awsPublicAccessKey) > 3) AND (len(awsSecretAccessKey) > 3):  
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
     with open('/home/aci-user/.aws/credentials', "w") as file:
       lineToAdd = '[default]'
       file.write(lineToAdd)
