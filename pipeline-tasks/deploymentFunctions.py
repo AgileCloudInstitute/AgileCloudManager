@@ -460,11 +460,11 @@ def getFoundationBackendConfig(yamlInputFile):
                   varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
   if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
     with open('/home/aci-user/.aws/credentials', "w") as file:
-      lineToAdd = '[default]'
+      lineToAdd = '[default]\n'
       file.write(lineToAdd)
-      lineToAdd = "aws_access_key_id="+awsPublicAccessKey
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
       file.write(lineToAdd)
-      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
       file.write(lineToAdd)
   print("varsString is: ", varsString)
   return varsString
