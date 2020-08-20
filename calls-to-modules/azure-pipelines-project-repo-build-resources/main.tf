@@ -1,4 +1,3 @@
-
 module "azure-pipelines-project-repo-build-resources" {
   source = "../../modules/azure-pipelines-project-repo-build-resources"
 
@@ -47,9 +46,6 @@ variable "repoName" { }
 variable "buildName" { }
 variable "awsPublicAccessKey" { }
 variable "awsSecretAccessKey" { }
-variable "s3BucketNameTF" { }
-variable "dynamoDbTableNameTF" { }
-variable "s3KeyNameTF" { }  
 
 ##Output variables  
 output "azuredevops_project_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_project_id}" }  
@@ -71,13 +67,3 @@ output "azuredevops_subscription_id" { value = "${module.azure-pipelines-project
 output "azuredevops_client_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_client_name}" }  
 output "azuredevops_service_connection_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_service_connection_name}" }  
 output "azuredevops_service_connection_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_service_connection_id}" }  
-  
-##Backend
-terraform {
-  backend "s3" {
-    bucket         = var.s3BucketNameTF
-    key            = var.s3KeyNameTF
-    region         = var.pipeResourceGroupRegion
-    dynamodb_table = var.dynamoDbTableNameTF
-  }
-}
