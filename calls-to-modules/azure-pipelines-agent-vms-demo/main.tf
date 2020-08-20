@@ -29,16 +29,3 @@ variable "adminUser" { }
 variable "adminPwd" { }
 variable "storageAccountDiagName" { }
 variable "pathToCloudInitScript" { }
-variable "s3BucketNameTF" { }
-variable "dynamoDbTableNameTF" { }
-variable "s3KeyNameTF" { }
-
-##Backend
-terraform {
-  backend "s3" {
-    bucket         = var.s3BucketNameTF
-    key            = var.s3KeyNameTF
-    region         = var.resourceGroupLocation
-    dynamodb_table = var.dynamoDbTableNameTF
-  }
-}
