@@ -29,6 +29,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 5.  **Run the Setup Script:**  
     
       cd /home/aci-user/cloned-repos/agile-cloud-manager/setup/      
+      mkdir /home/aci-user/.aws
       sudo python3 setup.py      
       source /etc/bashrc     
     
@@ -37,10 +38,12 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-tasks/installPipelineSystemAndAgents.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installPipelineSystemAndAgents.py)   
     
       cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
-      python3 installPipelineSystemAndAgents.py     
-  
-2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.   
-
+      python3 installPipelineSystem.py     
+     
+2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements.        
+        
+, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.         
+          
 # Create an Azure DevOps Project and import the sample repo and pipeline     
     
 1.  Run the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
