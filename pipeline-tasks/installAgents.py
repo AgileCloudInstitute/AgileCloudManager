@@ -35,7 +35,7 @@ print("depfunc.storageAccountDiagName is: ", depfunc.storageAccountDiagName)
 ### Step Two: Prepare the input variables for the azure-pipelines-agent-vms-demo module
 ##############################################################################################
 applyCommand='terraform apply -auto-approve'
-agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.pipes_resource_group_region, depfunc.pipes_resource_group_name, depfunc.nicName, depfunc.storageAccountDiagName )
+agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.nicName, depfunc.storageAccountDiagName )
 applyAgentsCommand=applyCommand+AgentsVars
 pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 print ('agentsVars is: :', agentsVars )
