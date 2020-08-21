@@ -21,7 +21,7 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 ##############################################################################################
 ### Step One: Get Output from The azure-pipelines-foundation-demo module
 ##############################################################################################
-depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
+depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
 depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
 print("depfunc.subscriptionId  is: ", depfunc.subscriptionId)
