@@ -24,5 +24,9 @@ output "pipes_subnet_id" { value = azurerm_subnet.pipelines.id }
 output "nicName" { value = azurerm_network_interface.myterraformnic.name }
 output "storageAccountDiagName" { value = azurerm_storage_account.mystorageaccount.name }
 output "pipeKeyVaultName" { value = azurerm_key_vault.infraPipes.name }
-
 output "currentConfig" { value = data.azurerm_client_config.current }
+
+data "azurerm_subscription" "current" {}
+output "subscription_name" { value = data.azurerm_subscription.current.display_name }
+output "subscription_id" { value = data.azurerm_subscription.current.subscription_id }
+output "tenant_id" { value = data.azurerm_subscription.current.tenant_id }
