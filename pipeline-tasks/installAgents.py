@@ -1,4 +1,3 @@
-
 print("Inside installPipelineSystem.py script.")
 
 import os
@@ -25,34 +24,39 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
 depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
-print("depfunc.subscriptionName  is: ", depfunc.subscriptionName)
 print("depfunc.subscriptionId  is: ", depfunc.subscriptionId)
 print("depfunc.tenantId  is: ", depfunc.tenantId)
-print("depfunc.pipes_subnet_id  is: ", depfunc.pipes_subnet_id)
 print("depfunc.pipes_resource_group_region  is: ", depfunc.pipes_resource_group_region)
 print("depfunc.pipes_resource_group_name  is: ", depfunc.pipes_resource_group_name)
-print("depfunc.pipeKeyVaultName  is: ", depfunc.pipeKeyVaultName)
+print("depfunc.nicName  is: ", depfunc.nicName)
+print("depfunc.storageAccountDiagName is: ", depfunc.storageAccountDiagName)
 
 ##############################################################################################
 ### Step Two: Prepare the input variables for the azure-pipelines-agent-vms-demo module
 ##############################################################################################
 applyCommand='terraform apply -auto-approve'
-agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFiledepfunc.subscriptionName, depfunc.subscriptionId, depfunc.tenantId, depfunc.pipes_subnet_id, depfunc.pipes_resource_group_region, depfunc.pipes_resource_group_name, depfunc.pipeKeyVaultName )
+agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscriptionId, depfunc.tenantId, depfunc.pipes_resource_group_region, depfunc.pipes_resource_group_name, depfunc.nicName, depfunc.storageAccountDiagName )
 applyAgentsCommand=applyCommand+AgentsVars
 pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
-
 print ('agentsVars is: :', agentsVars )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+##############################################################################################
+### Step Three: Prepare the backend config for the azure-pipelines-agent-vms-demo module
+##############################################################################################
+backendAgentsConfig = depfunc.getAgentsBackendConfig(myYamlInputFile, awsCredFile)
+initAgentsCommand = initCommand + backendAgentsConfig
+print("backendAgentsConfig is: ", backendAgentsConfig)
 
-##############################################################################################
-### Step One: Apply The azure-pipelines-foundation-demo module
-##############################################################################################
-depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
-#Can we get away with removing the cred file here yet?  We are removing it so that credentials can be passed into apply separately.
-#os.remove(awsCredFile)
-#UNCOMMENT THE NEXT LINE.
-depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
+#//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# ##############################################################################################
+# ### Step One: Apply The azure-pipelines-foundation-demo module
+# ##############################################################################################
+# depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
+# #Can we get away with removing the cred file here yet?  We are removing it so that credentials can be passed into apply separately.
+# #os.remove(awsCredFile)
+# #UNCOMMENT THE NEXT LINE.
+# depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
 
 # ### Now create the auto output of input variables for the agent-vms-demo module
 # print("storName in installPipelineSystem.py is: ", depfunc.storName)
