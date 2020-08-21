@@ -26,6 +26,6 @@ output "storageAccountDiagName" { value = "${module.azure-pipelines-foundation-d
 output "pipeKeyVaultName" { value = "${module.azure-pipelines-foundation-demo.pipeKeyVaultName}" }
 output "currentConfig" { value = "${module.azure-pipelines-foundation-demo.currentConfig}" }
 
-
-
-
+output "subscription_name" { value = "${module.azure-pipelines-foundation-demo.subscription_name}" }
+output "subscription_id" { value = "${module.azure-pipelines-foundation-demo.subscription_id}" }
+output "tenant_id" { value = "${module.azure-pipelines-foundation-demo.tenant_id}" }
