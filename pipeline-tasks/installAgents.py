@@ -24,8 +24,8 @@ pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-
 depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
 depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
-print("depfunc.subscriptionId  is: ", depfunc.subscriptionId)
-print("depfunc.tenantId  is: ", depfunc.tenantId)
+print("depfunc.subscription_id  is: ", depfunc.subscription_id)
+print("depfunc.tenant_id  is: ", depfunc.tenant_id)
 print("depfunc.pipes_resource_group_region  is: ", depfunc.pipes_resource_group_region)
 print("depfunc.pipes_resource_group_name  is: ", depfunc.pipes_resource_group_name)
 print("depfunc.nicName  is: ", depfunc.nicName)
@@ -35,7 +35,7 @@ print("depfunc.storageAccountDiagName is: ", depfunc.storageAccountDiagName)
 ### Step Two: Prepare the input variables for the azure-pipelines-agent-vms-demo module
 ##############################################################################################
 applyCommand='terraform apply -auto-approve'
-agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscriptionId, depfunc.tenantId, depfunc.pipes_resource_group_region, depfunc.pipes_resource_group_name, depfunc.nicName, depfunc.storageAccountDiagName )
+agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.pipes_resource_group_region, depfunc.pipes_resource_group_name, depfunc.nicName, depfunc.storageAccountDiagName )
 applyAgentsCommand=applyCommand+AgentsVars
 pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 print ('agentsVars is: :', agentsVars )
