@@ -37,7 +37,10 @@ azuredevops_subscription_id = ''
 azuredevops_client_name = ''    
 azuredevops_service_connection_name = ''    
 azuredevops_service_connection_id = ''  
-
+subscription_name = '' 
+subscription_id = ''  
+tenant_id = '' 
+  
 azuredevops_organization_name = ''
 
 def updateOrganizationName():
@@ -159,6 +162,21 @@ def runTerraformCommand(commandToRun, workingDir ):
           global azuredevops_service_connection_id
           azuredevops_service_connection_id=decodedline[36:]
           print("azuredevops_service_connection_id in deploymentFunctions.py is: ", azuredevops_service_connection_id)
+        if "subscription_name" in decodedline:
+          print("Found subscription_name!")
+          global subscription_name
+          subscription_name=decodedline[20:]
+          print("subscription_name in deploymentFunctions.py is: ", subscription_name)
+        if "subscription_id" in decodedline:
+          print("Found subscription_id!")
+          global subscription_id
+          subscription_id=decodedline[18:]
+          print("subscription_id in deploymentFunctions.py is: ", subscription_id)
+        if "tenant_id" in decodedline:
+          print("Found tenant_id!")
+          global tenant_id
+          tenant_id=decodedline[12:]
+          print("tenant_id in deploymentFunctions.py is: ", tenant_id)
       else:
         break
 
