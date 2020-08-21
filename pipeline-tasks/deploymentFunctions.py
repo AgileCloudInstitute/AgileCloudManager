@@ -424,6 +424,45 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
   print("varsString is: ", varsString)
   return varsString
 
+def getAgentsInputs(yamlInputFile, foundationSecretsFile, subscriptionId, tenantId, pipes_resource_group_region, pipes_resource_group_name, nicName, storageAccountDiagName):
+  varsString = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      print("item is: ", item)
+      if re.match("connection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("clientId", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientSecret", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            with open(foundationSecretsFile, "w") as file:
+              lineToAdd = connectionItem+"=\""+connectionItems.get(connectionItem) +"\"\n"
+              file.write(lineToAdd)
+              varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""
+      if re.match("agents", item):  
+        agentsItems = topLevel_dict.get(item)  
+        for agentsItem in agentsItems:
+          if re.match("adminUser", agentsItem):
+            print(agentsItem, " is: ", agentsItems.get(agentsItem))
+            varsString = varsString + " -var=\""+ agentsItem + "=" + agentsItems.get(agentsItem) +"\""  
+          if re.match("adminPwd", agentsItem):
+            print(agentsItem, " is: ", agentsItems.get(agentsItem))
+            varsString = varsString + " -var=\""+ agentsItem + "=" + agentsItems.get(agentsItem) +"\""  
+          if re.match("pathToCloudInitScript", agentsItem):
+            print(agentsItem, " is: ", agentsItems.get(agentsItem))
+            varsString = varsString + " -var=\""+ agentsItem + "=" + agentsItems.get(agentsItem) +"\""  
+  varsString = varsString + " -var=\"subscriptionId=" + subscriptionId +"\""  
+  varsString = varsString + " -var=\"tenantId=" + tenantId +"\""  
+  varsString = varsString + " -var=\"resourceGroupLocation=" + pipes_resource_group_region +"\""  
+  varsString = varsString + " -var=\"resourceGroupName=" + pipes_resource_group_name +"\""  
+  varsString = varsString + " -var=\"nicName=" + nicName +"\""  
+  varsString = varsString + " -var=\"storageAccountDiagName=" + storageAccountDiagName +"\""  
+  print("varsString is: ", varsString)
+  return varsString
+  
 def getFoundationBackendConfig(yamlInputFile, awsCredFile):
   varsString = ''
   awsPublicAccessKey = ''
