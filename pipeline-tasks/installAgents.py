@@ -5,39 +5,45 @@ import os
 import sys 
 import deploymentFunctions as depfunc
 
-#The following are created/populated when you run  setup.sh at the time you download this repo.
-# pathToAgentAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-agent-vms-auto.tfvars'
-# pathToAgentManualInputs='/home/aci-user/vars/agile-cloud-manager/inputs-agent-vms-manual.tfvars'
-# pathToAzurermProviderInputs='/home/aci-user/vars/agile-cloud-manager/inputs-azurerm-provider.tfvars'
-# pathToFoundationInputs='/home/aci-user/vars/agile-cloud-manager/inputs-foundation-demo.tfvars'
-# pathToAzdoProjectRepoBuildAutoInputs='/home/aci-user/vars/agile-cloud-manager/inputs-project-repo-build-auto.tfvars'
 myYamlInputFile = '/home/aci-user/staging/enter-user-input-here-only.yaml'
 foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secrets.tfvars'
-
-# getAgentAutoInputs=' -var-file='+pathToAgentAutoInputs
-# getAgentManualInputs=' -var-file='+pathToAgentManualInputs
-# getAzurermProviderInputs=' -var-file='+pathToAzurermProviderInputs
-# getFoundationInputs=' -var-file='+pathToFoundationInputs
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/aci-user/.aws/credentials'
 initCommand='terraform init '
-backendConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
-initBackendCommand = initCommand + backendConfig
+backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
+initBackendFoundationCommand = initCommand + backendFoundationConfig
 
-applyCommand='terraform apply -auto-approve'
-# applyFoundationCommand=applyCommand+getAzurermProviderInputs+getFoundationInputs
-foundationVars = depfunc.getFoundationInputs(myYamlInputFile, foundationSecretsFile)
-applyFoundationCommand=applyCommand+foundationVars
-
+outputCommand = 'terraform output '
 #Environment variable set during cloud-init instantiation
 acmRootDir=os.environ['ACM_ROOT_DIR']
 pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
-# pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
-# applyAgentCommand=applyCommand+getAzurermProviderInputs+getAgentAutoInputs+getAgentManualInputs
+  
+##############################################################################################
+### Step One: Get Output from The azure-pipelines-foundation-demo module
+##############################################################################################
+depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
+depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
-print ('foundationVars is: :', foundationVars )
-#print ('getAgentAutoInputs:', getAgentAutoInputs )
+print("depfunc.subscriptionName  is: ", depfunc.subscriptionName)
+print("depfunc.subscriptionId  is: ", depfunc.subscriptionId)
+print("depfunc.tenantId  is: ", depfunc.tenantId)
+print("depfunc.pipes_subnet_id  is: ", depfunc.pipes_subnet_id)
+print("depfunc.pipes_resource_group_region  is: ", depfunc.pipes_resource_group_region)
+print("depfunc.pipes_resource_group_name  is: ", depfunc.pipes_resource_group_name)
+print("depfunc.pipeKeyVaultName  is: ", depfunc.pipeKeyVaultName)
+
+##############################################################################################
+### Step Two: Prepare the input variables for the azure-pipelines-agent-vms-demo module
+##############################################################################################
+applyCommand='terraform apply -auto-approve'
+agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFiledepfunc.subscriptionName, depfunc.subscriptionId, depfunc.tenantId, depfunc.pipes_subnet_id, depfunc.pipes_resource_group_region, depfunc.pipes_resource_group_name, depfunc.pipeKeyVaultName )
+applyAgentsCommand=applyCommand+AgentsVars
+pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
+
+print ('agentsVars is: :', agentsVars )
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ##############################################################################################
 ### Step One: Apply The azure-pipelines-foundation-demo module
