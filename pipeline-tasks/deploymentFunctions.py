@@ -508,6 +508,52 @@ def getFoundationBackendConfig(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString
 
+def getAgentsBackendConfig(yamlInputFile, awsCredFile):
+  varsString = ''
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("importProjectRepoBuild", item):
+        projectRepoBuildCollections = topLevel_dict.get(item)
+        for projectRepoBuild in projectRepoBuildCollections:
+          for projectRepoBuildItem in projectRepoBuild: 
+            if re.match("awsPublicAccessKey", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              awsPublicAccessKey = projectRepoBuild.get(projectRepoBuildItem)
+            if re.match("awsSecretAccessKey", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              awsSecretAccessKey = projectRepoBuild.get(projectRepoBuildItem)
+            if re.match("s3BucketNameTF", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              varsString = varsString + " -backend-config \"bucket=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
+            if re.match("s3BucketRegionTF", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              varsString = varsString + " -backend-config \"region=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
+            if re.match("dynamoDbTableNameTF", projectRepoBuildItem):
+              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
+              varsString = varsString + " -backend-config \"dynamodb_table=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
+            if re.match("moduleKeys", projectRepoBuildItem):
+              #print("-----------------------------------------------")
+              #print("-----------------------------------------------")
+              moduleKeysCollection = projectRepoBuild.get(projectRepoBuildItem)
+              for moduleKey in moduleKeysCollection:
+                if re.match(moduleKey.get("name"), "s3KeyNameTF_Agents"):
+                  print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
+                  varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
+  print("varsString is: ", varsString)
+  return varsString
+
+
 ### End of the new stuff
 #####################################################################################################################################
 #####################################################################################################################################
