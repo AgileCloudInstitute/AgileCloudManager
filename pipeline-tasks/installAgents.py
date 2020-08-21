@@ -36,7 +36,7 @@ print("depfunc.storName is: ", depfunc.storName)
 ##############################################################################################
 applyCommand='terraform apply -auto-approve'
 agentsVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.nicName, depfunc.storName )
-applyAgentsCommand=applyCommand+AgentsVars
+applyAgentsCommand=applyCommand+agentsVars
 pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 print ('agentsVars is: :', agentsVars )
 
