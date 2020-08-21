@@ -26,8 +26,8 @@ depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
 print("depfunc.subscription_id  is: ", depfunc.subscription_id)
 print("depfunc.tenant_id  is: ", depfunc.tenant_id)
-print("depfunc.pipes_resource_group_region  is: ", depfunc.pipes_resource_group_region)
-print("depfunc.pipes_resource_group_name  is: ", depfunc.pipes_resource_group_name)
+print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
+print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
 print("depfunc.nicName  is: ", depfunc.nicName)
 print("depfunc.storageAccountDiagName is: ", depfunc.storageAccountDiagName)
 
