@@ -47,6 +47,13 @@ backendAgentsConfig = depfunc.getAgentsBackendConfig(myYamlInputFile, awsCredFil
 initAgentsCommand = initCommand + backendAgentsConfig
 print("backendAgentsConfig is: ", backendAgentsConfig)
 
+##############################################################################################
+### Step Four: Initialize the Terraform backend for the azure-pipelines-agent-vms-demo module
+##############################################################################################
+depfunc.runTerraformCommand(initAgentsCommand, pathToAgentCalls)
+#depfunc.runTerraformCommand(applyAgentsCommand, pathToAgentCalls)
+print("Back in installPipelineSystem.py .")
+
 #//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # ##############################################################################################
