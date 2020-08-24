@@ -29,7 +29,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 5.  **Run the Setup Script:**  
     
       cd /home/aci-user/cloned-repos/agile-cloud-manager/setup/      
-      mkdir /home/aci-user/.aws
+      mkdir /home/aci-user/.aws        
       sudo python3 setup.py      
       source /etc/bashrc     
     
