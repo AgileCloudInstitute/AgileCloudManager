@@ -461,7 +461,21 @@ def getAgentsInputs(yamlInputFile, foundationSecretsFile, subscriptionId, tenant
   varsString = varsString + " -var=\"nicName=" + nicName +"\""  
   varsString = varsString + " -var=\"storageAccountDiagName=" + storageAccountDiagName +"\""  
   print("varsString is: ", varsString)
-  return varsString
+  return varsString  
+  
+def getCloudInitLocation(yamlInputFile):  
+  pathToCloudInitStartup = ''  
+  with open(yamlInputFile) as f:  
+    topLevel_dict = yaml.safe_load(f)  
+    for item in topLevel_dict:  
+      if re.match("agents", item):  
+        agentsItems = topLevel_dict.get(item)  
+        for agentsItem in agentsItems:  
+          if re.match("pathToCloudInitScript", agentsItem):  
+            print(agentsItem, " is: ", agentsItems.get(agentsItem))  
+            pathToCloudInitStartup = agentsItems.get(agentsItem)  
+  print("pathToCloudInitStartup is: ", pathToCloudInitStartup)  
+  return pathToCloudInitStartup  
   
 def getFoundationBackendConfig(yamlInputFile, awsCredFile):
   varsString = ''
