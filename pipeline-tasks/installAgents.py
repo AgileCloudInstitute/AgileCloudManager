@@ -41,87 +41,21 @@ pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 print ('agentsVars is: :', agentsVars )
 
 ##############################################################################################
-### Step Three: Prepare the backend config for the azure-pipelines-agent-vms-demo module
+### Step Three: Prepare cloud init startup script for the azure-pipelines-agent-vms-demo module
+##############################################################################################
+pathToCloudInitScript = depfunc.getCloudInitLocation(myYamlInputFile)
+depfunc.setEnvironmentVars(myYamlInputFile, fileAzEnvVars)
+
+##############################################################################################
+### Step Four: Prepare the backend config for the azure-pipelines-agent-vms-demo module
 ##############################################################################################
 backendAgentsConfig = depfunc.getAgentsBackendConfig(myYamlInputFile, awsCredFile)
 initAgentsCommand = initCommand + backendAgentsConfig
 print("backendAgentsConfig is: ", backendAgentsConfig)
 
 ##############################################################################################
-### Step Four: Initialize the Terraform backend for the azure-pipelines-agent-vms-demo module
+### Step Five: Initialize the Terraform backend for the azure-pipelines-agent-vms-demo module
 ##############################################################################################
 depfunc.runTerraformCommand(initAgentsCommand, pathToAgentCalls)
 #depfunc.runTerraformCommand(applyAgentsCommand, pathToAgentCalls)
 print("Back in installPipelineSystem.py .")
-
-#//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-# ##############################################################################################
-# ### Step One: Apply The azure-pipelines-foundation-demo module
-# ##############################################################################################
-# depfunc.runTerraformCommand(initBackendCommand, pathToFoundationCalls)
-# #Can we get away with removing the cred file here yet?  We are removing it so that credentials can be passed into apply separately.
-# #os.remove(awsCredFile)
-# #UNCOMMENT THE NEXT LINE.
-# depfunc.runTerraformCommand(applyFoundationCommand, pathToFoundationCalls)
-
-# ### Now create the auto output of input variables for the agent-vms-demo module
-# print("storName in installPipelineSystem.py is: ", depfunc.storName)
-# valueToChange=depfunc.storName
-# searchTermAgentInputs="storageAccountDiagName"
-# depfunc.changeLineInFile(pathToAgentAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-# print("nicName in installPipelineSystem.py is: ", depfunc.nicName)
-# valueToChange=depfunc.nicName
-# searchTermAgentInputs="nicName"
-# depfunc.changeLineInFile(pathToAgentAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-
-# print("resourceGroupName in installPipelineSystem.py is: ", depfunc.resourceGroupName)
-# valueToChange=depfunc.resourceGroupName
-# searchTermAgentInputs="resourceGroupName"
-# depfunc.changeLineInFile(pathToAgentAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-
-# print("resourceGroupLocation in installPipelineSystem.py is: ", depfunc.resourceGroupLocation)
-# valueToChange=depfunc.resourceGroupLocation
-# searchTermAgentInputs="resourceGroupLocation"
-# depfunc.changeLineInFile(pathToAgentAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-# #### Next create the auto output for the project-repo-build input file:
-
-# print("pipeSubnetId in installPipelineSystem.py is: ", depfunc.pipeSubnetId)
-# valueToChange=depfunc.pipeSubnetId
-# searchTermAgentInputs="pipeSubnetId"
-# depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-# print("pipeResourceGroupName in installPipelineSystem.py is: ", depfunc.resourceGroupName)
-# valueToChange=depfunc.resourceGroupName
-# searchTermAgentInputs="pipeResourceGroupName"
-# depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-# print("pipeResourceGroupRegion in installPipelineSystem.py is: ", depfunc.resourceGroupLocation)
-# valueToChange=depfunc.resourceGroupLocation
-# searchTermAgentInputs="pipeResourceGroupRegion"
-# depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-# print("pipeKeyVaultName in installPipelineSystem.py is: ", depfunc.pipeKeyVaultName)
-# valueToChange=depfunc.pipeKeyVaultName
-# searchTermAgentInputs="pipeKeyVaultName"
-# depfunc.changeLineInFile(pathToAzdoProjectRepoBuildAutoInputs, searchTermAgentInputs, valueToChange)
-# print("Back in installPipelineSystem.py .")
-
-
-# ##############################################################################################
-# ### Step Two: Apply the azure-pipelines-agent-vms-demo module
-# ##############################################################################################
-# depfunc.runTerraformCommand(initCommand, pathToAgentCalls)
-# depfunc.runTerraformCommand(applyAgentCommand, pathToAgentCalls)
-# print("Back in installPipelineSystem.py .")
