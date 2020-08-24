@@ -40,11 +40,11 @@ applyAgentsCommand=applyCommand+agentsVars
 pathToAgentCalls = acmRootDir+"calls-to-modules/azure-pipelines-agent-vms-demo/"
 print ('agentsVars is: :', agentsVars )
 
-##############################################################################################
-### Step Three: Prepare cloud init startup script for the azure-pipelines-agent-vms-demo module
-##############################################################################################
-pathToCloudInitScript = depfunc.getCloudInitLocation(myYamlInputFile)
-depfunc.setEnvironmentVars(myYamlInputFile, fileAzEnvVars)
+################################################################################################ 
+### Step Three: Prepare cloud init startup script for the azure-pipelines-agent-vms-demo module 
+################################################################################################  
+pathToCloudInitScript = depfunc.getCloudInitLocation(myYamlInputFile)  
+depfunc.setEnvironmentVars(myYamlInputFile, pathToCloudInitScript)  
 
 ##############################################################################################
 ### Step Four: Prepare the backend config for the azure-pipelines-agent-vms-demo module
@@ -57,5 +57,5 @@ print("backendAgentsConfig is: ", backendAgentsConfig)
 ### Step Five: Initialize the Terraform backend for the azure-pipelines-agent-vms-demo module
 ##############################################################################################
 depfunc.runTerraformCommand(initAgentsCommand, pathToAgentCalls)
-#depfunc.runTerraformCommand(applyAgentsCommand, pathToAgentCalls)
+depfunc.runTerraformCommand(applyAgentsCommand, pathToAgentCalls)
 print("Back in installPipelineSystem.py .")
