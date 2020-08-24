@@ -39,6 +39,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
       cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
       python3 installPipelineSystem.py     
+      python3 installAgents.py        
      
 2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements.        
         
