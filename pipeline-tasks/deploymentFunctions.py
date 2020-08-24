@@ -409,7 +409,7 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
           if re.match("pipeAzureRegion", metaItem):
             print(metaItem, " is: ", metaItems.get(metaItem))
             varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
-      if re.match("connection", item):  
+      if re.match("azdoConnection", item):  
         connectionItems = topLevel_dict.get(item)  
         for connectionItem in connectionItems:
           if re.match("clientId", connectionItem):
@@ -484,33 +484,28 @@ def getFoundationBackendConfig(yamlInputFile, awsCredFile):
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
-      if re.match("importProjectRepoBuild", item):
-        projectRepoBuildCollections = topLevel_dict.get(item)
-        for projectRepoBuild in projectRepoBuildCollections:
-          for projectRepoBuildItem in projectRepoBuild: 
-            if re.match("awsPublicAccessKey", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              awsPublicAccessKey = projectRepoBuild.get(projectRepoBuildItem)
-            if re.match("awsSecretAccessKey", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              awsSecretAccessKey = projectRepoBuild.get(projectRepoBuildItem)
-            if re.match("s3BucketNameTF", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              varsString = varsString + " -backend-config \"bucket=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
-            if re.match("s3BucketRegionTF", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              varsString = varsString + " -backend-config \"region=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
-            if re.match("dynamoDbTableNameTF", projectRepoBuildItem):
-              print(projectRepoBuildItem, " is: ", projectRepoBuild.get(projectRepoBuildItem))
-              varsString = varsString + " -backend-config \"dynamodb_table=" + projectRepoBuild.get(projectRepoBuildItem) +"\""  
-            if re.match("moduleKeys", projectRepoBuildItem):
-              #print("-----------------------------------------------")
-              #print("-----------------------------------------------")
-              moduleKeysCollection = projectRepoBuild.get(projectRepoBuildItem)
-              for moduleKey in moduleKeysCollection:
-                if re.match(moduleKey.get("name"), "s3KeyNameTF_Foundation"):
-                  print(moduleKey.get("name"), " ::: has key ::: ", moduleKey.get("value"))
-                  varsString = varsString + " -backend-config \"key=" + moduleKey.get("value") +"\""  
+      if re.match("awsBackendTF", item):
+        awsBackendItems = topLevel_dict.get(item)
+        #for projectRepoBuild in projectRepoBuildCollections:
+        for awsBackendItem in awsBackendItems: 
+            if re.match("awsPublicAccessKey", awsBackendItem):
+              print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+              awsPublicAccessKey = awsBackendItems.get(awsBackendItem)
+            if re.match("awsSecretAccessKey", awsBackendItem):
+              print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+              awsSecretAccessKey = awsBackendItems.get(awsBackendItem)
+            if re.match("s3BucketNameTF", awsBackendItem):
+              print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+              varsString = varsString + " -backend-config \"bucket=" + awsBackendItems.get(awsBackendItem) +"\""  
+            if re.match("s3BucketRegionTF", awsBackendItem):
+              print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+              varsString = varsString + " -backend-config \"region=" + projectRepoBuild.get(awsBackendItem) +"\""  
+            if re.match("dynamoDbTableNameTF", awsBackendItem):
+              print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+              varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
+            if re.match("moduleKeys", awsBackendItem):
+              print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+              varsString = varsString + " -backend-config \"key=" + awsBackendItems.get(awsBackendItem) +"\""    
   if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
     with open(awsCredFile, "w") as file:
       lineToAdd = '[default]\n'
