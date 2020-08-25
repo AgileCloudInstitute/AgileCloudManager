@@ -31,30 +31,6 @@ def runShellCommand(commandToRun, workingDir ):
       else:
         break
   
-def updateVarFileAzureProvider(fileName):
-    print("inside deploymentFunctions.py script and updateVarFileAzureProvider(...,...,...) function.")
-    print("fileName is: ", fileName)
-    for line in fileinput.input(fileName, inplace=True):
-        if "subscriptionId" in line:
-            line = "subscriptionId=\""+subscriptionId+"\""
-        if "tenantId" in line:
-            line = "tenantId=\""+tenantId+"\""
-        if "clientId" in line:
-            line = "clientId=\""+clientId+"\""
-        if "clientSecret" in line:
-            line = "clientSecret=\""+clientSecret+"\""
-        print('{}'.format(line))
-
-def updateVarFileAzureDevOpsProvider(fileName):
-    print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProvider(...,...,...) function.")
-    print("fileName is: ", fileName)
-    for line in fileinput.input(fileName, inplace=True):
-        if "azdoOrgPAT" in line:
-            line = "azdoOrgPAT=\""+azdoOrgPAT+"\""
-        if "azdoOrgServiceURL" in line:
-            line = "azdoOrgServiceURL=\""+azdoOrgServiceURL+"\""
-        print('{}'.format(line))
-
 def updateVarFileAzurePipesFoundation(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesFoundation(...,...,...) function.")
     print("fileName is: ", fileName)
