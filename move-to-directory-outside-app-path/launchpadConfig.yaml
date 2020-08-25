@@ -1,0 +1,9 @@
+#Manually enter the values for the input variables here, and then run a script to import them. 
+--- 
+azureMeta: 
+  tenantId: 
+azdoConnection: 
+  azdoOrgServiceURL: 
+  clientId: 
+  clientSecret: 
+  azdoOrgPAT: 
