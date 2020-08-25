@@ -499,7 +499,7 @@ def getFoundationBackendConfig(yamlInputFile, awsCredFile):
               varsString = varsString + " -backend-config \"bucket=" + awsBackendItems.get(awsBackendItem) +"\""  
             if re.match("s3BucketRegionTF", awsBackendItem):
               print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
-              varsString = varsString + " -backend-config \"region=" + projectRepoBuild.get(awsBackendItem) +"\""  
+              varsString = varsString + " -backend-config \"region=" + awsBackendItems.get(awsBackendItem) +"\""  
             if re.match("dynamoDbTableNameTF", awsBackendItem):
               print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
               varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
