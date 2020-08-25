@@ -31,42 +31,6 @@ def runShellCommand(commandToRun, workingDir ):
       else:
         break
   
-def updateVarFileAzureDevOpsProjectRepoBuild(fileName):
-    print("inside deploymentFunctions.py script and updateVarFileAzureDevOpsProjectRepoBuild(...,...,...) function.")
-    print("fileName is: ", fileName)
-    repoName='check-setup-py-for-error'
-    buildName='check-setup-py-for-error'
-    for line in fileinput.input(fileName, inplace=True):
-        if "subscriptionName" in line:
-            line = "subscriptionName=\""+subscriptionName+"\""
-        if "clientName" in line:
-            line = "clientName=\""+clientName+"\""
-        if "serviceConnectionName" in line:
-            line = "serviceConnectionName=\""+serviceConnectionName+"\""
-        if "storageAccountNameTerraformBackend" in line:
-            line = "storageAccountNameTerraformBackend=\""+storageAccountNameTerraformBackend+"\""
-        if "storageContainerNameTerraformBackend" in line:
-            line = "storageContainerNameTerraformBackend=\""+storageContainerNameTerraformBackend+"\""
-        if "awsPublicAccessKey" in line:
-            line = "awsPublicAccessKey=\""+awsPublicAccessKey+"\""
-        if "awsSecretAccessKey" in line:
-            line = "awsSecretAccessKey=\""+awsSecretAccessKey+"\""
-        if "sourceRepo" in line:
-            line = "sourceRepo=\""+sourceRepo+"\""
-        if "repoName" in line:
-            fragment=sourceRepo[sourceRepo.rfind('/')+1:]
-            repoName=fragment.split('.')[0]
-            line = "repoName=\""+repoName+"\""
-        if "buildName" in line:
-            fragment=sourceRepo[sourceRepo.rfind('/')+1:]
-            buildName=fragment.split('.')[0]
-            line = "buildName=\""+buildName+"\""
-        if "projectName" in line:
-            fragment=sourceRepo[sourceRepo.rfind('/')+1:]
-            repoName=fragment.split('.')[0]
-            line = "projectName=\""+repoName+"-project"+"\""
-        print('{}'.format(line))
-
 def updateVarFileAzurePipesAgentsStartUpScript(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgentStartupScript(...,...,...) function.")
     print("fileName is: ", fileName)
