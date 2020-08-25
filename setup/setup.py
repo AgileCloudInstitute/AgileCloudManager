@@ -31,56 +31,6 @@ def runShellCommand(commandToRun, workingDir ):
       else:
         break
   
-def updateVarFileAzurePipesAgentsStartUpScript(fileName):
-    print("inside deploymentFunctions.py script and updateVarFileAzurePipesAgentStartupScript(...,...,...) function.")
-    print("fileName is: ", fileName)
-    for line in fileinput.input(fileName, inplace=True):
-        trailingCharacters=len(line)-line.find('=')
-        if "export AZ_PASS=" in line:
-          if "echo" not in line:
-            if trailingCharacters < 3:
-              line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
-          if "echo" in line:
-            if trailingCharacters < 25:
-              line = line.replace("export AZ_PASS=","export AZ_PASS="+clientSecret)
-        if "export AZ_CLIENT=" in line:
-          if "echo" not in line:
-            if trailingCharacters < 3:
-              line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
-          if "echo" in line:
-            if trailingCharacters < 25:
-              line = line.replace("export AZ_CLIENT=","export AZ_CLIENT="+clientId)
-        if "export AZ_TENANT=" in line:
-          if "echo" not in line:
-            if trailingCharacters < 3:
-              line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
-          if "echo" in line:
-            if trailingCharacters < 25:
-              line = line.replace("export AZ_TENANT=","export AZ_TENANT="+tenantId)
-        if "export AZ_PAT=" in line:
-          if "echo" not in line:
-            if trailingCharacters < 3:
-              line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
-          if "echo" in line:
-            if trailingCharacters < 25:
-              line = line.replace("export AZ_PAT=","export AZ_PAT="+azdoOrgPAT)
-        if "export AZ_SERVER=" in line:
-          if "echo" not in line:
-            if trailingCharacters < 3:
-              line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
-          if "echo" in line:
-            if trailingCharacters < 25:
-              line = line.replace("export AZ_SERVER=","export AZ_SERVER="+azdoOrgServiceURL)
-
-        if "export AZURE_DEVOPS_EXT_PAT=" in line:
-          if "echo" not in line:
-            if trailingCharacters < 3:
-              line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
-          if "echo" in line:
-            if trailingCharacters < 25:
-              line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
-        print('{}'.format(line))
-
 #Now call the functions
 #First do some provisioning
 chmodCommand = "chmod +x provisioning.sh"
@@ -89,19 +39,12 @@ setupCommand = "sudo ./provisioning.sh"
 runShellCommand(chmodCommand, scriptsDir)
 runShellCommand(setupCommand, scriptsDir)
 
-###################################################################################################################################
-###################################################################################################################################
-### Now add the new stuff
+### Now import deploymentFunctions.py and translate the environment variables from yaml into bash
 sys.path.insert(0, '/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/')
 import deploymentFunctions as depfunc
-
 depfunc.setEnvironmentVars(fileEnterUserInputHereOnly, fileAzEnvVars)
 
-### Finished adding the new stuff
-###################################################################################################################################
-###################################################################################################################################
-
-#Third set local environment variables
+#Third set local environment variables by running the bash script that you just populated
 varsDir = "/home/aci-user/vars/agile-cloud-manager/"
 newChmodCommand = "chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
 setVarsCommand = "sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
@@ -110,7 +53,6 @@ runShellCommand(setVarsCommand, varsDir )
 
 # #Fourth chown the file to aci-user to avoid risk of being owned by root
 cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileAzEnvVars
-
 runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 
 #Consider further locking down the yaml config files
