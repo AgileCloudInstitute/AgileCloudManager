@@ -1,4 +1,4 @@
-print("Inside installPipelineSystem.py script.")
+print("Inside installFoundation.py script.")
 
 import os
 import sys 
