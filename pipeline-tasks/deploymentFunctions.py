@@ -430,7 +430,7 @@ def getAgentsInputs(yamlInputFile, foundationSecretsFile, subscriptionId, tenant
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
       print("item is: ", item)
-      if re.match("connection", item):  
+      if re.match("azdoConnection", item):  
         connectionItems = topLevel_dict.get(item)  
         for connectionItem in connectionItems:
           if re.match("clientId", connectionItem):
