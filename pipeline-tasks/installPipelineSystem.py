@@ -5,7 +5,7 @@ import sys
 import deploymentFunctions as depfunc
 
 #The following are created/populated when you run  setup.sh at the time you download this repo.
-myYamlInputFile = '/home/aci-user/staging/enter-user-input-here-only.yaml'
+myYamlInputFile = '/home/aci-user/staging/foundationConfig.yaml'
 foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
