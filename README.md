@@ -8,9 +8,9 @@ Prerequisites include:
 2.  Azure resources configured as described in the training that comes with this system, including an Azure DevOps organization, an Azure Application Registration, a Personal Access Token, etc.  
 3.  A VM or container into which to clone this repository.  Here, we will start with our own [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example) in order to keep things simple.  That means you need to follow the instructions to instantiate `terraform-aws-simple-example` or something comparable in order to proceed.  
   
-# Create the Infrastructure Orchestration System  
-  
-Once you have assembled the pre-requisites, do the following in order to use this repository:  
+# Create the Infrastructure Orchestration System    
+    
+Once you have assembled the pre-requisites, do the following in order to use this repository:    
     
 1.  **Log In To Dev Server:**  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)    
     
@@ -34,16 +34,16 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 #  Create the foundation of the infrastructure for the Azure Pipelines implementation   
     
-1.  Create the infrastructure foundation for Azure Pipelines by first populating `/home/aci-user/staging/foundationConfig.yaml` with variables and then running [pipeline-tasks/installPipelineSystem.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installPipelineSystem.py)   
+1.  Create the infrastructure foundation for Azure Pipelines by first populating `/home/aci-user/staging/foundationConfig.yaml` with variables and then running [pipeline-tasks/installFoundation.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installFoundation.py)   
       
       #First open the foundationConfig.yaml file by typing:      
       vi /home/aci-user/staging/foundationConfig.yaml       
       #Then enter the values for each listed variable.    
       #Then save the file.    
       #Note: foundationConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-      #Next, switch directories and run installPipelineSystem.py .      
+      #Next, switch directories and run installFoundation.py .      
       cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
-      python3 installPipelineSystem.py     
+      python3 installFoundation.py     
       
 2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements.        
       
