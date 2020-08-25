@@ -19,15 +19,14 @@ Once you have assembled the pre-requisites, do the following in order to use thi
       cd cloned-repos    
       git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git    
     
-3.  **Import Config Variables:**  Enter the variables you assembled in the pre-requisite steps into a new file you will create in `/home/aci-user/staging/enter-user-input-here-only.yaml` which follows the exact list of variables and syntax given in [this template file from the repository](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.yaml) .  
-  
-      vi /home/aci-user/staging/enter-user-input-here-only.yaml       
+3.  **Setup the LaucnPad:**  Enter the variables you assembled in the pre-requisite steps into a new file you will create in `/home/aci-user/staging/launchpadConfig.yaml` which follows the exact list of variables and syntax given in [this template file from the repository](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.yaml) .  Then run the setup.py script as follows:        
+      
+      #First open the launchpadConfig.yaml file by typing:      
+      vi /home/aci-user/staging/launchpadConfig.yaml       
       #Then enter the values for each listed variable.    
       #Then save the file.    
-      #Note this can be done by some automation you create separately if you need to do this repeatedly.     
-  
-5.  **Run the Setup Script:**  
-    
+      #Note: launchpadConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+      #Next, switch directories and run setup.py after creating a .aws directory in which to AWS credentials.      
       cd /home/aci-user/cloned-repos/agile-cloud-manager/setup/      
       mkdir /home/aci-user/.aws        
       sudo python3 setup.py      
