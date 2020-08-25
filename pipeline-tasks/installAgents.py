@@ -1,4 +1,4 @@
-print("Inside installPipelineSystem.py script.")
+print("Inside installAgents.py script.")
 
 import os
 import sys 
@@ -58,4 +58,4 @@ print("backendAgentsConfig is: ", backendAgentsConfig)
 ##############################################################################################
 depfunc.runTerraformCommand(initAgentsCommand, pathToAgentCalls)
 depfunc.runTerraformCommand(applyAgentsCommand, pathToAgentCalls)
-print("Back in installPipelineSystem.py .")
+print("Back in installAgents.py .")
