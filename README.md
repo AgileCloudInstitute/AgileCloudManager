@@ -34,16 +34,33 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 #  Create the foundation of the infrastructure for the Azure Pipelines implementation   
     
-1.  Create the infrastructure foundation for Azure Pipelines including an Agent VM by running [pipeline-tasks/installPipelineSystemAndAgents.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installPipelineSystemAndAgents.py)   
-    
+1.  Create the infrastructure foundation for Azure Pipelines by first populating `/home/aci-user/staging/foundationConfig.yaml` with variables and then running [pipeline-tasks/installPipelineSystem.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installPipelineSystem.py)   
+      
+      #First open the foundationConfig.yaml file by typing:      
+      vi /home/aci-user/staging/foundationConfig.yaml       
+      #Then enter the values for each listed variable.    
+      #Then save the file.    
+      #Note: foundationConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+      #Next, switch directories and run installPipelineSystem.py .      
       cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
       python3 installPipelineSystem.py     
-      python3 installAgents.py        
-     
+      
 2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements.        
-        
-, and puttying in to the Agent VM using the IP address you can find in the Azure Portal.         
-          
+      
+# Deploy an Agent into the infrastructure to run deployment operations      
+      
+1.  Create an Agent by first populating `agentsConfig.yaml` with variables and then running [pipeline-tasks/installAgents.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installAgents.py)          
+      
+      #Open the agentsConfig.yaml by typing:    
+      vi /home/aci-user/staging/agentsConfig.yaml       
+      #Then enter the values for each listed variable.    
+      #Then save the file.    
+      #Note: agentsConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+      #Next, switch directories and run installAgents.py .      
+      python3 installAgents.py        
+      
+2.  Validate that the agent is running by logging into [the Azure Portal](https://portal.azure.com/) to view the information about the VM, including the IP address, to which you can Putty in during the development phase.  Also look at the Azure DevOps organization page to see when the agent comes online.  Note that for Production you will want to turn off interactive login for the agents as a security precaution.          
+         
 # Create an Azure DevOps Project and import the sample repo and pipeline     
     
 1.  Run the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
