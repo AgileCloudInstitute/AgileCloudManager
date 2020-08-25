@@ -11,37 +11,9 @@ print("status of pyyaml install: ", failed)
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
-# #Declare all the input variables
-# subscriptionName=''
-# subscriptionId=''
-# tenantId=''
-# clientName=''
-# clientId=''
-# clientSecret=''
-# serviceConnectionName=''
-# pipeAzureRegion=''
-# storageAccountNameTerraformBackend=''
-# storageContainerNameTerraformBackend=''
-# awsPublicAccessKey=''
-# awsSecretAccessKey=''
-# adminUser=''
-# adminPwd=''
-# pathToCloudInitScript=''
-# azdoOrgPAT=''
-# azdoOrgServiceURL=''
-# sourceRepo=''
-
 # #Declare the directory and file name variables
 fileEnterUserInputHereOnly = "/home/aci-user/staging/launchpadConfig.yaml"  
 pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
-# fileInputsAgentVmsAuto = pathToVarFiles+'inputs-agent-vms-auto.tfvars'
-# fileInputsAgentVmsManual = pathToVarFiles+'inputs-agent-vms-manual.tfvars'
-# fileInputsAzdoProvider = pathToVarFiles+'inputs-azdo-provider.tfvars'
-# fileInputsAzurermProvider = pathToVarFiles+'inputs-azurerm-provider.tfvars'
-# fileInputsFoundationDemo = pathToVarFiles+'inputs-foundation-demo.tfvars'
-# fileInputsProjectRepoBuildAuto = pathToVarFiles+'inputs-project-repo-build-auto.tfvars'
-# fileInputsProjectRepoBuildManual = pathToVarFiles+'inputs-project-repo-build-manual.tfvars'
-# fileStartupScript = pathToVarFiles+'startup-script.sh'
 fileAzEnvVars = pathToVarFiles+'set-local-az-client-environment-vars.sh'  
   
 def runShellCommand(commandToRun, workingDir ):
@@ -290,18 +262,6 @@ setupCommand = "sudo ./provisioning.sh"
 runShellCommand(chmodCommand, scriptsDir)
 runShellCommand(setupCommand, scriptsDir)
 
-# #Second load data and update var files
-# loadDataFromFile(fileEnterUserInputHereOnly)
-# updateVarFileAzureProvider(fileInputsAzurermProvider)
-# updateVarFileAzureDevOpsProvider(fileInputsAzdoProvider)
-# updateVarFileAzurePipesFoundation(fileInputsFoundationDemo)
-# updateVarFileAzurePipesAgents(fileInputsAgentVmsManual)
-# updateVarFileAzureDevOpsProjectRepoBuild(fileInputsProjectRepoBuildManual)
-# #This next function call is for the cloud-init startup script that will run on the Azure Pipelines agent that will be created.
-# updateVarFileAzurePipesAgentsStartUpScript(fileStartupScript)
-# #This next function call will set vars on the local machine to use with the az client
-# updateVarFileAzurePipesAgentsStartUpScript(fileAzEnvVars)
-
 ###################################################################################################################################
 ###################################################################################################################################
 ### Now add the new stuff
@@ -321,21 +281,9 @@ setVarsCommand = "sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-clie
 runShellCommand(newChmodCommand, varsDir )
 runShellCommand(setVarsCommand, varsDir )
 
-# #Fourth chown all the files to aci-user to avoid risk of being owned by root
-# cmdChownVarFileAzureProvider = "sudo chown aci-user:aci-user " + fileInputsAzurermProvider
-# cmdChownVarFileAzureDevOpsProvider = "sudo chown aci-user:aci-user " + fileInputsAzdoProvider
-# cmdChownVarFileAzurePipesFoundation = "sudo chown aci-user:aci-user " + fileInputsFoundationDemo
-# cmdChownVarFileAzurePipesAgents = "sudo chown aci-user:aci-user " + fileInputsAgentVmsManual
-# cmdChownVarFileAzureDevOpsProjectRepoBuild = "sudo chown aci-user:aci-user " + fileInputsProjectRepoBuildManual
-# cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileStartupScript
+# #Fourth chown the file to aci-user to avoid risk of being owned by root
 cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileAzEnvVars
 
-# runShellCommand(cmdChownVarFileAzureProvider, varsDir )
-# runShellCommand(cmdChownVarFileAzureDevOpsProvider, varsDir )
-# runShellCommand(cmdChownVarFileAzurePipesFoundation, varsDir )
-# runShellCommand(cmdChownVarFileAzurePipesAgents, varsDir )
-# runShellCommand(cmdChownVarFileAzureDevOpsProjectRepoBuild, varsDir )
-# runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 
-#Add another line to lock down the /home/aci-user/staging/enter-user-input-here-only.yaml file by changing its ownership to root
+#Consider further locking down the yaml config files
