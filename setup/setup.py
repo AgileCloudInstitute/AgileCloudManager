@@ -31,9 +31,6 @@ def runShellCommand(commandToRun, workingDir ):
       else:
         break
   
-def validateVariableValues():
-    print("Need to add some validation logic here.")  
-
 def updateVarFileAzureProvider(fileName):
     print("inside deploymentFunctions.py script and updateVarFileAzureProvider(...,...,...) function.")
     print("fileName is: ", fileName)
