@@ -322,18 +322,18 @@ def setEnvironmentVars(yamlInputFile, setEnvironmentVarsFile):
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
-      if re.match("meta", item):
+      if re.match("azureMeta", item):
         metaItems = topLevel_dict.get(item)
         for metaItem in metaItems: 
           if re.match("tenantId", metaItem):
             tenantId = metaItems.get(metaItem)
             print("tenantId is: ", tenantId)
-          if re.match("azdoOrgServiceURL", metaItem):
-            azdoOrgServiceURL = metaItems.get(metaItem)
-            print("azdoOrgServiceURL is: ", azdoOrgServiceURL)
-      if re.match("connection", item):  
+      if re.match("azdoConnection", item):  
         connectionItems = topLevel_dict.get(item)  
         for connectionItem in connectionItems:
+          if re.match("azdoOrgServiceURL", connectionItem):
+            azdoOrgServiceURL = connectionItems.get(connectionItem)
+            print("azdoOrgServiceURL is: ", azdoOrgServiceURL)
           if re.match("clientId", connectionItem):
             clientId = connectionItems.get(connectionItem)
             print("clientId is: ", clientId)
