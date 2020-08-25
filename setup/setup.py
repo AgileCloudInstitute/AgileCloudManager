@@ -32,7 +32,7 @@ ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 # sourceRepo=''
 
 # #Declare the directory and file name variables
-fileEnterUserInputHereOnly = "/home/aci-user/staging/enter-user-input-here-only.yaml"
+fileEnterUserInputHereOnly = "/home/aci-user/staging/launchpadConfig.yaml"  
 pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
 # fileInputsAgentVmsAuto = pathToVarFiles+'inputs-agent-vms-auto.tfvars'
 # fileInputsAgentVmsManual = pathToVarFiles+'inputs-agent-vms-manual.tfvars'
