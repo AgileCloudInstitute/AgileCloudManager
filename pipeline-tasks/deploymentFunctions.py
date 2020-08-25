@@ -397,7 +397,7 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
       print("item is: ", item)
-      if re.match("meta", item):
+      if re.match("azureMeta", item):
         metaItems = topLevel_dict.get(item)
         for metaItem in metaItems: 
           if re.match("subscriptionId", metaItem):
