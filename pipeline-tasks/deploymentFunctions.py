@@ -503,7 +503,7 @@ def getFoundationBackendConfig(yamlInputFile, awsCredFile):
             if re.match("dynamoDbTableNameTF", awsBackendItem):
               print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
               varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
-            if re.match("moduleKeys", awsBackendItem):
+            if re.match("moduleKeyFoundation", awsBackendItem):
               print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
               varsString = varsString + " -backend-config \"key=" + awsBackendItems.get(awsBackendItem) +"\""    
   if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
@@ -542,7 +542,7 @@ def getAgentsBackendConfig(yamlInputFile, awsCredFile):
           if re.match("dynamoDbTableNameTF", awsBackendItem):
             print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
             varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
-          if re.match("moduleKey", awsBackendItem):  
+          if re.match("moduleKeyAgents", awsBackendItem):  
             print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
             varsString = varsString + " -backend-config \"key=" + awsBackendItems.get(awsBackendItem) +"\""  
   if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
