@@ -82,7 +82,7 @@ def loopProjectsReposBuilds(yamlInputFile):
         for projectRepoBuild in projectRepoBuildsItems: 
           for projectRepoBuildProperty in projectRepoBuild:
             if re.match("name", projectRepoBuildProperty):
-              print(projectRepoBuildProperty, " is: ", projectRepoBuilds.get(projectRepoBuildProperty))
+              print(projectRepoBuildProperty, " is: ", projectRepoBuild.get(projectRepoBuildProperty))
 
 loopProjectsReposBuilds(myYamlInputFile)
 
