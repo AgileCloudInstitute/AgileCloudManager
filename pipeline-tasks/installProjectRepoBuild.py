@@ -34,6 +34,7 @@ runShellCommand(addExteensionCommand)
 
 myYamlInputFile = '/home/aci-user/staging/projectRepoBuildConfig.yaml'
 foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secrets.tfvars'
+prbSecretsFile = '/home/aci-user/vars/agile-cloud-manager/prb-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/aci-user/.aws/credentials'
@@ -104,10 +105,49 @@ def getBackendConfigStarter(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString
 
-def loopProjectsReposBuilds(yamlInputFile, awsCredFile):
+def getProjectRepoBuildInputsStarter(yamlInputFile, prbSecretsFile):
+  varsString = ''
+  azdoOrgPAT = ''
+  clientSecret = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      print("item is: ", item)
+      if re.match("azdoConnection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("azdoOrgServiceURL", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientName", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("serviceConnectionName", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientId", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("azdoOrgPAT", connectionItem):
+            azdoOrgPAT = connectionItems.get(connectionItem)
+          if re.match("clientSecret", connectionItem):
+            clientSecret = connectionItems.get(connectionItem)
+  with open(prbSecretsFile, "w") as file:
+    lineToAdd = "azdoOrgPAT=\""+azdoOrgPAT +"\"\n"
+    file.write(lineToAdd)
+    lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
+    file.write(lineToAdd)
+    varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
+  print("varsString is: ", varsString)
+  return varsString
+
+def loopProjectsReposBuilds(yamlInputFile, awsCredFile, prbSecretsFile):
   print("inside loopProjectsReposBuilds(...,...,...) function.")
   awsPublicAccessKey = ''
   awsSecretAccessKey = ''
+  projectName = ''
+  repoName = ''
+  buildName = ''
   #Now populate the variables
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
@@ -115,15 +155,40 @@ def loopProjectsReposBuilds(yamlInputFile, awsCredFile):
       if re.match("projectRepoBuilds", item):
         projectRepoBuildsItems = topLevel_dict.get(item)
         for projectRepoBuild in projectRepoBuildsItems: 
+          prbVarsStarter = getProjectRepoBuildInputsStarter(yamlInputFile, prbSecretsFile)
+          prbVars = prbVarsStarter
           backendVars = ''
           for projectRepoBuildProperty in projectRepoBuild:
+            if re.match("sourceRepo", projectRepoBuildProperty):
+              print(projectRepoBuildProperty, " is: ", projectRepoBuild.get(projectRepoBuildProperty))
+              prbVars = prbVars + " -var=\""+ projectRepoBuildProperty + "=" + projectRepoBuild.get(projectRepoBuildProperty) +"\""  
+              nameStr = projectRepoBuild.get(projectRepoBuildProperty)
+              nameStr = projectNameStr.replace(" ", "")
+              if nameStr.endswith('.git'):
+                repoName = nameStr[:-4]
+              buildName = repoName
+              projectName = repoName + "Project"
+            if re.match("storageAccountNameTerraformBackend", projectRepoBuildProperty):
+              print(projectRepoBuildProperty, " is: ", projectRepoBuild.get(projectRepoBuildProperty))
+              prbVars = prbVars + " -var=\""+ projectRepoBuildProperty + "=" + projectRepoBuild.get(projectRepoBuildProperty) +"\""  
+            if re.match("storageContainerNameTerraformBackend", projectRepoBuildProperty):
+              print(projectRepoBuildProperty, " is: ", projectRepoBuild.get(projectRepoBuildProperty))
+              prbVars = prbVars + " -var=\""+ projectRepoBuildProperty + "=" + projectRepoBuild.get(projectRepoBuildProperty) +"\""  
+            if re.match("awsPublicAccessKey", projectRepoBuildProperty):
+              awsPublicAccessKey = projectRepoBuild.get(projectRepoBuildProperty)
+            if re.match("awsSecretAccessKey", projectRepoBuildProperty):
+              awsSecretAccessKey = projectRepoBuild.get(projectRepoBuildProperty)
             if re.match("moduleKeyProjectRepoBuild", projectRepoBuildProperty):
               print(projectRepoBuildProperty, " is: ", projectRepoBuild.get(projectRepoBuildProperty))
               backendVarsStarter = getBackendConfigStarter(yamlInputFile, awsCredFile)
               backendVars = backendVarsStarter + " -backend-config \"key=" + projectRepoBuild.get(projectRepoBuildProperty) +"\""  
+          prbVars = prbVars + " -var=\"projectName=" + projectName +"\""  
+          prbVars = prbVars + " -var=\"repoName=" + repoName +"\""  
+          prbVars = prbVars + " -var=\"buildName=" + buildName +"\""  
+          print("prbVars is: ", prbVars)
           print("backendVars is: ", backendVars)
 
-loopProjectsReposBuilds(myYamlInputFile, awsCredFile)
+loopProjectsReposBuilds(myYamlInputFile, awsCredFile, prbSecretsFile)
 
 ## /////////////////////////////////////////////////////////////////////////////
 ## applyCommand='terraform apply -auto-approve'
