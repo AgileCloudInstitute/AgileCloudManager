@@ -68,25 +68,41 @@ print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscrip
 ##############################################################################################
 ### Step Two: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
 ##############################################################################################
-applyCommand='terraform apply -auto-approve'
-prbVars = depfunc.getProjectRepoBuildInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name)
-applyPrbCommand=applyCommand+prbVars
-pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
-print ('prbVars is: :', prbVars )
-  
-################################################################################################ 
-### Step Three: Prepare the backend config for the azure-pipelines-project-repo-build-resources module
-##############################################################################################
-backendPrbConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-initPrbCommand = initCommand + backendPrbConfig
-print("backendPrbConfig is: ", backendPrbConfig)
 
-##############################################################################################
-### Step Five: Initialize the Terraform backend for the azure-pipelines-project-repo-build-resources module
-##############################################################################################
-depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
-depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
-print("Back in installProjectRepoBuild.py .")
+def loopProjectsReposBuilds(yamlInputFile):
+  print("inside loopProjectsReposBuilds(...,...,...) function.")
+  #Now populate the variables
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("projectRepoBuilds", item):
+        projectRepoBuildsItems = topLevel_dict.get(item)
+        for projectRepoBuildItem in projectRepoBuildsItems: 
+          if re.match("name", projectRepoBuildItem):
+            print(projectRepoBuildItem, " is: ", projectRepoBuildsItems.get(projectRepoBuildItem))
+
+loopProjectsReposBuilds(myYamlInputFile)
+
+## /////////////////////////////////////////////////////////////////////////////
+## applyCommand='terraform apply -auto-approve'
+## prbVars = depfunc.getProjectRepoBuildInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name)
+## applyPrbCommand=applyCommand+prbVars
+## pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
+## print ('prbVars is: :', prbVars )
+  
+## ################################################################################################ 
+## ### Step Three: Prepare the backend config for the azure-pipelines-project-repo-build-resources module
+## ##############################################################################################
+## backendPrbConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
+## initPrbCommand = initCommand + backendPrbConfig
+## print("backendPrbConfig is: ", backendPrbConfig)
+
+## ##############################################################################################
+## ### Step Five: Initialize the Terraform backend for the azure-pipelines-project-repo-build-resources module
+## ##############################################################################################
+## depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
+## depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
+## print("Back in installProjectRepoBuild.py .")
 
 ## THE INPUT VARIABLES FOR EACH PRB ARE:
 # .awsPublicAccessKey
