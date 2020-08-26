@@ -70,9 +70,43 @@ print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscrip
 ##############################################################################################
 ### Step Two: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
 ##############################################################################################
+def getBackendConfigStarter(yamlInputFile, awsCredFile):
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("awsBackendTF", item):
+        awsBackendItems = topLevel_dict.get(item)
+        for awsBackendItem in awsBackendItems: 
+          if re.match("awsPublicAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsPublicAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("awsSecretAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsSecretAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("s3BucketNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"bucket=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("s3BucketRegionTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"region=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("dynamoDbTableNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
+  print("varsString is: ", varsString)
+  return varsString
 
-def loopProjectsReposBuilds(yamlInputFile):
+def loopProjectsReposBuilds(yamlInputFile, awsCredFile):
   print("inside loopProjectsReposBuilds(...,...,...) function.")
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
   #Now populate the variables
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
@@ -80,9 +114,13 @@ def loopProjectsReposBuilds(yamlInputFile):
       if re.match("projectRepoBuilds", item):
         projectRepoBuildsItems = topLevel_dict.get(item)
         for projectRepoBuild in projectRepoBuildsItems: 
+          backendVars = ''
           for projectRepoBuildProperty in projectRepoBuild:
-            if re.match("name", projectRepoBuildProperty):
+            if re.match("moduleKeyProjectRepoBuild", projectRepoBuildProperty):
               print(projectRepoBuildProperty, " is: ", projectRepoBuild.get(projectRepoBuildProperty))
+              backendVarsStarter = getBackendConfigStarter(yamlInputFile, awsCredFile)
+              backendVars = backendVarsStarter + " -backend-config \"key=" + projectRepoBuild.get(projectRepoBuildProperty) +"\""  
+          print("backendVars is: ", backendVars)
 
 loopProjectsReposBuilds(myYamlInputFile)
 
