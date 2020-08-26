@@ -122,7 +122,7 @@ def loopProjectsReposBuilds(yamlInputFile, awsCredFile):
               backendVars = backendVarsStarter + " -backend-config \"key=" + projectRepoBuild.get(projectRepoBuildProperty) +"\""  
           print("backendVars is: ", backendVars)
 
-loopProjectsReposBuilds(myYamlInputFile)
+loopProjectsReposBuilds(myYamlInputFile, awsCredFile)
 
 ## /////////////////////////////////////////////////////////////////////////////
 ## applyCommand='terraform apply -auto-approve'
