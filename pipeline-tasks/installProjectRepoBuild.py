@@ -71,6 +71,7 @@ print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscrip
 ### Step Two: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
 ##############################################################################################
 def getBackendConfigStarter(yamlInputFile, awsCredFile):
+  varsString = ''
   with open(yamlInputFile) as f:
     topLevel_dict = yaml.safe_load(f)
     for item in topLevel_dict:
