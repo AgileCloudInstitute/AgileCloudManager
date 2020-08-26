@@ -79,9 +79,10 @@ def loopProjectsReposBuilds(yamlInputFile):
     for item in topLevel_dict:
       if re.match("projectRepoBuilds", item):
         projectRepoBuildsItems = topLevel_dict.get(item)
-        for projectRepoBuildItem in projectRepoBuildsItems: 
-          if re.match("name", projectRepoBuildItem):
-            print(projectRepoBuildItem, " is: ", projectRepoBuildsItems.get(projectRepoBuildItem))
+        for projectRepoBuild in projectRepoBuildsItems: 
+          for projectRepoBuildProperty in projectRepoBuild:
+            if re.match("name", projectRepoBuildProperty):
+              print(projectRepoBuildProperty, " is: ", projectRepoBuilds.get(projectRepoBuildProperty))
 
 loopProjectsReposBuilds(myYamlInputFile)
 
