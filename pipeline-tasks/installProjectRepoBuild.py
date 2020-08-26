@@ -28,9 +28,9 @@ def runShellCommand(commandToRun):
 addExteensionCommand = 'az extension add --name azure-devops'
 runShellCommand(addExteensionCommand)
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-myYamlInputFile = '/home/aci-user/staging/enter-user-input-here-only.yaml'
+myYamlInputFile = '/home/aci-user/staging/projectRepoBuildConfig.yaml'
 foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
@@ -54,14 +54,22 @@ print("depfunc.subscription_id  is: ", depfunc.subscription_id)
 print("depfunc.tenant_id  is: ", depfunc.tenant_id)
 print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
 print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
-print("depfunc.nicName  is: ", depfunc.nicName)
-print("depfunc.storName is: ", depfunc.storName)
+print("depfunc.pipeKeyVaultName is: ", depfunc.pipeKeyVaultName)
+print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
+print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
+
+#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# HOW SHOULD SECRETS FILES BE MANAGED?  foundationSecretsFile  awsCredFile
+# HOW SHOULD MULTIPLE PROJECTREPOBUILD DEFINITIONS BE MANAGED?
+# HOW SHOULD MULTIPLE BACKENDS BE MANAGED?  
+# STILL NEED TO CREATE: depfunc.getProjectRepoBuildInputs(...)  AND depfunc.getProjectRepoBuildBackendConfig(...)
+#//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ##############################################################################################
 ### Step Two: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
 ##############################################################################################
 applyCommand='terraform apply -auto-approve'
-prbVars = depfunc.getAgentsInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.nicName, depfunc.storName )
+prbVars = depfunc.getProjectRepoBuildInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name)
 applyPrbCommand=applyCommand+prbVars
 pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
 print ('prbVars is: :', prbVars )
@@ -69,7 +77,7 @@ print ('prbVars is: :', prbVars )
 ################################################################################################ 
 ### Step Three: Prepare the backend config for the azure-pipelines-project-repo-build-resources module
 ##############################################################################################
-backendPrbConfig = depfunc.getAgentsBackendConfig(myYamlInputFile, awsCredFile)
+backendPrbConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
 initPrbCommand = initCommand + backendPrbConfig
 print("backendPrbConfig is: ", backendPrbConfig)
 
@@ -78,19 +86,34 @@ print("backendPrbConfig is: ", backendPrbConfig)
 ##############################################################################################
 depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
 depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
-print("Back in installPipelineSystem.py .")
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-##############################################################################################
-### Step Two: Apply The azure-pipelines-project-repo-build module
-##############################################################################################
-
-depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
-depfunc.runTerraformCommand(applyProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
-
 print("Back in installProjectRepoBuild.py .")
 
-print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)
-print("depfunc.azuredevops_git_repository_name is: ", depfunc.azuredevops_git_repository_name)
+## THE INPUT VARIABLES FOR EACH PRB ARE:
+# .awsPublicAccessKey
+# .awsSecretAccessKey
+# .s3BucketNameTF
+# .s3BucketRegionTF
+# .dynamoDbTableNameTF
+# .moduleKeyProjectRepoBuild
 
+# _/\subscriptionName
+# _/\subscriptionId
+# _/\tenantId
+# .clientName
+# .clientId
+# .clientSecret
+# .serviceConnectionName
+# .storageAccountNameTerraformBackend
+# .storageContainerNameTerraformBackend
+# _/\pipeSubnetId
+# _/\pipeResourceGroupRegion
+# _/\pipeResourceGroupName
+# _/\pipeKeyVaultName
+# .azdoOrgPAT
+# .azdoOrgServiceURL
+# .sourceRepo
+# .projectName
+# .repoName
+# .buildName
+# .awsPublicAccessKey
+# .awsSecretAccessKey
