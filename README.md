@@ -16,34 +16,34 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 2.  **Clone this Repository:**  Navigate into the target directory and clone the repo by typing:    
     
-      cd cloned-repos    
-      git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git    
+        cd cloned-repos    
+        git clone https://github.com/AgileCloudInstitute/agile-cloud-manager.git    
     
 3.  **Setup the LaucnPad:**  Enter the variables you assembled in the pre-requisite steps into a new file you will create in `/home/aci-user/staging/launchpadConfig.yaml` which follows the exact list of variables and syntax given in [this template file from the repository](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.yaml) .  Then run the setup.py script as follows:        
       
-      #First open the launchpadConfig.yaml file by typing:      
-      vi /home/aci-user/staging/launchpadConfig.yaml       
-      #Then enter the values for each listed variable.    
-      #Then save the file.    
-      #Note: launchpadConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-      #Next, switch directories and run setup.py after creating a .aws directory in which to AWS credentials.      
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/setup/      
-      mkdir /home/aci-user/.aws        
-      sudo python3 setup.py      
-      source /etc/bashrc     
+        #First open the launchpadConfig.yaml file by typing:      
+        vi /home/aci-user/staging/launchpadConfig.yaml       
+        #Then enter the values for each listed variable.    
+        #Then save the file.    
+        #Note: launchpadConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+        #Next, switch directories and run setup.py after creating a .aws directory in which to AWS credentials.      
+        cd /home/aci-user/cloned-repos/agile-cloud-manager/setup/      
+        mkdir /home/aci-user/.aws        
+        sudo python3 setup.py      
+        source /etc/bashrc     
     
 #  Create the foundation of the infrastructure for the Azure Pipelines implementation   
     
 1.  Create the infrastructure foundation for Azure Pipelines by first populating `/home/aci-user/staging/foundationConfig.yaml` with variables and then running [pipeline-tasks/installFoundation.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installFoundation.py)   
       
-      #First open the foundationConfig.yaml file by typing:      
-      vi /home/aci-user/staging/foundationConfig.yaml       
-      #Then enter the values for each listed variable.    
-      #Then save the file.    
-      #Note: foundationConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-      #Next, switch directories and run installFoundation.py .      
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
-      python3 installFoundation.py     
+        #First open the foundationConfig.yaml file by typing:      
+        vi /home/aci-user/staging/foundationConfig.yaml       
+        #Then enter the values for each listed variable.    
+        #Then save the file.    
+        #Note: foundationConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+        #Next, switch directories and run installFoundation.py .      
+        cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
+        python3 installFoundation.py     
       
 2.  Validate that the infrastructure foundation was created by reading the console output, logging into [the Azure Portal](https://portal.azure.com/) to view the created elements.        
       
@@ -51,13 +51,13 @@ Once you have assembled the pre-requisites, do the following in order to use thi
       
 1.  Create an Agent by first populating `agentsConfig.yaml` with variables and then running [pipeline-tasks/installAgents.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installAgents.py)          
       
-      #Open the agentsConfig.yaml by typing:    
-      vi /home/aci-user/staging/agentsConfig.yaml       
-      #Then enter the values for each listed variable.    
-      #Then save the file.    
-      #Note: agentsConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-      #Next, switch directories and run installAgents.py .      
-      python3 installAgents.py        
+        #Open the agentsConfig.yaml by typing:    
+        vi /home/aci-user/staging/agentsConfig.yaml       
+        #Then enter the values for each listed variable.    
+        #Then save the file.    
+        #Note: agentsConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+        #Next, switch directories and run installAgents.py .      
+        python3 installAgents.py        
       
 2.  Validate that the agent is running by logging into [the Azure Portal](https://portal.azure.com/) to view the information about the VM, including the IP address, to which you can Putty in during the development phase.  Also look at the Azure DevOps organization page to see when the agent comes online.  Note that for Production you will want to turn off interactive login for the agents as a security precaution.          
          
@@ -76,8 +76,8 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 2.  Validate that the project, repository, and build have been created in the Azure DevOps portal.  And validate that the code was cloned into the new repository.      
     
-      #Manually trigger a build by navigating into one of the files in the `terraform-aws-simple-example` Azure Repo that was just imported and adding one character of white space and then clicking the "commit" button.  
-      #Confirm that the build was triggered by navigating to the Pipelines control panel and seeing that a build was just run.  
+        #Manually trigger a build by navigating into one of the files in the `terraform-aws-simple-example` Azure Repo that was just imported and adding one character of white space and then clicking the "commit" button.  
+        #Confirm that the build was triggered by navigating to the Pipelines control panel and seeing that a build was just run.  
         
 # Create two Release Definitions
         
@@ -97,8 +97,8 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 1.  Run the pipeline task that calls the project-repo-build module withe the `destroy` command.   
     
-      #From the same `pipeline-tasks` directory      
-      python3 destroyProjectRepoBuild.py     
+        #From the same `pipeline-tasks` directory      
+        python3 destroyProjectRepoBuild.py     
     
 2.  Validate that the project, repository, and build have been destroyed in the Azure Devops portal.        
     
@@ -107,8 +107,8 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Log in the the VM from which you ran the agile-cloud-manager program to create the Agile Cloud Manager instance.  If you are continuing directly from the creation steps described above, you can do this from within the same Putty or SSH session as above.      
 2.  Point the terminal to the directory containing destroyPipelineSystemAndAgents.py and then run destroyPipelineSystemAndAgents.py by typing the following:    
     
-      cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
-      python3 destroyPipelineSystemAndAgents.py      
+        cd /home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks     
+        python3 destroyPipelineSystemAndAgents.py      
     
 3.  Validate that the infrastructure has been destroyed by examining the console output that printed while the destroyPipelineSystemAndAgents.py was running, by examining the Azure Portal see the infrastructure disappear, and by validating in the Azure DevOps Organization that the agent has moved offline.    
     
