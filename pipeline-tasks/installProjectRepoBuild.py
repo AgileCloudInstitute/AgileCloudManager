@@ -60,6 +60,7 @@ print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
 print("depfunc.pipeKeyVaultName is: ", depfunc.pipeKeyVaultName)
 print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
 print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
+print("depfunc.subscription_name is: ", depfunc.subscription_name)
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # HOW SHOULD SECRETS FILES BE MANAGED?  foundationSecretsFile  awsCredFile
@@ -197,7 +198,7 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
   return varsString
 
 prbBackendConfig = getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-prbInputs = getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name )
+prbInputs = getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.subscription_name )
 
 
 
