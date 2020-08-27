@@ -150,7 +150,7 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
               print(prbItem, " is: ", projectRepoBuild.get(prbItem))
               varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
               nameStr = projectRepoBuild.get(prbItem)
-              nameStr = projectNameStr.replace(" ", "")
+              nameStr = nameStr.replace(" ", "")
               if nameStr.endswith('.git'):
                 repoName = nameStr[:-4]
               buildName = repoName
