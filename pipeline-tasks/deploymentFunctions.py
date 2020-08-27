@@ -556,6 +556,130 @@ def getAgentsBackendConfig(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString
 
+def getProjectRepoBuildBackendConfig(yamlInputFile, awsCredFile):
+  varsString = ''
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("awsBackendTF", item):
+        awsBackendItems = topLevel_dict.get(item)
+        for awsBackendItem in awsBackendItems: 
+          if re.match("awsPublicAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsPublicAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("awsSecretAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsSecretAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("s3BucketNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"bucket=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("s3BucketRegionTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"region=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("dynamoDbTableNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("moduleKeyProjectRepoBuild", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"key=" + awsBackendItems.get(awsBackendItem) +"\""  
+  #REPLACE THE FOLLOWING BLOCK WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
+  print("varsString is: ", varsString)
+  return varsString
+
+def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, pipeResourceGroupRegion, pipeResourceGroupName, pipeKeyVaultName, pipeSubnetId, subscriptionName):
+  print("inside getProjectsReposBuildInputs(...,...,...) function.")
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
+  projectName = ''
+  repoName = ''
+  buildName = ''
+  varsString = ''
+  azdoOrgPAT = ''
+  clientSecret = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      print("item is: ", item)
+      if re.match("azdoConnection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("azdoOrgServiceURL", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientName", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("serviceConnectionName", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientId", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("azdoOrgPAT", connectionItem):
+            azdoOrgPAT = connectionItems.get(connectionItem)
+          if re.match("clientSecret", connectionItem):
+            clientSecret = connectionItems.get(connectionItem)
+      if re.match("projectRepoBuild", item):
+        projectRepoBuild = topLevel_dict.get(item)
+        for prbItem in projectRepoBuild:
+            if re.match("sourceRepo", prbItem):
+              print(prbItem, " is: ", projectRepoBuild.get(prbItem))
+              varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
+              nameStr = projectRepoBuild.get(prbItem)
+              nameStr = nameStr.replace(" ", "")
+              if nameStr.endswith('.git'):
+                nameStr = nameStr[:-4]
+              nameStr = nameStr.rpartition('/')[2]
+              repoName = nameStr
+              buildName = repoName
+              projectName = repoName + "Project"
+            if re.match("storageAccountNameTerraformBackend", prbItem):
+              print(prbItem, " is: ", projectRepoBuild.get(prbItem))
+              varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
+            if re.match("storageContainerNameTerraformBackend", prbItem):
+              print(prbItem, " is: ", projectRepoBuild.get(prbItem))
+              varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
+            if re.match("awsPublicAccessKey", prbItem):
+              awsPublicAccessKey = projectRepoBuild.get(prbItem)
+            if re.match("awsSecretAccessKey", prbItem):
+              awsSecretAccessKey = projectRepoBuild.get(prbItem)
+  varsString = varsString + " -var=\"projectName=" + projectName +"\""  
+  varsString = varsString + " -var=\"repoName=" + repoName +"\""  
+  varsString = varsString + " -var=\"buildName=" + buildName +"\""  
+  varsString = varsString + " -var=\"subscriptionId=" + subscriptionId +"\""  
+  varsString = varsString + " -var=\"tenantId=" + tenantId +"\""  
+  varsString = varsString + " -var=\"pipeResourceGroupRegion=" + pipeResourceGroupRegion +"\""  
+  varsString = varsString + " -var=\"pipeResourceGroupName=" + pipeResourceGroupName +"\""  
+  varsString = varsString + " -var=\"pipeKeyVaultName=" + pipeKeyVaultName +"\""  
+  varsString = varsString + " -var=\"pipeSubnetId=" + pipeSubnetId +"\""  
+  varsString = varsString + " -var=\"subscriptionName=" + subscriptionName +"\""  
+  with open(prbSecretsFile, "w") as file:
+    lineToAdd = "azdoOrgPAT=\""+azdoOrgPAT +"\"\n"
+    file.write(lineToAdd)
+    lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
+    file.write(lineToAdd)
+    varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
+  #REPLACE THE FOLLOWING WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS.
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
+  print("varsString is: ", varsString)
+  return varsString
 
 ### End of the new stuff
 #####################################################################################################################################
