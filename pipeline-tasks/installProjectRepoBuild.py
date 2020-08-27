@@ -99,6 +99,7 @@ def getProjectRepoBuildBackendConfig(yamlInputFile, awsCredFile):
           if re.match("moduleKeyProjectRepoBuild", awsBackendItem):
             print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
             varsString = varsString + " -backend-config \"key=" + awsBackendItems.get(awsBackendItem) +"\""  
+  #REPLACE THE FOLLOWING BLOCK WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS
   if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
     with open(awsCredFile, "w") as file:
       lineToAdd = '[default]\n'
@@ -176,6 +177,15 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
     lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
     file.write(lineToAdd)
     varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
+  #REPLACE THE FOLLOWING WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS.
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
   print("varsString is: ", varsString)
   return varsString
 
