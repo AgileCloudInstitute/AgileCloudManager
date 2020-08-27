@@ -177,7 +177,7 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
   print("varsString is: ", varsString)
   return varsString
 
-prbBackendConfig = getProjectRepoBuildBackendConfig(yamlInputFile, awsCredFile)
+prbBackendConfig = getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
 prbInputs = getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile)
 
 print("prbBackendConfig is: ", prbBackendConfig)
