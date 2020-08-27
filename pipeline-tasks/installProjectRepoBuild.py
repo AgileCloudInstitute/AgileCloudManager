@@ -152,7 +152,9 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
               nameStr = projectRepoBuild.get(prbItem)
               nameStr = nameStr.replace(" ", "")
               if nameStr.endswith('.git'):
-                repoName = nameStr[:-4]
+                nameStr = nameStr[:-4]
+              nameStr = nameStr.rpartition('/')[2]
+              repoName = nameStr
               buildName = repoName
               projectName = repoName + "Project"
             if re.match("storageAccountNameTerraformBackend", prbItem):
