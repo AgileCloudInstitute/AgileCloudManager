@@ -213,7 +213,7 @@ initPrbCommand = initCommand + prbBackendConfig
 ### Step Five: Initialize the Terraform backend for the azure-pipelines-project-repo-build-resources module
 ##############################################################################################
 depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
-## depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
+depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
 print("Back in installProjectRepoBuild.py .")
 
 ## THE INPUT VARIABLES FOR EACH PRB ARE:
