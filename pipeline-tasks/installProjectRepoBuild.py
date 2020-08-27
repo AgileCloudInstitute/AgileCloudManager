@@ -111,8 +111,8 @@ def getProjectRepoBuildBackendConfig(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString
 
-def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
-  print("inside loopProjectsReposBuilds(...,...,...) function.")
+def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, pipeResourceGroupRegion, pipeResourceGroupName, pipeKeyVaultName, pipeSubnetId, subscriptionName):
+  print("inside getProjectsReposBuildInputs(...,...,...) function.")
   awsPublicAccessKey = ''
   awsSecretAccessKey = ''
   projectName = ''
@@ -171,6 +171,13 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
   varsString = varsString + " -var=\"projectName=" + projectName +"\""  
   varsString = varsString + " -var=\"repoName=" + repoName +"\""  
   varsString = varsString + " -var=\"buildName=" + buildName +"\""  
+  varsString = varsString + " -var=\"subscriptionId=" + subscriptionId +"\""  
+  varsString = varsString + " -var=\"tenantId=" + tenantId +"\""  
+  varsString = varsString + " -var=\"pipeResourceGroupRegion=" + pipeResourceGroupRegion +"\""  
+  varsString = varsString + " -var=\"pipeResourceGroupName=" + pipeResourceGroupName +"\""  
+  varsString = varsString + " -var=\"pipeKeyVaultName=" + pipeKeyVaultName +"\""  
+  varsString = varsString + " -var=\"pipeSubnetId=" + pipeSubnetId +"\""  
+  varsString = varsString + " -var=\"subscriptionName=" + subscriptionName +"\""  
   with open(prbSecretsFile, "w") as file:
     lineToAdd = "azdoOrgPAT=\""+azdoOrgPAT +"\"\n"
     file.write(lineToAdd)
@@ -190,7 +197,9 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile):
   return varsString
 
 prbBackendConfig = getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-prbInputs = getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile)
+prbInputs = getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name )
+
+
 
 print("prbBackendConfig is: ", prbBackendConfig)
 print("prbInputs is: ", prbInputs)
