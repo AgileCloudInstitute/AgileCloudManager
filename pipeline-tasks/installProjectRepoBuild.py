@@ -196,25 +196,25 @@ print("prbBackendConfig is: ", prbBackendConfig)
 print("prbInputs is: ", prbInputs)
 
 ## /////////////////////////////////////////////////////////////////////////////
-## applyCommand='terraform apply -auto-approve'
+applyCommand='terraform apply -auto-approve'
 ## prbVars = depfunc.getProjectRepoBuildInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name)
-## applyPrbCommand=applyCommand+prbVars
-## pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
+applyPrbCommand=applyCommand+prbInputs
+pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
 ## print ('prbVars is: :', prbVars )
   
-## ################################################################################################ 
-## ### Step Three: Prepare the backend config for the azure-pipelines-project-repo-build-resources module
-## ##############################################################################################
+################################################################################################ 
+### Step Three: Prepare the backend config for the azure-pipelines-project-repo-build-resources module
+##############################################################################################
 ## backendPrbConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-## initPrbCommand = initCommand + backendPrbConfig
+initPrbCommand = initCommand + prbBackendConfig
 ## print("backendPrbConfig is: ", backendPrbConfig)
 
-## ##############################################################################################
-## ### Step Five: Initialize the Terraform backend for the azure-pipelines-project-repo-build-resources module
-## ##############################################################################################
-## depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
+##############################################################################################
+### Step Five: Initialize the Terraform backend for the azure-pipelines-project-repo-build-resources module
+##############################################################################################
+depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
 ## depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
-## print("Back in installProjectRepoBuild.py .")
+print("Back in installProjectRepoBuild.py .")
 
 ## THE INPUT VARIABLES FOR EACH PRB ARE:
 # .awsPublicAccessKey
