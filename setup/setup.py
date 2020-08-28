@@ -12,8 +12,8 @@ print("status of pyyaml install: ", failed)
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
 # #Declare the directory and file name variables
-fileEnterUserInputHereOnly = "/home/aci-user/staging/launchpadConfig.yaml"  
-pathToVarFiles='/home/aci-user/vars/agile-cloud-manager/'
+fileEnterUserInputHereOnly = "/home/agile-cloud/staging/launchpadConfig.yaml"  
+pathToVarFiles='/home/agile-cloud/vars/agile-cloud-manager/'
 fileAzEnvVars = pathToVarFiles+'set-local-az-client-environment-vars.sh'  
   
 def runShellCommand(commandToRun, workingDir ):
@@ -34,25 +34,25 @@ def runShellCommand(commandToRun, workingDir ):
 #Now call the functions
 #First do some provisioning
 chmodCommand = "chmod +x provisioning.sh"
-scriptsDir = "/home/aci-user/cloned-repos/agile-cloud-manager/setup/" 
+scriptsDir = "/home/agile-cloud/cloned-repos/agile-cloud-manager/setup/" 
 setupCommand = "sudo ./provisioning.sh"
 runShellCommand(chmodCommand, scriptsDir)
 runShellCommand(setupCommand, scriptsDir)
 
 ### Now import deploymentFunctions.py and translate the environment variables from yaml into bash
-sys.path.insert(0, '/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/')
+sys.path.insert(0, '/home/agile-cloud/cloned-repos/agile-cloud-manager/pipeline-tasks/')
 import deploymentFunctions as depfunc
 depfunc.setEnvironmentVars(fileEnterUserInputHereOnly, fileAzEnvVars)
 
 #Third set local environment variables by running the bash script that you just populated
-varsDir = "/home/aci-user/vars/agile-cloud-manager/"
-newChmodCommand = "chmod +x /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
-setVarsCommand = "sudo /home/aci-user/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
+varsDir = "/home/agile-cloud/vars/agile-cloud-manager/"
+newChmodCommand = "chmod +x /home/agile-cloud/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
+setVarsCommand = "sudo /home/agile-cloud/vars/agile-cloud-manager/set-local-az-client-environment-vars.sh"  
 runShellCommand(newChmodCommand, varsDir )
 runShellCommand(setVarsCommand, varsDir )
 
 # #Fourth chown the file to aci-user to avoid risk of being owned by root
-cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown aci-user:aci-user " + fileAzEnvVars
+cmdChownVarFileAzurePipesAgentsStartUpScript = "sudo chown agile-cloud:agile-cloud " + fileAzEnvVars
 runShellCommand(cmdChownVarFileAzurePipesAgentsStartUpScript, varsDir )
 
 #Consider further locking down the yaml config files
