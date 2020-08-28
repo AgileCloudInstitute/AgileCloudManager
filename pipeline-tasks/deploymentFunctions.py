@@ -668,16 +668,20 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
     file.write(lineToAdd)
     lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
     file.write(lineToAdd)
+    lineToAdd = "awsPublicAccessKey=\""+awsPublicAccessKey +"\"\n"
+    file.write(lineToAdd)
+    lineToAdd = "awsSecretAccessKey=\""+awsSecretAccessKey +"\"\n"
+    file.write(lineToAdd)
     varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
-  #REPLACE THE FOLLOWING WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS.
-  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
-    with open(awsCredFile, "w") as file:
-      lineToAdd = '[default]\n'
-      file.write(lineToAdd)
-      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
-      file.write(lineToAdd)
-      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
-      file.write(lineToAdd)
+  ##REPLACE THE FOLLOWING WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS.
+  #if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+  #  with open(awsCredFile, "w") as file:
+  #    lineToAdd = '[default]\n'
+  #    file.write(lineToAdd)
+  #    lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+  #    file.write(lineToAdd)
+  #    lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+  #    file.write(lineToAdd)
   print("varsString is: ", varsString)
   return varsString
 
