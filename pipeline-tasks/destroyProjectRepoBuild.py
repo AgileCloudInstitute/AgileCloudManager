@@ -10,12 +10,12 @@ import yaml
 addExteensionCommand = 'az extension add --name azure-devops'
 depfunc.runShellCommand(addExteensionCommand)
 
-myYamlInputFile = '/home/aci-user/staging/projectRepoBuildConfig.yaml'
-foundationSecretsFile = '/home/aci-user/vars/agile-cloud-manager/foundation-secrets.tfvars'
-prbSecretsFile = '/home/aci-user/vars/agile-cloud-manager/prb-secrets.tfvars'
+myYamlInputFile = '/home/agile-cloud/staging/projectRepoBuildConfig.yaml'
+foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
+prbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/prb-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
-awsCredFile = '/home/aci-user/.aws/credentials'
+awsCredFile = '/home/agile-cloud/.aws/credentials'
 initCommand='terraform init '
 backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
 initBackendFoundationCommand = initCommand + backendFoundationConfig
