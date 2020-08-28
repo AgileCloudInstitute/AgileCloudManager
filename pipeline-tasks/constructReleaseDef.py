@@ -287,7 +287,7 @@ def createReleaseDefinitionApiRequest(data, azdo_organization_name, azdo_project
 ### Step One: Get The Output Variables From the azure-pipelines-project-repo-build module
 ##############################################################################################
 initCommand='terraform init'
-pathToProjectRepoBuildCalls = "/home/aci-user/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
+pathToProjectRepoBuildCalls = "/home/agile-cloud/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
 outputProjectRepoBuildCommand='terraform output '
 
 depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
