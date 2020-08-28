@@ -6,13 +6,13 @@ Prerequisites include:
   
 1.  [An Azure account](https://portal.azure.com/) with sufficient privileges such as subscription owner, Active Directory Contributor, Azure DevOps Organization Owner, etc.  
 2.  Azure resources configured as described in the training that comes with this system, including an Azure DevOps organization, an Azure Application Registration, a Personal Access Token, etc.  
-3.  A VM or container into which to clone this repository.  Here, we will start with our own [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example) in order to keep things simple.  That means you need to follow the instructions to instantiate `terraform-aws-simple-example` or something comparable in order to proceed.  
+3.  A VM or container into which to clone this repository.  Here, we will start with our own [terraform-aws-starter-kit](https://github.com/AgileCloudInstitute/terraform-aws-starter-kit) in order to keep things simple.  That means you need to follow the instructions to instantiate `terraform-aws-starter-kit` or something comparable in order to proceed.  
   
 # Create the Infrastructure Orchestration System    
     
 Once you have assembled the pre-requisites, do the following in order to use this repository:    
     
-1.  **Log In To Dev Server:**  Putty or `ssh` into the compute unit you created with [terraform-aws-simple-example](https://github.com/AgileCloudInstitute/terraform-aws-simple-example)    
+1.  **Log In To Dev Server:**  Putty or `ssh` into the compute unit you created with [terraform-aws-starter-kit](https://github.com/AgileCloudInstitute/terraform-aws-starter-kit)    
     
 2.  **Clone this Repository:**  Navigate into the target directory and clone the repo by typing:    
     
