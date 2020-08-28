@@ -15,7 +15,7 @@ resource "azuredevops_git_repository" "repository" {
   }
   provisioner "local-exec" {
     command = "az repos import create --git-source-url \"${var.sourceRepo}\" --repository \"${azuredevops_git_repository.repository.name}\" --organization \"${var.azdoOrgServiceURL}\" --project \"${azuredevops_project.project.project_name}\""
-    working_dir = "/home/aci-user/cloned-repos/agile-cloud-manager/pipeline-tasks/"
+    working_dir = "/home/agile-cloud/cloned-repos/agile-cloud-manager/pipeline-tasks/"
   }
 }
 
