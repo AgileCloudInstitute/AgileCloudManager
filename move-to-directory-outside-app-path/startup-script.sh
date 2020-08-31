@@ -172,10 +172,7 @@ EOF
 #rm /usr/bin/python
 #ln -s /usr/bin/python3 /usr/bin/python
 
-import pip
-failed = pip.main(["install", 'requests'])
-print("status of requests install: ", failed)
-failed = pip.main(["install", 'pyyaml'])
-print("status of pyyaml install: ", failed)
+pip3 install requests
+pip3 install pyyaml
 
 echo "All done with cloud-init.  "
