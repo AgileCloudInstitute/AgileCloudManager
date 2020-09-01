@@ -1,4 +1,5 @@
 #The terraform backend will be located in this storage container, which will be placed in the imported storage account.
+#Another approach here: https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage
 
 resource "azurerm_storage_account" "terraformBknd" {
   name                     = var.storageAccountNameTerraformBackend
