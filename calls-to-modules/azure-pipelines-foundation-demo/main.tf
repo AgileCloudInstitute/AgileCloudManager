@@ -2,11 +2,13 @@
 module "azure-pipelines-foundation-demo" {
   source = "../../modules/azure-pipelines-foundation"
 
-  subscriptionId                     = "${var.subscriptionId}"
-  tenantId                           = "${var.tenantId}"
-  clientId                           = "${var.clientId}"
-  clientSecret                       = "${var.clientSecret}"
-  pipeAzureRegion                    = "${var.pipeAzureRegion}"
+  subscriptionId                       = "${var.subscriptionId}"
+  tenantId                             = "${var.tenantId}"
+  clientId                             = "${var.clientId}"
+  clientSecret                         = "${var.clientSecret}"
+  pipeAzureRegion                      = "${var.pipeAzureRegion}"
+  storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"
+  storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"
 }
 
 ##Input variables
@@ -16,7 +18,9 @@ variable "tenantId" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
-
+variable "storageAccountNameTerraformBackend" { }
+variable "storageContainerNameTerraformBackend" { }
+  
 ##Output variables
 output "pipes_resource_group_name" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_name}" }
 output "pipes_resource_group_region" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_region}" }
