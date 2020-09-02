@@ -30,20 +30,3 @@ resource "azurerm_key_vault_secret" "awsSecretAccessKey" {
   tags = { environment = "Testing" }
   depends_on = [azurerm_key_vault_access_policy.azdo-project-access-key-vault]
 }
-
-resource "azurerm_key_vault_secret" "storageAccountNameTerraformBackend" {
-  name         = "storageAccountNameTerraformBackend"
-  value        = var.storageAccountNameTerraformBackend
-  key_vault_id = data.azurerm_key_vault.pipeKeyVault.id
-  tags = { environment = "Testing" }
-  depends_on = [azurerm_key_vault_access_policy.azdo-project-access-key-vault]
-}
-
-resource "azurerm_key_vault_secret" "terraBackendKey" {
-  name         = "terra-backend-key"
-  value        = azurerm_storage_account.terraformBknd.primary_access_key
-  key_vault_id = data.azurerm_key_vault.pipeKeyVault.id
-  tags = { environment = "Testing" }
-  depends_on = [azurerm_key_vault_access_policy.azdo-project-access-key-vault]
-}
-
