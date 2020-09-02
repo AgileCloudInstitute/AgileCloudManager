@@ -7,19 +7,16 @@ module "azure-pipelines-foundation-demo" {
   clientId                             = "${var.clientId}"
   clientSecret                         = "${var.clientSecret}"
   pipeAzureRegion                      = "${var.pipeAzureRegion}"
-  storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"
-  storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"
+
 }
 
-##Input variables
+##Input variables.  The client referred to is an App Registration.
 variable "subscriptionId" { }
 variable "tenantId" { }
-#The client referred to is an App Registration.
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
-variable "storageAccountNameTerraformBackend" { }
-variable "storageContainerNameTerraformBackend" { }
+
   
 ##Output variables
 output "pipes_resource_group_name" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_name}" }
