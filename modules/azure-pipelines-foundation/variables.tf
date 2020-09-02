@@ -12,6 +12,8 @@ variable "tenantId" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
+variable "storageAccountNameTerraformBackend" { }
+variable "storageContainerNameTerraformBackend" { }
 
 # Workstation External IP. Override with variable or hardcoded value if necessary.
 data "http" "admin-external-ip" { url = "http://ipv4.icanhazip.com" }
