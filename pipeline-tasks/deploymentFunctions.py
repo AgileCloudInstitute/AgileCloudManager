@@ -668,7 +668,7 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
     varsString = varsString + " -var=\"keyVaultName=" + keyVaultName +"\""  
   if len(subnetId) > 2: 
     varsString = varsString + " -var=\"subnetId=" + subnetId +"\""  
-  if len(subscriptionName) : 2: 
+  if len(subscriptionName) > 2: 
     varsString = varsString + " -var=\"subscriptionName=" + subscriptionName +"\""  
   if (len(azdoOrgPAT) > 2) OR (len(clientSecret) > 2) OR (len(awsPublicAccessKey) > 2) OR (len(awsSecretAccessKey) >2):  
     with open(prbSecretsFile, "w") as file:
