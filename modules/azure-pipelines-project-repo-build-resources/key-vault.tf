@@ -1,7 +1,7 @@
   
 data "azurerm_key_vault" "pipeKeyVault" {
-  name                = var.pipeKeyVaultName
-  resource_group_name = var.pipeResourceGroupName
+  name                = var.keyVaultName
+  resource_group_name = var.resourceGroupName
 }
   
 resource "azurerm_key_vault_access_policy" "azdo-project-access-key-vault" {
