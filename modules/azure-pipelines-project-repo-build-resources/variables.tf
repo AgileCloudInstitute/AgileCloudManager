@@ -11,12 +11,10 @@ variable "clientName" { }
 variable "clientId" { }  
 variable "clientSecret" { }  
 variable "serviceConnectionName" { } 
-variable "storageAccountNameTerraformBackend" { }  
-variable "storageContainerNameTerraformBackend" { }  
-variable "pipeSubnetId" { }  
-variable "pipeResourceGroupRegion" { }  
-variable "pipeResourceGroupName" { }  
-variable "pipeKeyVaultName" { }  
+variable "subnetId" { }  
+variable "resourceGroupLocation" { }  
+variable "resourceGroupName" { }  
+variable "keyVaultName" { }  
 variable "azdoOrgPAT" { }  
 variable "azdoOrgServiceURL" { }  
 variable "sourceRepo" { }  
@@ -45,7 +43,7 @@ output "azuredevops_git_repository_web_url" { value = azuredevops_git_repository
 output "azuredevops_project_name" { value = azuredevops_project.project.project_name }
 output "azuredevops_build_definition_id" { value = azuredevops_build_definition.build.id }
 output "azuredevops_organization_service_url" { value = var.azdoOrgServiceURL }
-output "azuredevops_key_vault_name" { value = var.pipeKeyVaultName }  
+output "azuredevops_key_vault_name" { value = var.keyVaultName }  
 output "azuredevops_subscription_name" { value = var.subscriptionName }  
 output "azuredevops_subscription_id" { value = var.subscriptionId }  
 output "azuredevops_client_name" { value = var.clientName }  
