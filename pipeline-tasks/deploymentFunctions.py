@@ -622,12 +622,12 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
           if re.match("serviceConnectionName", connectionItem):
             print(connectionItem, " is: ", connectionItems.get(connectionItem))
             varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
-.          if re.match("clientId", connectionItem):
+          if re.match("clientId", connectionItem):
             print(connectionItem, " is: ", connectionItems.get(connectionItem))
             varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
           if re.match("azdoOrgPAT", connectionItem):
             azdoOrgPAT = connectionItems.get(connectionItem)
-.          if re.match("clientSecret", connectionItem):
+          if re.match("clientSecret", connectionItem):
             clientSecret = connectionItems.get(connectionItem)
       if re.match("projectRepoBuild", item):
         projectRepoBuild = topLevel_dict.get(item)
@@ -643,10 +643,10 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
               repoName = nameStr
               buildName = repoName
               projectName = repoName + "Project"
-.            if re.match("storageAccountName", prbItem):
+            if re.match("storageAccountName", prbItem):
               print(prbItem, " is: ", projectRepoBuild.get(prbItem))
               varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
-.            if re.match("storageContainerName", prbItem):
+            if re.match("storageContainerName", prbItem):
               print(prbItem, " is: ", projectRepoBuild.get(prbItem))
               varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
             if re.match("awsPublicAccessKey", prbItem):
