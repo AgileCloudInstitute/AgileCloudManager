@@ -8,12 +8,10 @@ module "azure-pipelines-project-repo-build-resources" {
   clientId                             = "${var.clientId}"  
   clientSecret                         = "${var.clientSecret}"  
   serviceConnectionName                = "${var.serviceConnectionName}"  
-  storageAccountNameTerraformBackend   = "${var.storageAccountNameTerraformBackend}"  
-  storageContainerNameTerraformBackend = "${var.storageContainerNameTerraformBackend}"  
-  pipeSubnetId                         = "${var.pipeSubnetId}"
-  pipeResourceGroupRegion              = "${var.pipeResourceGroupRegion}"
-  pipeResourceGroupName                = "${var.pipeResourceGroupName}"  
-  pipeKeyVaultName                     = "${var.pipeKeyVaultName}"  
+  subnetId                             = "${var.subnetId}"
+  resourceGroupLocation                = "${var.resourceGroupLocation}"
+  resourceGroupName                    = "${var.resourceGroupName}"  
+  keyVaultName                         = "${var.keyVaultName}"  
   azdoOrgPAT                           = "${var.azdoOrgPAT}"  
   azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"  
   sourceRepo                           = "${var.sourceRepo}"  
@@ -32,12 +30,10 @@ variable "clientName" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "serviceConnectionName" { }
-variable "storageAccountNameTerraformBackend" { }
-variable "storageContainerNameTerraformBackend" { }
-variable "pipeSubnetId" { }
-variable "pipeResourceGroupRegion" { }
-variable "pipeResourceGroupName" { }
-variable "pipeKeyVaultName" { }
+variable "subnetId" { }
+variable "resourceGroupLocation" { }
+variable "resourceGroupName" { }
+variable "keyVaultName" { }
 variable "azdoOrgPAT" { }
 variable "azdoOrgServiceURL" { }
 variable "sourceRepo" { }
