@@ -678,10 +678,10 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
       if len(clientSecret) > 2: 
         lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
         file.write(lineToAdd)
-	  if len(awsPublicAccessKey) > 2: 
+      if len(awsPublicAccessKey) > 2: 
         lineToAdd = "awsPublicAccessKey=\""+awsPublicAccessKey +"\"\n"
         file.write(lineToAdd)
-	  if len(awsSecretAccessKey) >2 : 
+      if len(awsSecretAccessKey) >2 : 
         lineToAdd = "awsSecretAccessKey=\""+awsSecretAccessKey +"\"\n"
         file.write(lineToAdd)
     varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
