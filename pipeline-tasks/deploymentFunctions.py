@@ -596,7 +596,7 @@ def getProjectRepoBuildBackendConfig(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString  
   
-def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, resourceGroupLocation, resourceGroupName, pipeKeyVaultName, subnetId, subscriptionName, environmentName):
+def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, resourceGroupLocation, resourceGroupName, pipeKeyVaultName, subnetId, subscriptionName):
   print("inside getProjectsReposBuildInputs(...,...,...) function.")
   awsPublicAccessKey = ''
   awsSecretAccessKey = ''
