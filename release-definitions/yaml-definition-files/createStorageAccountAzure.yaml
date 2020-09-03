@@ -16,4 +16,4 @@ environments:
         - name: Python task to create Azure Storage Account
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-azure-storage-account/drop/pipeline-tasks/createStorageAccount.py "
-          arguments: " $(storageAccountName)  $(storageContainerName)  $(terra-backend-key)  $(System.DefaultWorkingDirectory)"
+          arguments: " $(storageAccountName)  $(storageContainerName)  $(terra-backend-key)  $(System.DefaultWorkingDirectory)"  $(client-id)  $(client-secret)  $(subscription-id)  $(tenant-id)  
