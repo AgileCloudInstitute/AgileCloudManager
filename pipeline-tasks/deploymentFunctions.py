@@ -645,14 +645,18 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
               projectName = repoName + "Project"
             if re.match("storageAccountName", prbItem):
               print(prbItem, " is: ", projectRepoBuild.get(prbItem))
-              varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
+              if projectRepoBuild.get(prbItem) is not None:
+                varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
             if re.match("storageContainerName", prbItem):
               print(prbItem, " is: ", projectRepoBuild.get(prbItem))
-              varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
+              if projectRepoBuild.get(prbItem) is not None:
+                varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
             if re.match("awsPublicAccessKey", prbItem):
-              awsPublicAccessKey = projectRepoBuild.get(prbItem)
+              if projectRepoBuild.get(prbItem) is not None:
+                awsPublicAccessKey = projectRepoBuild.get(prbItem)
             if re.match("awsSecretAccessKey", prbItem):
-              awsSecretAccessKey = projectRepoBuild.get(prbItem)
+              if projectRepoBuild.get(prbItem) is not None:
+                awsSecretAccessKey = projectRepoBuild.get(prbItem)
   varsString = varsString + " -var=\"projectName=" + projectName +"\""  
   varsString = varsString + " -var=\"repoName=" + repoName +"\""  
   varsString = varsString + " -var=\"buildName=" + buildName +"\""  
