@@ -209,7 +209,7 @@ def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, pro
   return artifactsDataList
 
 def getVariablesData(variablesYAML):
-  lastIndex = len(variablesYAML)-1
+  lastIndex = len(variablesYAML)
   print("lastIndex at start of getVariablesData() is: ", lastIndex)
   idx = 0
   varJsonListItems = ""
