@@ -4,7 +4,7 @@ name: Create Terraform Azure Storage Account Release
 description: A Release Definition for creating instances of Terraform Azure Storage Account
 variables:
   - storageAccountName: terraformbknd123zyx456wv
-  - storageContainerName: terraform-azure-storage-account
+    storageContainerName: terraform-azure-storage-account
 environments:
   - name: Dev environment
     deployPhases:
