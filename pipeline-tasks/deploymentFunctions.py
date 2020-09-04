@@ -409,6 +409,12 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
           if re.match("pipeAzureRegion", metaItem):
             print(metaItem, " is: ", metaItems.get(metaItem))
             varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
+          if re.match("storageAccountName", metaItem):
+            print(metaItem, " is: ", metaItems.get(metaItem))
+            varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
+          if re.match("storageContainerName", metaItem):
+            print(metaItem, " is: ", metaItems.get(metaItem))
+            varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
       if re.match("azdoConnection", item):  
         connectionItems = topLevel_dict.get(item)  
         for connectionItem in connectionItems:
