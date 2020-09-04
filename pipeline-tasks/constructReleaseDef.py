@@ -210,17 +210,23 @@ def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, pro
 
 def getVariablesData(variablesYAML):
   lastIndex = len(variablesYAML)-1
+  print("lastIndex at start of getVariablesData() is: ", lastIndex)
   idx = 0
   varJsonListItems = ""
   print("variablesYAML is: ", variablesYAML)
   for pair in variablesYAML:
+    print("lastIndex at start of for pair is: ", lastIndex)
+    print("idx at start of for pair is: ", idx)
     print("pair is: ", pair)
     for var in pair:
+      print("lastIndex at start of for var in pair is: ", lastIndex)
+      print("idx at start of for var in pair is: ", idx)
       print("var is: ", var)  
       #/////////////// begin test new syntax
       print(var, " is: ", pair.get(var))
       varJSON = " \""+ var + "\":{ \"value\":\""+pair.get(var)+"\"}"
       varJsonListItems = varJsonListItems + varJSON
+      print("varJsonListItems right after assignment is: ", varJsonListItems)
       #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
       if idx < lastIndex:
         varJsonListItems = varJsonListItems + ", "
@@ -232,7 +238,8 @@ def getVariablesData(variablesYAML):
       #  #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
       #  if idx < lastIndex:
       #    varJsonListItems = varJsonListItems + ", "
-    idx += 1  
+      idx += 1  
+    #idx += 1  
   varOutputString = "{ " + varJsonListItems + " }"
   varOutputString = varOutputString.replace(" ", "")
   varOutputData = json.loads(varOutputString)
