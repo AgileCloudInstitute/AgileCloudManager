@@ -14,8 +14,8 @@ jsonFragmentDir = '../release-definitions/json-fragments/'
 def getPythonTaskData(task_idx, task):  
   pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
   pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
-  print("pythonTaskData is: ", pythonTaskData)
-  print("--------------------------------------------------------")
+  print("pythonTaskData is: ", pythonTaskData)  
+  print("--------------------------------------------------------")  
   print("--------- Gonna print a new workflow task ----------------")  
   print(task_idx, ": ", task)  
   print("--------- Gonna decompose the workflow task ----------------")  
@@ -217,13 +217,21 @@ def getVariablesData(variablesYAML):
     print("pair is: ", pair)
     for var in pair:
       print("var is: ", var)  
-      if re.match("aws-region", var):
-        print("aws-region is: ", pair.get(var))
-        varJSON = " \"aws-region\":{ \"value\":\""+pair.get(var)+"\"}"
-        varJsonListItems = varJsonListItems + varJSON
-        #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
-        if idx < lastIndex:
-          varJsonListItems = varJsonListItems + ", "
+      #/////////////// begin test new syntax
+      print(var, " is: ", pair.get(var))
+      varJSON = " \""+ var + "\":{ \"value\":\""+pair.get(var)+"\"}"
+      varJsonListItems = varJsonListItems + varJSON
+      #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
+      if idx < lastIndex:
+        varJsonListItems = varJsonListItems + ", "
+      #/////////////// end test new syntax
+      #if re.match("aws-region", var):
+      #  print("aws-region is: ", pair.get(var))
+      #  varJSON = " \"aws-region\":{ \"value\":\""+pair.get(var)+"\"}"
+      #  varJsonListItems = varJsonListItems + varJSON
+      #  #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
+      #  if idx < lastIndex:
+      #    varJsonListItems = varJsonListItems + ", "
     idx += 1  
   varOutputString = "{ " + varJsonListItems + " }"
   varOutputString = varOutputString.replace(" ", "")
