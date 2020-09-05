@@ -18,8 +18,6 @@ variable "tenantId" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
-variable "storageAccountName" { }
-variable "storageContainerName" { }
   
 ##Output variables
 output "pipes_resource_group_name" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_name}" }
@@ -33,3 +31,8 @@ output "currentConfig" { value = "${module.azure-pipelines-foundation-demo.curre
 output "subscription_name" { value = "${module.azure-pipelines-foundation-demo.subscription_name}" }
 output "subscription_id" { value = "${module.azure-pipelines-foundation-demo.subscription_id}" }
 output "tenant_id" { value = "${module.azure-pipelines-foundation-demo.tenant_id}" }
+
+output "admin_ip_body" { value = "${module.azure-pipelines-foundation-demo.admin_ip_body}" }
+output "admin_cider" { value = "${module.azure-pipelines-foundation-demo.admin_cider}" }
+
+  
