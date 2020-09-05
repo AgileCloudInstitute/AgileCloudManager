@@ -14,7 +14,7 @@ resource "azurerm_storage_account" "terraformstorageaccount" {
 
   network_rules {	
     default_action             = "Deny"	
-    ip_rules                   = [data.http.admin-external-ip.body]
+    ip_rules                   = ["${chomp(data.http.admin-external-ip.body)}/32"]
     virtual_network_subnet_ids = [azurerm_subnet.pipelines.id]	
   }	
 
