@@ -14,16 +14,12 @@ variable "serviceConnectionName" { }
 variable "subnetId" { }  
 variable "resourceGroupLocation" { }  
 variable "resourceGroupName" { }  
-variable "keyVaultName" { }  
 variable "azdoOrgPAT" { }  
 variable "azdoOrgServiceURL" { }  
 variable "sourceRepo" { }  
 variable "projectName" { }  
 variable "repoName" { }  
 variable "buildName" { }  
-#Keeping the next two because we will add secrets definition later.  For now, the secrets have already been entered into the key vault.
-variable "awsPublicAccessKey" { }
-variable "awsSecretAccessKey" { }
 
 #Use this data source to access the configuration of the azurerm provider, which you configured above:
 data "azurerm_client_config" "current" {}
@@ -50,4 +46,3 @@ output "azuredevops_client_name" { value = var.clientName }
 output "azuredevops_service_connection_name" { value = var.serviceConnectionName }  
 
 output "azuredevops_service_connection_id" { value = azuredevops_serviceendpoint_azurerm.endpointazure.id }
-
