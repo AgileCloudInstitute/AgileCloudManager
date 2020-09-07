@@ -1,7 +1,7 @@
 ---
 # Defines a release definition
-name: Create Terraform Azure Storage Account Release
-description: A Release Definition for creating instances of Terraform Azure Storage Account
+name: Create Azure Storage Account Release
+description: A Release Definition for creating Azure Storage Accounts
 variables:
   - storageAccountName: terraformbknd123zyx456wv
     storageContainerName: terraform-azure-storage-account
@@ -11,9 +11,9 @@ environments:
       - name: Azure Storage Account Creation Job
         deploymentInput:
         - artifactsDownloadInput:
-          - alias: _terraform-azure-storage-account
+          - alias: _azure-storage-account-toolkit  
         workflowTasks:
         - name: Python task to create Azure Storage Account
           type: Python
-          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-azure-storage-account/drop/pipeline-tasks/createStorageAccount.py "
+          scriptPath: "$(System.DefaultWorkingDirectory)/_azure-storage-account-toolkit/drop/pipeline-tasks/createStorageAccount.py "
           arguments: " $(storageAccountName)  $(storageContainerName)  $(terra-backend-key)  $(System.DefaultWorkingDirectory)  $(client-id)  $(client-secret)  $(subscription-id)  $(tenant-id) "
