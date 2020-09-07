@@ -12,6 +12,8 @@ variable "tenantId" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
+variable "awsPublicAccessKey" { }
+variable "awsSecretAccessKey" { }
 
 # Workstation External IP. Override with variable or hardcoded value if necessary.
 data "http" "admin-external-ip" { url = "http://ipv4.icanhazip.com" }
@@ -33,4 +35,3 @@ output "tenant_id" { value = data.azurerm_subscription.current.tenant_id }
 
 output "admin_ip_body" { value = data.http.admin-external-ip.body }
 output "admin_cider" { value = local.admin-external-cidr }
-
