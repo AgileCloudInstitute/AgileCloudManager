@@ -419,12 +419,7 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
             print(connectionItem, " is: ", connectionItems.get(connectionItem))
             varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
           if re.match("clientSecret", connectionItem):
-            print(connectionItem, " is: ", connectionItems.get(connectionItem))
-            with open(foundationSecretsFile, "w") as file:
-              lineToAdd = connectionItem+"=\""+connectionItems.get(connectionItem) +"\"\n"
-              file.write(lineToAdd)
-              varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""
-
+            clientSecret = connectionItems.get(connectionItem)
       if re.match("awsConnection", item):  
         awsItems = topLevel_dict.get(item)  
         for awsItem in awsItems:  
@@ -432,11 +427,18 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
             awsPublicAccessKey = awsItems.get(awsItem)  
           if re.match("subscriptionId", awsItem):  
             awsSecretAccessKey = awsItems.get(awsItem)  
-
-  clientSecret
-  awsPublicAccessKey
-  awsSecretAccessKey
-
+  if len(clientSecret)>2 or len(awsPublicAccessKey)>2 or len(awsSecretAccessKey)>2 :  
+    with open(foundationSecretsFile, "w") as file:
+      if len(clientSecret) > 2:
+        lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
+        file.write(lineToAdd)
+      if len(awsPublicAccessKey) > 2:
+        lineToAdd = "awsPublicAccessKey=\""+awsPublicAccessKey +"\"\n"
+        file.write(lineToAdd)
+      if len(awsSecretAccessKey) > 2:
+        lineToAdd = "awsSecretAccessKey=\""+awsSecretAccessKey +"\"\n"
+        file.write(lineToAdd)
+    varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""
   print("varsString is: ", varsString)
   return varsString
 
