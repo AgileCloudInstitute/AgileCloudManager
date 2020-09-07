@@ -1,4 +1,3 @@
-
 ## #Use this data source to access the configuration of the azurerm provider, which you configured separately in this module.
 ## data "azurerm_client_config" "current" {}
 
@@ -36,8 +35,7 @@ resource "azurerm_key_vault_access_policy" "userCreatedSP" {
   secret_permissions = [ "backup", "delete", "get", "list", "purge", "recover", "restore", "set", ]
   storage_permissions = [ "get", ]
 }
-
-
+  
 #Now create secrets and attach to the new key vault.
 resource "azurerm_key_vault_secret" "subscriptionId" {
   name         = "subscription-id"
@@ -66,6 +64,27 @@ resource "azurerm_key_vault_secret" "clientId" {
 resource "azurerm_key_vault_secret" "clientSecret" {
   name         = "client-secret"
   value        = var.clientSecret
+  key_vault_id = azurerm_key_vault.infraPipes.id
+  tags = { environment = "Testing" }
+  depends_on = [azurerm_key_vault_access_policy.userCreatedSP]
+}
+
+#############################################################################################################################################
+#### Key Vaults must be managed as a separate process instead of sharing across projects as done in this demo.  
+#### For simpicity in this demo, we are including secrets like the AWS keys below, which will need to be managed differently in production.  
+#############################################################################################################################################
+
+resource "azurerm_key_vault_secret" "awsPublicAccessKey" {
+  name         = "-aws-public-access-key"
+  value        = var.awsPublicAccessKey
+  key_vault_id = azurerm_key_vault.infraPipes.id
+  tags = { environment = "Testing" }
+  depends_on = [azurerm_key_vault_access_policy.userCreatedSP]
+}
+
+resource "azurerm_key_vault_secret" "awsSecretAccessKey" {
+  name         = "-aws-secret-access-key"
+  value        = var.awsSecretAccessKey
   key_vault_id = azurerm_key_vault.infraPipes.id
   tags = { environment = "Testing" }
   depends_on = [azurerm_key_vault_access_policy.userCreatedSP]
