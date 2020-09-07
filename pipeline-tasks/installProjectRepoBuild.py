@@ -41,7 +41,6 @@ print("depfunc.subscription_id  is: ", depfunc.subscription_id)
 print("depfunc.tenant_id  is: ", depfunc.tenant_id)
 print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
 print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
-print("depfunc.pipeKeyVaultName is: ", depfunc.pipeKeyVaultName)
 print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
 print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
 print("depfunc.subscription_name is: ", depfunc.subscription_name)
@@ -58,13 +57,12 @@ print("depfunc.subscription_name is: ", depfunc.subscription_name)
 ##############################################################################################
 
 prbBackendConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-prbInputs = depfunc.getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.subscription_name )
-
-print("prbBackendConfig is: ", prbBackendConfig)
-print("prbInputs is: ", prbInputs)
-
+prbInputs = depfunc.getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeSubnetId, depfunc.subscription_name )  
+  
+print("prbBackendConfig is: ", prbBackendConfig)  
+print("prbInputs is: ", prbInputs)  
+  
 applyCommand='terraform apply -auto-approve'
-## prbVars = depfunc.getProjectRepoBuildInputs(myYamlInputFile, foundationSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.azuredevops_subscription_name)
 applyPrbCommand=applyCommand+prbInputs
 pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
 ## print ('prbVars is: :', prbVars )
