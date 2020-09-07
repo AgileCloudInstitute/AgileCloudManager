@@ -391,28 +391,25 @@ def setEnvironmentVars(yamlInputFile, setEnvironmentVarsFile):
           line = line.replace("export AZURE_DEVOPS_EXT_PAT=","export AZURE_DEVOPS_EXT_PAT="+azdoOrgPAT)
     print('{}'.format(line))
 
-def getFoundationInputs(yamlInputFile, foundationSecretsFile):
-  varsString = ''
-  with open(yamlInputFile) as f:
-    topLevel_dict = yaml.safe_load(f)
-    for item in topLevel_dict:
-      print("item is: ", item)
-      if re.match("azureMeta", item):
-        metaItems = topLevel_dict.get(item)
-        for metaItem in metaItems: 
-          if re.match("subscriptionId", metaItem):
-            print(metaItem, " is: ", metaItems.get(metaItem))
-            varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
-          if re.match("tenantId", metaItem):
+def getFoundationInputs(yamlInputFile, foundationSecretsFile):  
+  varsString = '' 
+  clientSecret = '' 
+  awsPublicAccessKey = '' 
+  awsSecretAccessKey = '' 
+  with open(yamlInputFile) as f:  
+    topLevel_dict = yaml.safe_load(f)  
+    for item in topLevel_dict:  
+      print("item is: ", item)  
+      if re.match("azureMeta", item):  
+        metaItems = topLevel_dict.get(item)  
+        for metaItem in metaItems:  
+          if re.match("subscriptionId", metaItem):  
+            print(metaItem, " is: ", metaItems.get(metaItem))  
+            varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""   
+          if re.match("tenantId", metaItem):  
             print(metaItem, " is: ", metaItems.get(metaItem))
             varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
           if re.match("pipeAzureRegion", metaItem):
-            print(metaItem, " is: ", metaItems.get(metaItem))
-            varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
-          if re.match("storageAccountName", metaItem):
-            print(metaItem, " is: ", metaItems.get(metaItem))
-            varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
-          if re.match("storageContainerName", metaItem):
             print(metaItem, " is: ", metaItems.get(metaItem))
             varsString = varsString + " -var=\""+ metaItem + "=" + metaItems.get(metaItem) +"\""  
       if re.match("azdoConnection", item):  
@@ -427,6 +424,19 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
               lineToAdd = connectionItem+"=\""+connectionItems.get(connectionItem) +"\"\n"
               file.write(lineToAdd)
               varsString = varsString + " -var-file=\""+ foundationSecretsFile +"\""
+
+      if re.match("awsConnection", item):  
+        awsItems = topLevel_dict.get(item)  
+        for awsItem in awsItems:  
+          if re.match("awsPublicAccessKey", awsItem):  
+            awsPublicAccessKey = awsItems.get(awsItem)  
+          if re.match("subscriptionId", awsItem):  
+            awsSecretAccessKey = awsItems.get(awsItem)  
+
+  clientSecret
+  awsPublicAccessKey
+  awsSecretAccessKey
+
   print("varsString is: ", varsString)
   return varsString
 
