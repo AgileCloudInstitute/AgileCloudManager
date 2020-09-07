@@ -7,8 +7,6 @@ module "azure-pipelines-foundation-demo" {
   clientId              = "${var.clientId}"
   clientSecret          = "${var.clientSecret}"
   pipeAzureRegion       = "${var.pipeAzureRegion}"
-  storageAccountName    = "${var.storageAccountName}"
-  storageContainerName  = "${var.storageContainerName}"
 
 }
 
