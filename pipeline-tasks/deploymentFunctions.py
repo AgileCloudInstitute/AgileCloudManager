@@ -602,7 +602,7 @@ def getProjectRepoBuildBackendConfig(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString  
   
-def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, resourceGroupLocation, resourceGroupName, keyVaultName, subnetId, subscriptionName):
+def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, resourceGroupLocation, resourceGroupName, subnetId, subscriptionName):
   print("inside getProjectsReposBuildInputs(...,...,...) function.")
   awsPublicAccessKey = ''
   awsSecretAccessKey = ''
@@ -649,20 +649,6 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
               repoName = nameStr
               buildName = repoName
               projectName = repoName + "Project"
-            if re.match("storageAccountName", prbItem):
-              print(prbItem, " is: ", projectRepoBuild.get(prbItem))
-              if projectRepoBuild.get(prbItem) is not None:
-                varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
-            if re.match("storageContainerName", prbItem):
-              print(prbItem, " is: ", projectRepoBuild.get(prbItem))
-              if projectRepoBuild.get(prbItem) is not None:
-                varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
-            if re.match("awsPublicAccessKey", prbItem):
-              if projectRepoBuild.get(prbItem) is not None:
-                awsPublicAccessKey = projectRepoBuild.get(prbItem)
-            if re.match("awsSecretAccessKey", prbItem):
-              if projectRepoBuild.get(prbItem) is not None:
-                awsSecretAccessKey = projectRepoBuild.get(prbItem)
   varsString = varsString + " -var=\"projectName=" + projectName +"\""  
   varsString = varsString + " -var=\"repoName=" + repoName +"\""  
   varsString = varsString + " -var=\"buildName=" + buildName +"\""  
@@ -674,25 +660,17 @@ def getProjectsReposBuildInputs(yamlInputFile, awsCredFile, prbSecretsFile, subs
     varsString = varsString + " -var=\"resourceGroupLocation=" + resourceGroupLocation +"\""  
   if len(resourceGroupName) > 2: 
     varsString = varsString + " -var=\"resourceGroupName=" + resourceGroupName +"\""  
-  if len(keyVaultName) >2 : 
-    varsString = varsString + " -var=\"keyVaultName=" + keyVaultName +"\""  
   if len(subnetId) > 2: 
     varsString = varsString + " -var=\"subnetId=" + subnetId +"\""  
   if len(subscriptionName) > 2: 
     varsString = varsString + " -var=\"subscriptionName=" + subscriptionName +"\""  
-  if len(azdoOrgPAT)>2 or len(clientSecret)>2 or len(awsPublicAccessKey)>2 or len(awsSecretAccessKey)>2 :  
+  if len(azdoOrgPAT)>2 or len(clientSecret)>2 :  
     with open(prbSecretsFile, "w") as file:
       if len(azdoOrgPAT) > 2:
         lineToAdd = "azdoOrgPAT=\""+azdoOrgPAT +"\"\n"
         file.write(lineToAdd)
       if len(clientSecret) > 2: 
         lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
-        file.write(lineToAdd)
-      if len(awsPublicAccessKey) > 2: 
-        lineToAdd = "awsPublicAccessKey=\""+awsPublicAccessKey +"\"\n"
-        file.write(lineToAdd)
-      if len(awsSecretAccessKey) >2 : 
-        lineToAdd = "awsSecretAccessKey=\""+awsSecretAccessKey +"\"\n"
         file.write(lineToAdd)
     varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
   print("varsString is: ", varsString)
