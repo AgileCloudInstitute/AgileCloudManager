@@ -2,12 +2,13 @@
 module "azure-pipelines-foundation-demo" {
   source = "../../modules/azure-pipelines-foundation"
 
-  subscriptionId        = "${var.subscriptionId}"
-  tenantId              = "${var.tenantId}"
-  clientId              = "${var.clientId}"
-  clientSecret          = "${var.clientSecret}"
-  pipeAzureRegion       = "${var.pipeAzureRegion}"
-
+  subscriptionId     = "${var.subscriptionId}"
+  tenantId           = "${var.tenantId}"
+  clientId           = "${var.clientId}"
+  clientSecret       = "${var.clientSecret}"
+  pipeAzureRegion    = "${var.pipeAzureRegion}"
+  awsPublicAccessKey = "${var.awsPublicAccessKey}"
+  awsSecretAccessKey = "${var.awsPublicAccessKey}"
 }
 
 ##Input variables.  The client referred to is an App Registration.
@@ -16,7 +17,9 @@ variable "tenantId" { }
 variable "clientId" { }
 variable "clientSecret" { }
 variable "pipeAzureRegion" { }
-  
+variable "awsPublicAccessKey" { }
+variable "awsSecretAccessKey" { }
+
 ##Output variables
 output "pipes_resource_group_name" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_name}" }
 output "pipes_resource_group_region" { value = "${module.azure-pipelines-foundation-demo.pipes_resource_group_region}" }
