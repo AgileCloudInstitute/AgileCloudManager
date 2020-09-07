@@ -11,15 +11,12 @@ module "azure-pipelines-project-repo-build-resources" {
   subnetId                             = "${var.subnetId}"
   resourceGroupLocation                = "${var.resourceGroupLocation}"
   resourceGroupName                    = "${var.resourceGroupName}"  
-  keyVaultName                         = "${var.keyVaultName}"  
   azdoOrgPAT                           = "${var.azdoOrgPAT}"  
   azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"  
   sourceRepo                           = "${var.sourceRepo}"  
   projectName                          = "${var.projectName}"  
   repoName                             = "${var.repoName}"  
   buildName                            = "${var.buildName}"  
-  awsPublicAccessKey                   = "${var.awsPublicAccessKey}"  
-  awsSecretAccessKey                   = "${var.awsSecretAccessKey}"  
 }
 
 variable "subscriptionName" { }  
@@ -33,15 +30,12 @@ variable "serviceConnectionName" { }
 variable "subnetId" { }
 variable "resourceGroupLocation" { }
 variable "resourceGroupName" { }
-variable "keyVaultName" { }
 variable "azdoOrgPAT" { }
 variable "azdoOrgServiceURL" { }
 variable "sourceRepo" { }
 variable "projectName" { }
 variable "repoName" { }
 variable "buildName" { }
-variable "awsPublicAccessKey" { }
-variable "awsSecretAccessKey" { }
 
 ##Output variables  
 output "azuredevops_project_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_project_id}" }  
@@ -57,7 +51,6 @@ output "azuredevops_git_repository_web_url" { value = "${module.azure-pipelines-
 output "azuredevops_project_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_project_name}" }  
 output "azuredevops_build_definition_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_build_definition_id}" }  
 output "azuredevops_organization_service_url" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_organization_service_url}" }  
-output "azuredevops_key_vault_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_key_vault_name}" }  
 output "azuredevops_subscription_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_subscription_name}" }  
 output "azuredevops_subscription_id" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_subscription_id}" }  
 output "azuredevops_client_name" { value = "${module.azure-pipelines-project-repo-build-resources.azuredevops_client_name}" }  
