@@ -17,7 +17,7 @@ depfunc.runShellCommand(addExteensionCommand)
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 myYamlInputFile = '/home/agile-cloud/staging/projectRepoBuildConfig.yaml'
-foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
+#foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
 prbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/prb-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
