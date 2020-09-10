@@ -10,7 +10,13 @@ import yaml
 addExteensionCommand = 'az extension add --name azure-devops'
 depfunc.runShellCommand(addExteensionCommand)
 
-myYamlInputFile = '/home/agile-cloud/staging/projectRepoBuildConfig.yaml'
+#myYamlInputFile = 'projectRepoBuildConfig.yaml'
+#////
+YamlPRBFileName=sys.argv[1] 
+yamlConfigDir = '/home/agile-cloud/staging/'
+myYamlInputFile = yamlConfigDir + YamlPRBFileName
+print("myYamlInputFile is: ", myYamlInputFile)
+#////
 foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
 prbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/prb-secrets.tfvars'
 
@@ -52,7 +58,7 @@ print("depfunc.subscription_name is: ", depfunc.subscription_name)
 ##############################################################################################
 
 prbBackendConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-prbInputs = depfunc.getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeKeyVaultName, depfunc.pipeSubnetId, depfunc.subscription_name )
+prbInputs = depfunc.getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeSubnetId, depfunc.subscription_name )
 
 print("prbBackendConfig is: ", prbBackendConfig)
 print("prbInputs is: ", prbInputs)
