@@ -39,12 +39,15 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 1.  Create the infrastructure foundation for Azure Pipelines by first populating `/home/aci-user/staging/foundationConfig.yaml` with variables and then running [pipeline-tasks/installFoundation.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installFoundation.py)   
       
-        #First open the foundationConfig.yaml file by typing:      
+      #First open the foundationConfig.yaml file by typing:      
+      
         vi /home/agile-cloud/staging/foundationConfig.yaml       
-        #Then enter the values for each listed variable.    
-        #Then save the file.    
-        #Note: foundationConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-        #Next, switch directories and run installFoundation.py .      
+        
+      #Then enter the values for each listed variable.    
+      #Then save the file.    
+      #Note: foundationConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+      #Next, switch directories and run installFoundation.py .      
+      
         cd /home/agile-cloud/cloned-repos/agile-cloud-manager/pipeline-tasks     
         python3 installFoundation.py     
       
@@ -54,12 +57,15 @@ Once you have assembled the pre-requisites, do the following in order to use thi
       
 1.  Create an Agent by first populating `agentsConfig.yaml` with variables and then running [pipeline-tasks/installAgents.py](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/pipeline-tasks/installAgents.py)          
       
-        #Open the agentsConfig.yaml by typing:    
+      #Open the agentsConfig.yaml by typing:    
+      
         vi /home/agile-cloud/staging/agentsConfig.yaml       
-        #Then enter the values for each listed variable.    
-        #Then save the file.    
-        #Note: agentsConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-        #Next, switch directories and run installAgents.py .      
+        
+      #Then enter the values for each listed variable.    
+      #Then save the file.    
+      #Note: agentsConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+      #Next, switch directories and run installAgents.py .      
+      
         python3 installAgents.py        
       
 2.  Validate that the agent is running by logging into [the Azure Portal](https://portal.azure.com/) to view the information about the VM, including the IP address, to which you can Putty in during the development phase.  Also look at the Azure DevOps organization page to see when the agent comes online.  Note that for Production you will want to turn off interactive login for the agents as a security precaution.          
@@ -69,11 +75,14 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Create a Project, Repository, and Build by first populating 'projectRepoBuildConfig.yaml' with variables and then running the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
     
       #Open the projectRepoBuildConfig_AzStorageDemo.yaml by typing:        
+      
         vi /home/agile-cloud/staging/projectRepoBuildConfig_AzStorageDemo.yaml         
+        
       #Then enter the values for each listed variable        
       #Then save the file        
       #Note: projectRepoBuildConfig.yaml can be populated by some automation that you create separately if you need to do this repeatedly.        
       #Navigate to the `pipeline-tasks` directory if you are not already there    
+      
         cd /home/agile-cloud/cloned-repos/agile-cloud-manager/pipeline-tasks      
         python3 installProjectRepoBuild.py projectRepoBuildConfig_AzStorageDemo.yaml     
     
@@ -86,8 +95,10 @@ Once you have assembled the pre-requisites, do the following in order to use thi
         
       #Navigate to the same `pipeline-tasks` directory if you are not already there        
       #Type the following two commands to create two Release Definitions, noting that the yaml files are in the `release-definitions/yaml-definition-files/` directory.        
+      
         python3 constructReleaseDef.py createStorageAccountAzure.yaml projectRepoBuildConfig_AzStorageDemo.yaml        
         python3 constructReleaseDef.py destroyStorageAccountAzure.yaml projectRepoBuildConfig_AzStorageDemo.yaml        
+        
       #Confirm in the console that each of the commands produced a 200 HTTP response code.  Then navigate to the Azure Devops Portal to view the Release Definitions.  
       #Manually Trigger the "Create ... Example Release" in the Azure Devops Portal and confirm that the infrastructure was created in Aazure.  Note that you must click the manual "Deploy" button in the release the way the definition is currently configured.        
       #Then Manually trigger the "Destroy ... Example Release" in the Azure Devops Portal and confirm that the same infrastructure was destroyed in Azure. Again note that you must manually click on the "Deploy" button on the release the way the definition is currently configured.         
@@ -98,11 +109,14 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Create a Project, Repository, and Build by first populating 'projectRepoBuildConfig_AWSStarterDemo.yaml' with variables and then running the Pipeline task that calls the project-repo-build module using the `apply` command.  (Variables have been automatically imported for you for this demo.)   
     
       #Open the projectRepoBuildConfig_AWSStarterDemo.yaml by typing:        
+      
         vi /home/agile-cloud/staging/projectRepoBuildConfig_AWSStarterDemo.yaml         
+        
       #Then enter the values for each listed variable        
       #Then save the file        
       #Note: projectRepoBuildConfig_AWSStarterDemo.yaml can be populated by some automation that you create separately if you need to do this repeatedly.        
       #Navigate to the `pipeline-tasks` directory if you are not already there    
+      
         cd /home/agile-cloud/cloned-repos/agile-cloud-manager/pipeline-tasks      
         python3 installProjectRepoBuild.py projectRepoBuildConfig_AWSStarterDemo.yaml     
     
@@ -115,8 +129,10 @@ Once you have assembled the pre-requisites, do the following in order to use thi
         
       #Navigate to the same `pipeline-tasks` directory if you are not already there        
       #Type the following two commands to create two Release Definitions, noting that the yaml files are in the `release-definitions/yaml-definition-files/` directory.        
+      
         python3 constructReleaseDef.py createTerraformSimpleAWS.yaml projectRepoBuildConfig_AWSStarterDemo.yaml       
         python3 constructReleaseDef.py destroyTerraformSimpleAWS.yaml projectRepoBuildConfig_AWSStarterDemo.yaml       
+        
       #Confirm in the console that each of the commands produced a 200 HTTP response code.  Then navigate to the Azure Devops Portal to view the Release Definitions.  
       #Manually Trigger the "Create Terraform AWS Simple Example Release" in the Azure Devops Portal and confirm that the infrastructure was created in AWS.  Note that you must click the manual "Deploy" button in the release the way the definition is currently configured.        
       #Then Manually trigger the "Destroy Terraform AWS Simple Example Release" in the Azure Devops Portal and confirm that the same infrastructure was destroyed in AWS. Again note that you must manually click on the "Deploy" button on the release the way the definition is currently configured.         
@@ -130,6 +146,7 @@ Once you have assembled the pre-requisites, do the following in order to use thi
 1.  Run the pipeline task that calls the project-repo-build module withe the `destroy` command.   
     
       #From the same `pipeline-tasks` directory      
+      
         python3 destroyProjectRepoBuild.py projectRepoBuildConfig_AWSStarterDemo.yaml    
         python3 destroyProjectRepoBuild.py projectRepoBuildConfig_AzStorageDemo.yaml     
     
