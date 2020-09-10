@@ -211,7 +211,7 @@ def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, pro
 def getVariablesData(variablesYAML):
   lastIndex = len(variablesYAML)
   print("lastIndex at start of getVariablesData() is: ", lastIndex)
-  idx = 0
+  idx = 1
   varJsonListItems = ""
   print("variablesYAML is: ", variablesYAML)
   for pair in variablesYAML:
@@ -242,6 +242,7 @@ def getVariablesData(variablesYAML):
     #idx += 1  
   varOutputString = "{ " + varJsonListItems + " }"
   varOutputString = varOutputString.replace(" ", "")
+  print("varOutputString just before json loads is: ", varOutputString)
   varOutputData = json.loads(varOutputString)
   print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"")
   print("varOutputData is: ", varOutputData)
