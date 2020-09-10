@@ -21,12 +21,15 @@ Once you have assembled the pre-requisites, do the following in order to use thi
     
 3.  **Setup the LaucnPad:**  Enter the variables you assembled in the pre-requisite steps into a new file you will create in `/home/aci-user/staging/launchpadConfig.yaml` which follows the exact list of variables and syntax given in [this template file from the repository](https://github.com/AgileCloudInstitute/agile-cloud-manager/blob/master/move-to-directory-outside-app-path/enter-user-input-here-only.yaml) .  Then run the setup.py script as follows:        
       
-        #First open the launchpadConfig.yaml file by typing:      
+      #First open the launchpadConfig.yaml file by typing:      
+      
         vi /home/agile-cloud/staging/launchpadConfig.yaml       
-        #Then enter the values for each listed variable.    
-        #Then save the file.    
-        #Note: launchpadConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
-        #Next, switch directories and run setup.py after creating a .aws directory in which to AWS credentials.      
+        
+      #Then enter the values for each listed variable.    
+      #Then save the file.    
+      #Note: launchpadConfig.yaml can be populated by some automation you create separately if you need to do this repeatedly.     
+      #Next, switch directories and run setup.py after creating a .aws directory in which to AWS credentials.      
+      
         cd /home/agile-cloud/cloned-repos/agile-cloud-manager/setup/      
         mkdir /home/agile-cloud/.aws        
         sudo python3 setup.py      
