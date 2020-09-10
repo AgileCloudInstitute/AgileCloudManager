@@ -209,22 +209,24 @@ def getArtifactsDataList(artifactsTemplateFile, project_id, org_service_url, pro
   return artifactsDataList
 
 def getVariablesData(variablesYAML):
-  lastIndex = len(variablesYAML)
-  print("lastIndex at start of getVariablesData() is: ", lastIndex)
+  #lastIndex = len(variablesYAML)
+  #print("lastIndex at start of getVariablesData() is: ", lastIndex)
   idx = 1
   varJsonListItems = ""
   print("variablesYAML is: ", variablesYAML)
-  for pair in variablesYAML:
+  #NOTE: Assuming here the variablesYAML is a list containing a single dict of keys/values, so not we extract the dict from the YAML and assume there is only one dict so that the loop only runs once.  
+  for varsList in variablesYAML:
+    lastIndex = len(varsList)
     print("lastIndex at start of for pair is: ", lastIndex)
     print("idx at start of for pair is: ", idx)
-    print("pair is: ", pair)
-    for var in pair:
-      print("lastIndex at start of for var in pair is: ", lastIndex)
-      print("idx at start of for var in pair is: ", idx)
+    print("varsList is: ", varsList)
+    for var in varsList:
+      print("lastIndex at start of for var in varsList is: ", lastIndex)
+      print("idx at start of for var in varsList is: ", idx)
       print("var is: ", var)  
       #/////////////// begin test new syntax
-      print(var, " is: ", pair.get(var))
-      varJSON = " \""+ var + "\":{ \"value\":\""+pair.get(var)+"\"}"
+      print(var, " is: ", varsList.get(var))
+      varJSON = " \""+ var + "\":{ \"value\":\""+varsList.get(var)+"\"}"
       varJsonListItems = varJsonListItems + varJSON
       print("varJsonListItems right after assignment is: ", varJsonListItems)
       #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
@@ -232,8 +234,8 @@ def getVariablesData(variablesYAML):
         varJsonListItems = varJsonListItems + ", "
       #/////////////// end test new syntax
       #if re.match("aws-region", var):
-      #  print("aws-region is: ", pair.get(var))
-      #  varJSON = " \"aws-region\":{ \"value\":\""+pair.get(var)+"\"}"
+      #  print("aws-region is: ", varsList.get(var))
+      #  varJSON = " \"aws-region\":{ \"value\":\""+varsList.get(var)+"\"}"
       #  varJsonListItems = varJsonListItems + varJSON
       #  #The following check assumes that all variable items are valid and are handled by if cases here.  This could cause malformed JSON if received data is not valid or is not handled in if cases here.
       #  if idx < lastIndex:
