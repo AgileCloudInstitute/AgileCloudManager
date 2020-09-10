@@ -80,3 +80,6 @@ initPrbCommand = initCommand + prbBackendConfig
 depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
 depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
 print("Back in installProjectRepoBuild.py .")
+#About to remove prbSecrets file so that it can be refreshed every time it is used, and thus avoid cross-contamination with other prb variants.  
+os.remove(prbSecretsFile)  
+  
