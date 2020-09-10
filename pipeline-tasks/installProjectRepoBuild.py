@@ -15,8 +15,15 @@ addExteensionCommand = 'az extension add --name azure-devops'
 depfunc.runShellCommand(addExteensionCommand)
 
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-myYamlInputFile = '/home/agile-cloud/staging/projectRepoBuildConfig.yaml'
+    
+#myYamlInputFile = 'projectRepoBuildConfig.yaml'  
+#////  
+YamlPRBFileName=sys.argv[1]   
+yamlConfigDir = '/home/agile-cloud/staging/'  
+myYamlInputFile = yamlConfigDir + YamlPRBFileName  
+print("myYamlInputFile is: ", myYamlInputFile)  
+#////  
+    
 #foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
 prbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/prb-secrets.tfvars'
 
