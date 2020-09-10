@@ -11,6 +11,13 @@ YamlReleaseDefFile=sys.argv[1]
 print("YamlReleaseDefFile is: ", YamlReleaseDefFile)
 jsonFragmentDir = '../release-definitions/json-fragments/' 
   
+#////  
+YamlPRBFileName=sys.argv[2]   
+yamlConfigDir = '/home/agile-cloud/staging/'  
+myYamlInputFile = yamlConfigDir + YamlPRBFileName  
+print("myYamlInputFile is: ", myYamlInputFile)  
+#//// 
+
 def getPythonTaskData(task_idx, task):  
   pythonTaskTemplateFile = jsonFragmentDir + 'pythonTaskTemplate.json'  
   pythonTaskData = json.load(open(pythonTaskTemplateFile, 'r'))  
@@ -308,14 +315,26 @@ initCommand='terraform init'
 pathToProjectRepoBuildCalls = "/home/agile-cloud/cloned-repos/agile-cloud-manager/calls-to-modules/azure-pipelines-project-repo-build-resources/"
 outputProjectRepoBuildCommand='terraform output '
 
+#////////
+#myYamlInputFile
+awsCredFile = '/home/agile-cloud/.aws/credentials'
+prbBackendConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
+print("prbBackendConfig is: ", prbBackendConfig)
+initPrbCommand = initCommand + prbBackendConfig
+depfunc.runTerraformCommand(initPrbCommand, pathToProjectRepoBuildCalls)
+#//////
+
 depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
 depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
 
-print("Back in constructReleaseDef.py .")
-print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )
-print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)
-print("depfunc.azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)
-print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_service_connection_id)
+print("Back in constructReleaseDef.py .")  
+print("depfunc.azuredevops_project_id is: ", depfunc.azuredevops_project_id )  
+print("depfunc.azuredevops_organization_name is: ", depfunc.azuredevops_organization_name)  
+print("depfunc.azuredevops_key_vault_name is: ", depfunc.azuredevops_key_vault_name)  
+print("depfunc.azuredevops_project_name is: ", depfunc.azuredevops_project_name)  
+print("depfunc.azuredevops_service_connection_id is: ", depfunc.azuredevops_service_connection_id)  
+
+### //////////////////////
 
 #########################################################################################################
 ### Step Two: Get The poolQueueId from the agent pool Queue that will be used by the release definition.
