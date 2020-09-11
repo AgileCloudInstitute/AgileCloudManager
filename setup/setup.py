@@ -2,6 +2,7 @@ import fileinput
 import sys
 import subprocess
 import re
+from pathlib import Path
 
 import pip
 failed = pip.main(["install", 'requests'])
@@ -10,6 +11,9 @@ failed = pip.main(["install", 'pyyaml'])
 print("status of pyyaml install: ", failed)
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+
+#Create .aws directory for use below.
+Path("/home/agile-cloud/.aws").mkdir(parents=True, exist_ok=True)
 
 # #Declare the directory and file name variables
 fileEnterUserInputHereOnly = "/home/agile-cloud/staging/launchpadConfig.yaml"  
