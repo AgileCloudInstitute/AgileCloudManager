@@ -12,9 +12,6 @@ print("status of pyyaml install: ", failed)
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
-#Create .aws directory for use below.
-Path("/home/agile-cloud/.aws").mkdir(parents=True, exist_ok=True)
-
 # #Declare the directory and file name variables
 fileEnterUserInputHereOnly = "/home/agile-cloud/staging/launchpadConfig.yaml"  
 pathToVarFiles='/home/agile-cloud/vars/agile-cloud-manager/'
@@ -37,10 +34,14 @@ def runShellCommand(commandToRun, workingDir ):
   
 #Now call the functions
 #First do some provisioning
-chmodCommand = "chmod +x provisioning.sh"
+#Create .aws directory for use below.
+Path("/home/agile-cloud/.aws").mkdir(parents=True, exist_ok=True)
+chmodCommand1 = 'sudo chown -R agile-cloud:agile-cloud /home/agile-cloud/.aws'
+chmodCommand2 = "chmod +x provisioning.sh"
 scriptsDir = "/home/agile-cloud/cloned-repos/agile-cloud-manager/setup/" 
 setupCommand = "sudo ./provisioning.sh"
-runShellCommand(chmodCommand, scriptsDir)
+runShellCommand(chmodCommand1, scriptsDir)
+runShellCommand(chmodCommand2, scriptsDir)
 runShellCommand(setupCommand, scriptsDir)
 
 ### Now import deploymentFunctions.py and translate the environment variables from yaml into bash
