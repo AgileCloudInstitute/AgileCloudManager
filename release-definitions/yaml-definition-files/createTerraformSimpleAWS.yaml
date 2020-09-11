@@ -15,7 +15,7 @@ environments:
         - name: Python task to create AWS Foundation
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/createFoundationFromPipeline.py "
-          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)  $(client-id)  $(client-secret)  $(subscription-id)  $(tenant-id)"
+          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)  $(demoStorageKey) "
         - name: Python task to create AWS VM
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/createVMFromPipeline.py "
