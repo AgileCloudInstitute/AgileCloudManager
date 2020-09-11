@@ -324,7 +324,7 @@ initPrbCommand = initCommand + prbBackendConfig
 depfunc.runTerraformCommand(initPrbCommand, pathToProjectRepoBuildCalls)
 #//////
 
-depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
+#depfunc.runTerraformCommand(initCommand, pathToProjectRepoBuildCalls)
 depfunc.runTerraformCommand(outputProjectRepoBuildCommand, pathToProjectRepoBuildCalls)
 
 print("Back in constructReleaseDef.py .")  
@@ -355,7 +355,11 @@ environmentTemplateFile = jsonFragmentDir + 'environmentTemplate.json'
 releaseDefConstructorTemplateFile = jsonFragmentDir + 'releaseDefConstructorTemplate.json'
 artifactsTemplateFile = jsonFragmentDir + 'artifactsTemplate.json'
 
-releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, depfunc.azuredevops_key_vault_name, depfunc.azuredevops_service_connection_id)
+vaultName = depfunc.azuredevops_key_vault_name
+#The following line is a test to confirm that we can toggle the key vault task on or off depending on whether or not the vault name is populated.  
+vaultName = 'testvlt789'  
+
+releaseDefData = getReleaseDefData(yamlFile, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, depfunc.azuredevops_project_id, depfunc.azuredevops_organization_service_url, depfunc.azuredevops_project_name, depfunc.azuredevops_build_definition_id, depfunc.azuredevops_git_repository_name, vaultName, depfunc.azuredevops_service_connection_id)
 print("--------------------------------------------------------")
 print("revised releaseDefData is: ", releaseDefData)
 print("--------------------------------------------------------")
