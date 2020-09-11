@@ -31,7 +31,6 @@ Once you have assembled the pre-requisites, do the following in order to use thi
       #Next, switch directories and run setup.py after creating a .aws directory in which to AWS credentials.      
       
         cd /home/agile-cloud/cloned-repos/agile-cloud-manager/setup/      
-        mkdir /home/agile-cloud/.aws        
         sudo python3 setup.py      
         source /etc/bashrc     
     
