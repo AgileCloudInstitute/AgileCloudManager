@@ -12,6 +12,10 @@ environments:
         - artifactsDownloadInput:
           - alias: _terraform-aws-starter-kit
         workflowTasks: 
+        - name: Python task to set OS Environment Variables
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/setEnvironmentVarsFromPipeline.py "
+          arguments: "$(demoStorageKey) "
         - name: Python task to create AWS Foundation
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/createFoundationFromPipeline.py "
