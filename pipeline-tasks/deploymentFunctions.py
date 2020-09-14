@@ -425,7 +425,7 @@ def getFoundationInputs(yamlInputFile, foundationSecretsFile):
         for awsItem in awsItems:  
           if re.match("awsPublicAccessKey", awsItem):  
             awsPublicAccessKey = awsItems.get(awsItem)  
-          if re.match("subscriptionId", awsItem):  
+          if re.match("awsSecretAccessKey", awsItem):  
             awsSecretAccessKey = awsItems.get(awsItem)  
   if len(clientSecret)>2 or len(awsPublicAccessKey)>2 or len(awsSecretAccessKey)>2 :  
     with open(foundationSecretsFile, "w") as file:
