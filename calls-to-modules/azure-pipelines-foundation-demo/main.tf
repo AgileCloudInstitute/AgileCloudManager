@@ -8,7 +8,7 @@ module "azure-pipelines-foundation-demo" {
   clientSecret       = "${var.clientSecret}"
   pipeAzureRegion    = "${var.pipeAzureRegion}"
   awsPublicAccessKey = "${var.awsPublicAccessKey}"
-  awsSecretAccessKey = "${var.awsPublicAccessKey}"
+  awsSecretAccessKey = "${var.awsSecretAccessKey}"
 }
 
 ##Input variables.  The client referred to is an App Registration.
