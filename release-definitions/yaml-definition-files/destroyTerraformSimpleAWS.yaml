@@ -4,6 +4,10 @@ name: Destroy Terraform AWS Starter Kit Release
 description: A Release Definition for destroying instances of Terraform AWS Starter Kit
 variables:
   - aws-region: us-west-2
+    storageAccountNameTerraformBackend: tfbkendabc123x
+    foundationKeyFileTF: aws-starter-network-foundation-state.tf
+    sgKeyFileTF: aws-starter-sg-rule-state.tf
+    vmKeyFileTF: aws-starter-vm-state.tf
 environments:
   - name: Dev environment
     deployPhases:
@@ -12,7 +16,15 @@ environments:
         - artifactsDownloadInput:
           - alias: _terraform-aws-starter-kit
         workflowTasks: 
-        - name: Python task to destroy AWS starter
+        - name: Python task to Destroy AWS VM
           type: Python
-          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyFoundationFromPipeline.py"
-          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)  $(demoStorageKey) "
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyVMFromPipeline.py "
+          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)   $(demoStorageKey)  $(foundationKeyFileTF)  $(vmKeyFileTF) "
+        - name: Python task to Destroy Security Group Rule
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroySecurityGroupRuleFromPipeline.py "
+          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)  $(demoStorageKey)  $(foundationKeyFileTF)  $(sgKeyFileTF) "
+        - name: Python task to Destroy AWS Foundation
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyFoundationFromPipeline.py "
+          arguments: "$(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(terra-backend-key)  $(aws-region)  $(System.DefaultWorkingDirectory)  $(demoStorageKey)  $(foundationKeyFileTF) "
