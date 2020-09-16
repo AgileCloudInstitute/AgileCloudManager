@@ -4,6 +4,7 @@ name: Create Terraform AWS Starter Kit Release
 description: A Release Definition for creating instances of Terraform AWS Starter Kit
 variables:
   - aws-region: us-west-2
+    storageAccountNameTerraformBackend: tfbkendabc123x
     foundationKeyFileTF: aws-starter-network-foundation-state.tf
     sgKeyFileTF: aws-starter-sg-rule-state.tf
     vmKeyFileTF: aws-starter-vm-state.tf
