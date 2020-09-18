@@ -1,11 +1,11 @@
 ####################################################################################################################
 ####Define the input variables:  
 ####################################################################################################################
-variable "subscriptionId" { }  
-variable "tenantId" { }  
-#The client referred to is an App Registration we created for the subscription.  
-variable "clientId" { }  
-variable "clientSecret" { }  
+# variable "subscriptionId" { }  
+# variable "tenantId" { }  
+# #The client referred to is an App Registration we created for the subscription.  
+# variable "clientId" { }  
+# variable "clientSecret" { }  
 variable "azdoOrgPAT" { }  
 variable "azdoOrgServiceURL" { }  
 variable "sourceRepo" { }  
