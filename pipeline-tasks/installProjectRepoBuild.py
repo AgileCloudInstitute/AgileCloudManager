@@ -3,7 +3,18 @@ import sys
 import deploymentFunctions as depfunc
 import os 
 import yaml 
-    
+  
+def createBackendConfigFileTerraform( dir_to_use ): 
+  tfFileNameAndPath=dir_to_use+"/terraform.tf"
+  print("tfFileNameAndPath is: ", tfFileNameAndPath)
+  print("About to write 4 lines to a backend config file.")
+  f = open(tfFileNameAndPath, "w")
+  f.write("terraform {\n")
+  f.write("  backend \"s3\" {\n")
+  f.write("  }\n")
+  f.write("}\n")
+  f.close()
+  
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
 ##############################################################################################
