@@ -1,10 +1,10 @@
 module "azure-devops-repo-build" {
   source = "../../modules/azure-devops-repo-build"
 
-  subscriptionId                       = "${var.subscriptionId}"  
-  tenantId                             = "${var.tenantId}"  
-  clientId                             = "${var.clientId}"  
-  clientSecret                         = "${var.clientSecret}"  
+  #subscriptionId                       = "${var.subscriptionId}"  
+  #tenantId                             = "${var.tenantId}"  
+  #clientId                             = "${var.clientId}"  
+  #clientSecret                         = "${var.clientSecret}"  
   azdoOrgPAT                           = "${var.azdoOrgPAT}"  
   azdoOrgServiceURL                    = "${var.azdoOrgServiceURL}"  
   sourceRepo                           = "${var.sourceRepo}"  
@@ -24,4 +24,3 @@ variable "sourceRepo" { }
 variable "projectName" { }
 variable "repoName" { }
 variable "buildName" { }
-  
