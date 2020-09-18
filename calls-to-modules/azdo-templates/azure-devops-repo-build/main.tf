@@ -1,5 +1,5 @@
 module "azure-devops-repo-build" {
-  source = "../../modules/azure-devops-repo-build"
+  source = "../../../modules/azure-devops-repo-build"
 
   #subscriptionId                       = "${var.subscriptionId}"  
   #tenantId                             = "${var.tenantId}"  
