@@ -1,5 +1,5 @@
 module "azure-devops-project" {
-  source = "../../modules/azure-devops-project"
+  source = "../../../modules/azure-devops-project"
 
   subscriptionName                     = "${var.subscriptionName}"  
   subscriptionId                       = "${var.subscriptionId}"  
