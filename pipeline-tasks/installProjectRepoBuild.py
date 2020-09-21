@@ -148,7 +148,7 @@ def getProjectBackendConfig(yamlInputFile, awsCredFile):
   print("varsString is: ", varsString)
   return varsString
 
-def getProjectInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, subscriptionName):  
+def getProjectInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId):  
   print("inside getProjectsReposBuildInputs(...,...,...) function.")
   varsString = ''
   azdoOrgPAT = ''
@@ -161,6 +161,9 @@ def getProjectInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId,
         connectionItems = topLevel_dict.get(item)  
         for connectionItem in connectionItems:
           if re.match("azdoOrgServiceURL", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("subscriptionName", connectionItem):
             print(connectionItem, " is: ", connectionItems.get(connectionItem))
             varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
           if re.match("clientName", connectionItem):
@@ -233,8 +236,8 @@ print("depfunc.tenant_id  is: ", depfunc.tenant_id)
 #print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
 #print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
 #print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
-print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
-print("depfunc.subscription_name is: ", depfunc.subscription_name)
+#print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
+#print("depfunc.subscription_name is: ", depfunc.subscription_name)
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # HOW SHOULD SECRETS FILES BE MANAGED?  foundationSecretsFile  awsCredFile
@@ -276,7 +279,7 @@ createBackendConfigFileTerraform( call_to_project_dir )
 backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
 initBackendProjectCommand = initCommand + backendProjectConfig
 print("initBackendProjectCommand is: ", initBackendProjectCommand)
-projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.azuredevops_subscription_name )
+projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id )
 print("projectVars is: ", projectVars)
 applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
 
