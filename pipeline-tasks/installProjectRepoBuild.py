@@ -278,6 +278,11 @@ initBackendProjectCommand = initCommand + backendProjectConfig
 print("initBackendProjectCommand is: ", initBackendProjectCommand)
 projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.azuredevops_subscription_name )
 print("projectVars is: ", projectVars)
+applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
+
+depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
+depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
+
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
