@@ -94,7 +94,7 @@ def copyContentsOfDirectoryRecursively(src, dst, symlinks=False, ignore=None):
 #, backup ='.bak'
 import fileinput 
 def changePointerLineInCallToModule(fileName, searchTerm, newPointerLine): 
-  with fileinput.FileInput(filename, inplace = True) as f: 
+  with fileinput.FileInput(fileName, inplace = True) as f: 
     for line in f: 
       if searchTerm in line: 
         print(newPointerLine, end ='\n') 
@@ -171,7 +171,7 @@ copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, sym
 
 print("Now going to change main.tf to point the call to the correct module directory.  ")
 newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
-filename = call_to_project_dir + "/main.tf"
+fileName = call_to_project_dir + "/main.tf"
 searchTerm = "/modules/azure-devops-project"  
 changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
 
