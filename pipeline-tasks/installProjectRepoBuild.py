@@ -138,14 +138,16 @@ print("depfunc.subscription_name is: ", depfunc.subscription_name)
 # STILL NEED TO CREATE: depfunc.getProjectRepoBuildInputs(...)  AND depfunc.getProjectRepoBuildBackendConfig(...)
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-##############################################################################################
-### Step Three: Get Project Name from YAML
-##############################################################################################
+##########################################################################################################
+### Step Three: Get Project Name from YAML.  Then instantiate call to project module for this project by 
+###             creating new instance directory and copying the call template into the new directory.
+##########################################################################################################
 
 project_name = getProjectName(myYamlInputFile)
 #Create new directory for call to this specific project
 call_name = "call-to-" + project_name  
-call_to_project_dir = acmRootDir+"calls-to-modules/instances/"+call_name
+project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+call_to_project_dir = project_calls_root+call_name  
 print("call_to_project_dir is: ", call_to_project_dir)
 if not os.path.exists(call_to_project_dir):
     os.makedirs(call_to_project_dir)
@@ -153,12 +155,26 @@ if not os.path.exists(call_to_project_dir):
 deleteContentsOfDirectoryRecursively(call_to_project_dir)
 print("Now confirming that directory is empty before moving on.  ")
 deleteContentsOfDirectoryRecursively(call_to_project_dir)
-
+print("Now going to copy the template of the call to the project module into the new instance directory.")
 sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
-
 copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None)
 
+print("Now going to change main.tf to point the call to the correct module directory.  ")
+#correct relative file reference
+newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
 
+# python3 code to search text in line and replace that line with other line in file 
+import fileinput 
+
+filename = call_to_project_dir + "/main.tf"
+searchTerm = "/modules/azure-devops-project"  
+
+with fileinput.FileInput(filename, inplace = True, backup ='.bak') as f: 
+    for line in f: 
+        if searchTerm in line: 
+            print(newPointerLine, end ='\n') 
+        else: 
+            print(line, end ='') 
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
