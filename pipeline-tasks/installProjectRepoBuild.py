@@ -38,7 +38,7 @@ def deleteContentsOfDirectoryRecursively(call_to_project_dir):
     if [f for f in os.listdir(call_to_project_dir) if not f.startswith('.')] == []:  
         print(call_to_project_dir, " is empty. ")  
     else: 
-        print(call_to_project_dir, " is NOT empty.  Deleting contents now, but consider backup strategy in case you do not want this auto-delete in your processes.  ")  
+        print(call_to_project_dir, " is NOT empty.  Deleting contents now, but consider backup strategy in case you do not want this auto-delete in your processes.  Currently, YAML input files are the source of truth for this demo.  You must decide where you want the source of truth to be in your system.  ")  
         for the_file in os.listdir(call_to_project_dir):
             file_path = os.path.join(call_to_project_dir, the_file)
             try:
@@ -47,6 +47,50 @@ def deleteContentsOfDirectoryRecursively(call_to_project_dir):
                 elif os.path.isdir(file_path): shutil.rmtree(file_path)
             except Exception as e:
                 print(e)
+
+import os
+#from shutil import *
+def copyContentsOfDirectoryRecursively(src, dst, symlinks=False, ignore=None):
+    names = os.listdir(src)
+    if ignore is not None:
+        ignored_names = ignore(src, names)
+    else:
+        ignored_names = set()
+
+    if not os.path.isdir(dst): # This one line does the trick
+        os.makedirs(dst)
+    errors = []
+    for name in names:
+        if name in ignored_names:
+            continue
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        try:
+            if symlinks and os.path.islink(srcname):
+                linkto = os.readlink(srcname)
+                os.symlink(linkto, dstname)
+            elif os.path.isdir(srcname):
+                copytree(srcname, dstname, symlinks, ignore)
+            else:
+                # Will raise a SpecialFileError for unsupported file types
+                copy2(srcname, dstname)
+        # catch the Error from the recursive copytree so that we can
+        # continue with other files
+        except Error, err:
+            errors.extend(err.args[0])
+        except EnvironmentError, why:
+            errors.append((srcname, dstname, str(why)))
+    try:
+        copystat(src, dst)
+    except OSError, why:
+        if WindowsError is not None and isinstance(why, WindowsError):
+            # Copying file access times may fail on Windows
+            pass
+        else:
+            errors.extend((src, dst, str(why)))
+    if errors:
+        raise Error, errors
+
 
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
@@ -110,6 +154,12 @@ if not os.path.exists(call_to_project_dir):
 deleteContentsOfDirectoryRecursively(call_to_project_dir)
 print("Now confirming that directory is empty before moving on.  ")
 deleteContentsOfDirectoryRecursively(call_to_project_dir)
+
+sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
+
+copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None):
+
+
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
