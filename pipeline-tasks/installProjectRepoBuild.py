@@ -90,6 +90,16 @@ def copyContentsOfDirectoryRecursively(src, dst, symlinks=False, ignore=None):
     if errors:
         raise Exception(errors)
 
+# python3 code to search text in line and replace that line with other line in file 
+#, backup ='.bak'
+import fileinput 
+def changePointerLineInCallToModule(fileName, searchTerm, newPointerLine): 
+  with fileinput.FileInput(filename, inplace = True) as f: 
+    for line in f: 
+      if searchTerm in line: 
+        print(newPointerLine, end ='\n') 
+      else: 
+        print(line, end ='') 
 
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
@@ -160,21 +170,10 @@ sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"
 copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None)
 
 print("Now going to change main.tf to point the call to the correct module directory.  ")
-#correct relative file reference
 newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
-
-# python3 code to search text in line and replace that line with other line in file 
-import fileinput 
-
 filename = call_to_project_dir + "/main.tf"
 searchTerm = "/modules/azure-devops-project"  
-
-with fileinput.FileInput(filename, inplace = True, backup ='.bak') as f: 
-    for line in f: 
-        if searchTerm in line: 
-            print(newPointerLine, end ='\n') 
-        else: 
-            print(line, end ='') 
+changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
