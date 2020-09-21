@@ -87,8 +87,8 @@ project_name = getProjectName(myYamlInputFile)
 call_name = "call-to-" + project_name  
 call_to_project_dir = acmRootDir+"calls-to-modules/instances/"+call_name
 print("call_to_project_dir is: ", call_to_project_dir)
-if not os.path.exists('call_to_project_dir'):
-    os.makedirs('call_to_project_dir')
+if not os.path.exists(call_to_project_dir):
+    os.makedirs(call_to_project_dir)
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
