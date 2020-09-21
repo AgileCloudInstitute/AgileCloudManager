@@ -101,6 +101,102 @@ def changePointerLineInCallToModule(fileName, searchTerm, newPointerLine):
       else: 
         print(line, end ='') 
 
+def getProjectBackendConfig(yamlInputFile, awsCredFile):
+  varsString = ''
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
+  projectName = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("projectRepoBuild", item):
+        prbItems = topLevel_dict.get(item)
+        for prbItem in prbItems: 
+          if re.match("projectName", prbItem):
+            projectName = prbItems.get(prbItem)
+      if re.match("awsBackendTF", item):
+        awsBackendItems = topLevel_dict.get(item)
+        for awsBackendItem in awsBackendItems: 
+          if re.match("awsPublicAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsPublicAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("awsSecretAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsSecretAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("s3BucketNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"bucket=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("s3BucketRegionTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"region=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("dynamoDbTableNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("moduleKeyProject", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            keyVal = awsBackendItems.get(awsBackendItem) + projectName + ".tfstate"
+            varsString = varsString + " -backend-config \"key=" + keyVal +"\""  
+  #REPLACE THE FOLLOWING BLOCK WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
+  print("varsString is: ", varsString)
+  return varsString
+
+def getProjectInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId, tenantId, subscriptionName):  
+  print("inside getProjectsReposBuildInputs(...,...,...) function.")
+  varsString = ''
+  azdoOrgPAT = ''
+  clientSecret = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      print("item is: ", item)
+      if re.match("azdoConnection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("azdoOrgServiceURL", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientName", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("clientId", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("azdoOrgPAT", connectionItem):
+            azdoOrgPAT = connectionItems.get(connectionItem)
+          if re.match("clientSecret", connectionItem):
+            clientSecret = connectionItems.get(connectionItem)
+      if re.match("projectRepoBuild", item):
+        projectRepoBuild = topLevel_dict.get(item)
+        for prbItem in projectRepoBuild:
+          if re.match("projectName", prbItem):
+            print(prbItem, " is: ", projectRepoBuild.get(prbItem))
+            varsString = varsString + " -var=\""+ prbItem + "=" + projectRepoBuild.get(prbItem) +"\""  
+  if len(subscriptionId) > 2: 
+    varsString = varsString + " -var=\"subscriptionId=" + subscriptionId +"\""  
+  if len(tenantId) > 2: 
+    varsString = varsString + " -var=\"tenantId=" + tenantId +"\""  
+  if len(subscriptionName) > 2: 
+    varsString = varsString + " -var=\"subscriptionName=" + subscriptionName +"\""  
+  if len(azdoOrgPAT)>2 or len(clientSecret)>2 :  
+    with open(prbSecretsFile, "w") as file:
+      if len(azdoOrgPAT) > 2:
+        lineToAdd = "azdoOrgPAT=\""+azdoOrgPAT +"\"\n"
+        file.write(lineToAdd)
+      if len(clientSecret) > 2: 
+        lineToAdd = "clientSecret=\""+clientSecret +"\"\n"
+        file.write(lineToAdd)
+    varsString = varsString + " -var-file=\""+ prbSecretsFile +"\""
+  print("varsString is: ", varsString)
+  return varsString
+
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
 ##############################################################################################
@@ -113,7 +209,6 @@ myYamlInputFile = yamlConfigDir + YamlPRBFileName
 print("myYamlInputFile is: ", myYamlInputFile)  
     
 #foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
-prbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/prb-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/agile-cloud/.aws/credentials'
@@ -135,9 +230,9 @@ depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
 print("depfunc.subscription_id  is: ", depfunc.subscription_id)
 print("depfunc.tenant_id  is: ", depfunc.tenant_id)
-print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
-print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
-print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
+#print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
+#print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
+#print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
 print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
 print("depfunc.subscription_name is: ", depfunc.subscription_name)
 
@@ -154,6 +249,8 @@ print("depfunc.subscription_name is: ", depfunc.subscription_name)
 ##########################################################################################################
 
 project_name = getProjectName(myYamlInputFile)
+projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
+
 #Create new directory for call to this specific project
 call_name = "call-to-" + project_name  
 project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
@@ -174,6 +271,13 @@ newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
 fileName = call_to_project_dir + "/main.tf"
 searchTerm = "/modules/azure-devops-project"  
 changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
+print("Now going to create the terraform.tf file that will point to the remote backend. ")
+createBackendConfigFileTerraform( call_to_project_dir )
+backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
+initBackendProjectCommand = initCommand + backendProjectConfig
+print("initBackendProjectCommand is: ", initBackendProjectCommand)
+projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.azuredevops_subscription_name )
+print("projectVars is: ", projectVars)
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
