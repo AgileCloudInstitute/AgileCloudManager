@@ -65,7 +65,7 @@ print("depfunc.subscription_name is: ", depfunc.subscription_name)
 ##############################################################################################
 ### Step Three: Get Project Name from YAML
 ##############################################################################################
-
+import re
 def getProjectName(yamlInputFile):
   print("inside getProjectName(...) function.")
   projectName = ''
@@ -86,6 +86,7 @@ project_name = getProjectName(myYamlInputFile)
 #Create new directory for call to this specific project
 call_name = "call-to-" + project_name  
 call_to_project_dir = acmRootDir+"calls-to-modules/instances/"+call_name
+print("call_to_project_dir is: ", call_to_project_dir)
 if not os.path.exists('call_to_project_dir'):
     os.makedirs('call_to_project_dir')
 
