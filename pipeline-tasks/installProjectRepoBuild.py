@@ -321,8 +321,48 @@ def createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplat
   fileName = call_to_project_dir + "/main.tf"
   changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
   print("Now going to create the terraform.tf file that will point to the remote backend. ")
-  createBackendConfigFileTerraform( call_to_project_dir )
+  createBackendConfigFileTerraform( call_to_project_dir )  
+  
+def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, initCommand, project_name): 
+  crudCommand = '' 
+  if operation == "apply":
+    crudCommand = 'terraform apply -auto-approve '
+  elif operation == "destroy":
+    crudCommand = 'terraform destroy -auto-approve '
+  else:
+    print("INVALID OPERATION.  The only acceptable values are \"apply\" or \"destroy\" . ")
+    sys.exit(1)
+  if len(sourceReposList) > 0:
+    print(len(sourceReposList), " source repository URLs were imported from YAML input.  Going to process each now.  ")
+    for sourceRepo in sourceReposList:
+      print("sourceRepo before call to getRepoName() is: ", sourceRepo)
+      nameOfRepo = getRepoName(sourceRepo)
+      print("nameOfRepo returned by getNameRepo() is: ", nameOfRepo)
+      #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      call_name = "call-to-" + nameOfRepo  
+      call_to_repobuild_dir = project_calls_root+ "repo-builds/" + call_name  
+      print("call_to_repobuild_dir is: ", call_to_repobuild_dir)
+      sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-repo-build/"
+      newPointerLine="  source = \"../../../../../../modules/azure-devops-repo-build/\""
+      searchTerm = "/modules/azure-devops-repo-build"
+      createInstanceOfTemplateCallToModule(call_to_repobuild_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
+      #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      backendConfigRepo = getRepoBuildBackendConfig(nameOfRepo, myYamlInputFile, awsCredFile)
+      print("backendConfigRepo is: ", backendConfigRepo)
+      initBackendRepoBuildCommand = initCommand + backendConfigRepo
+      print("initBackendRepoBuildCommand is: ", initBackendRepoBuildCommand)
+      rbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-'+ nameOfRepo + '-repoBuild-secrets.tfvars'
+      inputsRepoBuild = getRepoBuildInputs(myYamlInputFile, awsCredFile, rbSecretsFile, project_name, sourceRepo, nameOfRepo)
+      print("inputsRepoBuild is: ", inputsRepoBuild)
+      crudRepoBuildCommand = crudCommand + inputsRepoBuild
+      print("crudRepoBuildCommand is: ", crudRepoBuildCommand)
+      depfunc.runTerraformCommand(initBackendRepoBuildCommand, call_to_repobuild_dir)
+      depfunc.runTerraformCommand(crudRepoBuildCommand, call_to_repobuild_dir)
+      print("........................................................................................................")
+  else:
+    print("Zero source repository URLs were imported from the YAML input.  ")
 
+  
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
 ##############################################################################################
@@ -411,39 +451,7 @@ depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
 ##########################################################################################################
 sourceReposList = getListOfSourceRepos(myYamlInputFile)  
 print("sourceReposList is: ", sourceReposList)  
-
-if len(sourceReposList) > 0:
-  print(len(sourceReposList), " source repository URLs were imported from YAML input.  Going to process each now.  ")
-  for sourceRepo in sourceReposList:
-    print("sourceRepo before call to getRepoName() is: ", sourceRepo)
-    nameOfRepo = getRepoName(sourceRepo)
-    print("nameOfRepo returned by getNameRepo() is: ", nameOfRepo)
-    #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    call_name = "call-to-" + nameOfRepo  
-    call_to_repobuild_dir = project_calls_root+ "repo-builds/" + call_name  
-    print("call_to_repobuild_dir is: ", call_to_repobuild_dir)
-    sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-repo-build/"
-    newPointerLine="  source = \"../../../../../../modules/azure-devops-repo-build/\""
-    searchTerm = "/modules/azure-devops-repo-build"
-    createInstanceOfTemplateCallToModule(call_to_repobuild_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
-    #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    backendConfigRepo = getRepoBuildBackendConfig(nameOfRepo, myYamlInputFile, awsCredFile)
-    print("backendConfigRepo is: ", backendConfigRepo)
-    initBackendRepoBuildCommand = initCommand + backendConfigRepo
-    print("initBackendRepoBuildCommand is: ", initBackendRepoBuildCommand)
-
-    rbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-'+ nameOfRepo + '-repoBuild-secrets.tfvars'
-    inputsRepoBuild = getRepoBuildInputs(myYamlInputFile, awsCredFile, rbSecretsFile, project_name, sourceRepo, nameOfRepo)
-    print("inputsRepoBuild is: ", inputsRepoBuild)
-    applyRepoBuildCommand = 'terraform apply -auto-approve ' + inputsRepoBuild
-    print("applyRepoBuildCommand is: ", applyRepoBuildCommand)
-
-    depfunc.runTerraformCommand(initBackendRepoBuildCommand, call_to_repobuild_dir)
-    depfunc.runTerraformCommand(applyRepoBuildCommand, call_to_repobuild_dir)
-
-    print("........................................................................................................")
-else:
-  print("Zero source repository URLs were imported from the YAML input.  ")
+manageRepoBuilds("apply", sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, initCommand, project_name)
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
