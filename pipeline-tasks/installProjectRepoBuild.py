@@ -339,23 +339,23 @@ print("myYamlInputFile is: ", myYamlInputFile)
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/agile-cloud/.aws/credentials'
 
-# ##############################################################################################
-# ### Step Two: Get Output from The azure-pipelines-foundation-demo module
-# ##############################################################################################
-# initCommand='terraform init '
-# backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
-# initBackendFoundationCommand = initCommand + backendFoundationConfig
+##############################################################################################
+### Step Two: Get Output from The azure-pipelines-foundation-demo module
+##############################################################################################
+initCommand='terraform init '
+backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
+initBackendFoundationCommand = initCommand + backendFoundationConfig
 
-# outputCommand = 'terraform output '
-# #Environment variable set during cloud-init instantiation
+outputCommand = 'terraform output '
+#Environment variable set during cloud-init instantiation
 acmRootDir=os.environ['ACM_ROOT_DIR']
-# pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
+pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
   
-# depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
-# depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
+depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
+depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
-# print("depfunc.subscription_id  is: ", depfunc.subscription_id)
-# print("depfunc.tenant_id  is: ", depfunc.tenant_id)
+print("depfunc.subscription_id  is: ", depfunc.subscription_id)
+print("depfunc.tenant_id  is: ", depfunc.tenant_id)
 # #print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
 # #print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
 # #print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
@@ -377,8 +377,9 @@ acmRootDir=os.environ['ACM_ROOT_DIR']
 
 project_name = getProjectName(myYamlInputFile)
 projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
-call_name = "call-to-" + project_name  
 project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+
+call_name = "call-to-" + project_name  
 call_to_project_dir = project_calls_root+call_name  
 print("call_to_project_dir is: ", call_to_project_dir)
 sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
@@ -386,24 +387,24 @@ newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
 searchTerm = "/modules/azure-devops-project"  
 createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
 
-# ##########################################################################################################
-# ### Step Four:  Init and Apply the Project
-# ##########################################################################################################
+##########################################################################################################
+### Step Four:  Init and Apply the Project
+##########################################################################################################
 
-# backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
-# initBackendProjectCommand = initCommand + backendProjectConfig
-# print("initBackendProjectCommand is: ", initBackendProjectCommand)
-# projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id )
-# print("projectVars is: ", projectVars)
-# applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
+backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
+initBackendProjectCommand = initCommand + backendProjectConfig
+print("initBackendProjectCommand is: ", initBackendProjectCommand)
+projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id )
+print("projectVars is: ", projectVars)
+applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
 
-# depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
-# #Uncomment the following when you want to create
-# depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
+depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
+#Uncomment the following when you want to create
+depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
 
-# #Comment out the following when you do not want to delete.
-# #destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
-# #depfunc.runTerraformCommand(destroyProjectCommand, call_to_project_dir)
+#Comment out the following when you do not want to delete.
+#destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
+#depfunc.runTerraformCommand(destroyProjectCommand, call_to_project_dir)
 
 ##########################################################################################################
 ### Step Five:  Get list of source repositories
@@ -417,11 +418,29 @@ if len(sourceReposList) > 0:
     print("sourceRepo before call to getRepoName() is: ", sourceRepo)
     nameOfRepo = getRepoName(sourceRepo)
     print("nameOfRepo returned by getNameRepo() is: ", nameOfRepo)
+    #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    call_name = "call-to-" + nameOfRepo  
+    call_to_repobuild_dir = project_calls_root+ "repo-builds/" + call_name  
+    print("call_to_repobuild_dir is: ", call_to_repobuild_dir)
+    sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-repo-build/"
+    newPointerLine="  source = \"../../../../../../modules/azure-devops-repo-build/\""
+    searchTerm = "/modules/azure-devops-repo-build"
+    createInstanceOfTemplateCallToModule(call_to_repobuild_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
+    #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     backendConfigRepo = getRepoBuildBackendConfig(nameOfRepo, myYamlInputFile, awsCredFile)
     print("backendConfigRepo is: ", backendConfigRepo)
+    initBackendRepoBuildCommand = initCommand + backendConfigRepo
+    print("initBackendRepoBuildCommand is: ", initBackendRepoBuildCommand)
+
     rbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-'+ nameOfRepo + '-repoBuild-secrets.tfvars'
     inputsRepoBuild = getRepoBuildInputs(myYamlInputFile, awsCredFile, rbSecretsFile, project_name, sourceRepo, nameOfRepo)
     print("inputsRepoBuild is: ", inputsRepoBuild)
+    applyRepoBuildCommand = 'terraform apply -auto-approve ' + inputsRepoBuild
+    print("applyRepoBuildCommand is: ", applyRepoBuildCommand)
+
+    depfunc.runTerraformCommand(initBackendRepoBuildCommand, call_to_repobuild_dir)
+    depfunc.runTerraformCommand(applyRepoBuildCommand, call_to_repobuild_dir)
+
     print("........................................................................................................")
 else:
   print("Zero source repository URLs were imported from the YAML input.  ")
