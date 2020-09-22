@@ -7,7 +7,7 @@ resource "azuredevops_git_repository" "repository" {
     init_type = "Uninitialized"
   }
   provisioner "local-exec" {
-    command = "az repos import create --git-source-url \"${var.sourceRepo}\" --repository \"${azuredevops_git_repository.repository.name}\" --organization \"${var.azdoOrgServiceURL}\" --project \"${data.azuredevops_project.p.name}\""
+    command = "az repos import create --git-source-url \"${var.sourceRepo}\" --repository \"${azuredevops_git_repository.repository.name}\" --organization \"${var.azdoOrgServiceURL}\" --project \"${var.projectName}\""
     working_dir = "/home/agile-cloud/cloned-repos/agile-cloud-manager/pipeline-tasks/"
   }
 }
