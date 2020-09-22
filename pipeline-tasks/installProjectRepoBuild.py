@@ -373,11 +373,11 @@ YamlPRBFileName=sys.argv[1]
 yamlConfigDir = '/home/agile-cloud/staging/'  
 myYamlInputFile = yamlConfigDir + YamlPRBFileName  
 print("myYamlInputFile is: ", myYamlInputFile)  
-    
-# #foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/agile-cloud/.aws/credentials'
+#Environment variable set during cloud-init instantiation
+acmRootDir=os.environ['ACM_ROOT_DIR']
 
 ##############################################################################################
 ### Step Two: Get Output from The azure-pipelines-foundation-demo module
@@ -387,8 +387,6 @@ backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, aw
 initBackendFoundationCommand = initCommand + backendFoundationConfig
 
 outputCommand = 'terraform output '
-#Environment variable set during cloud-init instantiation
-acmRootDir=os.environ['ACM_ROOT_DIR']
 pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
   
 depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
@@ -396,18 +394,6 @@ depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
 print("depfunc.subscription_id  is: ", depfunc.subscription_id)
 print("depfunc.tenant_id  is: ", depfunc.tenant_id)
-# #print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
-# #print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
-# #print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
-# #print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
-# #print("depfunc.subscription_name is: ", depfunc.subscription_name)
-
-# #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# # HOW SHOULD SECRETS FILES BE MANAGED?  foundationSecretsFile  awsCredFile
-# # HOW SHOULD MULTIPLE PROJECTREPOBUILD DEFINITIONS BE MANAGED?
-# # HOW SHOULD MULTIPLE BACKENDS BE MANAGED?  
-# # STILL NEED TO CREATE: depfunc.getProjectRepoBuildInputs(...)  AND depfunc.getProjectRepoBuildBackendConfig(...)
-# #//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ##########################################################################################################
 ### Step Three: Get Project Name from YAML.  
@@ -442,49 +428,23 @@ depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
 #Uncomment the following when you want to create
 depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
 
+
+##########################################################################################################
+### Step Five:  Get list of source repositories, then instantiate repos and builds for each source repo
+##########################################################################################################
+sourceReposList = getListOfSourceRepos(myYamlInputFile)  
+print("sourceReposList is: ", sourceReposList)  
+#Toggle the crudOperation values to either apply or destroy.  Note to destroy any repo-builds before destroying the parent project.  
+crudOperation = "apply"
+#crudOperation = "destroy"
+manageRepoBuilds(crudOperation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, initCommand, project_name)
+
 #Comment out the following when you do not want to delete.
 #destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
 #depfunc.runTerraformCommand(destroyProjectCommand, call_to_project_dir)
 
-##########################################################################################################
-### Step Five:  Get list of source repositories
-##########################################################################################################
-sourceReposList = getListOfSourceRepos(myYamlInputFile)  
-print("sourceReposList is: ", sourceReposList)  
-manageRepoBuilds("apply", sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, initCommand, project_name)
 
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-# ##############################################################################################
-# ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
-# ##############################################################################################
-
-# prbBackendConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-# prbInputs = depfunc.getProjectsReposBuildInputs(myYamlInputFile, awsCredFile, prbSecretsFile, depfunc.subscription_id, depfunc.tenant_id, depfunc.resourceGroupLocation, depfunc.resourceGroupName, depfunc.pipeSubnetId, depfunc.subscription_name )  
-  
-# print("prbBackendConfig is: ", prbBackendConfig)  
-# print("prbInputs is: ", prbInputs)  
-  
-# applyCommand='terraform apply -auto-approve'
-# applyPrbCommand=applyCommand+prbInputs
-# pathToPrbCalls = acmRootDir+"calls-to-modules/azure-pipelines-project-repo-build-resources/"
-# ## print ('prbVars is: :', prbVars )
-  
-# ################################################################################################ 
-# ### Step Three: Prepare the backend config for the azure-pipelines-project-repo-build-resources module
-# ##############################################################################################
-# ## backendPrbConfig = depfunc.getProjectRepoBuildBackendConfig(myYamlInputFile, awsCredFile)
-# initPrbCommand = initCommand + prbBackendConfig
-# ## print("backendPrbConfig is: ", backendPrbConfig)
-
-# ##############################################################################################
-# ### Step Five: Initialize the Terraform backend for the azure-pipelines-project-repo-build-resources module
-# ##############################################################################################
-# depfunc.runTerraformCommand(initPrbCommand, pathToPrbCalls)
-# depfunc.runTerraformCommand(applyPrbCommand, pathToPrbCalls)
-# print("Back in installProjectRepoBuild.py .")
-# #About to remove prbSecrets file so that it can be refreshed every time it is used, and thus avoid cross-contamination with other prb variants.  
+##Destroy stuff.  Keeping the following line for now to remind us to later go throu and make sure every item is 
+##destroyed after use so that everything must always be recreated by automation.    
 # os.remove(prbSecretsFile)  
   
