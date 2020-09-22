@@ -32,6 +32,25 @@ def getProjectName(yamlInputFile):
   print("projectName is: ", projectName)
   return projectName
 
+def getListOfSourceRepos(yamlInputFile):
+  print("inside getListOfSourceRepos(...) function.")
+  reposList = []
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      #print("item is: ", item)
+      if re.match("projectRepoBuild", item):
+        projectRepoBuild = topLevel_dict.get(item)
+        for prbItem in projectRepoBuild:
+          if re.match("sourceRepositories", prbItem):
+            sourceRepositories = projectRepoBuild.get(prbItem)
+            for sourceRepo in sourceRepositories:
+              print("sourceRepo is: ", sourceRepo)
+              #print(sourceRepositories.get(sourceRepo))
+              reposList.append(sourceRepo)
+  print("reposList is: ", reposList)
+  return reposList
+
 import shutil
 
 def deleteContentsOfDirectoryRecursively(call_to_project_dir):  
@@ -198,6 +217,98 @@ def getProjectInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId,
   print("varsString is: ", varsString)
   return varsString
 
+def getRepoName(repoURL):
+  repoName = repoURL.replace(" ", "")
+  if repoName.endswith('.git'):
+    repoName = repoName[:-4]
+  repoName = repoName.rpartition('/')[2]
+  print("repoName after cleaning is: ", repoName)
+  return repoName
+
+def getRepoBuildBackendConfig(repoName, yamlInputFile, awsCredFile):
+  varsString = ''
+  awsPublicAccessKey = ''
+  awsSecretAccessKey = ''
+  projectName = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match("projectRepoBuild", item):
+        prbItems = topLevel_dict.get(item)
+        for prbItem in prbItems: 
+          if re.match("projectName", prbItem):
+            projectName = prbItems.get(prbItem)
+      if re.match("awsBackendTF", item):
+        awsBackendItems = topLevel_dict.get(item)
+        for awsBackendItem in awsBackendItems: 
+          if re.match("awsPublicAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsPublicAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("awsSecretAccessKey", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            awsSecretAccessKey = awsBackendItems.get(awsBackendItem)
+          if re.match("s3BucketNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"bucket=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("s3BucketRegionTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"region=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("dynamoDbTableNameTF", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            varsString = varsString + " -backend-config \"dynamodb_table=" + awsBackendItems.get(awsBackendItem) +"\""  
+          if re.match("moduleKeyProject", awsBackendItem):
+            print(awsBackendItem, " is: ", awsBackendItems.get(awsBackendItem))
+            keyRoot = awsBackendItems.get(awsBackendItem)
+            if keyRoot[-1:] == "/":
+              print("keyRoot ends with valid character. ")
+            else: 
+              print("About to add / to end of keyRoot.  ")
+              keyRoot = keyRoot + "/"
+            keyVal = keyRoot + projectName + "/repos/" + repoName + ".tfstate"
+            varsString = varsString + " -backend-config \"key=" + keyVal +"\""  
+  #REPLACE THE FOLLOWING BLOCK WITH MORE ADVANCED VERSION CAPABLE OF HANDLING MULTIPLE ACCOUNTS
+  if ((len(awsPublicAccessKey) > 3) and (len(awsSecretAccessKey) > 3)):  
+    with open(awsCredFile, "w") as file:
+      lineToAdd = '[default]\n'
+      file.write(lineToAdd)
+      lineToAdd = "aws_access_key_id="+awsPublicAccessKey+"\n"
+      file.write(lineToAdd)
+      lineToAdd = "aws_secret_access_key="+awsSecretAccessKey+"\n"
+      file.write(lineToAdd)
+  print("varsString is: ", varsString)
+  return varsString
+
+def getRepoBuildInputs(yamlInputFile, awsCredFile, rbSecretsFile, projectName, sourceRepo, repoName):
+  print("inside getRepoBuildInputs(...,...,...) function.")
+  buildName = repoName
+  varsString = ''
+  azdoOrgPAT = ''
+  with open(yamlInputFile) as f:
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      print("item is: ", item)
+      if re.match("azdoConnection", item):  
+        connectionItems = topLevel_dict.get(item)  
+        for connectionItem in connectionItems:
+          if re.match("azdoOrgServiceURL", connectionItem):
+            print(connectionItem, " is: ", connectionItems.get(connectionItem))
+            varsString = varsString + " -var=\""+ connectionItem + "=" + connectionItems.get(connectionItem) +"\""  
+          if re.match("azdoOrgPAT", connectionItem):
+            azdoOrgPAT = connectionItems.get(connectionItem)
+  varsString = varsString + " -var=\"projectName=" + projectName +"\""  
+  varsString = varsString + " -var=\"sourceRepo=" + sourceRepo +"\""  
+  varsString = varsString + " -var=\"repoName=" + repoName +"\""  
+  varsString = varsString + " -var=\"buildName=" + buildName +"\""  
+  if len(azdoOrgPAT)>2 :  
+    with open(rbSecretsFile, "w") as file:
+      if len(azdoOrgPAT) > 2:
+        lineToAdd = "azdoOrgPAT=\""+azdoOrgPAT +"\"\n"
+        file.write(lineToAdd)
+    varsString = varsString + " -var-file=\""+ rbSecretsFile +"\""
+  print("varsString is: ", varsString)
+  return varsString
+
+
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
 ##############################################################################################
@@ -209,86 +320,116 @@ yamlConfigDir = '/home/agile-cloud/staging/'
 myYamlInputFile = yamlConfigDir + YamlPRBFileName  
 print("myYamlInputFile is: ", myYamlInputFile)  
     
-#foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
+# #foundationSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/foundation-secrets.tfvars'
 
 #The awsCredFile is for the terraform backend that will store state for the azure infrastructure created for the agile cloud manager.
 awsCredFile = '/home/agile-cloud/.aws/credentials'
 
-##############################################################################################
-### Step Two: Get Output from The azure-pipelines-foundation-demo module
-##############################################################################################
-initCommand='terraform init '
-backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
-initBackendFoundationCommand = initCommand + backendFoundationConfig
+# ##############################################################################################
+# ### Step Two: Get Output from The azure-pipelines-foundation-demo module
+# ##############################################################################################
+# initCommand='terraform init '
+# backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
+# initBackendFoundationCommand = initCommand + backendFoundationConfig
 
-outputCommand = 'terraform output '
-#Environment variable set during cloud-init instantiation
-acmRootDir=os.environ['ACM_ROOT_DIR']
-pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
+# outputCommand = 'terraform output '
+# #Environment variable set during cloud-init instantiation
+# acmRootDir=os.environ['ACM_ROOT_DIR']
+# pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
   
-depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
-depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
+# depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
+# depfunc.runTerraformCommand(outputCommand, pathToFoundationCalls)
 
-print("depfunc.subscription_id  is: ", depfunc.subscription_id)
-print("depfunc.tenant_id  is: ", depfunc.tenant_id)
-#print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
-#print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
-#print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
-#print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
-#print("depfunc.subscription_name is: ", depfunc.subscription_name)
+# print("depfunc.subscription_id  is: ", depfunc.subscription_id)
+# print("depfunc.tenant_id  is: ", depfunc.tenant_id)
+# #print("depfunc.resourceGroupLocation  is: ", depfunc.resourceGroupLocation)
+# #print("depfunc.resourceGroupName  is: ", depfunc.resourceGroupName)
+# #print("depfunc.pipeSubnetId is: ", depfunc.pipeSubnetId)
+# #print("depfunc.azuredevops_subscription_name is: ", depfunc.azuredevops_subscription_name)
+# #print("depfunc.subscription_name is: ", depfunc.subscription_name)
 
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# HOW SHOULD SECRETS FILES BE MANAGED?  foundationSecretsFile  awsCredFile
-# HOW SHOULD MULTIPLE PROJECTREPOBUILD DEFINITIONS BE MANAGED?
-# HOW SHOULD MULTIPLE BACKENDS BE MANAGED?  
-# STILL NEED TO CREATE: depfunc.getProjectRepoBuildInputs(...)  AND depfunc.getProjectRepoBuildBackendConfig(...)
-#//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# # HOW SHOULD SECRETS FILES BE MANAGED?  foundationSecretsFile  awsCredFile
+# # HOW SHOULD MULTIPLE PROJECTREPOBUILD DEFINITIONS BE MANAGED?
+# # HOW SHOULD MULTIPLE BACKENDS BE MANAGED?  
+# # STILL NEED TO CREATE: depfunc.getProjectRepoBuildInputs(...)  AND depfunc.getProjectRepoBuildBackendConfig(...)
+# #//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-##########################################################################################################
-### Step Three: Get Project Name from YAML.  Then instantiate call to project module for this project by 
-###             creating new instance directory and copying the call template into the new directory.
-##########################################################################################################
+# ##########################################################################################################
+# ### Step Three: Get Project Name from YAML.  
+# ###             Then instantiate call to project module for this project by creating new 
+# ###                     instance directory and copying the call template into the new directory.
+# ##########################################################################################################
 
 project_name = getProjectName(myYamlInputFile)
-projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
+# projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
 
-#Create new directory for call to this specific project
-call_name = "call-to-" + project_name  
-project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
-call_to_project_dir = project_calls_root+call_name  
-print("call_to_project_dir is: ", call_to_project_dir)
-if not os.path.exists(call_to_project_dir):
-    os.makedirs(call_to_project_dir)
-#Check whether directory is empty or not.  If it is NOT empty, then delete the contents  
-deleteContentsOfDirectoryRecursively(call_to_project_dir)
-print("Now confirming that directory is empty before moving on.  ")
-deleteContentsOfDirectoryRecursively(call_to_project_dir)
-print("Now going to copy the template of the call to the project module into the new instance directory.")
-sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
-copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None)
+# #Create new directory for call to this specific project
+# call_name = "call-to-" + project_name  
+# project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+# call_to_project_dir = project_calls_root+call_name  
+# print("call_to_project_dir is: ", call_to_project_dir)
+# if not os.path.exists(call_to_project_dir):
+#     os.makedirs(call_to_project_dir)
+# #Check whether directory is empty or not.  If it is NOT empty, then delete the contents  
+# deleteContentsOfDirectoryRecursively(call_to_project_dir)
+# print("Now confirming that directory is empty before moving on.  ")
+# deleteContentsOfDirectoryRecursively(call_to_project_dir)
+# print("Now going to copy the template of the call to the project module into the new instance directory.")
+# sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
+# copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None)
 
-print("Now going to change main.tf to point the call to the correct module directory.  ")
-newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
-fileName = call_to_project_dir + "/main.tf"
-searchTerm = "/modules/azure-devops-project"  
-changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
-print("Now going to create the terraform.tf file that will point to the remote backend. ")
-createBackendConfigFileTerraform( call_to_project_dir )
-backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
-initBackendProjectCommand = initCommand + backendProjectConfig
-print("initBackendProjectCommand is: ", initBackendProjectCommand)
-projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id )
-print("projectVars is: ", projectVars)
-applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
+# print("Now going to change main.tf to point the call to the correct module directory.  ")
+# newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
+# fileName = call_to_project_dir + "/main.tf"
+# searchTerm = "/modules/azure-devops-project"  
+# changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
+# print("Now going to create the terraform.tf file that will point to the remote backend. ")
+# createBackendConfigFileTerraform( call_to_project_dir )
 
-depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
-#Uncomment the following when you want to create
-depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
+# ##########################################################################################################
+# ### Step Four:  Init and Apply the Project
+# ##########################################################################################################
 
-#Comment out the following when you do not want to delete.
-#destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
-#depfunc.runTerraformCommand(destroyProjectCommand, call_to_project_dir)
+# backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
+# initBackendProjectCommand = initCommand + backendProjectConfig
+# print("initBackendProjectCommand is: ", initBackendProjectCommand)
+# projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id )
+# print("projectVars is: ", projectVars)
+# applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
 
+# depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
+# #Uncomment the following when you want to create
+# depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
+
+# #Comment out the following when you do not want to delete.
+# #destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
+# #depfunc.runTerraformCommand(destroyProjectCommand, call_to_project_dir)
+
+##########################################################################################################
+### Step Five:  Get list of source repositories
+##########################################################################################################
+sourceReposList = getListOfSourceRepos(myYamlInputFile)  
+print("sourceReposList is: ", sourceReposList)  
+
+if len(sourceReposList) > 0:
+  print(len(sourceReposList), " source repository URLs were imported from YAML input.  Going to process each now.  ")
+  for sourceRepo in sourceReposList:
+    print("sourceRepo before call to getRepoName() is: ", sourceRepo)
+    nameOfRepo = getRepoName(sourceRepo)
+    print("nameOfRepo returned by getNameRepo() is: ", nameOfRepo)
+    backendConfigRepo = getRepoBuildBackendConfig(nameOfRepo, myYamlInputFile, awsCredFile)
+    print("backendConfigRepo is: ", backendConfigRepo)
+    rbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-'+ nameOfRepo + '-repoBuild-secrets.tfvars'
+    inputsRepoBuild = getRepoBuildInputs(myYamlInputFile, awsCredFile, rbSecretsFile, project_name, sourceRepo, nameOfRepo)
+    print("inputsRepoBuild is: ", inputsRepoBuild)
+    print("........................................................................................................")
+else:
+  print("Zero source repository URLs were imported from the YAML input.  ")
+
+#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # ##############################################################################################
 # ### Step Three: Prepare the input variables for the azure-pipelines-project-repo-build-resources module
