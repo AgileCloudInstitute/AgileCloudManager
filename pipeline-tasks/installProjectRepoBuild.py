@@ -186,8 +186,6 @@ def getProjectInputs(yamlInputFile, awsCredFile, prbSecretsFile, subscriptionId,
     varsString = varsString + " -var=\"subscriptionId=" + subscriptionId +"\""  
   if len(tenantId) > 2: 
     varsString = varsString + " -var=\"tenantId=" + tenantId +"\""  
-  if len(subscriptionName) > 2: 
-    varsString = varsString + " -var=\"subscriptionName=" + subscriptionName +"\""  
   if len(azdoOrgPAT)>2 or len(clientSecret)>2 :  
     with open(prbSecretsFile, "w") as file:
       if len(azdoOrgPAT) > 2:
@@ -284,7 +282,12 @@ print("projectVars is: ", projectVars)
 applyProjectCommand = 'terraform apply -auto-approve ' + projectVars
 
 depfunc.runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
+#Uncomment the following when you want to create
 depfunc.runTerraformCommand(applyProjectCommand, call_to_project_dir)
+
+#Comment out the following when you do not want to delete.
+#destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
+#depfunc.runTerraformCommand(destroyProjectCommand, call_to_project_dir)
 
 
 # ##############################################################################################
