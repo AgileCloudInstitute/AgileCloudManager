@@ -308,6 +308,20 @@ def getRepoBuildInputs(yamlInputFile, awsCredFile, rbSecretsFile, projectName, s
   print("varsString is: ", varsString)
   return varsString
 
+def createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine):
+  if not os.path.exists(call_to_project_dir):
+    os.makedirs(call_to_project_dir)
+  #Check whether directory is empty or not.  If it is NOT empty, then delete the contents  
+  deleteContentsOfDirectoryRecursively(call_to_project_dir)
+  print("Now confirming that directory is empty before moving on.  ")
+  deleteContentsOfDirectoryRecursively(call_to_project_dir)
+  print("Now going to copy the template of the call to the project module into the new instance directory.")
+  copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None)
+  print("Now going to change main.tf to point the call to the correct module directory.  ")
+  fileName = call_to_project_dir + "/main.tf"
+  changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
+  print("Now going to create the terraform.tf file that will point to the remote backend. ")
+  createBackendConfigFileTerraform( call_to_project_dir )
 
 ##############################################################################################
 ### Step One:  Install azure devops extension for az client
@@ -334,7 +348,7 @@ awsCredFile = '/home/agile-cloud/.aws/credentials'
 
 # outputCommand = 'terraform output '
 # #Environment variable set during cloud-init instantiation
-# acmRootDir=os.environ['ACM_ROOT_DIR']
+acmRootDir=os.environ['ACM_ROOT_DIR']
 # pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
   
 # depfunc.runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
@@ -355,37 +369,22 @@ awsCredFile = '/home/agile-cloud/.aws/credentials'
 # # STILL NEED TO CREATE: depfunc.getProjectRepoBuildInputs(...)  AND depfunc.getProjectRepoBuildBackendConfig(...)
 # #//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# ##########################################################################################################
-# ### Step Three: Get Project Name from YAML.  
-# ###             Then instantiate call to project module for this project by creating new 
-# ###                     instance directory and copying the call template into the new directory.
-# ##########################################################################################################
+##########################################################################################################
+### Step Three: Get Project Name from YAML.  
+###             Then instantiate call to project module for this project by creating new 
+###                     instance directory and copying the call template into the new directory.
+##########################################################################################################
 
 project_name = getProjectName(myYamlInputFile)
-# projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
-
-# #Create new directory for call to this specific project
-# call_name = "call-to-" + project_name  
-# project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
-# call_to_project_dir = project_calls_root+call_name  
-# print("call_to_project_dir is: ", call_to_project_dir)
-# if not os.path.exists(call_to_project_dir):
-#     os.makedirs(call_to_project_dir)
-# #Check whether directory is empty or not.  If it is NOT empty, then delete the contents  
-# deleteContentsOfDirectoryRecursively(call_to_project_dir)
-# print("Now confirming that directory is empty before moving on.  ")
-# deleteContentsOfDirectoryRecursively(call_to_project_dir)
-# print("Now going to copy the template of the call to the project module into the new instance directory.")
-# sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
-# copyContentsOfDirectoryRecursively(sourceDirOfTemplate, call_to_project_dir, symlinks=False, ignore=None)
-
-# print("Now going to change main.tf to point the call to the correct module directory.  ")
-# newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
-# fileName = call_to_project_dir + "/main.tf"
-# searchTerm = "/modules/azure-devops-project"  
-# changePointerLineInCallToModule(fileName, searchTerm, newPointerLine)
-# print("Now going to create the terraform.tf file that will point to the remote backend. ")
-# createBackendConfigFileTerraform( call_to_project_dir )
+projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
+call_name = "call-to-" + project_name  
+project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+call_to_project_dir = project_calls_root+call_name  
+print("call_to_project_dir is: ", call_to_project_dir)
+sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
+newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
+searchTerm = "/modules/azure-devops-project"  
+createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
 
 # ##########################################################################################################
 # ### Step Four:  Init and Apply the Project
