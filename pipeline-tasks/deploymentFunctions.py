@@ -1060,3 +1060,56 @@ def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInput
       print("........................................................................................................")
   else:
     print("Zero source repository URLs were imported from the YAML input.  ")
+  
+#############################################################################################################
+def getOutputFromFoundation(myYamlInputFile, awsCredFile, acmRootDir ):
+  backendFoundationConfig = getFoundationBackendConfig(myYamlInputFile, awsCredFile)
+  initBackendFoundationCommand = 'terraform init ' + backendFoundationConfig
+  outputCommand = 'terraform output '
+  pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
+  runTerraformCommand(initBackendFoundationCommand, pathToFoundationCalls)
+  runTerraformCommand(outputCommand, pathToFoundationCalls)
+  print("subscription_id  is: ", subscription_id)
+  print("tenant_id  is: ", tenant_id)
+
+def getDirectoryOfCallToProjectModule(myYamlInputFile, acmRootDir):
+  project_name = getProjectName(myYamlInputFile)
+  projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
+  project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+  call_name = "call-to-" + project_name  
+  call_to_project_dir = project_calls_root+call_name  
+  print("call_to_project_dir is: ", call_to_project_dir)
+  return call_to_project_dir
+
+def instantiateProjectCall(myYamlInputFile, acmRootDir):  
+  project_name = getProjectName(myYamlInputFile)
+  projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
+  call_to_project_dir = getDirectoryOfCallToProjectModule(myYamlInputFile, acmRootDir)
+  sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
+  newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
+  searchTerm = "/modules/azure-devops-project"  
+  depfunc.createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
+
+def manageProject(operation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile):
+  crudCommand = '' 
+  if operation == "apply":
+    crudCommand = 'terraform apply -auto-approve '
+  elif operation == "destroy":
+    crudCommand = 'terraform destroy -auto-approve '
+  else:
+    print("INVALID OPERATION.  The only acceptable values are \"apply\" or \"destroy\" . ")
+    sys.exit(1)
+  getOutputFromFoundation(myYamlInputFile, awsCredFile, acmRootDir )
+  call_to_project_dir = getDirectoryOfCallToProjectModule(myYamlInputFile, acmRootDir)
+  backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
+  initBackendProjectCommand = 'terraform init ' + backendProjectConfig
+  print("initBackendProjectCommand is: ", initBackendProjectCommand)
+  print("Confirm that sbscription_id and tenant_id have been successfully populated from foundation output: ")
+  print("subscription_id  is: ", subscription_id)
+  print("tenant_id  is: ", tenant_id)
+  projectVars = getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, subscription_id, tenant_id )
+  print("projectVars is: ", projectVars)
+  crudProjectCommand = crudCommand + projectVars
+  runTerraformCommand(initBackendProjectCommand, call_to_project_dir)
+  runTerraformCommand(crudProjectCommand, call_to_project_dir)
+
