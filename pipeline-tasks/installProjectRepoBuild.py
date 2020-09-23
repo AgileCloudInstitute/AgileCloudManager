@@ -32,10 +32,10 @@ depfunc.instantiateProjectCall(myYamlInputFile, acmRootDir)
 ##########################################################################################################
 crudOperation = "apply"
 #First Apply the Project
-depfunc.manageProject(crudOperation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile)
+depfunc.manageProject(crudOperation, myYamlInputFile, acmRootDir, awsCredFile)
 #Then Apply the Repo-Builds
 sourceReposList = depfunc.getListOfSourceRepos(myYamlInputFile)  
-depfunc.manageRepoBuilds(crudOperation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, project_name)
+depfunc.manageRepoBuilds(crudOperation, sourceReposList, myYamlInputFile, awsCredFile, acmRootDir)
 
 # ##########################################################################################################
 # ### Destroy Option
