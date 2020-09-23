@@ -1022,7 +1022,7 @@ def createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplat
   print("Now going to create the terraform.tf file that will point to the remote backend. ")
   createBackendConfigFileTerraform( call_to_project_dir )  
   
-def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, project_name): 
+def manageRepoBuilds(operation, sourceReposList, myYamlInputFile, awsCredFile, acmRootDir): 
   crudCommand = '' 
   if operation == "apply":
     crudCommand = 'terraform apply -auto-approve '
@@ -1031,6 +1031,8 @@ def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInput
   else:
     print("INVALID OPERATION.  The only acceptable values are \"apply\" or \"destroy\" . ")
     sys.exit(1)
+  project_name = getProjectName(myYamlInputFile)
+  project_calls_root = getProjectCallsRoot(myYamlInputFile, acmRootDir)
   if len(sourceReposList) > 0:
     print(len(sourceReposList), " source repository URLs were imported from YAML input.  Going to process each now.  ")
     for sourceRepo in sourceReposList:
@@ -1072,10 +1074,17 @@ def getOutputFromFoundation(myYamlInputFile, awsCredFile, acmRootDir ):
   print("subscription_id  is: ", subscription_id)
   print("tenant_id  is: ", tenant_id)
 
-def getDirectoryOfCallToProjectModule(myYamlInputFile, acmRootDir):
+def getProjectCallsRoot(myYamlInputFile, acmRootDir):
   project_name = getProjectName(myYamlInputFile)
   projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
   project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+  return project_calls_root
+
+def getDirectoryOfCallToProjectModule(myYamlInputFile, acmRootDir):
+  project_name = getProjectName(myYamlInputFile)
+  #projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
+  #project_calls_root = acmRootDir+"calls-to-modules/instances/projects/"+project_name+'/'
+  project_calls_root = getProjectCallsRoot(myYamlInputFile, acmRootDir)
   call_name = "call-to-" + project_name  
   call_to_project_dir = project_calls_root+call_name  
   print("call_to_project_dir is: ", call_to_project_dir)
@@ -1090,7 +1099,7 @@ def instantiateProjectCall(myYamlInputFile, acmRootDir):
   searchTerm = "/modules/azure-devops-project"  
   createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
 
-def manageProject(operation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile):
+def manageProject(operation, myYamlInputFile, acmRootDir, awsCredFile):
   crudCommand = '' 
   if operation == "apply":
     crudCommand = 'terraform apply -auto-approve '
@@ -1099,6 +1108,8 @@ def manageProject(operation, myYamlInputFile, acmRootDir, awsCredFile, projectSe
   else:
     print("INVALID OPERATION.  The only acceptable values are \"apply\" or \"destroy\" . ")
     sys.exit(1)
+  project_name = getProjectName(myYamlInputFile)
+  projectSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-project-secrets.tfvars'
   getOutputFromFoundation(myYamlInputFile, awsCredFile, acmRootDir )
   call_to_project_dir = getDirectoryOfCallToProjectModule(myYamlInputFile, acmRootDir)
   backendProjectConfig = getProjectBackendConfig(myYamlInputFile, awsCredFile)
