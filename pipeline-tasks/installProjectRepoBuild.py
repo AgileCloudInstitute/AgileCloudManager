@@ -37,17 +37,6 @@ depfunc.manageProject(crudOperation, myYamlInputFile, acmRootDir, awsCredFile)
 sourceReposList = depfunc.getListOfSourceRepos(myYamlInputFile)  
 depfunc.manageRepoBuilds(crudOperation, sourceReposList, myYamlInputFile, awsCredFile, acmRootDir)
 
-# ##########################################################################################################
-# ### Destroy Option
-# ##########################################################################################################
-# crudOperation = "destroy"
-# #First Destroy The Repo-Builds
-# sourceReposList = depfunc.getListOfSourceRepos(myYamlInputFile)  
-# depfunc.manageRepoBuilds(crudOperation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, project_name)
-# #Then Destroy the Project
-# manageProject(crudOperation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id)
-
-
 ##Destroy stuff.  Keeping the following line for now to remind us to later go throu and make sure every item is 
 ##destroyed after use so that everything must always be recreated by automation.    
 # os.remove(prbSecretsFile)  
