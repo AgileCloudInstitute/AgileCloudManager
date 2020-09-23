@@ -1022,7 +1022,7 @@ def createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplat
   print("Now going to create the terraform.tf file that will point to the remote backend. ")
   createBackendConfigFileTerraform( call_to_project_dir )  
   
-def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, initCommand, project_name): 
+def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, project_name): 
   crudCommand = '' 
   if operation == "apply":
     crudCommand = 'terraform apply -auto-approve '
@@ -1048,7 +1048,7 @@ def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInput
       #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       backendConfigRepo = getRepoBuildBackendConfig(nameOfRepo, myYamlInputFile, awsCredFile)
       print("backendConfigRepo is: ", backendConfigRepo)
-      initBackendRepoBuildCommand = initCommand + backendConfigRepo
+      initBackendRepoBuildCommand = 'terraform init ' + backendConfigRepo
       print("initBackendRepoBuildCommand is: ", initBackendRepoBuildCommand)
       rbSecretsFile = '/home/agile-cloud/vars/agile-cloud-manager/'+project_name+'-'+ nameOfRepo + '-repoBuild-secrets.tfvars'
       inputsRepoBuild = getRepoBuildInputs(myYamlInputFile, awsCredFile, rbSecretsFile, project_name, sourceRepo, nameOfRepo)
