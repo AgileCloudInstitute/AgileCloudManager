@@ -25,14 +25,14 @@ acmRootDir=os.environ['ACM_ROOT_DIR']
 ### Step Three: Instantiate call to project module for this project by creating new 
 ###                     instance directory and copying the call template into the new directory.
 ##########################################################################################################
-instantiateProjectCall(myYamlInputFile, acmRootDir)
+depfunc.instantiateProjectCall(myYamlInputFile, acmRootDir)
 
 ##########################################################################################################
 ### Step Four:  Apply Option
 ##########################################################################################################
 crudOperation = "apply"
 #First Apply the Project
-manageProject(crudOperation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile)
+depfunc.manageProject(crudOperation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile)
 #Then Apply the Repo-Builds
 sourceReposList = depfunc.getListOfSourceRepos(myYamlInputFile)  
 depfunc.manageRepoBuilds(crudOperation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, project_name)
