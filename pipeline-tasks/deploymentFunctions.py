@@ -1088,7 +1088,7 @@ def instantiateProjectCall(myYamlInputFile, acmRootDir):
   sourceDirOfTemplate = "../calls-to-modules/azdo-templates/azure-devops-project/"  
   newPointerLine="  source = \"../../../../../modules/azure-devops-project/\""
   searchTerm = "/modules/azure-devops-project"  
-  depfunc.createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
+  createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTemplate, searchTerm, newPointerLine)
 
 def manageProject(operation, myYamlInputFile, acmRootDir, awsCredFile, projectSecretsFile):
   crudCommand = '' 
