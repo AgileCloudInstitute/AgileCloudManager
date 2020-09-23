@@ -23,10 +23,8 @@ acmRootDir=os.environ['ACM_ROOT_DIR']
 ##############################################################################################
 ### Step Two: Get Output from The azure-pipelines-foundation-demo module
 ##############################################################################################
-initCommand='terraform init '
 backendFoundationConfig = depfunc.getFoundationBackendConfig(myYamlInputFile, awsCredFile)
-initBackendFoundationCommand = initCommand + backendFoundationConfig
-
+initBackendFoundationCommand = 'terraform init ' + backendFoundationConfig
 outputCommand = 'terraform output '
 pathToFoundationCalls = acmRootDir+"calls-to-modules/azure-pipelines-foundation-demo/"
   
@@ -59,7 +57,7 @@ depfunc.createInstanceOfTemplateCallToModule(call_to_project_dir, sourceDirOfTem
 ##########################################################################################################
 
 backendProjectConfig = depfunc.getProjectBackendConfig(myYamlInputFile, awsCredFile)
-initBackendProjectCommand = initCommand + backendProjectConfig
+initBackendProjectCommand = 'terraform init ' + backendProjectConfig
 print("initBackendProjectCommand is: ", initBackendProjectCommand)
 projectVars = depfunc.getProjectInputs(myYamlInputFile, awsCredFile, projectSecretsFile, depfunc.subscription_id, depfunc.tenant_id )
 print("projectVars is: ", projectVars)
@@ -78,7 +76,7 @@ print("sourceReposList is: ", sourceReposList)
 #Toggle the crudOperation values to either apply or destroy.  Note to destroy any repo-builds before destroying the parent project.  
 crudOperation = "apply"
 #crudOperation = "destroy"
-depfunc.manageRepoBuilds(crudOperation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, initCommand, project_name)
+depfunc.manageRepoBuilds(crudOperation, sourceReposList, project_calls_root, myYamlInputFile, awsCredFile, project_name)
 
 #Comment out the following when you do not want to delete.
 #destroyProjectCommand = 'terraform destroy -auto-approve ' + projectVars
