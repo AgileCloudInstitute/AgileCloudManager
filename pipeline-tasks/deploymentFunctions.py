@@ -1055,8 +1055,8 @@ def manageRepoBuilds(operation, sourceReposList, project_calls_root, myYamlInput
       print("inputsRepoBuild is: ", inputsRepoBuild)
       crudRepoBuildCommand = crudCommand + inputsRepoBuild
       print("crudRepoBuildCommand is: ", crudRepoBuildCommand)
-      depfunc.runTerraformCommand(initBackendRepoBuildCommand, call_to_repobuild_dir)
-      depfunc.runTerraformCommand(crudRepoBuildCommand, call_to_repobuild_dir)
+      runTerraformCommand(initBackendRepoBuildCommand, call_to_repobuild_dir)
+      runTerraformCommand(crudRepoBuildCommand, call_to_repobuild_dir)
       print("........................................................................................................")
   else:
     print("Zero source repository URLs were imported from the YAML input.  ")
