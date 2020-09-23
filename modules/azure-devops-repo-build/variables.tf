@@ -13,7 +13,7 @@ variable "projectName" { }
 variable "repoName" { }  
 variable "buildName" { }  
 
-data "azuredevops_project" "p" {  project_identifier = var.projectName  }
+data "azuredevops_project" "p" {  project_name = var.projectName  }
 
 #Use this data source to access the configuration of the azurerm provider, which you configured with the input variables above:
 #data "azurerm_client_config" "current" {}
