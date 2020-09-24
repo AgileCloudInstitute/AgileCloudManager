@@ -22,3 +22,6 @@ variable "clientSecret" { }
 variable "azdoOrgPAT" { }  
 variable "azdoOrgServiceURL" { }  
 variable "projectName" { } 
+
+output "azuredevops_service_connection_id" { value = "${module.azure-devops-project.azuredevops_service_connection_id}" }
+output "azuredevops_project_id" { value = "${module.azure-devops-project.azuredevops_project_id}" }
