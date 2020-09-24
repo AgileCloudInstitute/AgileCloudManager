@@ -24,3 +24,6 @@ variable "sourceRepo" { }
 variable "projectName" { }
 variable "repoName" { }
 variable "buildName" { }
+
+output "azuredevops_build_definition_id" { value = "${module.azure-devops-repo-build.azuredevops_build_definition_id}" }
+output "azuredevops_git_repository_name" { value = "${module.azure-devops-repo-build.azuredevops_git_repository_name}" }
