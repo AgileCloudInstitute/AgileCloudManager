@@ -31,4 +31,4 @@ environments:
         - name: Python task to Configure Jekyll
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_jekyll-devserver-aws/drop/pipeline-tasks/createJekyllStuff.py "
-          arguments: " "
+          arguments: "$(System.DefaultWorkingDirectory) "
