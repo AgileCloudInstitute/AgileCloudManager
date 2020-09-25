@@ -130,7 +130,6 @@ chown -R azureuser:azureuser /home/azureuser/terraform-download
 chown -R azureuser:azureuser /home/azureuser/agent-download
 chown -R azureuser:azureuser /home/azureuser
 
-
 ###############################################################################################
 #### Section Three: wget this from raw github url in same repo.
 ###############################################################################################
@@ -174,5 +173,8 @@ EOF
 
 pip3 install requests
 pip3 install pyyaml
+
+#Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
+chown -R azureuser:azureuser /etc/ansible
 
 echo "All done with cloud-init.  "
