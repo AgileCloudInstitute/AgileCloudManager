@@ -20,4 +20,4 @@ environments:
         - name: Python task to Destroy AWS Infrastructure
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyFoundation.py "
-          arguments: "$(keySource)  $(configFile)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(foundationKeyFileTF)  $(sgKeyFileTF)  $(vmKeyFileTF) "
+          arguments: "$(keySource)  $(configFile)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(foundationKeyFileTF)  $(sgKeyFileTF)  $(vmKeyFileTF)  $(System.DefaultWorkingDirectory)"
