@@ -180,6 +180,8 @@ def getEnvironmentData(env_idx, environment, environmentTemplateFile, deployPhas
       # print("deployPhaseDataList is:", deployPhaseDataList)
       # print("--------------------------------------------------------")
       environmentData['deployPhases'] = deployPhaseDataList 
+  print("env_idx is: ", env_idx)
+  environmentData['rank'] = env_idx
   return environmentData
 
 def getEnvironmentsDataList(environmentsList, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id):
