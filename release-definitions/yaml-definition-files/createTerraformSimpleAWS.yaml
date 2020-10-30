@@ -8,7 +8,7 @@ variables:
     configFileTest: demoConfigTest.yaml
     storageAccountNameTerraformBackend: tfbkendabc123x
 environments:
-  - name: Dev environment Creation
+  - name: Dev environ Creation
     deployPhases:
       - name: Create Dev Environment
         deploymentInput: 
@@ -23,7 +23,7 @@ environments:
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_jekyll-devserver-aws/drop/pipeline-tasks/createJekyllStuff.py "
           arguments: "$(System.DefaultWorkingDirectory) "
-  - name: Dev Environment Destruction
+  - name: Dev Environ Destruction
     deployPhases:
       - name: Destroy Dev Environment 
         deploymentInput: 
@@ -34,7 +34,7 @@ environments:
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyFoundation.py "
           arguments: "$(keySource)  $(configFileDev)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(System.DefaultWorkingDirectory)"
-  - name: Test Environment Creation
+  - name: Test Environ Creation
     deployPhases:
       - name: Create Test Environment
         deploymentInput: 
@@ -45,11 +45,11 @@ environments:
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/createFoundation.py "
           arguments: "$(keySource)  $(configFileTest)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(System.DefaultWorkingDirectory)"
-        - name: Configure Jekyll Dev Server
+        - name: Configure Apache Server
           type: Python
           scriptPath: "$(System.DefaultWorkingDirectory)/_jekyll-devserver-aws/drop/pipeline-tasks/configureApache.py "
           arguments: "$(System.DefaultWorkingDirectory) "
-  - name: Test Environment Destruction
+  - name: Test Environ Destruction
     deployPhases:
       - name: Destroy Test Environment 
         deploymentInput: 
