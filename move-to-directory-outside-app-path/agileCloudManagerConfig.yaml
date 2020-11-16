@@ -1,0 +1,26 @@
+#Manually enter the values for the input variables here, and then run a script to import them. 
+--- 
+azureMeta: 
+  subscriptionId: 
+  tenantId: 
+  pipeAzureRegion: 
+azdoConnection: 
+  azdoOrgServiceURL: 
+  clientId: 
+  clientSecret: 
+  azdoOrgPAT: 
+agents:
+  adminUser: 
+  adminPwd: 
+  pathToCloudInitScript: 
+awsBackendTF: 
+  awsPublicAccessKey: 
+  awsSecretAccessKey: 
+  s3BucketNameTF: 
+  s3BucketRegionTF: 
+  dynamoDbTableNameTF: 
+  moduleKeys:
+    - keyName: foundation
+      keyValue: 
+    - keyName: agents
+      keyValue: 
