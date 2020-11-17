@@ -1,11 +1,13 @@
 #Manually enter the values for the input variables here, and then run a script to import them. 
 --- 
 azureMeta: 
+  subscriptionName: 
   subscriptionId: 
   tenantId: 
   pipeAzureRegion: 
 azdoConnection: 
   azdoOrgServiceURL: 
+  clientName: 
   clientId: 
   clientSecret: 
   azdoOrgPAT: 
@@ -20,7 +22,7 @@ awsBackendTF:
   s3BucketRegionTF: 
   dynamoDbTableNameTF: 
   moduleKeys:
-    - keyName: foundation
-      keyValue: 
-    - keyName: agents
-      keyValue: 
+    - name: foundation
+      value: 
+    - name: agents
+      value: 
