@@ -1,0 +1,54 @@
+---
+# Defines a release definition
+name: CICD Terraform AWS Infrastructure As Code
+description: A Release Definition for creating instances of Terraform AWS Starter Kit
+variables:
+  - keySource: keyVault
+    configFileDev: demoConfigDev.yaml
+    configFileTest: demoConfigTest.yaml
+    storageAccountNameTerraformBackend: <storage-account-name>
+environments:
+  - name: Dev nviron Create
+    deployPhases:
+      - name: Create Dev Environment
+        deploymentInput: 
+        - artifactsDownloadInput:
+          - alias: _terraform-aws-starter-kit
+        workflowTasks: 
+        - name: Create Infrastructure
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/createFoundation.py "
+          arguments: "$(keySource)  $(configFileDev)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(System.DefaultWorkingDirectory)"
+  - name: Dev Environ Destroy
+    deployPhases:
+      - name: Destroy Dev Environment 
+        deploymentInput: 
+        - artifactsDownloadInput:
+          - alias: _terraform-aws-starter-kit
+        workflowTasks: 
+        - name: Destroy Infrastructure
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyFoundation.py "
+          arguments: "$(keySource)  $(configFileDev)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(System.DefaultWorkingDirectory)"
+  - name: Test Environ Create
+    deployPhases:
+      - name: Create Test Environment
+        deploymentInput: 
+        - artifactsDownloadInput:
+          - alias: _terraform-aws-starter-kit
+        workflowTasks: 
+        - name: Create Infrastructure
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/createFoundation.py "
+          arguments: "$(keySource)  $(configFileTest)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(System.DefaultWorkingDirectory)"
+  - name: Test Environ Destroy
+    deployPhases:
+      - name: Destroy Test Environment 
+        deploymentInput: 
+        - artifactsDownloadInput:
+          - alias: _terraform-aws-starter-kit
+        workflowTasks: 
+        - name: Destroy Infrastructure
+          type: Python
+          scriptPath: "$(System.DefaultWorkingDirectory)/_terraform-aws-starter-kit/drop/pipeline-tasks/destroyFoundation.py "
+          arguments: "$(keySource)  $(configFileTest)  $(-aws-public-access-key)  $(-aws-secret-access-key)  $(storageAccountNameTerraformBackend)  $(demoStorageKey)  $(System.DefaultWorkingDirectory)"

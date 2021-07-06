@@ -1,7 +1,7 @@
 import yaml
 import re 
 
-myYamlInputFile = "C:\\projects\\terraform\\tfvars\\agile-cloud-manager\\enter-user-input-here-only.yaml"
+myYamlInputFile = "\\path\\to\\agile-cloud-manager\\enter-user-input-here-only.yaml"
 
 def getReleaseDefData(yamlInputFile):
   with open(yamlInputFile) as f:
