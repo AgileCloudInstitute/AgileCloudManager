@@ -56,15 +56,16 @@ def getShellJsonResponse(cmd):
         stdout=subprocess.PIPE)
     process.wait()
     data, err = process.communicate()
-    print("data bytes is:", data)
-    print("data string is: ", data.decode("utf-8"))
-    print("err is: ", err)
-    print("process.returncode is: ", process.returncode)
+#    print("data bytes is:", data)
+#    print("data string is: ", data.decode("utf-8"))
+#    print("err is: ", err)
+#    print("process.returncode is: ", process.returncode)
     if process.returncode is 0:
         return data.decode('utf-8')
     else:
         print("Error:", err)
-    return ""
+        quit("ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem.")
+    #return ""
   
 def runShellCommand(commandToRun):
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -76,6 +77,43 @@ def runShellCommand(commandToRun):
         print(decodedline)
       else:
         break
+
+################################################################################################################################
+### Start of dependency checks
+
+def checkIfAzInstalled(commandToRun, vers):
+    resp = json.loads(getShellJsonResponse(commandToRun))
+    cliV = resp['azure-cli']
+    if cliV.startswith(str(vers)):
+      return 'Dependency is installed.'
+    else:
+      return "Wrong version of dependency is installed for azure-cli."
+
+def checkIfAzdoInstalled(commandToRun, vers):
+    resp = json.loads(getShellJsonResponse(commandToRun))
+    azdoV = resp['extensions']['azure-devops']
+    if azdoV.startswith(str(vers)):
+      return 'Dependency is installed.'
+    else:
+      return "Wrong version of dependency is installed for azure-devops extension of azure-cli."
+
+def checkIfInstalled(commandToRun, vers):
+    proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    match = False
+    while True:
+      line = proc.stdout.readline()
+      if line:
+        thetext=line.decode('utf-8').rstrip('\r|\n')
+        decodedline=ansi_escape.sub('', thetext)
+        if vers in decodedline:
+          match = True
+          return "Dependency is installed."
+      else:
+        break
+    return 'Dependency is NOT installed.  Please make sure your machine is properly provisioned.'
+
+### End of dependency checks
+##################################################################################################################################
 
 def runShellCommandInWorkingDir(commandToRun, workingDir):
     proc = subprocess.Popen( commandToRun,cwd=workingDir, stdout=subprocess.PIPE, shell=True)
@@ -172,11 +210,15 @@ def processDecodedLine(decodedline):
 
 def runTerraformCommand(commandToRun, workingDir ):
     isError = "no"
+#    print("about to proc")
     #Make a work item to re-write this function to throw an error and stop the program whenever an error is encountered.
     proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+#    print("procc-ing")
     while True:
       line = proc.stdout.readline()
+#      print("about to if line")
       if line:
+#        print("there is a line")
         thetext=line.decode('utf-8').rstrip('\r|\n')
         decodedline=ansi_escape.sub('', thetext)
         print(decodedline)

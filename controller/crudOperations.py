@@ -365,6 +365,7 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
   if len(cloud) < 2:
     quit("ERROR: cloud name not valid.  Add better validation checking to the code. ")
   global buildRepoListOfTuples
+  print("instanceNames is: ", instanceNames)
   for instanceName in instanceNames: 
     #1. First assemble the variables
     if typeGrandChild != None:
@@ -379,6 +380,7 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
     app_parent_path = inputVars.get('app_parent_path')
     relative_path_to_instances =  inputVars.get('relativePathToInstances')
     path_to_application_root = ''
+    print("templateName is: ", templateName)
     if templateName.count('/') == 2:
       nameParts = templateName.split("/")
       if (len(nameParts[0]) > 1) and (len(nameParts[1]) >1) and (len(nameParts[2]) > 1):
@@ -441,11 +443,13 @@ def packerCrudOperation(operation, typeName, instanceNames, **inputVars):
         path_to_application_root = app_parent_path + nameParts[0] + "\\" + nameParts[1] + "\\"
         module_config_file_and_path = app_parent_path + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
         template_config_file_name = app_parent_path + nameParts[0] + '\\packer\\' + template_Name + '.json'
+        startup_script_file_and_path = app_parent_path + nameParts[0] + '\\scripts\\' + 'fileName'
       else:
         quit('ERROR: templateName is not valid. ')
     else:  
       quit("Template name is not valid.  Must have only one /.  ")
     yaml_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
     print("module_config_file_and_path is: ", module_config_file_and_path)
+    print("startup_script_file_and_path is: ", startup_script_file_and_path)
     #3. Then third assemble and run command
-    callInstanceManager.assembleAndRunPackerCommand(cloud, templateName, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, instanceName, typeName, module_config_file_and_path, template_config_file_name, **inputVars)
+    callInstanceManager.assembleAndRunPackerCommand(cloud, templateName, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, instanceName, typeName, module_config_file_and_path, template_config_file_name, startup_script_file_and_path, **inputVars)

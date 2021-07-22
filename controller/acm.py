@@ -18,10 +18,10 @@ def runInfraCommands(inputVariables):
   if cliproc.domain == 'setup':
 
     if cliproc.command == 'on':
-      setup.runSetup()
+      setup.runSetup(**inputVariables)
 
     elif cliproc.command == 'off':
-      setup.undoSetup()
+      setup.undoSetup(**inputVariables)
 
   if cliproc.domain == 'admin':
     typeName = 'admin'
@@ -75,6 +75,6 @@ def runInfraCommands(inputVariables):
 ##############################################################################
 inputVars = cliproc.processInputArgs(inputArgs)
 
-printProperties(inputVars)
+#printProperties(inputVars)
 
 runInfraCommands(inputVars)

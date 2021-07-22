@@ -85,14 +85,18 @@ def createCallDirectoryAndFile(sourceOfCallTemplate, destinationCallInstance, ne
     else:
       print("oldTfStateName files does NOT exist. ")
 
-def initializeTerraformBackend(keySource, keyFile, destinationCallInstance, **kw):
+def initializeTerraformBackend(keyFile, destinationCallInstance, **inputVars):
+  binariesPath = inputVars.get('dependenciesBinariesPath') 
+  kw = inputVars.get('tfBkndAzureParams')
+  keySource = inputVars.get('keySource')
+
   if keySource == "keyVault":
     kw['keyFileTF']  =  keyFile 
     demoStorageKey = kw["storageKey"]
     createBackendConfigFileTerraform(destinationCallInstance, **kw) 
-    initCommand="terraform init -backend=true -backend-config=\"access_key="+demoStorageKey+"\""  	
+    initCommand= binariesPath + "terraform init -backend=true -backend-config=\"access_key="+demoStorageKey+"\""  	
   else:
-    initCommand = 'terraform init '
+    initCommand = binariesPath + 'terraform init '
   commandRunner.runTerraformCommand(initCommand, destinationCallInstance )	
   #Add error handling to validate that init command succeeded.
 
@@ -101,7 +105,6 @@ def instantiateCallToModule(path_To_ApplicationRoot, instanceName, templateName,
   foundationInstanceName = configReader.getFoundationInstanceName(yamlConfigFileAndPath)
   relativePathTemplate = "\\calls-to-modules\\templates\\" + templateName + "\\"
   keySource = invars.get('keySource')
-  kw = invars.get('tfBkndAzureParams')
   if templateName == 'network-foundation':
     relativePathInstance = "\\calls-to-modules\\instances\\" + templateName + "\\"+foundationInstanceName+"-" + templateName + "\\"  
     keyFile = foundationInstanceName + "-" + templateName  
@@ -118,7 +121,7 @@ def instantiateCallToModule(path_To_ApplicationRoot, instanceName, templateName,
     newPointerLineWindows="  source = \"..\\\..\\\..\\\..\\\modules\\\\" + templateName + "\""
     newPointerLineLinux="  source = \"../../../../modules/" + templateName + "\""
     createCallDirectoryAndFile(sourceOfCallTemplate, destinationCallInstance, newPointerLineWindows, newPointerLineLinux, oldTfStateName, keySource, dynamicVarsPath, foundationInstanceName, templateName, instanceName)
-  initializeTerraformBackend(keySource, keyFile, destinationCallInstance, **kw)
+  initializeTerraformBackend(keyFile, destinationCallInstance, **invars)
   return destinationCallInstance
 
 def offInstanceOfCallToModule(locationOfCallInstance, parentDirOfCallInstance):
@@ -213,16 +216,23 @@ def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_fil
   moduleConfigFileAndPath = module_config_file_and_path
   commandToRun = 'invalid value must be reset below'
   tool = "terraform"
+
+  binariesPath = inputVars.get('dependenciesBinariesPath') 
+
   if operation == 'off':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
     varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, **inputVars)
-    commandToRun = "terraform destroy -auto-approve" + varsFrag
+    commandToRun = binariesPath + "terraform destroy -auto-approve" + varsFrag
   elif operation == 'on':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
     varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, **inputVars)
-    commandToRun = "terraform apply -auto-approve" + varsFrag
+    commandToRun = binariesPath + "terraform apply -auto-approve -parallelism=1 " + varsFrag
+#    print("instanceName is: ", instanceName)
+#    if instanceName == 'azdoAgents':
+#      print("commandToRun is: ", commandToRun)
+#      quit("DEBUG POINT")
   elif operation == 'output':
-    commandToRun = 'terraform output'
+    commandToRun = binariesPath + 'terraform output'
   else:
     quit("Error: Invalid value for operation: ", operation)
   print("commandToRun is: ", commandToRun)
@@ -262,15 +272,17 @@ def cleanupAfterOperation(destinationCallInstance, destinationCallParent, dynami
   except OSError:
     pass
 
-def assembleAndRunPackerCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, instanceName, typeName, moduleConfigFileAndPath, template_config_file_name, **inputVars):
+def assembleAndRunPackerCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, instanceName, typeName, moduleConfigFileAndPath, template_config_file_name, startup_script_file_and_path, **inputVars):
   commandToRun = 'invalid value must be reset below'
   tool = "packer"
   imageRepoDir = configReader.getImageRepoDir(yaml_infra_config_file_and_path, template_Name)
+  binariesPath = inputVars.get('dependenciesBinariesPath') 
+
   if operation == 'build':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
     varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, None, instanceName, **inputVars)
     #commandToRun = "packer build -debug " + varsFrag + " " + template_config_file_name
-    commandToRun = "packer build " + varsFrag + " " + template_config_file_name
+    commandToRun = binariesPath + "packer build " + varsFrag + " " + template_config_file_name
   else:
     quit("Error: Invalid value for operation: ", operation)
   print("commandToRun is: ", commandToRun)

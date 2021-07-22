@@ -29,6 +29,90 @@ def getAdminInstanceName(yamlFileAndPath):
             instanceName = foundationItems.get(foundationItem)
   return instanceName
 
+##############################################################################
+##############################################################################
+
+def getDependencyProperty(yamlConfigFileAndPath, typeParent, instanceName, propertyName):
+  propertyValue = ''
+  with open(yamlConfigFileAndPath) as f:  
+    my_dict = yaml.safe_load(f)
+    for key, value in my_dict.items():  
+      if (typeParent == 'dependencies'):
+        if key == typeParent:
+          childTypes = my_dict.get(key)
+          for instanceOfType in childTypes: 
+            if instanceOfType.get("name") == instanceName:
+              propertyValue = instanceOfType.get(propertyName)
+      else:  
+        print("The value given for for typeParent is NOT supported.  Please check your configuration file and the documentation.")
+  return propertyValue
+
+def getDependencyVersionSecondLevel(yamlConfigFileAndPath, typeParent, instanceName, propertyName, grandChild):
+  propertyValue = ''
+  with open(yamlConfigFileAndPath) as f:  
+    my_dict = yaml.safe_load(f)
+    for key, value in my_dict.items():  
+      if (typeParent == 'dependencies'):
+        if key == typeParent:
+          childTypes = my_dict.get(key)
+          for instanceOfType in childTypes: 
+            if instanceOfType.get("name") == instanceName:
+              propertyValue = instanceOfType.get(propertyName)
+#              print("instanceOfType is: ", instanceOfType)
+#              print("type(propertyValue) is: ", type(propertyValue))
+#              print('propertyValue is: ', propertyValue)
+              if type(propertyValue) is list:
+                for myListItem in propertyValue:
+#                  print("myListItem is: ", myListItem)
+#                  print("myListItem.get(name) is: ", myListItem.get('name'))
+                  if myListItem.get('name') == grandChild:
+                    propertyValue = myListItem.get('version')
+#                    print("version is: ", propertyValue)
+              else:
+                quit("ERROR: Invalid dependency configuration in infrastructureConfig.yaml.  Halting program so you can diagnose the source of the problem.  ")
+#              quit("Need some water.")
+      else:  
+        print("The value given for for typeParent is NOT supported.  Please check your configuration file and the documentation.")
+  return propertyValue
+
+
+
+def getDependencyVersion(yamlFileAndPath, dependency):
+  version = ""  
+  match = False  
+  with open(yamlFileAndPath) as f:  
+    topLevel_dict = yaml.safe_load(f)  
+    for item in topLevel_dict:  
+      if re.match("dependencies", item):    
+        deps = topLevel_dict.get(item)  
+        for dep in deps: 
+          if dependency == dep.get("name"):
+            version = dep.get("version")  
+            match = True  
+  if match == True:
+    return version
+  else: 
+    quit("ERROR: The dependency is not listed in the config file.  Halting program so you can look for the root cause of the problem before proceeding. ")
+
+##############################################################################
+##############################################################################
+
+def getSourceCodeProperty(yamlConfigFileAndPath, typeParent, instanceName, propertyName):
+  propertyValue = ''
+  with open(yamlConfigFileAndPath) as f:  
+    my_dict = yaml.safe_load(f)
+    for key, value in my_dict.items():  
+      if (typeParent == 'source'):
+        if key == typeParent:
+          childTypes = my_dict.get(key)
+          for instanceOfType in childTypes: 
+            if instanceOfType.get("instanceName") == instanceName:
+              propertyValue = instanceOfType.get(propertyName)
+      else:  
+        print("The value given for for typeParent is NOT supported.  Please check your configuration file and the documentation.")
+  return propertyValue
+
+
 def getImageInstanceNames(yamlFileAndPath, typeName):
   instanceNames = []
   with open(yamlFileAndPath) as f:  

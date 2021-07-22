@@ -7,6 +7,7 @@ import requests
 import sys
 import csv
 import json
+import platform
 import commandRunner
 
 def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, callInstanceName, **inputVars):
@@ -15,6 +16,8 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
   identifier = row[3]
   sourceField = row[4]
   varSnip = "empty"
+  print("....parentInstanceName is: ", parentInstanceName)
+  print("....callInstanceName is: ", callInstanceName)
   with open(yamlInfraFileAndPath) as f:  
     my_dict = yaml.safe_load(f)
     for key, value in my_dict.items():  
@@ -25,7 +28,11 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
           parent = my_dict.get(key)
           for child in parent:
             if re.match(childPart, child):
-              varSnip = getVarFromType(tool, row, callInstanceName, 2, parent.get(child))
+              varSnip = getVarFromType(tool, row, callInstanceName, 2, parent.get(child), **inputVars)
+              #if child == 'images':
+              print("...child is: ", child)
+              print("...parent.get(child) is: ", parent.get(child))
+              print("...varSnip is: ", varSnip)
       elif myType.count('/') == 2:
         if myType == 'projectManagement/projects/code':
           parentPart = myType.split('/')[0]
@@ -42,7 +49,7 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
                       grandChildInstances = project.get(grandChildPart)
                       for grandChild in grandChildInstances:
                         if grandChild.get('instanceName') == callInstanceName:
-                          varSnip = getVarFromType(tool, row, callInstanceName, 3, grandChild)
+                          varSnip = getVarFromType(tool, row, callInstanceName, 3, grandChild, **inputVars)
         elif myType == 'projectManagement/projects/parent':
           parentPart = myType.split('/')[0]
           childPart = myType.split('/')[1]
@@ -55,7 +62,7 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
                   projectInstances = parent.get(child)
                   for project in projectInstances:
                     if parentInstanceName == project.get('instanceName'):
-                      varSnip = getVarFromType(tool, row, callInstanceName, 2, project)
+                      varSnip = getVarFromType(tool, row, callInstanceName, 2, project, **inputVars)
         else: 
           quit("Error: Unsupported name for type.  Halting program so you can locate the problem within your configuration.")
       elif myType.count('/') > 2:
@@ -63,10 +70,10 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
       else:
         if re.match(myType, key):
           type = my_dict.get(key)
-          varSnip = getVarFromType(tool, row, callInstanceName, 1, type)
+          varSnip = getVarFromType(tool, row, callInstanceName, 1, type, **inputVars)
   return varSnip
 
-def getVarFromType(tool, r, callInstanceName, layers, aType):
+def getVarFromType(tool, r, callInstanceName, layers, aType, **inputVars):
   inputVar = r[0]
   myType = r[2]
   if myType.count('/') == 1:
@@ -119,9 +126,38 @@ def getVarFromType(tool, r, callInstanceName, layers, aType):
                   varSnip = " -var \"" +inputVar + "="+str(pathStr) +"\""  
             else:  
               if tool == 'terraform':
-                varSnip = " -var=\"" +inputVar + "="+str(props.get(prop)) +"\""  
+                if sourceField == 'cloudInit':
+                  appParentpath = inputVars.get('app_parent_path')
+                  relativePathAndFile = str(props.get(prop))
+                  print("platform.system() is: ", platform.system())
+                  if platform.system() == "Windows":
+                    appParentpath = appParentpath.replace("/", "\\")
+                    relativePathAndFile = relativePathAndFile.replace("/", "\\")
+                  print("....appParentpath is: ", appParentpath)
+                  print("....relativePathAndFile is: ", relativePathAndFile)
+                  varSnip = " -var=\"" +inputVar + "="+appParentpath + relativePathAndFile +"\""  
+                  print("....tool is terraform")
+                  print("....sourceField is: ", sourceField)
+                  print("....varSnip is:", varSnip)
+                else:
+                  varSnip = " -var=\"" +inputVar + "="+str(props.get(prop)) +"\""  
               elif tool == 'packer':
-                varSnip = " -var \"" +inputVar + "="+str(props.get(prop)) +"\""  
+                if sourceField == 'init_script':
+                  print("mmmmmmmmmmmmmmmmmmmmm")
+                  print("....sourceField is: ", sourceField)
+                  print("....prop is: ", prop)
+                  appParentpath = inputVars.get('app_parent_path')
+                  relativePathAndFile = str(props.get(prop))
+                  print("platform.system() is: ", platform.system())
+                  if platform.system() == "Windows":
+                    appParentpath = appParentpath.replace("/", "\\")
+                    relativePathAndFile = relativePathAndFile.replace("/", "\\")
+                  print("....appParentpath is: ", appParentpath)
+                  print("....relativePathAndFile is: ", relativePathAndFile)
+                  varSnip = " -var \"" +inputVar + "="+appParentpath + relativePathAndFile +"\""  
+                  print("....varSnip is: ", varSnip)
+                else:
+                  varSnip = " -var \"" +inputVar + "="+str(props.get(prop)) +"\""  
   return varSnip
 
 
