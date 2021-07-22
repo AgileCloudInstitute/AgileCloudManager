@@ -81,18 +81,8 @@ systems:
       cloudInit: azure-building-blocks/scripts/startup-script-demo.sh
 projectManagement:
   projects:
-#>    - instanceName: SampleProject
-#>      templateName: azure-building-blocks/terraform/azdo-project
-#>      tool: terraform
-#>      code:
-#>        - instanceName: SampleCode
-#>          templateName: azure-building-blocks/terraform/azdo-code
-#>          tool: terraform
-#>          sourceRepo: https://github.com/AgileCloudInstitute/aws-building-blocks.git
-#>          buildName: SampleCode
-#>          endpointTemplate: azure-building-blocks/api/azdo-service-conn-other-git.json
     - instanceName: ACM_ExampleProject
-      templateName: agile-cloud-manager
+      templateName: azure-building-blocks/terraform/azdo-project
       tool: terraform
       code:
         - instanceName: ACM_ExampleCode
@@ -109,20 +99,3 @@ releaseDefinition:
       YamlDefinitionFileName: ACM_DemoRelease.yaml
       repositories:
         - instanceName: ACM_ExampleCode
-#>    - instanceName: SampleRelease
-#>      projectName: SampleProject
-#>      vaultName: agentsVault
-#>      YamlDefinitionFileName: CICD_TerraformAWS_IaC.yaml
-#>      repositories:
-#>        - instanceName: SampleCode
-#-->        - instanceName: terraform-aws-starter-kit
-#>    - instanceName: createStorageAccountAzure.yaml
-#>      projectName: SampleProject
-#>      YamlDefinitionFileName: createStorageAccountAzure.yaml
-#>      repositories:
-#>        - instanceName: azure-storage-account-toolkit
-#>    - instanceName: destroyStorageAccountAzure
-#>      projectName: SampleProject
-#>      YamlDefinitionFileName: destroyStorageAccountAzure.yaml
-#>      repositories:
-#>        - instanceName: azure-storage-account-toolkit
