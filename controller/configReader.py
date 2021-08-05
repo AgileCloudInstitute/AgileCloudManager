@@ -4,6 +4,7 @@
 import yaml
 import re
 import os
+import csv
 
 def getFoundationInstanceName(yamlFileAndPath):
   instanceName = ""  
@@ -28,6 +29,29 @@ def getAdminInstanceName(yamlFileAndPath):
           if re.match("instanceName", foundationItem):
             instanceName = foundationItems.get(foundationItem)
   return instanceName
+
+def getTopLevelProperty(yamlFileAndPath, typeName, propertyName):
+  propVal = ""  
+  with open(yamlFileAndPath) as f:  
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match(typeName, item):
+        typeItems = topLevel_dict.get(item)
+        for typeItem in typeItems: 
+          if re.match(propertyName, typeItem):
+            propVal = typeItems.get(typeItem)
+  return propVal
+
+def checkTopLevelType(yamlFileAndPath, typeName):
+  returnVal = False
+  with open(yamlFileAndPath) as f:  
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match(typeName, item):
+        returnVal = True
+  return returnVal
+
+
 
 ##############################################################################
 ##############################################################################
@@ -150,6 +174,88 @@ def getSystemInstanceNames(yamlFileAndPath, typeName):
               if len(instanceName) > 0:
                 instanceNames.append(instanceName)
   return instanceNames
+
+def getSystemPropertyValue(yamlFileAndPath, typeName, instName, propName):
+  propVal = "empty"
+  with open(yamlFileAndPath) as f:  
+    topLevel_dict = yaml.safe_load(f)
+    for item in topLevel_dict:
+      if re.match('systems', item):
+        systemsTypes = topLevel_dict.get(item)
+        for systemsType in systemsTypes:
+          if re.match(typeName, systemsType):
+            items = systemsTypes.get(systemsType)
+            for instance in items: 
+              instanceName = instance.get("instanceName")
+              if len(instanceName) > 0:
+                if instName == instanceName:
+                  propVal = instance.get(propName)
+  return propVal
+
+def getPropertyCoordinatesFromCSV(templateName, propName, **inputVars):
+  print("inside getPropertyCoordinatesFromCSV() function, templateName is: ", templateName)
+  yaml_infra_config_file_and_path = inputVars.get('yamlInfraConfigFileAndPath')
+  cloud = getCloudName(yaml_infra_config_file_and_path)
+  if len(cloud) < 2:
+    quit("ERROR: cloud name not valid.  Add better validation checking to the code. ")
+  #yaml_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
+  #dynamicVarsPath = inputVars.get('dynamicVarsPath')
+  app_parent_path = inputVars.get('app_parent_path')
+  #relative_path_to_instances =  inputVars.get('relativePathToInstances')
+  path_to_application_root = ''
+  module_config_file_and_path = ''
+  print("app_parent_path is: ", app_parent_path)
+  print("templateName is: ", templateName)
+  #...........................................................................................................
+  if templateName.count('/') == 2:
+    nameParts = templateName.split("/")
+    if (len(nameParts[0]) > 1) and (len(nameParts[1]) >1) and (len(nameParts[2]) > 1): 
+      template_Name = nameParts[2]  
+      path_to_application_root = app_parent_path + nameParts[0] + "\\" + nameParts[1] + "\\"
+      module_config_file_and_path = app_parent_path + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
+    else:
+      quit('ERROR: templateName is not valid. ')
+  else:  
+    quit("Template name is not valid.  Must have only one /.  ")
+  print("module_config_file_and_path is: ", module_config_file_and_path)
+#  quit("1. stop for debug")
+  #...........................................................................................................
+  #df readModuleConfigFile(tool, yamlInfraFileAndPath, moduleConfigFileAndPath, parentInstanceName, callInstanceName, **inputVars):
+  varSnip = "empty"
+  varsFragment = ''
+  coordinates = ''
+  c = open(module_config_file_and_path,'r')
+  o = csv.reader(c)
+  for r in o:
+#    print("r is: ", r)
+    if r[0] == propName:
+#>      if r[1] == 'infrastructureConfig.yaml':
+      coordinates = r[1] + '/' + r[2]
+#>    if r[1] == 'infrastructureConfig.yaml':
+#>      if r[5] == 'no':
+#>        varSnip = getVarFromUserConfig(tool, r, yamlInfraFileAndPath, parentInstanceName, callInstanceName, **inputVars)
+#>        if varSnip != 'empty':
+#>          varsFragment = varsFragment + varSnip
+#>    elif r[1] == 'foundationOutput':
+#>      if r[5] == 'no':
+#>        varSnip = getVarFromOutput(tool, r)
+#>        if varSnip != 'empty':
+#>          varsFragment = varsFragment + varSnip
+#>    elif r[1] == 'customFunction':
+#>      if r[5] == 'no':
+#>        if r[0] == 'adminPublicIP':
+#>          cidrBlock = getAdminCidr()
+#>          if tool == 'terraform':
+#>            varSnip = " -var=\"" +r[0] + "="+cidrBlock +"\""  
+#>          elif tool == 'packer':
+#>            varSnip = " -var \"" +r[0] + "="+cidrBlock +"\""
+#>          varsFragment = varsFragment + varSnip
+#>  c.close()
+#>  return varsFragment
+  return coordinates
+  
+
+  #////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 def getProjectManagementInstanceNames(yamlFileAndPath, typeName, grandChild):
   instanceNames = []

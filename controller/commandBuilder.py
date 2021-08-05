@@ -238,6 +238,12 @@ def getSecretVarFromKeys(tool, r, yamlKeysFileAndPath, pub, sec, instanceName):
     keypairs_dict = yaml.safe_load(f)
     myItems = keypairs_dict.items()
     for key, value in myItems:  
+      if (value[0] == "\"") and (value[-1] == "\""):
+        #eliminate any pre-existing double quotes to avoid downstream errors.
+        #print("value is: ", value , " and value already has quotes")
+        value = value[1:]
+        value = value[:-1]
+        #print("revised value is: ", value)
       if key == sourceField:
         if tool == "terraform":
           secretLine = tfInputVarName + "=\""+value+"\"\n"
@@ -245,6 +251,7 @@ def getSecretVarFromKeys(tool, r, yamlKeysFileAndPath, pub, sec, instanceName):
           secretLine = tfInputVarName + "="+value
   if 'empty' in secretLine:
     print("Not able to find matching secret value.  Make sure to add better error handling here.")
+  #print("secretLine is: ", secretLine)
   return secretLine
 
 def getTypeOfLine(moduleConfigFileAndPath):
@@ -290,6 +297,8 @@ def getSecretVars(tool, yamlInfraFileAndPath, moduleConfigFileAndPath, yamlKeysF
   if len(secretVarLines)>0:
     tfvarsFileAndPath = inputVars.get("tfvarsFileAndPath")
     if tool == 'terraform':
+#      print("secretVarLines is: ", secretVarLines)
+#      quit("halt! ")
       f = open(tfvarsFileAndPath, "w")
       for line in secretVarLines:
         f.write(line)

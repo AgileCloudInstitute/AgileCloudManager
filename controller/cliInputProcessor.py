@@ -44,6 +44,9 @@ def processInputArgs(inputArgs):
     elif domain == 'setup':
       print('setup')
       print('command is: ', command)
+    elif domain == 'tfbackend':
+      print('tfbackend')
+      print('command is: ', command)
     else:  
       quit("Error: You must specify a valid value for the first parameter.  Either admin, foundation, system, or setup now, but other valid values may be added in future releases.  ")
   #Second, set any values conditionally based on flags entered by the user in the command line.  Add functionality here in future releases.

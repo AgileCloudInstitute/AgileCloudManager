@@ -78,6 +78,17 @@ def runShellCommand(commandToRun):
       else:
         break
 
+def getAccountKey(commandToRun):
+    proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, shell=True)
+    while True:
+      line = proc.stdout.readline()
+      if line:
+        thetext=line.decode('utf-8').rstrip('\r|\n')
+        decodedline=ansi_escape.sub('', thetext)
+        return decodedline
+      else:
+        break
+
 ################################################################################################################################
 ### Start of dependency checks
 

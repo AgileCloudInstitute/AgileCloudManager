@@ -163,6 +163,7 @@ def saveKeyFile(destinationCallInst, cloudprov, yaml_keys_file_and_path, **inVar
     saveAWSKeyFile(data["resources"], **inVars)
   elif cloudprov == 'azure':
     saveAzureKeyFile(data["resources"], yaml_keys_file_and_path, **inVars)
+  quit("Just debugging.")
 
 def saveAWSKeyFile(data_resources, **input_vars): 
   for i in data_resources:
@@ -184,6 +185,7 @@ def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, **input_vars):
       if appId.startswith('"') and appId.endswith('"'):
         appId = appId[1:-1]
   myList = []
+#  print("secKey is: ", secKey)
   with open(src_yaml_keys_file_and_path, 'r') as file:
     keys = yaml.safe_load(file)
     for key in keys:
@@ -197,7 +199,7 @@ def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, **input_vars):
         itemStr = key + ": "+ appId
         myList.append(itemStr)
       elif key == 'clientSecret': 
-        itemStr = key + ": "+ secKey
+        itemStr = key + ": \""+ secKey + "\""
         myList.append(itemStr)
       else: 
         itemStr = key + ": "+ keys.get(key)
@@ -206,9 +208,11 @@ def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, **input_vars):
   for key_value in myList:
     key, value = key_value.split(': ', 1)
     dictVersion[key] = value
+#    print("dictVersion[",key,"] is: ", dictVersion[key])
   yamlKeysNetworkFileAndPath = input_vars.get('dirOfYamlKeys') + input_vars.get('nameOfYamlKeys_Azure_Network_File')
   with open(yamlKeysNetworkFileAndPath, 'w') as file:
     documents = yaml.dump(dictVersion, file)
+#  quit("123 debug 456")
 
 def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, destinationCallInstance, typeName, module_config_file_and_path, **inputVars):
   configAndSecretsPath = inputVars.get('configAndSecretsPath')
@@ -227,15 +231,16 @@ def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_fil
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
     varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, **inputVars)
     commandToRun = binariesPath + "terraform apply -auto-approve -parallelism=1 " + varsFrag
-#    print("instanceName is: ", instanceName)
+    print("instanceName is: ", instanceName)
 #    if instanceName == 'azdoAgents':
-#      print("commandToRun is: ", commandToRun)
-#      quit("DEBUG POINT")
+#    print("commandToRun is: ", commandToRun)
+#    quit("DEBUG POINT")
   elif operation == 'output':
     commandToRun = binariesPath + 'terraform output'
   else:
     quit("Error: Invalid value for operation: ", operation)
   print("commandToRun is: ", commandToRun)
+  #quit("stop here. ")
   commandRunner.runTerraformCommand(commandToRun, destinationCallInstance)  
   if (typeName == 'admin') and (operation == 'on') and (commandRunner.terraformResult == "Applied"): 
     print("About to saveKeyFile. ")

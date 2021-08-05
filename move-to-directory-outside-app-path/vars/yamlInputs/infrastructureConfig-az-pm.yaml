@@ -40,6 +40,15 @@ source:
   - instanceName: aws-building-blocks
     repo: https://github.com/AgileCloudInstitute/aws-building-blocks.git
     branch: dev
+tfBackend:
+  instanceName: demoAzTfBackend
+  type: azurerm
+  resourceGroupName: pipeline-resources
+  resourceGroupLocation: westus
+  keyVaultName: agentsVault
+  keyName: demoStorageKey
+  storageAccountName: tfbkendabc123x
+  storageContainerName: tfcontainer
 admin:
   instanceName: netadmin
   templateName: azure-building-blocks/terraform/ad-admin
@@ -52,20 +61,45 @@ tags:
   ownerName: name-of-owner
 networkFoundation:
   instanceName: demo
-  templateName: azure-building-blocks/terraform/net-found-tfbknd-az
+  templateName: azure-building-blocks/terraform/network-foundation
   tool: terraform
-  resourceGroupName: terraform-backend
-  resourceGroupRegion: westus
+  region: "West US"
+imageBuilds:
+  subnetForBuilds:
+    instanceName: packer-demo
+    templateName: azure-building-blocks/terraform/snet-packer
+    tool: terraform
+    cidrSubnet: 10.0.9.0/24
+  images:
+    - instanceName: RHEL73_AZDO_Agent
+      templateName: azure-building-blocks/packer/rhel7-azure-arm-azdo-agent
+      tool: packer
+      ssh_user: packer
+      ssh_pass: just-me-123
+      init_script: azure-building-blocks/scripts/rhel7-startup-azdo-agent.sh
 systems:
-  tfBackend:
-    - instanceName: azProjMgtDemoTfBackend
-      templateName: azure-building-blocks/az-cli/storage-tfbknd-az
-      type: azurerm
-      tool: az-cli
-      keyVaultName: ProjectManagementBackend
-      keyName: azProjMgtDemoTfBackendKey
-      storageAccountName: tfbkendabc1234x
-      environment: Dev
+  subnetsWithScaleSet:
+    - instanceName: azdoAgents
+      templateName: azure-building-blocks/terraform/snet-agents
+      tool: terraform
+      imageName: RHEL73_AZDO_Agent
+      cidrSubnet: 10.0.6.0/24
+      vmUserName: azureuser
+      vmPwd: abc-some-pwd-123
+      vaultName: agentsVault
+      cloudInit: azure-building-blocks/scripts/startup-script-demo.sh
+projectManagement:
+  projects:
+    - instanceName: ACM_ExampleProject
+      templateName: azure-building-blocks/terraform/azdo-project
+      tool: terraform
+      code:
+        - instanceName: ACM_ExampleCode
+          templateName: azure-building-blocks/terraform/azdo-code
+          tool: terraform
+          sourceRepo: https://github.com/AgileCloudInstitute/agile-cloud-manager.git
+          buildName: ACM_ExampleCode
+          endpointTemplate: azure-building-blocks/api/azdo-service-conn-other-git.json
 releaseDefinition:
   releaseDefinitions:
     - instanceName: ACM_DemoRelease

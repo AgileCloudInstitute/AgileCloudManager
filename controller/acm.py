@@ -16,59 +16,53 @@ def printProperties(input_vars):
 
 def runInfraCommands(inputVariables):
   if cliproc.domain == 'setup':
-
     if cliproc.command == 'on':
       setup.runSetup(**inputVariables)
-
     elif cliproc.command == 'off':
       setup.undoSetup(**inputVariables)
 
-  if cliproc.domain == 'admin':
+  elif cliproc.domain == 'admin':
     typeName = 'admin'
     yamlInfraConfigFileAndPath = inputVariables.get('yamlInfraConfigFileAndPath')
     foundationInstanceName = configReader.getFoundationInstanceName(yamlInfraConfigFileAndPath)
     adminInstanceName = configReader.getAdminInstanceName(yamlInfraConfigFileAndPath)
     instanceNames = [adminInstanceName]
-
     if cliproc.command == 'on':
       operation = 'on'
       crudops.terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVariables)
-
     elif cliproc.command == 'off':
       operation = 'off'
       crudops.terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVariables)
 
-  if cliproc.domain == 'foundation':
-
+  elif cliproc.domain == 'foundation':
     if cliproc.command == 'on':
       crudops.onFoundation(cliproc.command, **inputVariables)
-
     elif cliproc.command == 'off':
       crudops.offFoundation(**inputVariables)
 
-  if cliproc.domain == 'system':
-
+  elif cliproc.domain == 'system':
     if cliproc.command == 'on':
       crudops.onSystem(cliproc.command, **inputVariables)
-
     elif cliproc.command == 'off':
       crudops.offSystem(**inputVariables)
 
-  if cliproc.domain == 'project':
-
+  elif cliproc.domain == 'project':
     if cliproc.command == 'on':
       crudops.onProject(cliproc.command, **inputVariables)
-
     elif cliproc.command == 'off':
       crudops.offProject(**inputVariables)
 
-  if cliproc.domain == 'pipeline':
-
+  elif cliproc.domain == 'pipeline':
     if cliproc.command == 'on':
       crudops.onPipeline(cliproc.command, **inputVariables)
-
     elif cliproc.command == 'off':
       crudops.offPipeline(**inputVariables)
+
+  elif cliproc.domain == 'tfbackend':
+    if cliproc.command == 'on':
+      crudops.onTfBackend(**inputVariables)
+    elif cliproc.command == 'off':
+      crudops.offTfBackend(**inputVariables)
 
 ##############################################################################
 ### Create Infrastructure By Calling The Functions
