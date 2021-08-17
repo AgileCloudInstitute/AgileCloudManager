@@ -4,6 +4,7 @@
 import os 
 from distutils.dir_util import copy_tree 
 from pathlib import Path 
+import time
 import pathlib
 import shutil 
 import commandRunner 
@@ -38,35 +39,31 @@ def downloadAndExtractBinary(url, dependencies_binaries_path):
 
 def getDependencies(**inputVars):
   configPath = inputVars.get('dirOfYamlFile') 
-  print("configPath is: ", configPath)
-  yaml_infra_config_file_and_path = configPath +"\\"+"infrastructureConfig.yaml"  
-  print("yaml_infra_config_file_and_path is: ", yaml_infra_config_file_and_path)  
+  yaml_setup_config_file_and_path = configPath +"\\"+"setupConfig.yaml"
   dependencies_binaries_path = inputVars.get('dependenciesBinariesPath')
   if platform.system() == "Windows":
     propName = "download-link-windows"
   else:
     propName = "download-link-linux"
 
-#>  url_git = configReader.getDependencyProperty(yaml_infra_config_file_and_path, "dependencies", "git", propName)
+#>  url_git = configReader.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "git", propName)
 #>  print("url_git is: ", url_git)
 #>  downloadAndExtractBinary(url_git, dependencies_binaries_path)
 
-  url_terraform = configReader.getDependencyProperty(yaml_infra_config_file_and_path, "dependencies", "terraform", propName)
+  url_terraform = configReader.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "terraform", propName)
   downloadAndExtractBinary(url_terraform, dependencies_binaries_path)
-  url_packer = configReader.getDependencyProperty(yaml_infra_config_file_and_path, "dependencies", "packer", propName)
+  url_packer = configReader.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "packer", propName)
   downloadAndExtractBinary(url_packer, dependencies_binaries_path)
 
 
 def checkDependencies(**inputVars):
   print("Checking to see if required dependencies are installed...")
   configPath = inputVars.get('dirOfYamlFile') 
-  print("configPath is: ", configPath)
-  yaml_infra_config_file_and_path = configPath +"\\"+"infrastructureConfig.yaml"  
-  print("yaml_infra_config_file_and_path is: ", yaml_infra_config_file_and_path)  
+  yaml_setup_config_file_and_path = configPath +"\\"+"setupConfig.yaml"  
   dependencies_binaries_path = inputVars.get('dependenciesBinariesPath')
 
   #Terraform
-  tfVers = configReader.getDependencyVersion(yaml_infra_config_file_and_path, 'terraform')
+  tfVers = configReader.getDependencyVersion(yaml_setup_config_file_and_path, 'terraform')
   print("tfVers is: ", tfVers)
   if tfVers.count('.') == 1:
     tfVers = 'v' + tfVers + '.'
@@ -83,7 +80,7 @@ def checkDependencies(**inputVars):
   print("tfCheck is: ", tfCheck)
 
   #packer
-  pkrVers = configReader.getDependencyVersion(yaml_infra_config_file_and_path, 'packer')
+  pkrVers = configReader.getDependencyVersion(yaml_setup_config_file_and_path, 'packer')
   if pkrVers.count('.') != 1:
     quit('ERROR: The value you entered for packer version in infrastructureConfig.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" ')
   if pkrVers.count('.') == 1:
@@ -101,7 +98,7 @@ def checkDependencies(**inputVars):
 #  quit("stop it!")
 
   #Azure CLI
-  azVers = configReader.getDependencyVersion(yaml_infra_config_file_and_path, 'azure-cli')
+  azVers = configReader.getDependencyVersion(yaml_setup_config_file_and_path, 'azure-cli')
 #  print("azVers is: ", azVers)
   azCheck = None
   azDependencyCheckCmd = "az version"
@@ -115,7 +112,7 @@ def checkDependencies(**inputVars):
   print("azCheck is: ", azCheck)
 
   #Azure-Devops CLI extension
-  azdoVers = configReader.getDependencyVersionSecondLevel(yaml_infra_config_file_and_path, 'dependencies', 'azure-cli', 'modules', 'azure-cli-ext-azure-devops')
+  azdoVers = configReader.getDependencyVersionSecondLevel(yaml_setup_config_file_and_path, 'dependencies', 'azure-cli', 'modules', 'azure-cli-ext-azure-devops')
 #  print("azdoVers is: ", azdoVers)
   azdoCheck = None
   azDependencyCheckCmd = "az version"
@@ -129,7 +126,7 @@ def checkDependencies(**inputVars):
   print("azdoCheck is: ", azdoCheck)
 
   #git check
-  gitVers = configReader.getDependencyVersion(yaml_infra_config_file_and_path, 'git')
+  gitVers = configReader.getDependencyVersion(yaml_setup_config_file_and_path, 'git')
   if gitVers.count('.') != 1:
     quit('ERROR: The value you entered for git version in infrastructureConfig.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" ')
   if gitVers.count('.') == 1:
@@ -231,34 +228,51 @@ def writeTerraformRC(terraformRC):
     print("}")
 
 def runSetup(**inputVars):
-  app_parent_path = os.path.dirname(os.path.realpath("..\\"))
-  from_path = app_parent_path+"\\agile-cloud-manager"+"\\"+"move-to-directory-outside-app-path\\"
-  dest_path = app_parent_path+"\\config-outside-acm-path\\"
-  #Create destination directory if it does not already exist 
-  Path(dest_path).mkdir(parents=True, exist_ok=True)
-  #Copy config and secret templates outside app path before they can be safely populated
-  copy_tree(from_path, dest_path)
+#>  app_parent_path = os.path.dirname(os.path.realpath("..\\"))
+#>  from_path = app_parent_path+"\\agile-cloud-manager"+"\\"+"move-to-directory-outside-app-path\\"
+#>  dest_path = app_parent_path+"\\config-outside-acm-path\\"
 
-  #Copy actual credentials into their destination.
-  #Git credentials
-  gitCredFileSrc = app_parent_path + "\\gitCred.yaml"
-  gitCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\gitCred.yaml"
-  if os.path.exists(gitCredFileSrc): shutil.copyfile(gitCredFileSrc, gitCredFileDest)
-  #azure credentials
-  azCredFileSrc = app_parent_path + "\\adUserKeys.yaml"
-  azCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\adUserKeys.yaml"
-  if os.path.exists(azCredFileSrc): shutil.copyfile(azCredFileSrc, azCredFileDest)
+#>  #Create destination directory if it does not already exist 
+#>  Path(dest_path).mkdir(parents=True, exist_ok=True)
+#>  #Copy config and secret templates outside app path before they can be safely populated
+#>  copy_tree(from_path, dest_path)
 
+#>  #Copy actual credentials into their destination.
+#>  if inputVars.get("keysDir") == '':
+#>    #Git credentials
+#>    gitCredFileSrc = app_parent_path + "\\gitCred.yaml"
+#>    #azure credentials
+#>    azCredFileSrc = app_parent_path + "\\adUserKeys.yaml"
+#>  else:
+#>    #Git credentials
+#>    gitCredFileSrc = inputVars.get("keysDir") + "\\gitCred.yaml"
+#>    #azure credentials
+#>    azCredFileSrc = inputVars.get("keysDir") + "\\adUserKeys.yaml"
+#>  gitCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\gitCred.yaml"
+#>  azCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\adUserKeys.yaml"
+#>  if os.path.exists(gitCredFileSrc): shutil.copyfile(gitCredFileSrc, gitCredFileDest)
+#>  if os.path.exists(azCredFileSrc): shutil.copyfile(azCredFileSrc, azCredFileDest)
 
-  getDependencies(**inputVars)
-  checkDependencies(**inputVars)
-  cloneTheSourceCode(**inputVars)
+#>  getDependencies(**inputVars)
+#>  checkDependencies(**inputVars)
+#>  cloneTheSourceCode(**inputVars)
 
-  providersPath = os.path.join( inputVars.get('dependenciesPath') , "terraform\\providers")
+#  quit("Setup breakpoint")
 
-  print(os.getenv('APPDATA'))
-  terraformRC = os.path.join( os.getenv('APPDATA'), "terraform.rc")
+  providersPath = os.path.join( inputVars.get('dependenciesPath') , ".terraform\\providers")
+  providersPath = providersPath.replace("\\", "\\\\")
+#  providersPath = "C:\\projects\\acm\\Aug2021\\admin\\"
+  appData = os.getenv('APPDATA').strip()
+#  appData = appData.replace("\\", "\\\\")
+  #print(os.getenv('APPDATA'))
+  #terraformRC = os.path.join( os.getenv('APPDATA'), "terraform.rc")
+#>  appData = "C:\\Users\\User\\Documents\\"
+  print("appData is: ", appData)
+  terraformRC = os.path.join( appData, "terraform.rc")
+  terraformRC = terraformRC.replace("\\", "\\\\")
   print("terraformRC is: ", terraformRC)
+
+#  quit("Breakpoint.")
   print("About to write terraformRC. ")
   try: 
     with open(terraformRC, 'w') as f:
@@ -275,12 +289,18 @@ def runSetup(**inputVars):
   except (Exception) as e:
     print(e)
 
+  print("About to sleep 60 seconds. ")
+  time.sleep(60)
   print("About to read the terraformRC we just wrote.  ")
   with open(terraformRC, 'r') as lines:
     for line in lines:
       print(line)
 
-
+  print("About to sleep 60 seconds. ")
+  time.sleep(60)
+  print("About to disable settings for folder so that the terraformRC file can be unhidden.  ")
+  removeSettingsCmd = 'attrib -h -s ' + terraformRC
+  os.system(removeSettingsCmd)
 
 #The next 2 lines are here for placekeeping.  make sure to move them to the appropriate place.
 #  addExteensionCommand = 'az extension add --name azure-devops'

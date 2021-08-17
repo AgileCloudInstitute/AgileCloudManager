@@ -155,15 +155,15 @@ def checkIfFileExists(oldTfStateName):
     doesExist = False
   return doesExist
 
-def saveKeyFile(destinationCallInst, cloudprov, yaml_keys_file_and_path, **inVars):  
+def saveKeyFile(destinationCallInst, type_name, cloudprov, yaml_keys_file_and_path, org_name, **inVars):  
   ### Save the newly-generated keys
   tfStateFile = destinationCallInst + 'terraform.tfstate'
   data = json.load(open(tfStateFile, 'r'))
   if cloudprov == 'aws':
     saveAWSKeyFile(data["resources"], **inVars)
   elif cloudprov == 'azure':
-    saveAzureKeyFile(data["resources"], yaml_keys_file_and_path, **inVars)
-  quit("Just debugging.")
+    saveAzureKeyFile(data["resources"], yaml_keys_file_and_path, type_name, org_name, **inVars)
+#  quit("Just debugging.")
 
 def saveAWSKeyFile(data_resources, **input_vars): 
   for i in data_resources:
@@ -176,7 +176,7 @@ def saveAWSKeyFile(data_resources, **input_vars):
       with open(yamlKeysNetworkFileAndPath, 'w') as file:
         documents = yaml.dump(dict_file, file)
 
-def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, **input_vars):
+def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, type_name, org_name, **input_vars):
   appId = commandRunner.appId
   secKey = 'empty'
   for i in data_resources:
@@ -210,26 +210,32 @@ def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, **input_vars):
     dictVersion[key] = value
 #    print("dictVersion[",key,"] is: ", dictVersion[key])
   yamlKeysNetworkFileAndPath = input_vars.get('dirOfYamlKeys') + input_vars.get('nameOfYamlKeys_Azure_Network_File')
+  yamlKeysNetworkFileAndPath = yamlKeysNetworkFileAndPath.replace('.yaml','')
+  yamlKeysNetworkFileAndPath = yamlKeysNetworkFileAndPath + '-' + type_name + '-' + org_name + '.yaml'
+  print("yamlKeysNetworkFileAndPath is: ", yamlKeysNetworkFileAndPath)
+#  quit("resting here")
+
   with open(yamlKeysNetworkFileAndPath, 'w') as file:
     documents = yaml.dump(dictVersion, file)
 #  quit("123 debug 456")
 
-def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, destinationCallInstance, typeName, module_config_file_and_path, **inputVars):
+def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, foundationInstanceName, parentInstanceName, instanceName, destinationCallInstance, typeName, module_config_file_and_path, **inputVars):
   configAndSecretsPath = inputVars.get('configAndSecretsPath')
   dirOfConfig = configAndSecretsPath + "vars\\config\\" + cloud + "\\"
   moduleConfigFileAndPath = module_config_file_and_path
   commandToRun = 'invalid value must be reset below'
   tool = "terraform"
+  org = configReader.getFirstLevelValue(yaml_infra_config_file_and_path, "organization")
 
   binariesPath = inputVars.get('dependenciesBinariesPath') 
 
   if operation == 'off':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
-    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, **inputVars)
+    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, cloud, foundationInstanceName, parentInstanceName, instanceName, org, **inputVars)
     commandToRun = binariesPath + "terraform destroy -auto-approve" + varsFrag
   elif operation == 'on':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
-    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, **inputVars)
+    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, cloud, foundationInstanceName, parentInstanceName, instanceName, org, **inputVars)
     commandToRun = binariesPath + "terraform apply -auto-approve -parallelism=1 " + varsFrag
     print("instanceName is: ", instanceName)
 #    if instanceName == 'azdoAgents':
@@ -242,9 +248,7 @@ def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_fil
   print("commandToRun is: ", commandToRun)
   #quit("stop here. ")
   commandRunner.runTerraformCommand(commandToRun, destinationCallInstance)  
-  if (typeName == 'admin') and (operation == 'on') and (commandRunner.terraformResult == "Applied"): 
-    print("About to saveKeyFile. ")
-    saveKeyFile(destinationCallInstance, cloud, yaml_keys_file_and_path, **inputVars)
+  #MOVED THE SAFE KEY FILE LOGIC TO crudOperations.terraformCrudOperation(...)
 
 def setDoCleanUp(oper):
   cleanup = False
@@ -282,10 +286,11 @@ def assembleAndRunPackerCommand(cloud, template_Name, operation, yaml_infra_conf
   tool = "packer"
   imageRepoDir = configReader.getImageRepoDir(yaml_infra_config_file_and_path, template_Name)
   binariesPath = inputVars.get('dependenciesBinariesPath') 
+  org = configReader.getFirstLevelValue(yaml_infra_config_file_and_path, "organization")
 
   if operation == 'build':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
-    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, None, instanceName, **inputVars)
+    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, None, instanceName, org, **inputVars)
     #commandToRun = "packer build -debug " + varsFrag + " " + template_config_file_name
     commandToRun = binariesPath + "packer build " + varsFrag + " " + template_config_file_name
   else:

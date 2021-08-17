@@ -221,7 +221,7 @@ def processDecodedLine(decodedline):
 
 def runTerraformCommand(commandToRun, workingDir ):
     isError = "no"
-#    print("about to proc")
+    print("about to proc")
     #Make a work item to re-write this function to throw an error and stop the program whenever an error is encountered.
     proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 #    print("procc-ing")

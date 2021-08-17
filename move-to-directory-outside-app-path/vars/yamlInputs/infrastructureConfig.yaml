@@ -2,37 +2,7 @@
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
 cloud: azure
-dependencies:
-  - name: azure-cli
-    version: "2.17"
-    download-link-windows: 
-    download-link-linux:
-    modules:
-    - name: azure-cli-ext-azure-devops
-      version: "0.18"
-  - name: git
-    version: "2.27"
-    download-link-windows: https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.27.0.tar.gz
-    download-link-linux:
-    checksums: 
-      - url: https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.27.0.tar.sign
-      - url: https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.27.0.tar.xz
-  - name: terraform
-    version: "0.14"
-    download-link-windows: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_windows_amd64.zip
-    download-link-linux: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
-    checksums:
-      - url: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_SHA256SUMS
-      - url: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_SHA256SUMS.348FFC4C.sig
-      - url: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_SHA256SUMS.72D7468F.sig
-      - url: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_SHA256SUMS.sig
-  - name: packer
-    version: "1.7"
-    download-link-windows: https://releases.hashicorp.com/packer/1.7.3/packer_1.7.3_windows_amd64.zip
-    download-link-linux: https://releases.hashicorp.com/packer/1.7.3/packer_1.7.3_linux_amd64.zip
-    checksums: 
-      - url: https://releases.hashicorp.com/packer/1.7.3/packer_1.7.3_SHA256SUMS
-      - url: https://releases.hashicorp.com/packer/1.7.3/packer_1.7.3_SHA256SUMS.sig
+organization: myOrg
 source:
   - instanceName: azure-building-blocks
     repo: https://github.com/AgileCloudInstitute/azure-building-blocks.git
@@ -40,37 +10,28 @@ source:
   - instanceName: aws-building-blocks
     repo: https://github.com/AgileCloudInstitute/aws-building-blocks.git
     branch: dev
-admin:
-  instanceName: netadmin
-  templateName: azure-building-blocks/terraform/ad-admin
-  appName: someApp
-  tool: terraform
 tags:
   networkName: name-of-vnet
   systemName: name-of-system
   environmentName: name-of-environment
   ownerName: name-of-owner
 networkFoundation:
-  instanceName: demo
-  templateName: azure-building-blocks/terraform/net-found-tfbknd-az
+  instanceName: admin
+  templateName: azure-building-blocks/terraform/foundation-admin
   tool: terraform
-  resourceGroupName: terraform-backend
+  resourceGroupName: admin
   resourceGroupRegion: westus
 systems:
-  tfBackend:
-    - instanceName: azProjMgtDemoTfBackend
-      templateName: azure-building-blocks/az-cli/storage-tfbknd-az
-      type: azurerm
-      tool: az-cli
-      keyVaultName: ProjectManagementBackend
-      keyName: azProjMgtDemoTfBackendKey
-      storageAccountName: tfbkendabc1234x
-      environment: Dev
-releaseDefinition:
-  releaseDefinitions:
-    - instanceName: ACM_DemoRelease
-      projectName: ACM_ExampleProject
-      vaultName: agentsVault
-      YamlDefinitionFileName: ACM_DemoRelease.yaml
-      repositories:
-        - instanceName: ACM_ExampleCode
+  admin:
+    - instanceName: tfBackend
+      templateName: azure-building-blocks/terraform/ad-admin
+      tool: terraform
+    - instanceName: pipelineAgents
+      templateName: azure-building-blocks/terraform/ad-admin
+      tool: terraform
+    - instanceName: projectManagement
+      templateName: azure-building-blocks/terraform/ad-admin
+      tool: terraform
+    - instanceName: releaseManagement
+      templateName: azure-building-blocks/terraform/ad-admin
+      tool: terraform

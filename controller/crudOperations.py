@@ -16,10 +16,42 @@ import logWriter
 
 buildRepoListOfTuples = []
 
+#>>def onAdmin(**inputVars):
+#>>  typeName = 'admin'
+#>>  yamlInfraConfigFileAndPath = inputVars.get('yamlInfraConfigFileAndPath')
+#>>#  adminInstanceName = configReader.getAdminInstanceName(yamlInfraConfigFileAndPath)
+#>>#  instanceNames = configReader.getInstanceNames(yamlInfraConfigFileAndPath, 'admin')
+#>>  instanceNames = configReader.getSystemInstanceNames(yamlInfraConfigFileAndPath, 'admin')
+#>>  print("instanceNames for admin are: ", instanceNames)
+#>>  quit("admin breakpoint")
+#>>  operation = 'on'
+#>>  terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVariables)
+#>>  print("---------------------------------------------------------------------------------------------------------------")
+#>>#>  operation = 'on'
+#>>#>  ##############################################################################
+#>>#>  ### Copy the template into a new instance of a call to the vm module
+#>>#>  ##############################################################################
+#>>#>  typesToCreate = configReader.listTypesInSystem(yamlInfraConfigFileAndPath)
+  
+#>>#>  print("1. typesToCreate is: ", typesToCreate)
+
+#>>#>  #System is NOT a terraform backend, or at least is not one defined through az-cli, so we will proceed with building the system with terraform
+#>>#>  typeParent = 'systems'
+#>>#>  print("-----------------------------------------------------------------------------")
+#>>#>  for typeName in typesToCreate:
+#>>#>    if (typeName != "networkFoundation") and (typeName != "subnetForBuilds") and (typeName != "images"):
+#>>#>      instanceNames = configReader.getSystemInstanceNames(yamlInfraConfigFileAndPath, typeName)
+#>>#>      terraformCrudOperation(operation, typeParent, typeName, None, None, instanceNames, **inputVars)
+#>>#>      localMsg = "done with -- " + typeName + " -----------------------------------------------------------------------------"
+#>>#>      print(localMsg)
+
+#>>def offAdmin(**inputVars):
+#>>  print("This is where the offAdmin function will go.  ")
+
 def onFoundation(command, **inputVars):
 #  myCmd = 'attrib -h -s path_to_file'
-  myCmd = 'attrib -h -s ' + 'C:\\Users\\User\\AppData\\Roaming\\terraform.rc'
-  os.system(myCmd)
+#  myCmd = 'attrib -h -s ' + 'C:\\Users\\User\\AppData\\Roaming\\terraform.rc'
+#  os.system(myCmd)
   typeName = 'networkFoundation'
   yamlInfraConfigFileAndPath = inputVars.get('yamlInfraConfigFileAndPath')
   foundationInstanceName = configReader.getFoundationInstanceName(yamlInfraConfigFileAndPath)
@@ -549,7 +581,6 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
         templateName = configReader.getTemplateName(yaml_infra_config_file_and_path, typeParent, typeName, typeGC, parentInstanceName, instanceName)  
     else:
       templateName = configReader.getTemplateName(yaml_infra_config_file_and_path, typeParent, typeName, None, instanceName, None)  
-    yaml_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
     dynamicVarsPath = inputVars.get('dynamicVarsPath')
     oldTfStateName = callInstanceManager.getBackedUpStateFileName(dynamicVarsPath, foundationInstanceName, templateName, instanceName)
     app_parent_path = inputVars.get('app_parent_path')
@@ -571,9 +602,14 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
     destinationCallParent = callInstanceManager.convertPathForOS(app_parent_path, relativePathToInstance)
     #2. Then second instantiate call to module
     destinationCallInstance = callInstanceManager.instantiateCallToModule(path_to_application_root, instanceName, template_Name, oldTfStateName, **inputVars)
+
+#    print("module_config_file_and_path is: ", module_config_file_and_path)
+
+#    quit("whoa nelly!")
+
     if os.path.exists(destinationCallInstance) and os.path.isdir(destinationCallInstance):
       #3. Then third assemble and run command
-      callInstanceManager.assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, parentInstanceName, instanceName, destinationCallInstance, typeName, module_config_file_and_path, **inputVars)
+      callInstanceManager.assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_file_and_path, foundationInstanceName, parentInstanceName, instanceName, destinationCallInstance, typeName, module_config_file_and_path, **inputVars)
       if typeGrandChild != None:
         if typeGrandChild == 'projects/code' and (operation == 'output'):
           buildRepoListOfTuples.append(((commandRunner.azuredevops_build_definition_id).replace('"', ''), (commandRunner.azuredevops_git_repository_name).replace('"', '')))
@@ -584,6 +620,16 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
         print("templateName inside terraformCrudOperation succeed block is: ", templateName)
         key_source = inputVars.get('keySource')
         tfvars_file_and_path = inputVars.get('tfvarsFileAndPath') 
+        ############################################################################################################################
+        if (typeName == 'admin') and (operation == 'on') and (commandRunner.terraformResult == "Applied"): 
+          org = configReader.getFirstLevelValue(yaml_infra_config_file_and_path, "organization")
+          yaml_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
+          print("yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
+          print("About to saveKeyFile. ")
+    #      quit("stopping to debug.")
+          callInstanceManager.saveKeyFile(destinationCallInstance, instanceName, cloud, yaml_keys_file_and_path, org, **inputVars)
+
+        ############################################################################################################################
         callInstanceManager.cleanupAfterOperation(destinationCallInstance, destinationCallParent, dynamicVarsPath, foundationInstanceName, templateName, instanceName, key_source, tfvars_file_and_path)
       else:  
         print("-------------------------------------------------------------------------------------------------------------------------------")
@@ -592,6 +638,8 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
     else:  
       msgStr = "The instance specified as \"" + instanceName + "\" does not have any corresponding call to a module that might manage it.  Either it does not exist or it is outside the scope of this program.  Specifically, the following directory does not exist: " + destinationAutoScalingSubnetCallInstance + "  Therefore, we are not processing the request to remove the instance named: \"" + instanceName + "\""
       quit(msgStr)
+
+
   if typeGrandChild != None:
     if typeGrandChild == 'code' and (operation == 'output'):
       print("end buildRepoListOfTuples is: ", buildRepoListOfTuples)
