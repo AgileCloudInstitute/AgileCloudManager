@@ -245,8 +245,13 @@ def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_fil
     commandToRun = binariesPath + 'terraform output'
   else:
     quit("Error: Invalid value for operation: ", operation)
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
   print("commandToRun is: ", commandToRun)
-  #quit("stop here. ")
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
+#>>  if "output" not in operation:
+#>>    quit("stop here. ")
   commandRunner.runTerraformCommand(commandToRun, destinationCallInstance)  
   #MOVED THE SAFE KEY FILE LOGIC TO crudOperations.terraformCrudOperation(...)
 
@@ -290,12 +295,15 @@ def assembleAndRunPackerCommand(cloud, template_Name, operation, yaml_infra_conf
 
   if operation == 'build':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
-    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, yaml_keys_file_and_path, foundationInstanceName, None, instanceName, org, **inputVars)
+    varsFrag = commandBuilder.getVarsFragment(tool, yaml_infra_config_file_and_path, moduleConfigFileAndPath, cloud, foundationInstanceName, None, instanceName, org, **inputVars)
     #commandToRun = "packer build -debug " + varsFrag + " " + template_config_file_name
     commandToRun = binariesPath + "packer build " + varsFrag + " " + template_config_file_name
   else:
     quit("Error: Invalid value for operation: ", operation)
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
   print("commandToRun is: ", commandToRun)
+  print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
   print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
   print("imageRepoDir is: ", imageRepoDir)
   print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")

@@ -21,21 +21,6 @@ def runInfraCommands(inputVariables):
     elif cliproc.command == 'off':
       setup.undoSetup(**inputVariables)
 
-  elif cliproc.domain == 'admin':
-#    typeName = 'admin'
-#    yamlInfraConfigFileAndPath = inputVariables.get('yamlInfraConfigFileAndPath')
-    #foundationInstanceName = configReader.getFoundationInstanceName(yamlInfraConfigFileAndPath)
-#    adminInstanceName = configReader.getAdminInstanceName(yamlInfraConfigFileAndPath)
-#    instanceNames = [adminInstanceName]
-    if cliproc.command == 'on':
-#      operation = 'on'
-      crudops.onAdmin(**inputVariables)
-#      crudops.terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVariables)
-    elif cliproc.command == 'off':
-#      operation = 'off'
-      crudops.offAdmin(**inputVariables)
-#      crudops.terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVariables)
-
   elif cliproc.domain == 'foundation':
     if cliproc.command == 'on':
       crudops.onFoundation(cliproc.command, **inputVariables)

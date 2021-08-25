@@ -252,6 +252,7 @@ def getVarFromOutput(tool, r):
 
 def getSecretVarFromKeys(tool, r, instanceName, cloud_vendor, **input_vars):
   yamlKeysPath = getKeyPath(cloud_vendor, **input_vars)
+  print("yamlKeysPath is: ", yamlKeysPath)
   yamlKeysFileAndPath = yamlKeysPath + r[1]
   if 'iamUserKeys.yaml' in yamlKeysFileAndPath:
     keyPairName = 'iamUserKeyPair'
@@ -264,6 +265,9 @@ def getSecretVarFromKeys(tool, r, instanceName, cloud_vendor, **input_vars):
   tfInputVarName = r[0]
   sourceField = r[4]
   secretLine = 'empty'
+  print("yamlKeysFileAndPath is: ", yamlKeysFileAndPath)
+  if cloud_vendor != "azure":
+    quit("Breakpoint getSecretVarFromKeys.")
   with open(yamlKeysFileAndPath) as f:  
     keypairs_dict = yaml.safe_load(f)
     myItems = keypairs_dict.items()
@@ -416,6 +420,7 @@ def getKeyFileAndPath(type_name, cloud_vendor, **input_vars):
   return yaml_keys_file_and_path
 
 def getKeyPath(cloud_vendor, **input_vars):
+  print("cloud_vendor is: ", cloud_vendor)
   yaml_keys_path = 'invalid'
   if cloud_vendor == 'aws':
     yaml_keys_path = input_vars.get('dirOfYamlKeys')

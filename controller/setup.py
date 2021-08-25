@@ -228,52 +228,45 @@ def writeTerraformRC(terraformRC):
     print("}")
 
 def runSetup(**inputVars):
-#>  app_parent_path = os.path.dirname(os.path.realpath("..\\"))
-#>  from_path = app_parent_path+"\\agile-cloud-manager"+"\\"+"move-to-directory-outside-app-path\\"
-#>  dest_path = app_parent_path+"\\config-outside-acm-path\\"
+  app_parent_path = os.path.dirname(os.path.realpath("..\\"))
+  from_path = app_parent_path+"\\agile-cloud-manager"+"\\"+"move-to-directory-outside-app-path\\"
+  dest_path = app_parent_path+"\\config-outside-acm-path\\"
+  #Create destination directory if it does not already exist 
+  Path(dest_path).mkdir(parents=True, exist_ok=True)
+  #Copy config and secret templates outside app path before they can be safely populated
+  copy_tree(from_path, dest_path)
+  #Copy actual credentials into their destination.
+  if inputVars.get("keysDir") == '':
+    #Git credentials
+    gitCredFileSrc = app_parent_path + "\\gitCred.yaml"
+    #azure credentials
+    azCredFileSrc = app_parent_path + "\\adUserKeys.yaml"
+    print("gitCredFileSrc is: ", gitCredFileSrc)
+    print("azCredFileSrc is: ", azCredFileSrc)
+  else:
+    #Git credentials
+    gitCredFileSrc = inputVars.get("keysDir") + "\\gitCred.yaml"
+    #azure credentials
+    azCredFileSrc = inputVars.get("keysDir") + "\\adUserKeys.yaml"
+  print("gitCredFileSrc is: ", gitCredFileSrc)
+  print("azCredFileSrc is: ", azCredFileSrc)
+  gitCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\gitCred.yaml"
+  azCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\adUserKeys.yaml"
 
-#>  #Create destination directory if it does not already exist 
-#>  Path(dest_path).mkdir(parents=True, exist_ok=True)
-#>  #Copy config and secret templates outside app path before they can be safely populated
-#>  copy_tree(from_path, dest_path)
+  if os.path.exists(gitCredFileSrc): shutil.copyfile(gitCredFileSrc, gitCredFileDest)
+  if os.path.exists(azCredFileSrc): shutil.copyfile(azCredFileSrc, azCredFileDest)
 
-#>  #Copy actual credentials into their destination.
-#>  if inputVars.get("keysDir") == '':
-#>    #Git credentials
-#>    gitCredFileSrc = app_parent_path + "\\gitCred.yaml"
-#>    #azure credentials
-#>    azCredFileSrc = app_parent_path + "\\adUserKeys.yaml"
-#>  else:
-#>    #Git credentials
-#>    gitCredFileSrc = inputVars.get("keysDir") + "\\gitCred.yaml"
-#>    #azure credentials
-#>    azCredFileSrc = inputVars.get("keysDir") + "\\adUserKeys.yaml"
-#>  gitCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\gitCred.yaml"
-#>  azCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\adUserKeys.yaml"
-#>  if os.path.exists(gitCredFileSrc): shutil.copyfile(gitCredFileSrc, gitCredFileDest)
-#>  if os.path.exists(azCredFileSrc): shutil.copyfile(azCredFileSrc, azCredFileDest)
-
-#>  getDependencies(**inputVars)
-#>  checkDependencies(**inputVars)
-#>  cloneTheSourceCode(**inputVars)
-
-#  quit("Setup breakpoint")
+  getDependencies(**inputVars)
+  checkDependencies(**inputVars)
+  cloneTheSourceCode(**inputVars)
 
   providersPath = os.path.join( inputVars.get('dependenciesPath') , ".terraform\\providers")
   providersPath = providersPath.replace("\\", "\\\\")
-#  providersPath = "C:\\projects\\acm\\Aug2021\\admin\\"
   appData = os.getenv('APPDATA').strip()
-#  appData = appData.replace("\\", "\\\\")
-  #print(os.getenv('APPDATA'))
-  #terraformRC = os.path.join( os.getenv('APPDATA'), "terraform.rc")
-#>  appData = "C:\\Users\\User\\Documents\\"
-  print("appData is: ", appData)
   terraformRC = os.path.join( appData, "terraform.rc")
   terraformRC = terraformRC.replace("\\", "\\\\")
-  print("terraformRC is: ", terraformRC)
 
-#  quit("Breakpoint.")
-  print("About to write terraformRC. ")
+  print("About to write terraformRC to: ", terraformRC)
   try: 
     with open(terraformRC, 'w') as f:
       f.write('provider_installation {\n')
@@ -288,19 +281,6 @@ def runSetup(**inputVars):
       f.write('}\n')
   except (Exception) as e:
     print(e)
-
-  print("About to sleep 60 seconds. ")
-  time.sleep(60)
-  print("About to read the terraformRC we just wrote.  ")
-  with open(terraformRC, 'r') as lines:
-    for line in lines:
-      print(line)
-
-  print("About to sleep 60 seconds. ")
-  time.sleep(60)
-  print("About to disable settings for folder so that the terraformRC file can be unhidden.  ")
-  removeSettingsCmd = 'attrib -h -s ' + terraformRC
-  os.system(removeSettingsCmd)
 
 #The next 2 lines are here for placekeeping.  make sure to move them to the appropriate place.
 #  addExteensionCommand = 'az extension add --name azure-devops'

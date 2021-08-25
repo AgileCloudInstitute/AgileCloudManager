@@ -16,42 +16,7 @@ import logWriter
 
 buildRepoListOfTuples = []
 
-#>>def onAdmin(**inputVars):
-#>>  typeName = 'admin'
-#>>  yamlInfraConfigFileAndPath = inputVars.get('yamlInfraConfigFileAndPath')
-#>>#  adminInstanceName = configReader.getAdminInstanceName(yamlInfraConfigFileAndPath)
-#>>#  instanceNames = configReader.getInstanceNames(yamlInfraConfigFileAndPath, 'admin')
-#>>  instanceNames = configReader.getSystemInstanceNames(yamlInfraConfigFileAndPath, 'admin')
-#>>  print("instanceNames for admin are: ", instanceNames)
-#>>  quit("admin breakpoint")
-#>>  operation = 'on'
-#>>  terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVariables)
-#>>  print("---------------------------------------------------------------------------------------------------------------")
-#>>#>  operation = 'on'
-#>>#>  ##############################################################################
-#>>#>  ### Copy the template into a new instance of a call to the vm module
-#>>#>  ##############################################################################
-#>>#>  typesToCreate = configReader.listTypesInSystem(yamlInfraConfigFileAndPath)
-  
-#>>#>  print("1. typesToCreate is: ", typesToCreate)
-
-#>>#>  #System is NOT a terraform backend, or at least is not one defined through az-cli, so we will proceed with building the system with terraform
-#>>#>  typeParent = 'systems'
-#>>#>  print("-----------------------------------------------------------------------------")
-#>>#>  for typeName in typesToCreate:
-#>>#>    if (typeName != "networkFoundation") and (typeName != "subnetForBuilds") and (typeName != "images"):
-#>>#>      instanceNames = configReader.getSystemInstanceNames(yamlInfraConfigFileAndPath, typeName)
-#>>#>      terraformCrudOperation(operation, typeParent, typeName, None, None, instanceNames, **inputVars)
-#>>#>      localMsg = "done with -- " + typeName + " -----------------------------------------------------------------------------"
-#>>#>      print(localMsg)
-
-#>>def offAdmin(**inputVars):
-#>>  print("This is where the offAdmin function will go.  ")
-
 def onFoundation(command, **inputVars):
-#  myCmd = 'attrib -h -s path_to_file'
-#  myCmd = 'attrib -h -s ' + 'C:\\Users\\User\\AppData\\Roaming\\terraform.rc'
-#  os.system(myCmd)
   typeName = 'networkFoundation'
   yamlInfraConfigFileAndPath = inputVars.get('yamlInfraConfigFileAndPath')
   foundationInstanceName = configReader.getFoundationInstanceName(yamlInfraConfigFileAndPath)
@@ -62,7 +27,6 @@ def onFoundation(command, **inputVars):
     hasImageBuilds = configReader.checkTopLevelType(yamlInfraConfigFileAndPath, 'imageBuilds')
     print("hasImageBuilds is: ", hasImageBuilds)
     if hasImageBuilds:
-      quit("BREAKPOINT ...  An imageBuilds definition has been found.  ")
       app_parent_path = os.path.dirname(os.path.realpath("..\\")) + '\\'
       operation = 'on'
       typesInImageBuilder = ['subnetForBuilds']
@@ -147,6 +111,7 @@ def getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, propNam
   rgNameCoords = configReader.getPropertyCoordinatesFromCSV(templateName, propName, **inputVars)
   print("propName is: ", propName)
   coordsParts = rgNameCoords.split("/")
+  print("coordsParts is: ", coordsParts)
   if coordsParts[0] == 'infrastructureConfig.yaml':
     if rgNameCoords.count('/') == 1:
       if coordsParts[1] == 'networkFoundation':
@@ -164,6 +129,20 @@ def getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, propNam
     print("No match: ", coordsParts[1])
   return varVal
 #..............................................................................................................................................
+#...................................................................................
+def writeBackendFile(storageAccountName, storageContainerName, subscriptionId, clientId, clientSecret, tenantId, resourceGroupName):
+  tfBackendConfigDir = "C:\\projects\\acm\\shared\\keys\\"
+  backendFile = tfBackendConfigDir + "module." + storageContainerName + ".backend.tfvars"
+  with open(backendFile, 'w') as f:
+    f.write("storage_account_name = \""+storageAccountName+"\"\n")
+    f.write("container_name       = \""+storageContainerName+"\"\n")
+    f.write("subscription_id      = \""+subscriptionId+"\"\n")
+    f.write("client_id            = \""+clientId+"\"\n")
+    f.write("client_secret        = \""+clientSecret+"\"\n")
+    f.write("tenant_id            = \""+tenantId+"\"\n")
+    f.write("resource_group_name  = \""+resourceGroupName+"\"\n")
+#...................................................................................
+
 
 def onSystem(command, **inputVars):
   typeName = 'networkFoundation'
@@ -179,20 +158,15 @@ def onSystem(command, **inputVars):
   ##############################################################################
   typesToCreate = configReader.listTypesInSystem(yamlInfraConfigFileAndPath)
   
-  print("1. typesToCreate is: ", typesToCreate)
-  
   isTfBackend = False
   for systemType in typesToCreate:
     if "tfBackend" in systemType:
       isTfBackend = True
-  print("isTfBackend is: ", isTfBackend)
     
   if isTfBackend == True:
     for systemType in typesToCreate:
       if "tfBackend" not in systemType:
         typesToCreate.remove(systemType)
-    print("2. typesToCreate is: ", typesToCreate)
-    
     #https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli
     #https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_create
     #https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
@@ -217,13 +191,11 @@ def onSystem(command, **inputVars):
         #Get the variable values
         resourceGroupName = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'resourceGroupName', **inputVars)
         resourceGroupRegion = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'resourceGroupRegion', **inputVars)
-        keyVaultName = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'keyVaultName', **inputVars).lower()
-        keyName = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'keyName', **inputVars)
         storageAccountName = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'storageAccountName', **inputVars)
+        subscriptionId = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'subscriptionId', **inputVars)
         clientId = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'clientId', **inputVars)
         clientSecret = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'clientSecret', **inputVars)
         tenantId = getTfBackendPropVal(yaml_keys_file_and_path, instName, templateName, 'tenantId', **inputVars)
-    
         if clientSecret[0] == '-':
           clientSecret = '\'' + clientSecret + '\''
     
@@ -233,9 +205,6 @@ def onSystem(command, **inputVars):
         print("myCmd is: ", myCmd)
         commandRunner.getShellJsonResponse(myCmd)
         print("Finished running login command.")
-    
-        adminCidr = commandBuilder.getAdminCidr()
-        print("adminCidr is: ", adminCidr)
     
         #First create storage account
         #https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-cli
@@ -250,54 +219,15 @@ def onSystem(command, **inputVars):
     
         #Then create the 6 storage containers within the storage account to correspond with the sections in infrastructureConfig 
         # Adding .lower() to the string declarations as a reminder that the azure portal only seems to accept lower case.  If you remove .lower() , then the containers that have camel case names like networkFoundation will NOT be created.
-        storageContainerName = 'admin'.lower()
-        createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
-        commandRunner.getShellJsonResponse(createStorageContainerCommand)  
-    
         storageContainerName = 'networkFoundation'.lower()
         createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
         commandRunner.getShellJsonResponse(createStorageContainerCommand)  
-    
-        storageContainerName = 'imageBuilds'.lower()
-        createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
-        commandRunner.getShellJsonResponse(createStorageContainerCommand)  
+        writeBackendFile(storageAccountName, storageContainerName, subscriptionId, clientId, clientSecret, tenantId, resourceGroupName)
     
         storageContainerName = 'systems'.lower()
         createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
         commandRunner.getShellJsonResponse(createStorageContainerCommand)  
-    
-        storageContainerName = 'projectManagement'.lower()
-        createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
-        commandRunner.getShellJsonResponse(createStorageContainerCommand)  
-    
-        storageContainerName = 'releaseDefinition'.lower()
-        createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
-        commandRunner.getShellJsonResponse(createStorageContainerCommand)  
-    
-        print("1 keyVaultName is: ", keyVaultName)
-    
-        #Now create the key vault
-        #https://docs.microsoft.com/en-us/cli/azure/keyvault?view=azure-cli-latest#az_keyvault_create
-        #Change default-action to Deny for PROD.  Just putting Allow here during development.  
-        createKeyVaultCommand = "az keyvault create --resource-group " + resourceGroupName + " --bypass AzureServices " + "--default-action Allow " + "--enabled-for-disk-encryption true " + "--location " + resourceGroupRegion + " --sku standard " + "--name " + keyVaultName 
-        #Look into potentially adding some of the following 7 flags.
-        # 1 purge_soft_delete_on_destroy = true
-        # 2 recover_soft_deleted_key_vaults = true
-        # 3 --network-acls-ips
-        # 4 --network-acls-vnets
-        # 5 --subscription
-        # 6 --enable-purge-protection false #This threw an error, so look into how to allow autodeletion.
-        # 7 --enable-soft-delete false # This threw a warning that this flag is deprecated and will be removed in a future version.  So find a better way to allow autodeletion
-        commandRunner.getShellJsonResponse(createKeyVaultCommand)
-    
-#        quit("stopping before creating key vault.  This is for debugging during development.  ")
-        print("Finished creating key vault.  ")
-        print("2 keyVaultName is: ", keyVaultName)
-        #Then add the storage account key to the keyvault so that the key can be used by a pipeline.  
-        createSecretCommand = 'az keyvault secret set --vault-name ' + keyVaultName + ' --name ' + keyName + ' --value ' + accountKey 
-        print("createSecretCommand is: ", createSecretCommand)    
-        commandRunner.getShellJsonResponse(createSecretCommand)    
-        quit("Finished creating secret.")
+        writeBackendFile(storageAccountName, storageContainerName, subscriptionId, clientId, clientSecret, tenantId, resourceGroupName)
     
         #add error handling for all of the above steps
     

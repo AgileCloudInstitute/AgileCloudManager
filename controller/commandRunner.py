@@ -60,7 +60,7 @@ def getShellJsonResponse(cmd):
 #    print("data string is: ", data.decode("utf-8"))
 #    print("err is: ", err)
 #    print("process.returncode is: ", process.returncode)
-    if process.returncode is 0:
+    if process.returncode == 0:
         return data.decode('utf-8')
     else:
         print("Error:", err)
