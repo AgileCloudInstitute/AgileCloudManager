@@ -256,27 +256,27 @@ def runSetup(**inputVars):
 
 #>>  quit("breakpoint to debug dependencies download")
 
-  providersPath = os.path.join( inputVars.get('dependenciesPath') , ".terraform\\providers")
-  providersPath = providersPath.replace("\\", "\\\\")
-  appData = os.getenv('APPDATA').strip()
-  terraformRC = os.path.join( appData, "terraform.rc")
-  terraformRC = terraformRC.replace("\\", "\\\\")
-
-  print("About to write terraformRC to: ", terraformRC)
-  try: 
-    with open(terraformRC, 'w') as f:
-      f.write('provider_installation {\n')
-      f.write('  filesystem_mirror {\n')
-      f.write('    path    = "' + providersPath + '"\n')
-      f.write('    include = ["*/*"]\n')
-      f.write('  }\n')
-      f.write('\n')
-      f.write('  direct {\n')
-      f.write('    exclude = ["*/*"]\n')
-      f.write('  }\n')
-      f.write('}\n')
-  except (Exception) as e:
-    print(e)
+#>>KEEP THE FOLLOWING BLOCK TO ADD WHEN USING LOCAL COPIES OF PROVIDERS.  FOR NOW, WE ARE COMMENTING IT OUT TO TEST DOWNLOADING REMOTE COPIES OF PROVIDERS.
+#>>  providersPath = os.path.join( inputVars.get('dependenciesPath') , ".terraform\\providers")
+#>>  providersPath = providersPath.replace("\\", "\\\\")
+#>>  appData = os.getenv('APPDATA').strip()
+#>>  terraformRC = os.path.join( appData, "terraform.rc")
+#>>  terraformRC = terraformRC.replace("\\", "\\\\")
+#>>  print("About to write terraformRC to: ", terraformRC)
+#>>  try: 
+#>>    with open(terraformRC, 'w') as f:
+#>>      f.write('provider_installation {\n')
+#>>      f.write('  filesystem_mirror {\n')
+#>>      f.write('    path    = "' + providersPath + '"\n')
+#>>      f.write('    include = ["*/*"]\n')
+#>>      f.write('  }\n')
+#>>      f.write('\n')
+#>>      f.write('  direct {\n')
+#>>      f.write('    exclude = ["*/*"]\n')
+#>>      f.write('  }\n')
+#>>      f.write('}\n')
+#>>  except (Exception) as e:
+#>>    print(e)
 
 #The next 2 lines are here for placekeeping.  make sure to move them to the appropriate place.
 #  addExteensionCommand = 'az extension add --name azure-devops'
