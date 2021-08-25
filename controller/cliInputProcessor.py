@@ -112,7 +112,7 @@ def processInputArgs(inputArgs):
     'nameOfYamlKeys_IAM_File': 'iamUserKeys.yaml',
     'nameOfYamlKeys_AWS_Network_File': 'generatedKeys.yaml',
     'nameOfYamlKeys_Azure_AD_File': 'adUserKeys.yaml',
-    'nameOfYamlKeys_Azure_Network_File': 'generatedAzureKeys.yaml',
+    'nameOfYamlKeys_Azure_Network_File': 'adUserKeys.yaml',
     'tfvarsFileAndPath': app_parent_path+"config-outside-acm-path\\vars\\VarsForTerraform\\keys.tfvars",
     'verboseLogFilePath': app_parent_path+"config-outside-acm-path\\logs\\",
     'dependenciesBinariesPath': app_parent_path + "config-outside-acm-path\\dependencies\\binaries\\",
@@ -126,3 +126,5 @@ def processInputArgs(inputArgs):
     'tfBkndAzureParams': {     'resGroupName': 'NA' }
   }  
   return inputVars
+
+#    'nameOfYamlKeys_Azure_Network_File': 'generatedAzureKeys.yaml',

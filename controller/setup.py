@@ -187,15 +187,7 @@ def cloneTheSourceCode(**inputVars):
   yaml_git_cred = appParentPath + "\\config-outside-acm-path\\vars\\admin\\gitCred.yaml"
   sourceRepoInstanceNames = configReader.getInstanceNames(yaml_infra_config_file_and_path, 'source')
   print("sourceRepoInstanceNames is: ", sourceRepoInstanceNames)
-
-################################################################################################################################################
-################################################################################################################################################
-################################################################################################################################################
-  uname = configReader.getFirstLevelValue(yaml_git_cred, 'gitUsername')
-  pword = configReader.getFirstLevelValue(yaml_git_cred, 'gitPassword')
-################################################################################################################################################
-################################################################################################################################################
-################################################################################################################################################
+  pword = configReader.getFirstLevelValue(yaml_git_cred, 'gitPAT')
 
   for sourceRepoInstance in sourceRepoInstanceNames:
     repoUrl = configReader.getSourceCodeProperty(yaml_infra_config_file_and_path, 'source', sourceRepoInstance, 'repo')
@@ -204,13 +196,15 @@ def cloneTheSourceCode(**inputVars):
     repoUrlEnd = "@" + repoUrl.split("//")[1]
     print("repoUrlStart is: ", repoUrlStart)
     print("repoUrlEnd is: ", repoUrlEnd)
-    repoUrlCred = repoUrlStart + uname + ":" + pword + repoUrlEnd
-#    repoUrlCred = repoUrlStart + uname + repoUrlEnd
+    repoUrlCred = repoUrlStart + pword + repoUrlEnd
     repoBranch = configReader.getSourceCodeProperty(yaml_infra_config_file_and_path, 'source', sourceRepoInstance, 'branch')
     print("repoBranch is: ", repoBranch)
     gitCloneCommand = "git clone -b " + repoBranch + " " + repoUrlCred
-#    print("gitCloneCommand is: ", gitCloneCommand)
+#>>    print("gitCloneCommand is: ", gitCloneCommand)
     print("appParentPath is: ", appParentPath)
+
+#>>    quit("debug git credentials")
+
     commandRunner.runShellCommandInWorkingDir(gitCloneCommand, appParentPath)
   #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
 
@@ -259,6 +253,8 @@ def runSetup(**inputVars):
   getDependencies(**inputVars)
   checkDependencies(**inputVars)
   cloneTheSourceCode(**inputVars)
+
+#>>  quit("breakpoint to debug dependencies download")
 
   providersPath = os.path.join( inputVars.get('dependenciesPath') , ".terraform\\providers")
   providersPath = providersPath.replace("\\", "\\\\")
