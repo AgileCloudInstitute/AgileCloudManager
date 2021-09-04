@@ -8,6 +8,7 @@ import sys
 import csv
 import json
 import platform
+import os
 import commandRunner
 import configReader
 
@@ -251,15 +252,25 @@ def getVarFromOutput(tool, r):
   return varSnip
 
 def getSecretVarFromKeys(tool, r, instanceName, cloud_vendor, **input_vars):
-  yamlKeysPath = getKeyPath(cloud_vendor, **input_vars)
-  print("yamlKeysPath is: ", yamlKeysPath)
-  yamlKeysFileAndPath = yamlKeysPath + r[1]
-  if 'iamUserKeys.yaml' in yamlKeysFileAndPath:
-    keyPairName = 'iamUserKeyPair'
-  elif 'adUserKeys.yaml' in yamlKeysFileAndPath:
-    keyPairName = 'adUserKeyPair'
+  #yamlKeysPath = getKeyPath(cloud_vendor, **input_vars)
+  #print("yamlKeysPath is: ", yamlKeysPath)
+  #yamlKeysFileAndPath = yamlKeysPath + r[1]
+
+  yamlKeysPath  = input_vars.get("keysDir").replace("\\\\","\\")
+  if cloud_vendor == "aws":
+    yamlKeysFileAndPath = yamlKeysPath + 'iamUserKeys.yaml'
+  if cloud_vendor == "azure":
+    yamlKeysFileAndPath = yamlKeysPath + 'adUserKeys.yaml'
   else:
-    keyPairName = instanceName + 'KeyPair'
+    quitStr = "Cloud vendor " + "\"" + cloud_vendor + "\" is not currently supported.  Halting program so you can fix your configuration. "
+
+  #if 'iamUserKeys.yaml' in yamlKeysFileAndPath:
+  #  keyPairName = 'iamUserKeyPair'
+  #elif 'adUserKeys.yaml' in yamlKeysFileAndPath:
+  #  keyPairName = 'adUserKeyPair'
+  #else:
+  #  keyPairName = instanceName + 'KeyPair'
+
   pub = input_vars.get("pub")
   sec = input_vars.get("sec")
   tfInputVarName = r[0]
@@ -418,6 +429,24 @@ def getKeyFileAndPath(type_name, cloud_vendor, **input_vars):
 #  quit("HALT")
 
   return yaml_keys_file_and_path
+
+#..........................................................................................................
+#This new function is for getting the specific location for the keys that the admin module creates for each system
+def getKeyFileLocation(instance_name, cloud_vendor, **input_vars):
+  outputDir = input_vars.get("dirOfOutput") + instance_name + "\\"
+  if not os.path.exists(outputDir):
+    os.makedirs(outputDir)
+  keys_file_and_path = 'invalid'
+  if cloud_vendor == 'aws':
+    keys_file_and_path = outputDir + input_vars.get('nameOfYamlKeys_IAM_File')
+  elif cloud_vendor == 'azure':
+    keys_file_and_path = outputDir + 'adUserKeys' + '.yaml'
+#  print("keys_file_and_path is: ", keys_file_and_path)
+#  quit("HALT")
+
+  return keys_file_and_path
+
+#..........................................................................................................
 
 def getKeyPath(cloud_vendor, **input_vars):
   print("cloud_vendor is: ", cloud_vendor)

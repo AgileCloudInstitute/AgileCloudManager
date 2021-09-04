@@ -169,7 +169,7 @@ def processDecodedLine(decodedline):
   if "public_ip_of_ec2_instance" in decodedline:
     global vm_ip_pub
     vm_ip_pub=decodedline[28:].replace('"', '')
-  if "appId" in decodedline:
+  if "appId = " in decodedline:
     global appId
     appId=decodedline[8:]
   if "subscription_id" in decodedline:

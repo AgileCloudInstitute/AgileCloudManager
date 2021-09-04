@@ -113,6 +113,12 @@ def instantiateCallToModule(path_To_ApplicationRoot, instanceName, templateName,
     keyFile = foundationInstanceName + "-" + instanceName + "-" + templateName  
   sourceOfCallTemplate = convertPathForOS(path_To_ApplicationRoot, relativePathTemplate)
   destinationCallInstance = convertPathForOS(path_To_ApplicationRoot, relativePathInstance)
+
+  if platform.system() == 'Windows':
+    if len(destinationCallInstance) >135:
+      print("destinationCallInstance path is too long at: ", destinationCallInstance)
+      quit("ERROR: The path of the directory into which you are placing the call to the terraform module is greater than 135 characters and is thus too long.  Halting program with this meaningful message so that you can avoid receiving an unhelpful message from the program vendor.  Please shorten the length of the path and re-run.  You can either move your app higher up in the directory structure, or you can change your config by shortening the template names and instance names that are fed into this path definition. ")
+
   p = Path(destinationCallInstance)
   if p.exists():
     print("The instance of the call to module already exists.")
@@ -155,14 +161,14 @@ def checkIfFileExists(oldTfStateName):
     doesExist = False
   return doesExist
 
-def saveKeyFile(destinationCallInst, type_name, cloudprov, yaml_keys_file_and_path, org_name, **inVars):  
+def saveKeyFile(destinationCallInst, type_name, cloudprov, source_keys_file_and_path, dest_keys_file_and_path, org_name, **inVars):  
   ### Save the newly-generated keys
   tfStateFile = destinationCallInst + 'terraform.tfstate'
   data = json.load(open(tfStateFile, 'r'))
   if cloudprov == 'aws':
     saveAWSKeyFile(data["resources"], **inVars)
   elif cloudprov == 'azure':
-    saveAzureKeyFile(data["resources"], yaml_keys_file_and_path, type_name, org_name, **inVars)
+    saveAzureKeyFile(data["resources"], source_keys_file_and_path, dest_keys_file_and_path, type_name, org_name, **inVars)
 #  quit("Just debugging.")
 
 def saveAWSKeyFile(data_resources, **input_vars): 
@@ -176,7 +182,7 @@ def saveAWSKeyFile(data_resources, **input_vars):
       with open(yamlKeysNetworkFileAndPath, 'w') as file:
         documents = yaml.dump(dict_file, file)
 
-def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, type_name, org_name, **input_vars):
+def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, dest_yaml_keys_file_and_path, type_name, org_name, **input_vars):
   appId = commandRunner.appId
   secKey = 'empty'
   for i in data_resources:
@@ -208,14 +214,7 @@ def saveAzureKeyFile(data_resources, src_yaml_keys_file_and_path, type_name, org
   for key_value in myList:
     key, value = key_value.split(': ', 1)
     dictVersion[key] = value
-#    print("dictVersion[",key,"] is: ", dictVersion[key])
-  yamlKeysNetworkFileAndPath = input_vars.get('dirOfYamlKeys') + input_vars.get('nameOfYamlKeys_Azure_Network_File')
-  yamlKeysNetworkFileAndPath = yamlKeysNetworkFileAndPath.replace('.yaml','')
-  yamlKeysNetworkFileAndPath = yamlKeysNetworkFileAndPath + '-' + type_name + '-' + org_name + '.yaml'
-  print("yamlKeysNetworkFileAndPath is: ", yamlKeysNetworkFileAndPath)
-#  quit("resting here")
-
-  with open(yamlKeysNetworkFileAndPath, 'w') as file:
+  with open(dest_yaml_keys_file_and_path, 'w') as file:
     documents = yaml.dump(dictVersion, file)
 #  quit("123 debug 456")
 
@@ -250,8 +249,8 @@ def assembleAndRunCommand(cloud, template_Name, operation, yaml_infra_config_fil
   print("commandToRun is: ", commandToRun)
   print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
   print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
-#>>  if "output" not in operation:
-#>>    quit("stop here. ")
+#  if "output" not in operation:
+#    quit("stop here to debug. ")
   commandRunner.runTerraformCommand(commandToRun, destinationCallInstance)  
   #MOVED THE SAFE KEY FILE LOGIC TO crudOperations.terraformCrudOperation(...)
 

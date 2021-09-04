@@ -17,7 +17,7 @@ tags:
   ownerName: name-of-owner
 networkFoundation:
   instanceName: admin
-  templateName: azure-building-blocks/terraform/foundation-admin
+  templateName: azure-building-blocks/terraform/foundationAdmin
   tool: terraform
   resourceGroupName: admin
   resourceGroupRegion: westus
@@ -29,9 +29,9 @@ systems:
     - instanceName: pipelineAgents
       templateName: azure-building-blocks/terraform/ad-admin
       tool: terraform
-    - instanceName: projectManagement
-      templateName: azure-building-blocks/terraform/ad-admin
-      tool: terraform
-    - instanceName: releaseManagement
-      templateName: azure-building-blocks/terraform/ad-admin
-      tool: terraform
+#    - instanceName: projectManagement
+#      templateName: azure-building-blocks/terraform/ad-admin
+#      tool: terraform
+#    - instanceName: releaseManagement
+#      templateName: azure-building-blocks/terraform/ad-admin
+#      tool: terraform

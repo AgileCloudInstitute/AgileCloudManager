@@ -49,6 +49,7 @@ def processInputArgs(inputArgs):
   configAndSecretsPath = app_parent_path+"config-outside-acm-path\\"
   dirOfYamlFile = configAndSecretsPath + "vars\\yamlInputs\\"
   dirOfYamlKeys = configAndSecretsPath + "vars\\admin\\"
+  dirOfOutput = configAndSecretsPath + "output\\"
   dirOfReleaseDefJsonParts = app_parent_path + "azure-building-blocks\\release-definitions\\json-fragments\\"
   dirOfReleaseDefYaml = app_parent_path + "azure-building-blocks\\release-definitions\\yaml-definition-files\\"
   yamlInfraConfigFileAndPath = ''
@@ -109,6 +110,7 @@ def processInputArgs(inputArgs):
     'dirOfYamlKeys': dirOfYamlKeys,
     'dirOfReleaseDefJsonParts': dirOfReleaseDefJsonParts,
     'dirOfReleaseDefYaml': dirOfReleaseDefYaml,
+    'dirOfOutput': dirOfOutput,
     'nameOfYamlKeys_IAM_File': 'iamUserKeys.yaml',
     'nameOfYamlKeys_AWS_Network_File': 'generatedKeys.yaml',
     'nameOfYamlKeys_Azure_AD_File': 'adUserKeys.yaml',

@@ -6,6 +6,8 @@ import os
 import shutil
 import json
 import platform
+import shutil
+import pathlib
 
 import commandRunner
 import commandBuilder
@@ -238,22 +240,17 @@ def onSystem(command, **inputVars):
     for typeName in typesToCreate:
       if (typeName != "networkFoundation") and (typeName != "subnetForBuilds") and (typeName != "images"):
         instanceNames = configReader.getSystemInstanceNames(yamlInfraConfigFileAndPath, typeName)
+        print("typesToCreate is: ", typesToCreate)
+        print("instanceNames is: ", instanceNames)
+#>>        quit("breakpoint in systems. ")
         terraformCrudOperation(operation, typeParent, typeName, None, None, instanceNames, **inputVars)
         localMsg = "done with -- " + typeName + " -----------------------------------------------------------------------------"
         print(localMsg)
 
 
 def offSystem(**inputVars):
-  typeName = 'networkFoundation'
   yamlInfraConfigFileAndPath = inputVars.get('yamlInfraConfigFileAndPath')
-  foundationInstanceName = configReader.getFoundationInstanceName(yamlInfraConfigFileAndPath)
-  instanceNames = [foundationInstanceName]
-  operation = 'output'
-  terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVars)
-  print("---------------------------------------------------------------------------------------------------------------")
-  operation = 'off'
-  #add code to confirm that output operation succeeded.
-  #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
+
   typesToDestroy = configReader.listTypesInSystem(yamlInfraConfigFileAndPath)
 
   isTfBackend = False
@@ -265,6 +262,15 @@ def offSystem(**inputVars):
   if isTfBackend == True:
     quit("Halting program because we are leaving the destruction of terraform backends to be a manual step in the UI portal in order to protect your data. ")
   else: 
+    typeName = 'networkFoundation'
+    foundationInstanceName = configReader.getFoundationInstanceName(yamlInfraConfigFileAndPath)
+    instanceNames = [foundationInstanceName]
+    operation = 'output'
+    terraformCrudOperation(operation, 'none', typeName, None, None, instanceNames, **inputVars)
+    print("---------------------------------------------------------------------------------------------------------------")
+    operation = 'off'
+    #add code to confirm that output operation succeeded.
+    #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
     typeParent = 'systems'
     for typeName in typesToDestroy:
       if typeName != "networkFoundation" and (typeName != "subnetForBuilds") and (typeName != "images"):
@@ -534,8 +540,8 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
     destinationCallInstance = callInstanceManager.instantiateCallToModule(path_to_application_root, instanceName, template_Name, oldTfStateName, **inputVars)
 
 #    print("module_config_file_and_path is: ", module_config_file_and_path)
-
-#    quit("whoa nelly!")
+#    if typeParent == 'systems':
+#      quit("whoa nelly!")
 
     if os.path.exists(destinationCallInstance) and os.path.isdir(destinationCallInstance):
       #3. Then third assemble and run command
@@ -553,12 +559,35 @@ def terraformCrudOperation(operation, typeParent, typeName, parentInstanceName, 
         ############################################################################################################################
         if (typeName == 'admin') and (operation == 'on') and (commandRunner.terraformResult == "Applied"): 
           org = configReader.getFirstLevelValue(yaml_infra_config_file_and_path, "organization")
-          yaml_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
-          print("yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
-          print("About to saveKeyFile. ")
-    #      quit("stopping to debug.")
-          callInstanceManager.saveKeyFile(destinationCallInstance, instanceName, cloud, yaml_keys_file_and_path, org, **inputVars)
+          source_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
 
+          dest_keys_file_and_path = commandBuilder.getKeyFileLocation(instanceName, cloud, **inputVars)
+          print("dest_keys_file_and_path is: ", dest_keys_file_and_path)
+          print("About to saveKeyFile. ")
+
+#          quit("stopping to debug.")
+          callInstanceManager.saveKeyFile(destinationCallInstance, instanceName, cloud, source_keys_file_and_path, dest_keys_file_and_path, org, **inputVars)
+#          quit("stopping to debug.")
+#...............................
+        if (typeName == 'admin') and (operation == 'off') and (commandRunner.terraformResult == "Destroyed"): 
+          org = configReader.getFirstLevelValue(yaml_infra_config_file_and_path, "organization")
+#          source_keys_file_and_path = commandBuilder.getKeyFileAndPath(typeName, cloud, **inputVars)
+          dest_keys_file_and_path = commandBuilder.getKeyFileLocation(instanceName, cloud, **inputVars)
+          filePathParts = dest_keys_file_and_path.split("\\")
+          keyFileName = filePathParts[-1]
+          pathOnly = dest_keys_file_and_path.replace(keyFileName, '')
+          print("dest_keys_file_and_path is: ", dest_keys_file_and_path)
+          print("keyFileName is: ", keyFileName)
+          print("pathOnly", pathOnly)
+          print("About to deleteKeyFile. ")
+
+          path = pathlib.Path(pathOnly)
+          shutil.rmtree(path)
+#          quit("stopping to debug.")
+#///          callInstanceManager.saveKeyFile(destinationCallInstance, instanceName, cloud, source_keys_file_and_path, dest_keys_file_and_path, org, **inputVars)
+#          quit("stopping to debug.")
+
+#...............................
         ############################################################################################################################
         callInstanceManager.cleanupAfterOperation(destinationCallInstance, destinationCallParent, dynamicVarsPath, foundationInstanceName, templateName, instanceName, key_source, tfvars_file_and_path)
       else:  

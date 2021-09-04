@@ -16,7 +16,7 @@ tags:
   ownerName: name-of-owner
 networkFoundation:
   instanceName: demo
-  templateName: azure-building-blocks/terraform/net-found-tfbknd-az
+  templateName: azure-building-blocks/terraform/found-tfbknd-az
   tool: terraform
   resourceGroupName: terraform-backend
   resourceGroupRegion: westus
