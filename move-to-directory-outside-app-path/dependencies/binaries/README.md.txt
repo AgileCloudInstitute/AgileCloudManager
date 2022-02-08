@@ -1,1 +1,0 @@
-# This README file is distributed with the app so that version control will retain this empty folder.
