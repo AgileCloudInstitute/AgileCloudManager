@@ -43,6 +43,7 @@ def writeKeyFiles(keysDir):
     file.write('    _public_access_key: <put-actual-secret-value-here>\n')
     file.write('    _secret_access_key: <put-actual-secret-value-here>\n')
 
+
 def createDirectoryStructure():
   userCallingDir = os.path.abspath(".")
   print('userCallingDir is: ', userCallingDir)
@@ -52,46 +53,46 @@ def createDirectoryStructure():
   print('Contents of parent directory are: ')
   for item in os.listdir(path.parent):
     print('... ', item)
-  acmAdmin = str(parentPath) + '\\acmAdmin'
+  acmAdmin = str(parentPath) + command_builder.getSlashForOS() + 'acmAdmin'
   acmAdmin = command_builder.formatPathForOS(acmAdmin)
   adminPath = Path(acmAdmin)
   if not os.path.exists(adminPath):
     os.mkdir(adminPath)
 
-  keys = acmAdmin + '\\keys'
+  keys = acmAdmin + command_builder.getSlashForOS() + 'keys'
   keys = command_builder.formatPathForOS(keys)
   keysPath = Path(keys)
   if not os.path.exists(keysPath):
     os.mkdir(keysPath)
 
-  keys = acmAdmin + '\\keys\\starter'
+  keys = acmAdmin + command_builder.getSlashForOS() + 'keys' + command_builder.getSlashForOS() + 'starter'
   keys = command_builder.formatPathForOS(keys)
   keysPath = Path(keys)
   if not os.path.exists(keysPath):
     os.mkdir(keysPath)
-    keysPathPlusSlash = str(keysPath)+'\\'
+    keysPathPlusSlash = str(keysPath)+command_builder.getSlashForOS() 
     keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
     writeKeyFiles(keysPathPlusSlash)
 
-  binaries = acmAdmin + '\\binaries'
+  binaries = acmAdmin + command_builder.getSlashForOS() + 'binaries'
   binaries = command_builder.formatPathForOS(binaries)
   path = Path(binaries)
   if not os.path.exists(path):
     os.mkdir(path)
 
-  vars = acmAdmin + '\\vars'
+  vars = acmAdmin + command_builder.getSlashForOS() + 'vars'
   vars = command_builder.formatPathForOS(vars)
   path = Path(vars)
   if not os.path.exists(path):
     os.mkdir(path)
 
-  dynamicVars = acmAdmin + '\\dynamicVars'
+  dynamicVars = acmAdmin + command_builder.getSlashForOS() + 'dynamicVars'
   dynamicVars = command_builder.formatPathForOS(dynamicVars)
   path = Path(dynamicVars)
   if not os.path.exists(path):
     os.mkdir(path)
 
-  logs = acmAdmin + '\\logs'
+  logs = acmAdmin + command_builder.getSlashForOS() + 'logs'
   logs = command_builder.formatPathForOS(logs)
   path = Path(logs)
   if not os.path.exists(path):

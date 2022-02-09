@@ -13,6 +13,12 @@ import command_runner
 import logWriter
 import config_cliprocessor
 
+def getSlashForOS():
+  if platform.system() == 'Windows':
+    return '\\'
+  else:
+    return '/'
+
 def formatPathForOS(input):
   if platform.system() == "Windows":
     input.replace('/','\\')
