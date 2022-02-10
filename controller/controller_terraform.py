@@ -115,7 +115,8 @@ def assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, oper
   elif operation == 'on':
     #Passing foundationInstanceName into getVarsFragment because we want to use the keys associated with the network foundation when we are attaching anything to the network foundation.
     varsFrag = command_builder.getVarsFragment(tool, keyDir, yaml_infra_config_file_and_path, module_config_file_and_path, cloud, instanceName, parentInstanceName, instanceName, org)
-    commandToRun = binariesPath + "terraform apply -auto-approve -parallelism=1 " + varsFrag
+    commandToRun = binariesPath + "terraform apply -auto-approve " + varsFrag
+#    quit('breakpoint in assembleAndRunCommand')
   elif operation == 'output':
     commandToRun = binariesPath + 'terraform output'
   else:
@@ -139,14 +140,19 @@ def assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, oper
 ###############################
 
 def changePointerLineInCallToModule(fileName, searchTerm, newPointerLine): 
+  print('fileName is: ', fileName)
   with fileinput.FileInput(fileName, inplace = True) as f: 
     for line in f: 
       if searchTerm in line: 
         print(newPointerLine, end ='\n') 
       else: 
         print(line, end ='') 
+  print('... searchTerm is: ', searchTerm)
+#  quit('!')
 
 def deleteWrongOSPointerLineInCallToModule(fileName, searchTerm): 
+  print('fileName is: ', fileName)
+#  quit('W!')
   with fileinput.FileInput(fileName, inplace = True) as f: 
     for line in f: 
       if searchTerm in line: 
@@ -171,16 +177,20 @@ def createCallDirectoryAndFile(sourceOfCallTemplate, destinationCallInstance, ne
   Path(destinationCallInstance).mkdir(parents=True, exist_ok=True)
   copy_tree(sourceOfCallTemplate, destinationCallInstance)
   fileName = destinationCallInstance + "main.tf"
+  print('fileName is: ', fileName)
   if platform.system() == 'Windows':
+    #WORK ITEM: change this 4 line windows block to reflect the two line linux version below it.
     searchTerm = "/modules/"
     deleteWrongOSPointerLineInCallToModule(fileName, searchTerm)
     searchTerm = "\\modules\\"
     changePointerLineInCallToModule(fileName, searchTerm, newPointerLineWindows)
   else: 
-    searchTerm = "\\modules\\"
-    deleteWrongOSPointerLineInCallToModule(fileName, searchTerm)
-    searchTerm = "/modules/"
-    changePointerLineInCallToModule(fileName, searchTerm, newPointerLineLinux)
+    searchTerm = ' source = '
+    replacePointerLineInCallToModule(fileName, searchTerm, newPointerLineLinux)
+#    searchTerm = "\\modules\\"
+#    deleteWrongOSPointerLineInCallToModule(fileName, searchTerm)
+#    searchTerm = "/modules/"
+#    changePointerLineInCallToModule(fileName, searchTerm, newPointerLineLinux)
   if keySource != "keyVault":
     if(checkIfFileExists(oldTfStateName)):
       logString = "oldTfStateName file exists. Copying the backup tfstate file into this directory to use again."
@@ -190,6 +200,34 @@ def createCallDirectoryAndFile(sourceOfCallTemplate, destinationCallInstance, ne
     else:
       logString = "oldTfStateName files does NOT exist. "
       logWriter.writeLogVerbose("acm", logString)
+
+def replacePointerLineInCallToModule(fileName, searchTerm, newPointerLine): 
+  print('fileName is: ', fileName)
+  with fileinput.FileInput(fileName, inplace = True) as f: 
+    for line in f: 
+      if searchTerm in line: 
+        line = line.replace('\\','/')
+        line = line.replace('//','/')
+        lineInQuestion = line
+        firstQuoteIndex = line.index('"',0)
+        partBeforeQuote = line[0:firstQuoteIndex]
+        partAfterQuote = line[firstQuoteIndex:]
+        moduleStartIndex = partAfterQuote.index('m',0)
+        partBeforeModule = partAfterQuote[0:moduleStartIndex]
+        partStartingWithModule = partAfterQuote[moduleStartIndex:]
+        replacementLine = partBeforeQuote+'"../../../../'+partStartingWithModule
+        print(replacementLine, end ='\n') 
+      else: 
+        print(line, end ='') 
+  print('lineInQuestion is: ', lineInQuestion)
+  print('firstQuoteIndex is: ', firstQuoteIndex)
+  print('partBeforeQuote is: ', partBeforeQuote)
+  print('partAfterQuote is: ', partAfterQuote)
+  print('moduleStartIndex is: ', moduleStartIndex)
+  print('partBeforeModule is: ', partBeforeModule)
+  print('partStartingWithModule is: ', partStartingWithModule)
+  print('replacementLine is: ', replacementLine)
+  quit('no no no!')
 
 def initializeTerraformBackend(cloud, operation, keyDir, yamlInfraFileAndPath, foundationInstanceName, parentInstanceName, typeName, moduleConfigFileAndPath, keyFile, destinationCallInstance, remoteBackend, instanceName):
 #  quit("s")
@@ -222,13 +260,13 @@ def instantiateCallToModule(cloud, operation, keyDir, yaml_infra_config_file_and
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(yamlConfigFileAndPath)
   if (foundationInstanceName is None) or (len(foundationInstanceName)==0):
     foundationInstanceName = "nof"
-  relativePathTemplate = "\\calls-to-modules\\templates\\" + templateName + "\\"
+  relativePathTemplate = command_builder.getSlashForOS() + "calls-to-modules" + command_builder.getSlashForOS() + "templates" + command_builder.getSlashForOS() + templateName + command_builder.getSlashForOS()
   keySource = config_cliprocessor.inputVars.get('keySource')
   if templateName == 'network-foundation':
-    relativePathInstance = "\\calls-to-modules\\instances\\" + templateName + "\\"+foundationInstanceName+"-" + templateName + "\\"  
+    relativePathInstance = command_builder.getSlashForOS() + "calls-to-modules" + command_builder.getSlashForOS() + "instances" + command_builder.getSlashForOS() + templateName + command_builder.getSlashForOS() +foundationInstanceName+"-" + templateName + command_builder.getSlashForOS()  
     keyFile = foundationInstanceName + "-" + templateName  
   else:
-    relativePathInstance = "\\calls-to-modules\\instances\\" + templateName + "\\"+foundationInstanceName+"-"+instanceName+"-" + templateName + "\\"  
+    relativePathInstance = command_builder.getSlashForOS() + "calls-to-modules" + command_builder.getSlashForOS() + "instances" + command_builder.getSlashForOS() + templateName + command_builder.getSlashForOS() +foundationInstanceName+"-"+instanceName+"-" + templateName + command_builder.getSlashForOS()
     keyFile = foundationInstanceName + "-" + instanceName + "-" + templateName  
   keyFile = command_builder.formatPathForOS(keyFile)
   sourceOfCallTemplate = convertPathForOS(path_To_ApplicationRoot, relativePathTemplate)
@@ -241,9 +279,10 @@ def instantiateCallToModule(cloud, operation, keyDir, yaml_infra_config_file_and
         if 'backend \"' in line:
           if line[0] != "#":
             remoteBackend = True
+  print('templateFileAndPath is: ', templateFileAndPath)
+#  quit('>')
   if remoteBackend == True:  
     oldTfStateName = "remoteBackend"
-
   if platform.system() == 'Windows':
     if len(destinationCallInstance) >135:
       logString = "destinationCallInstance path is too long at: " + destinationCallInstance
@@ -259,9 +298,10 @@ def instantiateCallToModule(cloud, operation, keyDir, yaml_infra_config_file_and
     dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
     newPointerLineWindows="  source = \"..\\\..\\\..\\\..\\\modules\\\\" + templateName + "\""
     newPointerLineLinux="  source = \"../../../../modules/" + templateName + "\""
+    print('-- -- -- newPointerLineLinux is: ', newPointerLineLinux)
     createCallDirectoryAndFile(sourceOfCallTemplate, destinationCallInstance, newPointerLineWindows, newPointerLineLinux, oldTfStateName, foundationInstanceName, templateName, instanceName)
+#  quit("r..")
   initializeTerraformBackend(cloud, operation, keyDir, yaml_infra_config_file_and_path, foundationInstanceName, parentInstanceName, typeName, module_config_file_and_path, keyFile, destinationCallInstance, remoteBackend, instanceName)
-  #quit("r..")
   return destinationCallInstance
 
 def offInstanceOfCallToModule(locationOfCallInstance, parentDirOfCallInstance):

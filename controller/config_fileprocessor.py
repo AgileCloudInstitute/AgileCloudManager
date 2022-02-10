@@ -391,6 +391,7 @@ def getFirstLevelValue(yamlFileAndPath, keyName):
   returnVal = ""  
   with open(yamlFileAndPath) as file:
     for line in file:
+      print('-- -- -- line is: ', line)
       if line.count(':') == 1:
         lineParts = line.split(":")
         key = lineParts[0].strip()

@@ -122,6 +122,8 @@ def checkIfAzInstalled(commandToRun, vers):
 
 def checkIfAzdoInstalled(commandToRun, vers):
     resp = json.loads(getShellJsonResponse(commandToRun))
+    logString = 'azdo response is: ' + str(resp)
+    logWriter.writeLogVerbose("acm", logString)
     azdoV = resp['extensions']['azure-devops']
     if azdoV.startswith(str(vers)):
       logString = 'Dependency is installed.'
@@ -135,11 +137,13 @@ def checkIfAzdoInstalled(commandToRun, vers):
 def checkIfInstalled(commandToRun, vers):
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     match = False
+    print('=== commandToRun is: ', commandToRun)
     while True:
       line = proc.stdout.readline()
       if line:
         thetext=line.decode('utf-8').rstrip('\r|\n')
         decodedline=ansi_escape.sub('', thetext)
+        print('--- decodedline is: ', decodedline)
         if vers in decodedline:
           match = True
           logString = "Dependency is installed."

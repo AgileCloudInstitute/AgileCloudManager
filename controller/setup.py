@@ -7,6 +7,7 @@ from pathlib import Path
 import time
 import pathlib
 import shutil 
+import sys
 
 import command_builder
 import command_runner 
@@ -126,13 +127,13 @@ def removeDirectoryStructure():
   print('Contents of parent directory BEFORE DELETION are: ')
   for item in os.listdir(parentPath):
     print('... ', item)
-  acmAdmin = str(parentPath) + '\\acmAdmin'
+  acmAdmin = str(parentPath) + command_builder.getSlashForOS() + 'acmAdmin'
   acmAdmin = command_builder.formatPathForOS(acmAdmin)
   adminPath = Path(acmAdmin)
   recursiveDelete(adminPath)
 
   configPath = os.path.abspath(".")
-  yaml_infra_config_file_and_path = configPath +"\\"+"setupConfig.yaml"
+  yaml_infra_config_file_and_path = configPath + command_builder.getSlashForOS() + "setupConfig.yaml"
   yaml_infra_config_file_and_path = command_builder.formatPathForOS(yaml_infra_config_file_and_path)
   sourceRepoInstanceNames = config_fileprocessor.getInstanceNames(yaml_infra_config_file_and_path, 'source')
   print('Contents of parent directory AFTER DELETION are: ')
@@ -169,7 +170,7 @@ def downloadAndExtractBinary(url, dependencies_binaries_path):
 def getDependencies():
 #  userCallingDir = os.path.abspath(".")
   configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
-  yaml_setup_config_file_and_path = configPath +"\\"+"setupConfig.yaml"
+  yaml_setup_config_file_and_path = configPath + command_builder.getSlashForOS() + "setupConfig.yaml"
   yaml_setup_config_file_and_path = command_builder.formatPathForOS(yaml_setup_config_file_and_path)
 #  if 'ACM_SHARED_KEYS' in os.environ:
 #    dependencies_binaries_path = os.environ['ACM_SHARED_KEYS']+'\\' #config_cliprocessor.inputVars.get('dependenciesBinariesPath')
@@ -177,7 +178,7 @@ def getDependencies():
   userCallingDir = os.path.abspath(".")
   path = Path(userCallingDir)
   parentPath = path.parent
-  dependencies_binaries_path = str(parentPath)+'\\acmAdmin\\binaries\\'
+  dependencies_binaries_path = str(parentPath)+ command_builder.getSlashForOS() + 'acmAdmin' + command_builder.getSlashForOS() + 'binaries' + command_builder.getSlashForOS()
   dependencies_binaries_path = command_builder.formatPathForOS(dependencies_binaries_path)
   if platform.system() == "Windows":
     propName = "download-link-windows"
@@ -193,16 +194,29 @@ def getDependencies():
 #  quit('ccc')
   url_packer = config_fileprocessor.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "packer", propName)
   downloadAndExtractBinary(url_packer, dependencies_binaries_path)
+  if platform.system() == 'Linux':
+    #import stat
+    fullyQualifiedPath = dependencies_binaries_path + 'terraform'
+    myCmd = 'chmod +x ' + fullyQualifiedPath
+    command_runner.runShellCommand(myCmd)
+#    st = os.stat(fullyQualifiedPath)
+#    os.chmod(fullyQualifiedPath, st.st_mode | stat.S_IEXEC)
+    fullyQualifiedPath = dependencies_binaries_path + 'packer'
+    myCmd = 'chmod +x ' + fullyQualifiedPath
+    command_runner.runShellCommand(myCmd)
+#    st = os.stat(fullyQualifiedPath)
+#    os.chmod(fullyQualifiedPath, st.st_mode | stat.S_IEXEC)
 
 
 def checkDependencies():
   logString = "Checking to see if required dependencies are installed..."
   logWriter.writeLogVerbose("acm", logString)
   configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
-  yaml_setup_config_file_and_path = configPath +"\\"+"setupConfig.yaml"  
+  yaml_setup_config_file_and_path = configPath +command_builder.getSlashForOS() + "setupConfig.yaml"  
   yaml_setup_config_file_and_path = command_builder.formatPathForOS(yaml_setup_config_file_and_path)
   dependencies_binaries_path = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
-
+  dependencies_binaries_path = command_builder.formatPathForOS(dependencies_binaries_path)
+  print('::: dependencies_binaries_path is: ', dependencies_binaries_path)
   #Terraform
   tfVers = config_fileprocessor.getDependencyVersion(yaml_setup_config_file_and_path, 'terraform')
   if tfVers.count('.') == 1:
@@ -214,6 +228,7 @@ def checkDependencies():
   tfCheck = None
   tfDependencyCheckCommand = dependencies_binaries_path + "terraform --version"
   tfResult = command_runner.checkIfInstalled(tfDependencyCheckCommand, tfVers)
+  print('+++   tfResult is: ', tfResult)
   if 'Dependency is installed' in tfResult:
     tfCheck = True
   if 'NOT installed' in tfResult:
@@ -332,13 +347,22 @@ def checkDependencies():
 
 def cloneTheSourceCode():
   configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
-  yaml_infra_config_file_and_path = configPath +"\\"+"setupConfig.yaml"  
+  yaml_infra_config_file_and_path = configPath +command_builder.getSlashForOS() + "setupConfig.yaml"  
   yaml_infra_config_file_and_path = command_builder.formatPathForOS(yaml_infra_config_file_and_path)
   appParentPath = config_cliprocessor.inputVars.get('app_parent_path')
-  yaml_git_cred = config_cliprocessor.inputVars.get('dirOfYamlKeys') + "\\gitCred.yaml"
-  yaml_git_cred = command_builder.formatPathForOS(yaml_git_cred)
   sourceRepoInstanceNames = config_fileprocessor.getInstanceNames(yaml_infra_config_file_and_path, 'source')
-  pword = config_fileprocessor.getFirstLevelValue(yaml_git_cred, 'gitPAT')
+  userCallingDir = os.path.abspath(".")
+  path = Path(userCallingDir)
+  parentPath = path.parent
+  acmAdmin = str(parentPath) + command_builder.getSlashForOS() + 'acmAdmin'
+  acmAdmin = command_builder.formatPathForOS(acmAdmin)
+  keys = acmAdmin + command_builder.getSlashForOS() + 'keys' + command_builder.getSlashForOS() + 'starter'
+  keys = command_builder.formatPathForOS(keys)
+  keysPathPlusSlash = keys+command_builder.getSlashForOS() 
+  keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
+  #WORK ITEM: Change the following line to make the file name cloud-agnostic
+  keys_file_and_path = keysPathPlusSlash+'adUserKeys.yaml'
+  pword = config_fileprocessor.getFirstLevelValue(keys_file_and_path, 'gitPass')
   for sourceRepoInstance in sourceRepoInstanceNames:
     repoUrl = config_fileprocessor.getSourceCodeProperty(yaml_infra_config_file_and_path, 'source', sourceRepoInstance, 'repo')
     repoUrlStart = repoUrl.split("//")[0] + "//"
@@ -418,8 +442,9 @@ def runConfigure():
 
 
 def undoConfigure():
-  app_parent_path = os.path.dirname(os.path.realpath("..\\"))
-  dest_path = app_parent_path+"\\config-outside-acm-path\\"
+  relPathStr = '..'+command_builder.getSlashForOS()
+  app_parent_path = os.path.dirname(os.path.realpath(relPathStr))
+  dest_path = app_parent_path+ command_builder.getSlashForOS() + "config-outside-acm-path" + command_builder.getSlashForOS()
   dest_path = command_builder.formatPathForOS(dest_path)
   try:
     shutil.rmtree(dest_path, ignore_errors=True)

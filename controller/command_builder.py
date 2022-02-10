@@ -20,16 +20,22 @@ def getSlashForOS():
     return '/'
 
 def formatPathForOS(input):
+  print(':: :: :: input before is: ', input)
   if platform.system() == "Windows":
-    input.replace('/','\\')
-    input.replace('\\\\','\\')
-    input.replace('\\\\\\','\\')
+    input = input.replace('/','\\')
+    input = input.replace('\\\\','\\')
+    input = input.replace('\\\\\\','\\')
   elif platform.system() == "Linux":
-    input.replace('\\','/')
-    input.replace('//','/')
-    input.replace('///','/')
+    if '\\' in input:
+      print('*** trap 1')
+    if '\\\\' in input:
+      print('*** trap 2')
+    input = input.replace('\\','/')
+    input = input.replace('//','/')
+    input = input.replace('///','/')
   if input.endswith('/n'):
     input = input[:-2] + '\n'
+  print(':: :: :: input after is: ', input)
   return input
 
 def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, callInstanceName, org):
@@ -93,7 +99,7 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
         if re.match(myType, key):
           type = my_dict.get(key)
           varSnip = getVarFromType(tool, row, callInstanceName, 1, type, org)
-  varSnip = formatPathForOS(varSnip)
+#  varSnip = formatPathForOS(varSnip)
   return varSnip
 
 def getVarFromType(tool, r, callInstanceName, layers, aType, org):
@@ -150,6 +156,7 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
                   varSnip = " -var=\"" +inputVar + "="+str(pathStr) +"\""  
                 elif tool == 'packer':
                   varSnip = " -var \"" +inputVar + "="+str(pathStr) +"\""  
+                varSnip = formatPathForOS(varSnip)
             elif sourceField == 'instanceName':
               if myType == "admin":
                 if tool == 'terraform':
@@ -170,6 +177,7 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
                     appParentpath = formatPathForOS(appParentpath)
                     relativePathAndFile = formatPathForOS(relativePathAndFile)
                   varSnip = " -var=\"" +inputVar + "="+appParentpath + relativePathAndFile +"\""  
+                  varSnip = formatPathForOS(varSnip)
                 else:
                   if callInstanceName == "azdoAgents":
                     print("prop is: ", prop)
@@ -182,9 +190,11 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
                     appParentpath = formatPathForOS(appParentpath)
                     relativePathAndFile = formatPathForOS(relativePathAndFile)
                   varSnip = " -var \"" +inputVar + "="+appParentpath + relativePathAndFile +"\""  
+                  varSnip = formatPathForOS(varSnip)
                 else:
                   varSnip = " -var \"" +inputVar + "="+str(props.get(prop)) +"\""  
-  varSnip = formatPathForOS(varSnip)
+#  if 'cidr' not in varSnip: #Consider indenting the next single line.  But for now we are commenting it to see if the new changes above are sufficient.
+#  varSnip = formatPathForOS(varSnip)
   return varSnip
 
 def getSecretVarFromUserConfig(tool, r, yamlInfraFileAndPath, instanceName):
@@ -281,7 +291,7 @@ def getVarFromOutput(tool, r, callInstanceName):
     varSnip = " -var=\"" +inputVar + "="+outputVar+"\""  
   elif tool == 'packer':
     varSnip = " -var \"" +inputVar + "="+outputVar+"\""  
-  varSnip = formatPathForOS(varSnip)
+  #varSnip = formatPathForOS(varSnip)
   return varSnip
 
 def getSecretVarFromKeys(tool, keyDir, r, instanceName, cloud_vendor):
@@ -481,7 +491,7 @@ def readModuleConfigFile(tool, yamlInfraFileAndPath, moduleConfigFileAndPath, pa
             varSnip = " -var=\"" +r[0] + "="+cidrBlock +"\""  
           elif tool == 'packer':
             varSnip = " -var \"" +r[0] + "="+cidrBlock +"\""
-          varSnip = formatPathForOS(varSnip)
+          #varSnip = formatPathForOS(varSnip)
           varsFragment = varsFragment + varSnip
   c.close()
   return varsFragment
