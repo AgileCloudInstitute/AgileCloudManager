@@ -227,7 +227,7 @@ def replacePointerLineInCallToModule(fileName, searchTerm, newPointerLine):
   print('partBeforeModule is: ', partBeforeModule)
   print('partStartingWithModule is: ', partStartingWithModule)
   print('replacementLine is: ', replacementLine)
-  quit('no no no!')
+#  quit('no no no!')
 
 def initializeTerraformBackend(cloud, operation, keyDir, yamlInfraFileAndPath, foundationInstanceName, parentInstanceName, typeName, moduleConfigFileAndPath, keyFile, destinationCallInstance, remoteBackend, instanceName):
 #  quit("s")
