@@ -60,11 +60,17 @@ def processInputArgs(inputArgs):
   path = Path(userCallingDir)
   app_parent_path = str(path.parent)+'\\'
   app_parent_path = command_builder.formatPathForOS(app_parent_path)
-  dirOfYamlKeys = app_parent_path+ '\\acmAdmin\\keys\\starter\\'
+  #Get acmAdmin path
+  acmAdmin = str(app_parent_path) + command_builder.getSlashForOS() + 'acmAdmin'
+  acmAdmin = command_builder.formatPathForOS(acmAdmin)
+
+  dirOfYamlKeys = acmAdmin + '\\keys\\starter\\'
   dirOfYamlKeys = command_builder.formatPathForOS(dirOfYamlKeys)
-  dirOfOutput = app_parent_path+ '\\acmAdmin\\keys\\' 
+  dirOfOutput = acmAdmin + '\\keys\\' 
   dirOfOutput = command_builder.formatPathForOS(dirOfOutput)
-  dynamicVarsPath = app_parent_path + '\\acmAdmin\\dynamicVars\\'
+  varsPath = acmAdmin + command_builder.getSlashForOS() + 'vars'
+
+  dynamicVarsPath = varsPath+'\\dynamicVars\\'
   dynamicVarsPath = command_builder.formatPathForOS(dynamicVarsPath)
   dirOfReleaseDefJsonParts = app_parent_path + "\\azure-building-blocks\\release-definitions\\json-fragments\\"
   dirOfReleaseDefJsonParts = command_builder.formatPathForOS(dirOfReleaseDefJsonParts)
@@ -76,14 +82,25 @@ def processInputArgs(inputArgs):
   keySource = 'keyFile'
   pub = 'invalid'
   sec = 'invalid'
-
-  tfvarsFileAndPath = app_parent_path+'\\acmAdmin\\vars'+"\\keys.tfvars"
+  #These next two /vars/vars/.. are temporary until we further revise the directory structure
+  tfvarsFileAndPath = varsPath+'\\vars'+"\\keys.tfvars"
   tfvarsFileAndPath = command_builder.formatPathForOS(tfvarsFileAndPath)
-  tfBackendFileAndPath = app_parent_path+'\\acmAdmin\\vars'+"\\backend.tfvars"
+  tfBackendFileAndPath = varsPath+'\\vars'+"\\backend.tfvars"
   tfBackendFileAndPath = command_builder.formatPathForOS(tfBackendFileAndPath)
-  verboseLogFilePath = app_parent_path+ '\\acmAdmin\\logs\\'
-  verboseLogFilePath = command_builder.formatPathForOS(verboseLogFilePath)
-  dependenciesBinariesPath = app_parent_path + '\\acmAdmin\\binaries\\'
+  #Get logsPath
+  if platform.system() == 'Windows':
+    verboseLogFilePath = acmAdmin + command_builder.getSlashForOS() + 'logs'
+    verboseLogFilePath = command_builder.formatPathForOS(verboseLogFilePath)
+  elif platform.system() == 'Linux':
+    verboseLogFilePath = '/var/log/acm'
+  ## Get directory structure
+  #Get binariesPath
+  if platform.system() == 'Windows':
+    dependenciesBinariesPath = acmAdmin + command_builder.getSlashForOS() + 'binaries'
+    dependenciesBinariesPath = command_builder.formatPathForOS(dependenciesBinariesPath)
+  elif platform.system() == 'Linux':
+    dependenciesBinariesPath = '/opt/acm'
+  dependenciesBinariesPath = acmAdmin+'\\binaries\\'
   dependenciesBinariesPath = command_builder.formatPathForOS(dependenciesBinariesPath)
   dependenciesPath = app_parent_path + "config-outside-acm-path\\dependencies\\"
   dependenciesPath = command_builder.formatPathForOS(dependenciesPath)
@@ -136,6 +153,8 @@ def processInputArgs(inputArgs):
     'yamlPlatformConfigFileAndPath': yamlPlatformConfigFileAndPath,
     'pathToApplicationRoot': pathToApplicationRoot,
     'app_parent_path': app_parent_path,
+    'acmAdminPath': acmAdmin,
+    'varsPath': varsPath,
     'dirOfYamlKeys': dirOfYamlKeys,
     'dirOfReleaseDefJsonParts': dirOfReleaseDefJsonParts,
     'dirOfReleaseDefYaml': dirOfReleaseDefYaml,

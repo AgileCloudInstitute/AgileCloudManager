@@ -49,7 +49,8 @@ def writeLogVerbose(tool, line):
 ##1.21.22 commenting out the next 2 lines.
 #  if "changeTaxonomy is:" in outputLine:
 #    changes_taxonomy.storeChangeTaxonomy(outputLine)
-  with io.open(verboseLogFileAndPath, "a", encoding="utf-8") as f:
+#  with io.open(verboseLogFileAndPath, "a", encoding="utf-8") as f:
+  with open(verboseLogFileAndPath, "a", encoding="utf-8") as f:
     f.write(outputLine + '\n')
   try:
     print(outputLine)

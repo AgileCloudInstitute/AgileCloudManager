@@ -44,60 +44,59 @@ def writeKeyFiles(keysDir):
     file.write('    _public_access_key: <put-actual-secret-value-here>\n')
     file.write('    _secret_access_key: <put-actual-secret-value-here>\n')
 
-
 def createDirectoryStructure():
-  userCallingDir = os.path.abspath(".")
-  print('userCallingDir is: ', userCallingDir)
-  path = Path(userCallingDir)
-  parentPath = path.parent
-  print('parentPath is: ', parentPath)
-  print('Contents of parent directory are: ')
-  for item in os.listdir(path.parent):
-    print('... ', item)
-  acmAdmin = str(parentPath) + command_builder.getSlashForOS() + 'acmAdmin'
-  acmAdmin = command_builder.formatPathForOS(acmAdmin)
-  adminPath = Path(acmAdmin)
+  acmAdminPath = config_cliprocessor.inputVars.get('acmAdminPath')
+  keysParentPath = config_cliprocessor.inputVars.get('keysParentPath')
+  keysStarterPath = config_cliprocessor.inputVars.get('keysStarter')
+  varsPath = config_cliprocessor.inputVars.get('varsPath')
+  dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
+  binariesPath = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
+  logsPath = config_cliprocessor.inputVars.get('verboseLogFilePath')
+
+  adminPath = Path(acmAdminPath)
   if not os.path.exists(adminPath):
     os.mkdir(adminPath)
 
-  keys = acmAdmin + command_builder.getSlashForOS() + 'keys'
-  keys = command_builder.formatPathForOS(keys)
-  keysPath = Path(keys)
+  keysPath = Path(keysParentPath)
   if not os.path.exists(keysPath):
     os.mkdir(keysPath)
 
-  keys = acmAdmin + command_builder.getSlashForOS() + 'keys' + command_builder.getSlashForOS() + 'starter'
-  keys = command_builder.formatPathForOS(keys)
-  keysPath = Path(keys)
-  if not os.path.exists(keysPath):
-    os.mkdir(keysPath)
-    keysPathPlusSlash = str(keysPath)+command_builder.getSlashForOS() 
+  keysStarterPath = Path(keysStarterPath)
+  if not os.path.exists(keysStarterPath):
+    os.mkdir(keysStarterPath)
+    keysPathPlusSlash = str(keysStarterPath)+command_builder.getSlashForOS() 
     keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
     writeKeyFiles(keysPathPlusSlash)
 
-  binaries = acmAdmin + command_builder.getSlashForOS() + 'binaries'
-  binaries = command_builder.formatPathForOS(binaries)
-  path = Path(binaries)
-  if not os.path.exists(path):
-    os.mkdir(path)
+  binariesPath = Path(binariesPath)
+  if not os.path.exists(binariesPath):
+    if platform.system() == 'Windows':
+      os.mkdir(binariesPath)
+    elif platform.system() == 'Linux':
+      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
+      chownCommand = 'sudo chown -R azureuser:azureuser '+str(binariesPath)
+      command_runner.runShellCommand(chownCommand)
+      binariesCommand = 'sudo mkdir '+str(binariesPath)
+      command_runner.runShellCommand(binariesCommand)
 
-  vars = acmAdmin + command_builder.getSlashForOS() + 'vars'
-  vars = command_builder.formatPathForOS(vars)
-  path = Path(vars)
-  if not os.path.exists(path):
-    os.mkdir(path)
+  varsPath = Path(varsPath)
+  if not os.path.exists(varsPath):
+    os.mkdir(varsPath)
 
-  dynamicVars = acmAdmin + command_builder.getSlashForOS() + 'dynamicVars'
-  dynamicVars = command_builder.formatPathForOS(dynamicVars)
-  path = Path(dynamicVars)
-  if not os.path.exists(path):
-    os.mkdir(path)
+  dynamicVarsPath = Path(dynamicVarsPath)
+  if not os.path.exists(dynamicVarsPath):
+    os.mkdir(dynamicVarsPath)
 
-  logs = acmAdmin + command_builder.getSlashForOS() + 'logs'
-  logs = command_builder.formatPathForOS(logs)
-  path = Path(logs)
-  if not os.path.exists(path):
-    os.mkdir(path)
+  logsPath = Path(logsPath)
+  if not os.path.exists(logsPath):
+    if platform.system() == 'Windows':
+      os.mkdir(logsPath)
+    elif platform.system() == 'Linux':
+      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
+      chownCommand = 'sudo chown -R azureuser:azureuser '+str(logsCommand)
+      command_runner.runShellCommand(chownCommand)
+      logsCommand = 'sudo mkdir '+logsPath
+      command_runner.runShellCommand(logsCommand)
 
   print('Contents of acmAdmin directory are: ')
   for item in os.listdir(adminPath):
