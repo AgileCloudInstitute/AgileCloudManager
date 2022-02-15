@@ -68,8 +68,12 @@ def cleanUp(operation, yaml_infra_config_file_and_path, keyDir, typeName, instan
       dest_keys_file_and_path = command_builder.getKeyFileLocation(instanceName, cloud)
       if platform.system() == "Windows":
         splitString = '\\'
-      elif platform.system() == "Windows":
+      elif platform.system() == "Linux":
         splitString = '/'
+      else:
+        logString = "ERROR: Operating system must be either Windows or Linux"
+        logWriter.writeLogVerbose("acm", logString)
+        exit(1)
       filePathParts = dest_keys_file_and_path.split(splitString)
       keyFileName = filePathParts[-1]
       pathOnly = dest_keys_file_and_path.replace(keyFileName, '')

@@ -86,6 +86,19 @@ def terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFil
       if (typeName == 'admin'): 
         controller_azureadmin.cleanUp(operation, infraConfigFileAndPath, keyDir, typeName, instanceName, destinationCallInstance, cloud)
       ############################################################################################################################
+      print('...')
+      print('...')
+      print('...')
+      print("destinationCallInstance is: ", destinationCallInstance)
+      print("destinationCallParent is: ", destinationCallParent)
+      print("foundationInstanceName is: ", foundationInstanceName)
+      print("templateName is: ", templateName)
+      print("instanceName is: ", instanceName)
+      print("key_source is: ", key_source)
+      print("tfvars_file_and_path is: ", tfvars_file_and_path)
+      print('...')
+      print('...')
+      print('...')
       cleanupAfterOperation(destinationCallInstance, destinationCallParent, foundationInstanceName, templateName, instanceName, key_source, tfvars_file_and_path)
     else:  
       logString = "-------------------------------------------------------------------------------------------------------------------------------"
@@ -447,6 +460,7 @@ def setDoCleanUp(oper):
 
 def cleanupAfterOperation(destinationCallInstance, destinationCallParent, foundationInstanceName, templateName, instanceName, key_source, tfvars_file_and_path):
   dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
+  print('dynamicVarsPath is: ', dynamicVarsPath)
   if key_source =="keyFile":
     #Now make a backup copy of the tfstate file.
     tfStateSrc = destinationCallInstance + 'terraform.tfstate'
@@ -454,6 +468,8 @@ def cleanupAfterOperation(destinationCallInstance, destinationCallParent, founda
     if os.path.isfile(tfStateSrc):
       shutil.copy(tfStateSrc, tfStateDest)
   offInstanceOfCallToModule(destinationCallInstance, destinationCallParent)
+#  quit('ok!')
+
   ###############################################################################
   ### Delete the tfvars file and the instance of the call to module
   ### Note we only want keys to be in external locations such as a vault

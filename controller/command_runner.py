@@ -171,8 +171,9 @@ def runShellCommandInWorkingDir(commandToRun, workingDir):
         break
 
 def getShellJsonData(cmd, workingDir):
-  oldTfLog = os.environ["TF_LOG"]
-  os.environ["TF_LOG"] = "ERROR"
+  if "TF_LOG" in os.environ:
+    oldTfLog = os.environ["TF_LOG"]
+    os.environ["TF_LOG"] = "ERROR"
   process = subprocess.Popen(
       cmd,cwd=workingDir,
       shell=True,
@@ -185,13 +186,15 @@ def getShellJsonData(cmd, workingDir):
     pass
   if process.returncode == 0:
     decodedData = data.decode('utf-8')
-    os.environ["TF_LOG"] = oldTfLog
+    if "TF_LOG" in os.environ:
+      os.environ["TF_LOG"] = oldTfLog
     return decodedData
   else:
     print("Error: " + str(err))
     print("Error: Return Code is: " + str(process.returncode))
     print("ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem.")
-    os.environ["TF_LOG"] = oldTfLog
+    if "TF_LOG" in os.environ:
+      os.environ["TF_LOG"] = oldTfLog
     sys.exit(1)
 
 def processDecodedLine(decodedline, lineNum, errIdx, commFragment):

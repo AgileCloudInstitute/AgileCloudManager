@@ -46,10 +46,11 @@ def writeKeyFiles(keysDir):
 
 def createDirectoryStructure():
   acmAdminPath = config_cliprocessor.inputVars.get('acmAdminPath')
-  keysParentPath = config_cliprocessor.inputVars.get('keysParentPath')
-  keysStarterPath = config_cliprocessor.inputVars.get('keysStarter')
+  keysParentPath = config_cliprocessor.inputVars.get('dirOfOutput')
+  keysStarterPath = config_cliprocessor.inputVars.get('dirOfYamlKeys')
   varsPath = config_cliprocessor.inputVars.get('varsPath')
   dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
+  otherVarsPath = config_cliprocessor.inputVars.get('otherVarsPath')
   binariesPath = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
   logsPath = config_cliprocessor.inputVars.get('verboseLogFilePath')
 
@@ -74,10 +75,11 @@ def createDirectoryStructure():
       os.mkdir(binariesPath)
     elif platform.system() == 'Linux':
       #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
-      chownCommand = 'sudo chown -R azureuser:azureuser '+str(binariesPath)
-      command_runner.runShellCommand(chownCommand)
+      print('binariesPath is: ', str(binariesPath))
       binariesCommand = 'sudo mkdir '+str(binariesPath)
       command_runner.runShellCommand(binariesCommand)
+      chownCommand = 'sudo chown -R azureuser:azureuser '+str(binariesPath)
+      command_runner.runShellCommand(chownCommand)
 
   varsPath = Path(varsPath)
   if not os.path.exists(varsPath):
@@ -87,16 +89,23 @@ def createDirectoryStructure():
   if not os.path.exists(dynamicVarsPath):
     os.mkdir(dynamicVarsPath)
 
+  otherVarsPath = Path(otherVarsPath)
+  print('.....++++  otherVarsPath is: ', otherVarsPath)
+  if not os.path.exists(otherVarsPath):
+    os.mkdir(otherVarsPath)
+
   logsPath = Path(logsPath)
   if not os.path.exists(logsPath):
     if platform.system() == 'Windows':
       os.mkdir(logsPath)
     elif platform.system() == 'Linux':
-      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
-      chownCommand = 'sudo chown -R azureuser:azureuser '+str(logsCommand)
-      command_runner.runShellCommand(chownCommand)
-      logsCommand = 'sudo mkdir '+logsPath
+      logsCommand = 'sudo mkdir '+str(logsPath)
       command_runner.runShellCommand(logsCommand)
+      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
+      chownCommand = 'sudo chown -R azureuser:azureuser '+str(logsPath)
+      command_runner.runShellCommand(chownCommand)
+      print('logsPath is: ', str(logsPath))
+#      quit('!!')
 
   print('Contents of acmAdmin directory are: ')
   for item in os.listdir(adminPath):
@@ -177,7 +186,7 @@ def getDependencies():
   userCallingDir = os.path.abspath(".")
   path = Path(userCallingDir)
   parentPath = path.parent
-  dependencies_binaries_path = str(parentPath)+ command_builder.getSlashForOS() + 'acmAdmin' + command_builder.getSlashForOS() + 'binaries' + command_builder.getSlashForOS()
+  dependencies_binaries_path = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
   dependencies_binaries_path = command_builder.formatPathForOS(dependencies_binaries_path)
   if platform.system() == "Windows":
     propName = "download-link-windows"
@@ -441,16 +450,22 @@ def runConfigure():
 
 
 def undoConfigure():
-  relPathStr = '..'+command_builder.getSlashForOS()
-  app_parent_path = os.path.dirname(os.path.realpath(relPathStr))
-  dest_path = app_parent_path+ command_builder.getSlashForOS() + "config-outside-acm-path" + command_builder.getSlashForOS()
-  dest_path = command_builder.formatPathForOS(dest_path)
+  config_path = config_cliprocessor.inputVars.get('acmAdminPath')
+  print('config_path is: ', config_path)
   try:
-    shutil.rmtree(dest_path, ignore_errors=True)
+    shutil.rmtree(config_path, ignore_errors=True)
   except FileNotFoundError:
-    logString = "The config-outside-acm-path directory does not exist.  It may have already been deleted."
+    logString = "The acmAdmin directory does not exist.  It may have already been deleted."
     logWriter.writeLogVerbose("acm", logString)
-  command_runner.runShellCommandInWorkingDir("dir", app_parent_path)
+  if platform.system() == 'Linux':
+    binaries_path = '/opt/acm/'
+    try:
+      shutil.rmtree(binaries_path, ignore_errors=True)
+    except FileNotFoundError:
+      logString = "The /opt/acm/ directory does not exist.  It may have already been deleted."
+      logWriter.writeLogVerbose("acm", logString)
+    command_runner.runShellCommandInWorkingDir("dir", '/opt')
+
 
 def runSetup():
   createDirectoryStructure()

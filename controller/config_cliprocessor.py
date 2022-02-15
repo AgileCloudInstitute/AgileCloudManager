@@ -4,6 +4,7 @@
 import os
 import sys
 from pathlib import Path 
+import platform
 
 import command_builder
 
@@ -70,8 +71,10 @@ def processInputArgs(inputArgs):
   dirOfOutput = command_builder.formatPathForOS(dirOfOutput)
   varsPath = acmAdmin + command_builder.getSlashForOS() + 'vars'
 
-  dynamicVarsPath = varsPath+'\\dynamicVars\\'
+  dynamicVarsPath = acmAdmin+'\\dynamicVars\\'
   dynamicVarsPath = command_builder.formatPathForOS(dynamicVarsPath)
+  otherVarsPath = varsPath + '\\vars\\'
+  otherVarsPath = command_builder.formatPathForOS(otherVarsPath)
   dirOfReleaseDefJsonParts = app_parent_path + "\\azure-building-blocks\\release-definitions\\json-fragments\\"
   dirOfReleaseDefJsonParts = command_builder.formatPathForOS(dirOfReleaseDefJsonParts)
   dirOfReleaseDefYaml = app_parent_path + "\\azure-building-blocks\\release-definitions\\yaml-definition-files\\"
@@ -85,23 +88,21 @@ def processInputArgs(inputArgs):
   #These next two /vars/vars/.. are temporary until we further revise the directory structure
   tfvarsFileAndPath = varsPath+'\\vars'+"\\keys.tfvars"
   tfvarsFileAndPath = command_builder.formatPathForOS(tfvarsFileAndPath)
-  tfBackendFileAndPath = varsPath+'\\vars'+"\\backend.tfvars"
+  tfBackendFileAndPath = otherVarsPath+"backend.tfvars"
   tfBackendFileAndPath = command_builder.formatPathForOS(tfBackendFileAndPath)
   #Get logsPath
   if platform.system() == 'Windows':
     verboseLogFilePath = acmAdmin + command_builder.getSlashForOS() + 'logs'
     verboseLogFilePath = command_builder.formatPathForOS(verboseLogFilePath)
   elif platform.system() == 'Linux':
-    verboseLogFilePath = '/var/log/acm'
+    verboseLogFilePath = '/var/log/acm/'
   ## Get directory structure
   #Get binariesPath
   if platform.system() == 'Windows':
-    dependenciesBinariesPath = acmAdmin + command_builder.getSlashForOS() + 'binaries'
+    dependenciesBinariesPath = acmAdmin + command_builder.getSlashForOS() + 'binaries' + command_builder.getSlashForOS()
     dependenciesBinariesPath = command_builder.formatPathForOS(dependenciesBinariesPath)
   elif platform.system() == 'Linux':
-    dependenciesBinariesPath = '/opt/acm'
-  dependenciesBinariesPath = acmAdmin+'\\binaries\\'
-  dependenciesBinariesPath = command_builder.formatPathForOS(dependenciesBinariesPath)
+    dependenciesBinariesPath = '/opt/acm/'
   dependenciesPath = app_parent_path + "config-outside-acm-path\\dependencies\\"
   dependenciesPath = command_builder.formatPathForOS(dependenciesPath)
   relativePathToInstances = "\\calls-to-modules\\instances\\"
@@ -170,6 +171,7 @@ def processInputArgs(inputArgs):
     'userCallingDir': userCallingDir,
     'dependenciesPath': dependenciesPath,
     'dynamicVarsPath': dynamicVarsPath,
+    'otherVarsPath': otherVarsPath,
     'relativePathToInstances': relativePathToInstances,
     'keySource': keySource,
     'pub': pub,
