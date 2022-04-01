@@ -57,6 +57,7 @@ def runInfraCommands():
     changes_manifest.initializeChangesManagementDataStructures('foundation', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(changes_manifest.changesManifest)) + " changes. "
     logWriter.writeLogVerbose("acm", logString)
+    print('keyDir is: ', keyDir)
 #    quit("on stop")
 #..
     if cliproc.command == 'on':
@@ -72,15 +73,19 @@ def runInfraCommands():
       changes_manifest.updateStartOfPlatformRun('foundation', "In Process")
       changes_manifest.updateStartOfASystem('foundation', systemInstanceName, "In Process")
       changes_manifest.updateStartOfAFoundation('foundation', systemInstanceName, "In Process")
-      workflow_system.offFoundation(systemInstanceName, keyDir, 'cli')
+      workflow_system.offFoundation(systemInstanceName, keyDir, yamlInfraConfigFileAndPath)
       changes_manifest.updateEndOfAFoundation('foundation', systemInstanceName)
       changes_manifest.updateEndOfASystem('foundation', systemInstanceName)
       changes_manifest.updateEndOfPlatformRun('foundation')
 
   elif cliproc.domain == 'services':
     keyDir = cliproc.inputVars.get('keysDir')
+    print('keyDir is: ', keyDir)
     yamlInfraConfigFileAndPath = cliproc.inputVars.get('yamlInfraConfigFileAndPath')
+    print('yamlInfraConfigFileAndPath is: ', yamlInfraConfigFileAndPath)
     systemInstanceName = config_fileprocessor.getFirstLevelValue(yamlInfraConfigFileAndPath, "name")
+    print('systemInstanceName is: ', systemInstanceName)
+#    quit('ff!')
     changes_manifest.initializeChangesManagementDataStructures('services', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(changes_manifest.changesManifest)) + " changes. "
     logWriter.writeLogVerbose("acm", logString)
@@ -95,10 +100,11 @@ def runInfraCommands():
       changes_manifest.updateEndOfPlatformRun('services')
 #      quit("Hi! ...--- ")
     elif cliproc.command == 'off':
+#      quit('off stop')
       changes_manifest.updateStartOfPlatformRun('services', "In Process")
       changes_manifest.updateStartOfASystem('services', systemInstanceName, "In Process")
       changes_manifest.updateStartOfAServicesSection('services', systemInstanceName)
-      workflow_system.offServices('services', systemInstanceName, keyDir, yamlInfraConfigFileAndPath)
+      workflow_system.offServices('services', systemInstanceName, keyDir, None, yamlInfraConfigFileAndPath)
       changes_manifest.updateEndOfAServicesSection('services', systemInstanceName)
       changes_manifest.updateEndOfASystem('services', systemInstanceName)
       changes_manifest.updateEndOfPlatformRun('services')

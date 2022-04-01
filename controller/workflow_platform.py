@@ -1,4 +1,4 @@
-## Copyright 2021 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
+## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
 import sys
@@ -82,6 +82,8 @@ def offPlatform():
 #    logString = str(change)
 #    logWriter.writeLogVerbose("acm", logString)
   changes_manifest.updateStartOfPlatformRun('platform', "In Process")
+  print('len(systemInstanceNames) is: ', len(systemInstanceNames))
+#  quit('d')
   for systemInstanceName in reversed(systemInstanceNames):
     useTheForce = config_fileprocessor.getForce(yamlPlatformConfigFileAndPath, 'systems', systemInstanceName)
     print(useTheForce)

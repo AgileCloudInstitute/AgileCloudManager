@@ -22,6 +22,64 @@ def getFoundationInstanceName(yamlFileAndPath):
             instanceName = foundationItems.get(foundationItem)
   return instanceName
 
+def getPreProcessor(yamlFileAndPath, type, typeName, instName):
+  preprocessor = {}  
+  if type == 'networkFoundation':
+    with open(yamlFileAndPath) as f:  
+      topLevel_dict = yaml.safe_load(f)
+      for item in topLevel_dict:
+        if re.match("networkFoundation", item):
+          foundationItems = topLevel_dict.get(item)
+          for foundationItem in foundationItems: 
+            if re.match("preprocessor", foundationItem):
+              preprocessor = foundationItems.get(foundationItem)
+  elif type == 'serviceInstance':
+    with open(yamlFileAndPath) as f:  
+      topLevel_dict = yaml.safe_load(f)
+      for item in topLevel_dict:
+        if re.match('systems', item):
+          systemsTypes = topLevel_dict.get(item)
+          for systemsType in systemsTypes:
+            if re.match(typeName, systemsType):
+              items = systemsTypes.get(systemsType)
+              for instance in items: 
+                instanceName = instance.get("instanceName")
+                if len(instanceName) > 0:
+                  if instName == instanceName:
+                    for instanceItem in instance:
+                      if re.match("preprocessor", instanceItem):
+                        preprocessor = instance.get(instanceItem)
+  return preprocessor
+
+def getPostProcessor(yamlFileAndPath, type, typeName, instName):  
+  postprocessor = {}  
+  if type == 'networkFoundation':
+    with open(yamlFileAndPath) as f:  
+      topLevel_dict = yaml.safe_load(f)
+      for item in topLevel_dict:
+        if re.match("networkFoundation", item):
+          foundationItems = topLevel_dict.get(item)
+          for foundationItem in foundationItems: 
+            if re.match("postprocessor", foundationItem):
+              postprocessor = foundationItems.get(foundationItem)
+  elif type == 'serviceInstance':
+    with open(yamlFileAndPath) as f:  
+      topLevel_dict = yaml.safe_load(f)
+      for item in topLevel_dict:
+        if re.match('systems', item):
+          systemsTypes = topLevel_dict.get(item)
+          for systemsType in systemsTypes:
+            if re.match(typeName, systemsType):
+              items = systemsTypes.get(systemsType)
+              for instance in items: 
+                instanceName = instance.get("instanceName")
+                if len(instanceName) > 0:
+                  if instName == instanceName:
+                    for instanceItem in instance:
+                      if re.match("postprocessor", instanceItem):
+                        postprocessor = instance.get(instanceItem)
+  return postprocessor
+
 def getTopLevelProperty(yamlFileAndPath, typeName, propertyName):
   propVal = ""  
   with open(yamlFileAndPath) as f:  
@@ -329,6 +387,7 @@ def getImageSpecs(yamlInfraFileAndPath):
   return typesList
 
 def getImageTemplateName(yamlConfigFileAndPath, typeName, instanceName):
+  #Work item: replace this with getImagePropertyValue() for simplicity
   templateName = ''
   with open(yamlConfigFileAndPath) as f:  
     my_dict = yaml.safe_load(f)
@@ -343,8 +402,30 @@ def getImageTemplateName(yamlConfigFileAndPath, typeName, instanceName):
                 #Note: The following assumes that imageBuild is a string containing only one / with the repo in front and the template name after.  You must add better validation to avoid difficult to diagnose runtime errors.  
                 templateName = imageBuild.get("templateName")
                 #Note: returning here in early version to clip off a match.  Make sure to add better checking in future to make sure there is only one match.  Here, we are assuming there is only one match without checking.  The config file must include only one match to be valid.  
+                print('....xyz templateName: ', templateName)
+#                quit('hohoho')
                 return templateName
   return templateName
+
+def getImagePropertyValue(yamlConfigFileAndPath, typeName, instanceName, propertyName):
+  propVal = ''
+  with open(yamlConfigFileAndPath) as f:  
+    my_dict = yaml.safe_load(f)
+    for key, value in my_dict.items():  
+      if re.match('imageBuilds', key):
+        imageBuildsTypes = my_dict.get(key)
+        for imageBuildsType in imageBuildsTypes:
+          if re.match(typeName, imageBuildsType):
+            imageBuilds = imageBuildsTypes.get(imageBuildsType)
+            for imageBuild in imageBuilds:
+              if imageBuild.get("instanceName") == instanceName:
+                #Note: The following assumes that imageBuild is a string containing only one / with the repo in front and the template name after.  You must add better validation to avoid difficult to diagnose runtime errors.  
+                propVal = imageBuild.get(propertyName)
+                #Note: returning here in early version to clip off a match.  Make sure to add better checking in future to make sure there is only one match.  Here, we are assuming there is only one match without checking.  The config file must include only one match to be valid.  
+                print('....xyz propVal: ', propVal)
+#                quit('hohoho')
+                return propVal
+  return propVal
 
 def getTemplateName(yamlConfigFileAndPath, typeParent, typeName, typeGrandChild, instanceName, grandChildName):
   templateName = ''
@@ -373,13 +454,22 @@ def getTemplateName(yamlConfigFileAndPath, typeParent, typeName, typeGrandChild,
                       if instance.get('instanceName') == instanceName:
                         templateName = instance.get('templateName')
       else:  
+        print('typeName is: ', typeName)
+        print('key is: ', key)
         if re.match(typeName, key):
           resourceTypes = my_dict.get(key)
+          if typeName == 'networkFoundation':
+            print('resourceTypes is: ', str(resourceTypes))
           if type(resourceTypes) is dict:
+            if typeName == 'networkFoundation':
+              print('list(resourceTypes.values())[0] is: ', list(resourceTypes.values())[0])
             valueToCheck = list(resourceTypes.values())[0]
             if isinstance(valueToCheck, str):
+              print('... instanceName is: ', instanceName)
               if resourceTypes.get("instanceName") == instanceName:
                 templateName = resourceTypes.get("templateName")
+                if typeName == 'networkFoundation':
+                  print('... templateName is: ', templateName)
           elif type(resourceTypes) is list:
             for instancesOfTypes in resourceTypes:
               if instancesOfTypes.get("instanceName") == instanceName:
@@ -388,10 +478,11 @@ def getTemplateName(yamlConfigFileAndPath, typeParent, typeName, typeGrandChild,
 
 
 def getFirstLevelValue(yamlFileAndPath, keyName):
+  #Only scan lines that have one or two colons.  
+  # First colon separates key and value.  Second colon might be in a URL.
   returnVal = ""  
   with open(yamlFileAndPath) as file:
     for line in file:
-      print('-- -- -- line is: ', line)
       if line.count(':') == 1:
         lineParts = line.split(":")
         key = lineParts[0].strip()
@@ -404,9 +495,6 @@ def getFirstLevelValue(yamlFileAndPath, keyName):
         value = lineParts[1].strip() + ":" + lineParts[2].strip()
         if re.match(keyName, key):
           returnVal = value
-      else:
-        logString = "WARNING: We did not import the following line from your variables input file because the following line contains more than two : colons. " + line
-        logWriter.writeLogVerbose("acm", logString)
   return returnVal
 
 

@@ -10,6 +10,9 @@ import json
 import sys 
 import os
 
+import config_cliprocessor
+import command_builder
+
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
 #NOTE: Add functionality to accept variable names that are themselves variables.  
@@ -50,37 +53,57 @@ vaultName = ''
 terraformResult = ''  
 success_packer = ''
 
-def getShellJsonResponse(cmd):
-    process = subprocess.Popen(
-        cmd,
-        shell=True,
-        stdout=subprocess.PIPE)
-    process.wait()
-    data, err = process.communicate()
-    logString = "data bytes is:" + str(data.decode("utf-8"))
-    logWriter.writeLogVerbose("acm", logString)
-    logString = "data string is: " + str(data.decode("utf-8"))
-    logWriter.writeLogVerbose("acm", logString)
-    logString = "err is: " + str(err)
-    logWriter.writeLogVerbose("acm", logString)
-    logString = "process.returncode is: " + str(process.returncode)
-    logWriter.writeLogVerbose("acm", logString)
-    logString = "cmd is: " + cmd
-    logWriter.writeLogVerbose("acm", logString)
-    if process.returncode == 0:
-      logString = str(data.decode('utf-8'))
-      logWriter.writeLogVerbose("shell", logString)
-      decodedData = data.decode('utf-8')
-      return decodedData
-    else:
-      logString = "Error: " + str(err)
-      logWriter.writeLogVerbose("shell", logString)
-      logString = "Error: Return Code is: " + str(process.returncode)
-      logWriter.writeLogVerbose("shell", logString)
-      logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
-      logWriter.writeLogVerbose("acm", logString)
-      sys.exit(1)
-  
+def getShellJsonResponse(cmd,counter=0):
+  process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
+  data = process.stdout
+  err = process.stderr
+  logString = "data string is: " + data
+  logWriter.writeLogVerbose("acm", logString)
+  logString = "err is: " + str(err)
+  logWriter.writeLogVerbose("acm", logString)
+  logString = "process.returncode is: " + str(process.returncode)
+  logWriter.writeLogVerbose("acm", logString)
+  logString = "cmd is: " + cmd
+  logWriter.writeLogVerbose("acm", logString)
+  if process.returncode == 0:
+    logString = str(data)
+    logWriter.writeLogVerbose("shell", logString)
+    decodedData = data #.decode('utf-8')
+    return decodedData
+  else:
+    print("str(err) is: ", str(err))
+    print("--------------")
+    print("type(stdout) is: ", type(sys.stdout))
+    print("str(sys.stdout) is: ", str(sys.stdout))
+    print("str(process.stdout) is: ", str(process.stdout))
+    print('str(data) is: ', str(data))
+    print("++++++++++++++")
+    print("str(process.returncode) is: ", str(process.returncode))
+    print("========================")
+    if counter == 0:
+      counter +=1 
+      logString = "Sleeping 30 seconds bewfore running the command a second time in case a latency problem caused the first attempt to fail. "
+      logWriter.writeLogVerbose('acm', logString)
+      import time
+      time.sleep(30)
+      data = getShellJsonResponse(cmd,counter)
+      return data
+    else:  
+      if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
+        logString = "WARNING: "+"(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found."
+        logWriter.writeLogVerbose('shell')
+        logString = "Continuing because this error message is often benign.  If you encounter downstream problems resulting from this, please report your use case so that we can examine the cause. "
+        logWriter.writeLogVerbose('acm', logString)
+        return decodedData
+      else:
+        logString = "Error: " + str(err)
+        logWriter.writeLogVerbose("shell", logString)
+        logString = "Error: Return Code is: " + str(process.returncode)
+        logWriter.writeLogVerbose("shell", logString)
+        logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
+        logWriter.writeLogVerbose("acm", logString)
+        sys.exit(1)
+
 def runShellCommand(commandToRun):
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     while True:
@@ -92,6 +115,22 @@ def runShellCommand(commandToRun):
         logWriter.writeLogVerbose("shell", logString)
       else:
         break
+
+def runPreOrPostProcessor(processorSpecs, operation):
+  if operation == 'on':
+    location = processorSpecs['locationOn']
+    command = processorSpecs['commandOn']
+  elif operation == 'off':
+    location = processorSpecs['locationOff']
+    command = processorSpecs['commandOff']
+  fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('app_parent_path')+location
+  fullyQualifiedPathToScript = command_builder.formatPathForOS(fullyQualifiedPathToScript)
+  print("fullyQualifiedPathToScript is: ", fullyQualifiedPathToScript)
+  print("location is: ", location)
+  print("command is: ", command)
+  commandToRun = command.replace('location',fullyQualifiedPathToScript)
+  print('commandToRun is: ', commandToRun)
+  runShellCommand(commandToRun)
 
 def getAccountKey(commandToRun):
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, shell=True)

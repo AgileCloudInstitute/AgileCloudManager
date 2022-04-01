@@ -7,15 +7,20 @@ import time
 import calendar
 
 import config_cliprocessor
-import changes_taxonomy
-  
+import command_builder
+
 def replaceLogFile():
   verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
-  verboseLogFileAndPath = verboseLogFilePath + 'log-verbose.log'
-  acmSummaryLogFileAndPath = verboseLogFilePath + 'log-acm-summary.log'
+  verboseLogFileAndPath = verboseLogFilePath + '/log-verbose.log'
+  verboseLogFileAndPath = command_builder.formatPathForOS(verboseLogFileAndPath)
+  acmSummaryLogFileAndPath = verboseLogFilePath + '/log-acm-summary.log'
+  acmSummaryLogFileAndPath = command_builder.formatPathForOS(acmSummaryLogFileAndPath)
   current_GMT = time.gmtime()
   ts = calendar.timegm(current_GMT)
   timeString = "Time Stamp at start of log is: " + str(ts)
+#  print('verboseLogFileAndPath is: ', verboseLogFileAndPath)
+#  print('acmSummaryLogFileAndPath is: ', acmSummaryLogFileAndPath)
+#  quit('!4@')
   if os.path.exists(verboseLogFileAndPath):
     first_line = ''
     with open(verboseLogFileAndPath) as f:
@@ -42,14 +47,17 @@ def replaceLogFile():
   writeMetaLog("acm", timeString)
   
 def writeLogVerbose(tool, line):
+  
   verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
-  verboseLogFileAndPath = verboseLogFilePath + 'log-verbose.log'
-  acmSummaryLogFileAndPath = verboseLogFilePath + 'log-acm-summary.log'
+  verboseLogFileAndPath = verboseLogFilePath + '/log-verbose.log'
+  verboseLogFileAndPath = command_builder.formatPathForOS(verboseLogFileAndPath)
+#  acmSummaryLogFileAndPath = verboseLogFilePath + 'log-acm-summary.log'
   outputLine = "[ " + str(tool) + " ] " + str(line)
 ##1.21.22 commenting out the next 2 lines.
 #  if "changeTaxonomy is:" in outputLine:
 #    changes_taxonomy.storeChangeTaxonomy(outputLine)
 #  with io.open(verboseLogFileAndPath, "a", encoding="utf-8") as f:
+
   with open(verboseLogFileAndPath, "a", encoding="utf-8") as f:
     f.write(outputLine + '\n')
   try:
@@ -61,8 +69,10 @@ def writeLogVerbose(tool, line):
 def writeMetaLog(tool, line):
   verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
   ##Add work item to set up logic for log file time stamps in names, etc.
-  verboseLogFileAndPath = verboseLogFilePath + 'log-verbose.log'
-  acmSummaryLogFileAndPath = verboseLogFilePath + 'log-acm-summary.log'
+  verboseLogFileAndPath = verboseLogFilePath + '/log-verbose.log'
+  verboseLogFileAndPath = command_builder.formatPathForOS(verboseLogFileAndPath)
+  acmSummaryLogFileAndPath = verboseLogFilePath + '/log-acm-summary.log'
+  acmSummaryLogFileAndPath = command_builder.formatPathForOS(acmSummaryLogFileAndPath)
   outputLine = "[ " + str(tool) + " ] " + str(line)
   with io.open(verboseLogFileAndPath, "a", encoding="utf-8") as f:
     f.write(outputLine + '\n')

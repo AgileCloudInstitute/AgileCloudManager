@@ -1,8 +1,6 @@
-## Copyright 2021 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
+## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
-import os
-import platform
 import sys
 import shutil
 
@@ -15,57 +13,90 @@ import controller_azdoproject
 import logWriter
 import config_keysassembler
 import controller_tfbackendazrm
+import controller_arm
 import changes_manifest
 import config_cliprocessor
-import changes_taxonomy
+import controller_cf
 
 def onFoundation(command, systemInstanceName, keyDir, source, yamlInfraConfig = 'default'):
   test = config_cliprocessor.inputVars.get("test")
   typeOfTest = config_cliprocessor.inputVars.get("testType")
   infraConfigFileAndPath = yamlInfraConfig
-  print('yamlInfraConfig is: ', yamlInfraConfig)
   if yamlInfraConfig == "default":
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
   else:
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('userCallingDir') + yamlInfraConfig
-#  infraConfigFileAndPath = yamlInfraConfigFileAndPath
   typeName = 'networkFoundation'
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(infraConfigFileAndPath)
-#  instanceNames = [foundationInstanceName]
+  foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
+
   operation = command
-  print('infraConfigFileAndPath is: ', infraConfigFileAndPath)
-  print('keyDir is: ', keyDir)
-#  quit('b')
 
   if (test==True) and (typeOfTest=="workflow"):
-#    print("stub test stuff goes here.")
     # Skip the else block in this case because we are just testing the workflow.
     pass
-#    quit("BREAKPOINT n to debug --test")
   else:
-    controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', typeName, None, None, foundationInstanceName)
-#    quit("q")
-    if command_runner.terraformResult == "Applied": 
+    preprocessor = config_fileprocessor.getPreProcessor(infraConfigFileAndPath, 'networkFoundation', None, None)
+    if preprocessor:
+      print('preprocessor is: ', str(preprocessor))
+#      quit('Hi!')
+      command_runner.runPreOrPostProcessor(preprocessor, 'on')
+    else:
+      print('NO preprocessor present.')
+      pass
+#    quit('debug preprocessor')
+    if foundationTool == 'arm':
+      controller_arm.createDeployment(infraConfigFileAndPath, keyDir, 'networkFoundation', None, foundationInstanceName)
+    elif foundationTool == 'cloudformation':
+      controller_cf.createStack(infraConfigFileAndPath, keyDir, 'networkFoundation', None, foundationInstanceName)
       hasImageBuilds = config_fileprocessor.checkTopLevelType(infraConfigFileAndPath, 'imageBuilds')
       if hasImageBuilds:
         controller_image.buildImages(systemInstanceName, infraConfigFileAndPath, operation, keyDir)
       else:
         logString = "WARNING: This network foundation does not have any image builds associated with it.  If you intend not to build images in this network, then everything is fine.  But if you do want to build images with this network, then check your configuration and re-run this command.  "
         logWriter.writeLogVerbose("acm", logString)
+    elif foundationTool =='terraform':
+      controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', typeName, None, None, foundationInstanceName)
+      if command_runner.terraformResult == "Applied": 
+        hasImageBuilds = config_fileprocessor.checkTopLevelType(infraConfigFileAndPath, 'imageBuilds')
+        if hasImageBuilds:
+          controller_image.buildImages(systemInstanceName, infraConfigFileAndPath, operation, keyDir)
+        else:
+          logString = "WARNING: This network foundation does not have any image builds associated with it.  If you intend not to build images in this network, then everything is fine.  But if you do want to build images with this network, then check your configuration and re-run this command.  "
+          logWriter.writeLogVerbose("acm", logString)
+      else:
+        logString = "Foundation apply failed for " + systemInstanceName
+        logWriter.writeLogVerbose("acm", logString)
+        sys.exit(1)
     else:
-      logString = "Foundation apply failed for " + systemInstanceName
+      logString = "The following value for foundationTool from your systemConfig is not supported: " + foundationTool
       logWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
+    postprocessor = config_fileprocessor.getPostProcessor(infraConfigFileAndPath, 'networkFoundation', None, None)
+    if postprocessor:
+      print('postprocessor is: ', str(postprocessor))
+      command_runner.runPreOrPostProcessor(postprocessor, 'on')
+    else:
+      print('NO postprocessor present.')
+      pass
+#    quit('debug postprocessor')
 
 def offFoundation(systemInstanceName, keyDir, infraConfigFileAndPath):
   test = config_cliprocessor.inputVars.get("test")
   typeOfTest = config_cliprocessor.inputVars.get("testType")
   if (test==True) and (typeOfTest=="workflow"):
-#    print("stub test stuff goes here.")
     # Skip the else block in this case because we are just testing the workflow.
     pass
-#    quit("BREAKPOINT n to debug --test")
   else:
+    preprocessor = config_fileprocessor.getPreProcessor(infraConfigFileAndPath, 'networkFoundation', None, None)
+    if preprocessor:
+      print('preprocessor is: ', str(preprocessor))
+#      quit('Hi!')
+      command_runner.runPreOrPostProcessor(preprocessor, 'off')
+    else:
+      print('NO preprocessor present.')
+      pass
+#    quit('debug preprocessor')
     #add code to confirm that output operation succeeded.
     #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
     #ADD LOGIC HERE TO PREPARE BEFORE DELETING THE FOUNDATION 
@@ -74,20 +105,34 @@ def offFoundation(systemInstanceName, keyDir, infraConfigFileAndPath):
     ##########################################################################################
     typeName = 'networkFoundation'
     foundationInstanceName = config_fileprocessor.getFoundationInstanceName(infraConfigFileAndPath)
+    foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
     operation = 'off'
-    controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', typeName, None, None, foundationInstanceName)
-    if command_runner.terraformResult == "Destroyed": 
-      logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
-      logWriter.writeLogVerbose("acm", logString)
+    if foundationTool == 'arm':
+      controller_arm.destroyDeployment(systemInstanceName, keyDir, infraConfigFileAndPath, 'networkFoundation', None, None)
+    elif foundationTool == 'cloudformation':
+      controller_cf.destroyStack(infraConfigFileAndPath, keyDir, 'networkFoundation', None, foundationInstanceName)
+    elif foundationTool == 'terraform':
+      controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', typeName, None, None, foundationInstanceName)
+      if command_runner.terraformResult == "Destroyed": 
+        logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
+        logWriter.writeLogVerbose("acm", logString)
+      else:
+        logString = "Error: offFoundation operation failed.  "
+        logWriter.writeLogVerbose("acm", logString)
+        sys.exit(1)
+    postprocessor = config_fileprocessor.getPostProcessor(infraConfigFileAndPath, 'networkFoundation', None, None)
+    if postprocessor:
+      print('postprocessor is: ', str(postprocessor))
+      command_runner.runPreOrPostProcessor(postprocessor, 'off')
     else:
-      logString = "Error: offFoundation operation failed.  "
-      logWriter.writeLogVerbose("acm", logString)
-      sys.exit(1)
+      print('NO postprocessor present.')
+      pass
+#    quit('debug postprocessor')
 
 def onServices(command, level, systemInstanceName, keyDir, infraConfigFileAndPath):
   test = config_cliprocessor.inputVars.get("test")
   typeOfTest = config_cliprocessor.inputVars.get("testType")
-
+  foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
   foundTypeName = 'networkFoundation'
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(infraConfigFileAndPath)
   if len(foundationInstanceName) == 0:
@@ -98,11 +143,11 @@ def onServices(command, level, systemInstanceName, keyDir, infraConfigFileAndPat
 #    instanceNames = [foundationInstanceName]
     operation = 'output'
     if (test==True) and (typeOfTest=="workflow"):
-      print("stub test w stuff goes here.")
       # Skip the else block when this workflow test is running.
       pass
     else:
-      controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', foundTypeName, None, None, foundationInstanceName)
+      if foundationTool == 'terraform':
+        controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', foundTypeName, None, None, foundationInstanceName)
   operation = 'on'
   typesToCreate = config_fileprocessor.listTypesInSystem(infraConfigFileAndPath)
   for serviceType in typesToCreate:
@@ -112,18 +157,40 @@ def onServices(command, level, systemInstanceName, keyDir, infraConfigFileAndPat
       for instName in instanceNames:  
         changes_manifest.updateStartOfAnInstanceOfAServiceType(level, systemInstanceName, serviceType, instName)
         if (test==True) and (typeOfTest=="workflow"):
-          print("stub test e stuff goes here.")
           # Skip the else block when this workflow test is running.
           pass
         else:
-          if serviceType == "tfBackend":
-            controller_tfbackendazrm.createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir)
-          elif serviceType == "releaseDefinitions":
-            controller_release.onPipeline(command, systemInstanceName, instName, infraConfigFileAndPath, keyDir)
-          elif serviceType == 'projects':
-            controller_azdoproject.onProject("on", systemInstanceName, instName, infraConfigFileAndPath, keyDir)
+          preprocessor = config_fileprocessor.getPreProcessor(infraConfigFileAndPath, 'serviceInstance', serviceType, instName)
+          if preprocessor:
+            print('preprocessor is: ', str(preprocessor))
+      #      quit('Hi!')
+            command_runner.runPreOrPostProcessor(preprocessor, 'on')
           else:
-            controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'systems', serviceType, None, None, instName)
+            print('NO preprocessor present.')
+            pass
+#          quit('debug preprocessor')
+          instanceTool = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, serviceType, instName, 'tool')
+          if instanceTool =='arm':
+            controller_arm.createDeployment(infraConfigFileAndPath, keyDir, 'serviceInstance', serviceType, instName)
+          elif instanceTool == 'cloudformation':
+            controller_cf.createStack(infraConfigFileAndPath, keyDir, 'serviceInstance', serviceType, instName)
+          else:# instanceTool != 'arm':
+            if serviceType == "tfBackend":
+              controller_tfbackendazrm.createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir)
+            elif serviceType == "releaseDefinitions":
+              controller_release.onPipeline(command, systemInstanceName, instName, infraConfigFileAndPath, keyDir)
+            elif serviceType == 'projects':
+              controller_azdoproject.onProject("on", systemInstanceName, instName, infraConfigFileAndPath, keyDir)
+            else:
+              controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'systems', serviceType, None, None, instName)
+          postprocessor = config_fileprocessor.getPostProcessor(infraConfigFileAndPath, 'serviceInstance', serviceType, instName)
+          if postprocessor:
+            print('postprocessor is: ', str(postprocessor))
+            command_runner.runPreOrPostProcessor(postprocessor, 'on')
+          else:
+            print('NO postprocessor present.')
+            pass
+#          quit('debug postprocessor')
         changes_manifest.updateEndOfAnInstanceOfAServiceType(level, systemInstanceName, serviceType, instName)
       logString = "done with -- " + serviceType + " -----------------------------------------------------------------------------"
       logWriter.writeLogVerbose("acm", logString)
@@ -144,18 +211,12 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
   typesToDestroy = config_fileprocessor.listTypesInSystem(infraConfigFileAndPath)
   isTfBackend = checkDestroyType('tfBackend', infraConfigFileAndPath)
   isReleaseDef = checkDestroyType('releaseDefinitions', infraConfigFileAndPath)
-  useTheForce = config_fileprocessor.getForce(yamlPlatformConfigFileAndPath, 'systems', systemInstanceName)
+  if yamlPlatformConfigFileAndPath != None:
+    useTheForce = config_fileprocessor.getForce(yamlPlatformConfigFileAndPath, 'systems', systemInstanceName)
+  else:
+    useTheForce = False
+  foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
 
-#  print('isTfBackend is: ', isTfBackend)
-#  print('isReleaseDef is: ', isReleaseDef)
-#  print('useTheForce is: ', useTheForce)
-#  quit('2!')
-#  for serviceType in typesToDestroy:
-#    if "tfBackend" in serviceType:
-#      isTfBackend = True
-#    if "releaseDefinitions" in serviceType:
-#      isReleaseDef = True
-#  print('typesToDestroy before change is: ', typesToDestroy)
   if isTfBackend == True:
     logString = "Halting program because we are leaving the destruction of terraform backends to be a manual step in the UI portal in order to protect your data. "
     logWriter.writeLogVerbose("acm", logString)
@@ -174,8 +235,6 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
       logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in platformConfig.yaml or 2. comment out the releaseDefinitions block in the systemConfig file while also incuding the containing project in the systemConfig file, so that deletion of the containing project will cascade delete the releaseDefinitions contained within the project."
       logWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
-#  print('typesToDestroy after change is: ', typesToDestroy)
-#  quit('3!')
   typeName = 'networkFoundation'
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(infraConfigFileAndPath)
   if len(foundationInstanceName) == 0:
@@ -186,8 +245,12 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
     if (test==True) and (typeOfTest=="workflow"):
       pass
     else:
-      operation = 'output'
-      controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', typeName, None, None, foundationInstanceName)
+      if foundationTool == 'terraform':
+        operation = 'output'
+        controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'none', typeName, None, None, foundationInstanceName)
+      elif foundationTool == 'cloudformation':
+        #pass here because aws cloudformation destroy-stack command might not need variables
+        pass
     logString = "---------------------------------------------------------------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)
   operation = 'off'
@@ -204,20 +267,44 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
         if (test==True) and (typeOfTest=="workflow"):
           pass
         else:
+          preprocessor = config_fileprocessor.getPreProcessor(infraConfigFileAndPath, 'serviceInstance', typeName, instName)
+          if preprocessor:
+            print('preprocessor is: ', str(preprocessor))
+      #      quit('Hi!')
+            command_runner.runPreOrPostProcessor(preprocessor, 'off')
+          else:
+            print('NO preprocessor present.')
+            pass
+          instanceTool = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, typeName, instName, 'tool')
           if typeName == 'projects':
             controller_azdoproject.offProject(systemInstanceName, instName, infraConfigFileAndPath, keyDir)
           else:
-            controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, typeParent, typeName, None, None, instName)
-            if command_runner.terraformResult == "Destroyed": 
-              logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
-              logWriter.writeLogVerbose("acm", logString)
+            if instanceTool == 'arm':
+              controller_arm.destroyDeployment(systemInstanceName, keyDir, infraConfigFileAndPath, 'serviceInstance', typeName, instName)
+            elif instanceTool == 'terraform':
+              controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, typeParent, typeName, None, None, instName)
+              if command_runner.terraformResult == "Destroyed": 
+                logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
+                logWriter.writeLogVerbose("acm", logString)
+              else:
+                logString = "Error: off operation failed.  "
+                logWriter.writeLogVerbose("acm", logString)
+                sys.exit(1)
+            elif instanceTool == 'cloudformation':
+              controller_cf.destroyStack(infraConfigFileAndPath, keyDir, 'serviceInstance', typeName, instName)
             else:
-              logString = "Error: off operation failed.  "
+              logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
               logWriter.writeLogVerbose("acm", logString)
               sys.exit(1)
+          postprocessor = config_fileprocessor.getPostProcessor(infraConfigFileAndPath, 'serviceInstance', typeName, instName)
+          if postprocessor:
+            print('postprocessor is: ', str(postprocessor))
+            command_runner.runPreOrPostProcessor(postprocessor, 'off')
+          else:
+            print('NO postprocessor present.')
+            pass
         changes_manifest.updateEndOfAnInstanceOfAServiceType(level, systemInstanceName, typeName, instName)
       changes_manifest.updateEndOfAServiceType(level, systemInstanceName, typeName)
-#      quit("--- 000 ---")
       logString = "done with -- " + typeName + " -----------------------------------------------------------------------------"
       logWriter.writeLogVerbose("acm", logString)
 #..
@@ -236,8 +323,6 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
 def skipServices(level, systemInstanceName, keyDir, yamlInfraConfig = 'default'):
   test = config_cliprocessor.inputVars.get("test")
   typeOfTest = config_cliprocessor.inputVars.get("testType")
-  print("...,,,bbb test and typeOfTest are: ", test, " ", typeOfTest)
-#  quit("p")
   infraConfigFileAndPath = yamlInfraConfig
   typesToSkip = config_fileprocessor.listTypesInSystem(infraConfigFileAndPath)
   typeParent = 'systems'
@@ -246,7 +331,6 @@ def skipServices(level, systemInstanceName, keyDir, yamlInfraConfig = 'default')
     logWriter.writeLogVerbose("acm", logString)
 #    changes_taxonomy.updateTheTaxonomy(systemInstanceName, None, "services", None, "In Process")
     changes_manifest.updateStartOfAServiceType(level, systemInstanceName, typeName)
-#    quit("x")
     instanceNames = config_fileprocessor.getSystemInstanceNames(infraConfigFileAndPath, typeName)
     for instanceName in instanceNames: 
       changes_manifest.updateStartOfAnInstanceOfAServiceType(level, systemInstanceName, typeName, instanceName)

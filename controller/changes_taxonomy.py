@@ -3,11 +3,13 @@
 
 import sys
 import io
+from pathlib import Path
 
 import config_fileprocessor
 import changes_comparer
 import changes_manifest
 import config_cliprocessor
+import command_builder
 import logWriter
 
 changeTaxonomy = {}
@@ -75,8 +77,11 @@ def assembleChangeTaxonomy(level, command):
     yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     createTopLevelOfChangeTaxonomy_ServicesOnly(command, yaml_infra_config_file_and_path)
     systemInstanceName = config_fileprocessor.getFirstLevelValue(yaml_infra_config_file_and_path, "name")
-
     yaml_infra_config_file_and_path = getInfraConfigFileAndPath(systemInstanceName)
+    file_path = Path('yaml_infra_config_file_and_path ')
+    if not file_path.is_dir():
+      yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    print('yaml_infra_config_file_and_path is: ', yaml_infra_config_file_and_path)
     serviceTypes = config_fileprocessor.listTypesInSystem(yaml_infra_config_file_and_path)
     systemDict = { }
     systemDict["name"] = systemInstanceName
@@ -108,11 +113,11 @@ def storeChangeTaxonomy(level, outputLine):
   changeCounter += 1
   changeDict = {"changeCounter": changeCounter , "line": outputLine}
   changeReports.append(changeDict)
-  counterOutputLineMeta = "changeCounter is: " + str(changeCounter)
+  counterOutputLineMeta = "changeCounter is: " + str(changeCounter-1)
   outputLineMeta = outputLine.replace("[ acm ] ", "")
   logWriter.writeMetaLog("acm", counterOutputLineMeta)
   logWriter.writeMetaLog("acm", outputLineMeta)
-  counterOutputLine = "[ acm ] changeCounter is: " + str(changeCounter)
+  counterOutputLine = "[ acm ] changeCounter is: " + str(changeCounter-1)
 #  print("changesList is: ", changesList)
   print("len(changeReports)", len(changeReports))
   if changeCounter == 1:
@@ -123,7 +128,8 @@ def storeChangeTaxonomy(level, outputLine):
       print("The preceding line is returned here as a byte array because it threw a UnicodeEncodeError which was handled by encoding its as utf-8, which returns a byte array.  ")
   elif changeCounter > 1:
     verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
-    verboseLogFileAndPath = verboseLogFilePath + 'log-verbose.log'
+    verboseLogFileAndPath = verboseLogFilePath + '/log-verbose.log'
+    verboseLogFileAndPath = command_builder.formatPathForOS(verboseLogFileAndPath)
     with io.open(verboseLogFileAndPath, "a", encoding="utf-8") as f:  
       f.write(counterOutputLine + '\n')  
     try:
