@@ -281,6 +281,10 @@ def checkDependencies():
   if 'NOT installed' in azdoResult:
     azdoCheck = False
   #ADD CHECK FOR SUCCESS TO MAKE TRUE
+#  print('azdoVers is: ', azdoVers)
+#  print('azdoResult is: ', str(azdoResult))
+#  print('azdoCheck is: ', azdoCheck)
+#  quit('!mm!')
 
   #git check
   gitVers = config_fileprocessor.getDependencyVersion(yaml_setup_config_file_and_path, 'git')
@@ -349,6 +353,11 @@ def checkDependencies():
   logWriter.writeLogVerbose("acm", logString)
 
   if (azCheck != True) or (azdoCheck != True) or (gitCheck != True) or (tfCheck != True) or (pkrCheck != True): 
+    print("azCheck is: ", azCheck)
+    print("azdoCheck is: ", azdoCheck)
+    print("gitCheck is: ", gitCheck)
+    print("tfCheck is: ", tfCheck)
+    print("pkrCheck is: ", pkrCheck)
     logString = "ERROR:  Your system is missing one or more of the dependencies listed above.  Please make sure that the dependencies are properly installed and then re-run the setup on command. "
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)

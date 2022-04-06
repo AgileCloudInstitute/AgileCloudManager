@@ -9,7 +9,7 @@ import command_runner
 import logWriter
 import config_cliprocessor
 
-def packerCrudOperation(operation, systemInstanceName, keyDir, typeName, instanceNames, yaml_infra_config_file_and_path):
+def packerCrudOperation(operation, systemInstanceName, keyDir, typeName, instanceName, yaml_infra_config_file_and_path):
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(yaml_infra_config_file_and_path)
   cloud = config_fileprocessor.getCloudName(yaml_infra_config_file_and_path)
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
@@ -49,7 +49,7 @@ def packerCrudOperation(operation, systemInstanceName, keyDir, typeName, instanc
   assembleAndRunPackerCommand(cloud, systemInstanceName, keyDir, templateName, operation, yaml_infra_config_file_and_path, yaml_keys_file_and_path, foundationInstanceName, instanceName, typeName, module_config_file_and_path, template_config_file_name, startup_script_file_and_path)
 #    logWriter.updateTheTaxonomy(systemInstanceName, None, "imageBuilds", instanceName, "Completed")
   if command_runner.success_packer == 'true':
-    logString = "done with -- " + imageTypeName + " -----------------------------------------------------------------------------"
+    logString = "done with -- " + instanceName + " -----------------------------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)
   else:
     logString = "Failed Packer Build.  Stopping program so you can diagnose the problem. "

@@ -12,43 +12,9 @@ import os
 
 import config_cliprocessor
 import command_builder
+import controller_terraform
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-
-#NOTE: Add functionality to accept variable names that are themselves variables.  
-#      The output variable names from terraform module files can be auto imported with 
-#      slice indices to be processed by the runTerraformCommand() function so that downstream 
-#      modules can use those output variables as their own input without need to hardwire the 
-#      variable names in code as we are doing here for now.  
-#AWS output vars
-vpc_id = ''  
-vpc_cidr = ''  
-subnet_id = ''  
-sg_id = ''  
-sg_name = ''  
-instance_profile_name = ''  
-iam_role_name = ''  
-vm_ip_pub = ''  
-#Azure output vars
-appId = ''
-subscription_id = ''  
-tenant_id = ''  
-pipes_resource_group_name = ''  
-pipes_resource_group_region = ''  
-nicName = ''  
-storageAccountDiagName = ''  
-azuredevops_project_id = ''
-azuredevops_service_connection_id = ''
-
-azuredevops_build_definition_id = ''
-azuredevops_git_repository_name = ''
-
-vnetName = ''  
-
-azuredevops_build_definition_id = ''
-azuredevops_git_repository_name = ''
-
-vaultName = ''
 
 terraformResult = ''  
 success_packer = ''
@@ -71,18 +37,9 @@ def getShellJsonResponse(cmd,counter=0):
     decodedData = data #.decode('utf-8')
     return decodedData
   else:
-    print("str(err) is: ", str(err))
-    print("--------------")
-    print("type(stdout) is: ", type(sys.stdout))
-    print("str(sys.stdout) is: ", str(sys.stdout))
-    print("str(process.stdout) is: ", str(process.stdout))
-    print('str(data) is: ', str(data))
-    print("++++++++++++++")
-    print("str(process.returncode) is: ", str(process.returncode))
-    print("========================")
     if counter == 0:
       counter +=1 
-      logString = "Sleeping 30 seconds bewfore running the command a second time in case a latency problem caused the first attempt to fail. "
+      logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the first attempt to fail. "
       logWriter.writeLogVerbose('acm', logString)
       import time
       time.sleep(30)
@@ -125,11 +82,7 @@ def runPreOrPostProcessor(processorSpecs, operation):
     command = processorSpecs['commandOff']
   fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('app_parent_path')+location
   fullyQualifiedPathToScript = command_builder.formatPathForOS(fullyQualifiedPathToScript)
-  print("fullyQualifiedPathToScript is: ", fullyQualifiedPathToScript)
-  print("location is: ", location)
-  print("command is: ", command)
   commandToRun = command.replace('location',fullyQualifiedPathToScript)
-  print('commandToRun is: ', commandToRun)
   runShellCommand(commandToRun)
 
 def getAccountKey(commandToRun):
@@ -164,7 +117,9 @@ def checkIfAzdoInstalled(commandToRun, vers):
     logString = 'azdo response is: ' + str(resp)
     logWriter.writeLogVerbose("acm", logString)
     azdoV = resp['extensions']['azure-devops']
-    if azdoV.startswith(str(vers)):
+    versParts = vers.split('.')
+    azdoVParts = azdoV.split('.')
+    if (int(azdoVParts[0]) >= int(versParts[0])) and (int(azdoVParts[1]) >= int(versParts[1])):
       logString = 'Dependency is installed.'
       logWriter.writeLogVerbose("acm", logString)
       return logString
@@ -176,13 +131,11 @@ def checkIfAzdoInstalled(commandToRun, vers):
 def checkIfInstalled(commandToRun, vers):
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     match = False
-    print('=== commandToRun is: ', commandToRun)
     while True:
       line = proc.stdout.readline()
       if line:
         thetext=line.decode('utf-8').rstrip('\r|\n')
         decodedline=ansi_escape.sub('', thetext)
-        print('--- decodedline is: ', decodedline)
         if vers in decodedline:
           match = True
           logString = "Dependency is installed."
@@ -254,73 +207,6 @@ def processDecodedLine(decodedline, lineNum, errIdx, commFragment):
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)
 
-  if ("{" not in decodedline) and ("(" not in decodedline) and (")" not in decodedline) and ("*" not in decodedline) and ("." not in decodedline):
-    if "vpc_id" in decodedline:
-      global vpc_id
-      vpc_id=decodedline[9:]
-    if "vpc_cidr" in decodedline:
-      global vpc_cidr
-      vpc_cidr=decodedline[11:]
-    if "subnet_id" in decodedline:
-      global subnet_id
-      subnet_id=decodedline[12:]
-    if "sg_id" in decodedline:
-      global sg_id
-      sg_id=decodedline[8:]
-    if "sg_name" in decodedline:
-      global sg_name
-      sg_name=decodedline[10:]
-    if "instance_profile_name" in decodedline:
-      global instance_profile_name
-      instance_profile_name=decodedline[24:]
-    if "iam_role_name" in decodedline:
-      global iam_role_name
-      iam_role_name=decodedline[16:]
-    if "public_ip_of_ec2_instance" in decodedline:
-      global vm_ip_pub
-      vm_ip_pub=decodedline[28:].replace('"', '')
-    if "appId = " in decodedline:
-      global appId
-      appId=decodedline[8:]
-    if "subscription_id" in decodedline:
-      global subscription_id
-      subscription_id=decodedline[18:]
-    if "tenant_id" in decodedline:
-      global tenant_id
-      tenant_id=decodedline[12:]
-    if "pipes_resource_group_name" in decodedline:
-      global pipes_resource_group_name
-      pipes_resource_group_name=decodedline[28:]
-    if "pipes_resource_group_region" in decodedline:
-      global pipes_resource_group_region
-      pipes_resource_group_region=decodedline[30:]
-    if "nicName" in decodedline:
-      global nicName
-      nicName=decodedline[10:]
-    if "storageAccountDiagName" in decodedline:
-      global storageAccountDiagName
-      storageAccountDiagName=decodedline[25:]
-    if "azuredevops_build_definition_id" in decodedline:
-      global azuredevops_build_definition_id
-      azuredevops_build_definition_id=decodedline[34:]
-    if "azuredevops_git_repository_name" in decodedline:
-      global azuredevops_git_repository_name
-      azuredevops_git_repository_name=decodedline[34:]
-    if "vnetName" in decodedline:
-      global vnetName
-      vnetName=decodedline[11:]
-    if "azuredevops_project_id" in decodedline:
-      global azuredevops_project_id
-      azuredevops_project_id=decodedline[25:]
-    if "azuredevops_service_connection_id" in decodedline:
-      global azuredevops_service_connection_id
-      azuredevops_service_connection_id=decodedline[36:]
-    if "azuredevops_service_connection_id_gh" in decodedline:
-      global azuredevops_service_connection_id_gh
-      azuredevops_service_connection_id_gh=decodedline[39:]
-    if "vaultName" in decodedline:
-      global vaultName
-      vaultName=decodedline[12:]
   if "Destroy complete!" in decodedline:
     logString = "Found Destroy complete!!"
     logWriter.writeLogVerbose("acm", logString)
@@ -333,11 +219,12 @@ def processDecodedLine(decodedline, lineNum, errIdx, commFragment):
   return errIdx
 
 def runTerraformCommand(commandToRun, workingDir):
-  if " apply " in commandToRun:
+  reachedOutputs = False
+  if " apply" in commandToRun:
     commFragment = "apply"
-  elif " destroy " in commandToRun:
+  elif " destroy" in commandToRun:
     commFragment = "destroy"
-  elif " output " in commandToRun:
+  elif " output" in commandToRun:
     commFragment = "output"
   else:
     commFragment = "other"
@@ -353,9 +240,30 @@ def runTerraformCommand(commandToRun, workingDir):
       thetext=line.decode('utf-8').rstrip('\r|\n')
       decodedline=ansi_escape.sub('', thetext)
       logWriter.writeLogVerbose("terraform", decodedline)
+#      print('commFragment is: ', commFragment)
+      if 'Outputs' in decodedline:
+        reachedOutputs = True
+      if (commFragment == 'output'):
+        print('decodedLine is: ', decodedline)
+#        if (decodedline.count('=') == 1) and (reachedOutputs == True):
+        lineParts = decodedline.split('=')
+        key = lineParts[0].replace(' ','').replace('"','').replace("'","")
+        value = lineParts[1].replace(' ','').replace('"','').replace("'","")
+        controller_terraform.tfOutputDict[key] = value
+#          print('controller_terraform.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
+      if (commFragment != 'output') and (controller_terraform.foundationApply == True):
+        print('decodedLine is: ', decodedline)
+        if (decodedline.count('=') == 1) and (reachedOutputs == True):
+          lineParts = decodedline.split('=')
+          key = lineParts[0].replace(' ','').replace('"','').replace("'","")
+          value = lineParts[1].replace(' ','').replace('"','').replace("'","")
+          controller_terraform.tfOutputDict[key] = value
+#          print('controller_terraform.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
       errIdx = processDecodedLine(decodedline, lineNum, errIdx, commFragment)
     else:
       break
+#  if commFragment == 'output':
+#    quit('OUTPUT!!!')
 
 def runPackerCommand(commandToRun, workingDir):
     proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)

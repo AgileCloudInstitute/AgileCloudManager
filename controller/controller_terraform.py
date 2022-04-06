@@ -20,6 +20,9 @@ import controller_azureadmin
 import logWriter
 import config_cliprocessor
 
+tfOutputDict = {}
+foundationApply = True
+
 def terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, typeParent, typeName, parentInstanceName, typeGrandChild, instanceName):
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(infraConfigFileAndPath)
   cloud = config_fileprocessor.getCloudName(infraConfigFileAndPath)
@@ -117,6 +120,11 @@ def assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, oper
 #  configAndSecretsPath = config_cliprocessor.inputVars.get('configAndSecretsPath')
 #  dirOfConfig = configAndSecretsPath + "vars\\config\\" + cloud + "\\"
 #  moduleConfigFileAndPath = module_config_file_and_path
+  if typeName == 'networkFoundation':  
+    print('typeName is: ', typeName)
+    global foundationApply
+    foundationApply = True
+#    quit('J!m')
   commandToRun = 'invalid value must be reset below'
   tool = "terraform"
   org = config_fileprocessor.getFirstLevelValue(yaml_infra_config_file_and_path, "organization")
@@ -144,12 +152,14 @@ def assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, oper
   logString = "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
   logWriter.writeLogVerbose("acm", logString)
   logWriter.writeLogVerbose("acm", logString)
-  if systemInstanceName == "admin":
-    import traceback
-    traceback.print_stack()
+#  if systemInstanceName == "admin":
+#    import traceback
+#    traceback.print_stack()
   command_runner.runTerraformCommand(commandToRun, destinationCallInstance)
-
-
+#  if operation == 'output':
+#    for outputVar in tfOutputDict:
+#      print(outputVar,' is: ', tfOutputDict.get(outputVar))
+#    quit('After Output!!')
 ###############################
 
 def changePointerLineInCallToModule(fileName, searchTerm, newPointerLine): 

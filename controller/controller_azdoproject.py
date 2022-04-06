@@ -47,8 +47,15 @@ def onProject(command, systemInstanceName, projName, yamlInfraConfigFileAndPath,
     #### #The following command gets the client logged in and able to operate on azure repositories.
     loginCmd = "az login --service-principal -u " + clientId + " --tenant " + tenantId + " -p \"" + clientSecret + "\""
     command_runner.runShellCommand(loginCmd)
-    pid = command_runner.azuredevops_project_id
-    pid = pid.replace('"', '')
+#    print('command_runner.tfOutputDict is: ', str(command_runner.tfOutputDict))
+#    quit('DEBUG pid')
+    if 'azuredevops_project_id' in controller_terraform.tfOutputDict.keys():
+      pid = controller_terraform.tfOutputDict['azuredevops_project_id']
+      pid = pid.replace('"', '')
+    else:
+      logString = "ERROR: The terraform module that creates the Azure Devops Project must have an output variable named azuredevops_project_id which contains a valid id for the project that the module defines.  Since the module you are using does not have a azuredevops_project_id output variable, the program is halting so you can fix the problem and rerun the command that got you here.  "
+      logWriter.writeLogVerbose("acm", logString)
+      sys.exit(1)
     if len(pid) > 2:
       azPat = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'azdoOrgPAT')
       azdoLoginCmd= "ECHO " + azPat + " | " + "az devops login --organization "+organization + " --debug "
@@ -125,6 +132,8 @@ def offProject(systemInstanceName, projName, infraConfigFileAndPath, keyDir):
 def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_and_path, cloud):
   logString = "Inside the function that imports code into repo.  "
   logWriter.writeLogVerbose("acm", logString)
+#  print('command_runner.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
+#  quit('DEBUG pid2')
   try:
     codeResult = "Success"
     yaml_keys_file_and_path = command_builder.getKeyFileAndPath(keyDir, typeName, cloud)
@@ -137,8 +146,13 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     gitPass = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'gitPass')
     gitPass = gitPass.replace('"','')
     gitPass = gitPass.replace("'","")
-    pid = command_runner.azuredevops_project_id
-    pid = pid.replace('"', '')
+    if 'azuredevops_project_id' in controller_terraform.tfOutputDict.keys():
+      pid = controller_terraform.tfOutputDict['azuredevops_project_id']
+      pid = pid.replace('"', '')
+    else:
+      logString = "ERROR: The terraform module that creates the Azure Devops Project must have an output variable named azuredevops_project_id which contains a valid id for the project that the module defines.  Since the module you are using does not have a azuredevops_project_id output variable, the program is halting so you can fix the problem and rerun the command that got you here.  "
+      logWriter.writeLogVerbose("acm", logString)
+      sys.exit(1)
     repoName = config_fileprocessor.getSecondLevelProperty(yaml_infra_config_file_and_path, 'systems', 'projects', instanceName, 'repoName')
     gitSourceUrl = config_fileprocessor.getSecondLevelProperty(yaml_infra_config_file_and_path, 'systems', 'projects', instanceName, 'sourceRepo')
     organization = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'azdoOrgServiceURL')

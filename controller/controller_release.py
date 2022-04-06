@@ -21,8 +21,13 @@ def onPipeline(command, systemInstanceName, iName, infraConfigFileAndPath, keyDi
   operation = "output"
   controller_terraform.terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFileAndPath, 'systems', 'projects', None, None, projName)
   #Get the following 2:
-  azuredevops_project_id = command_runner.azuredevops_project_id
-  azuredevops_service_connection_id = command_runner.azuredevops_service_connection_id
+  if ('azuredevops_project_id' in controller_terraform.tfOutputDict.keys()) and ('azuredevops_service_connection_id' in controller_terraform.tfOutputDict.keys()):
+    azuredevops_project_id = controller_terraform.tfOutputDict['azuredevops_project_id']
+    azuredevops_service_connection_id = controller_terraform.tfOutputDict['azuredevops_service_connection_id']
+  else:
+    logString = "ERROR: The terraform module that creates the Azure Devops Project must have output variables named azuredevops_project_id and azuredevops_service_connection_id which each contain a valid id.  Since the module you are using does not have both an azuredevops_project_id and an azuredevops_service_connection_id output variable, the program is halting so you can fix the problem and rerun the command that got you here.  "
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
   #Next: get code instance names
   typeParent = 'systems'
   typeName = 'projects'

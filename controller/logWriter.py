@@ -5,6 +5,7 @@ import io
 import os 
 import time
 import calendar
+import sys
 
 import config_cliprocessor
 import command_builder
@@ -62,6 +63,8 @@ def writeLogVerbose(tool, line):
     f.write(outputLine + '\n')
   try:
     print(outputLine)
+    if (tool == 'terraform') and ('Error: expected ' in line):
+      sys.exit(1)
   except UnicodeEncodeError as e:
     print(outputLine.encode('utf-8'))
     print("The preceding line is returned here as a byte array because it threw a UnicodeEncodeError which was handled by encoding its as utf-8, which returns a byte array.  ")

@@ -30,7 +30,7 @@ def buildImages(systemInstanceName, infraConfigFileAndPath, operation, keyDir):
         instanceTool = config_fileprocessor.getImagePropertyValue(infraConfigFileAndPath, imageTypeName, instName, 'tool')
         if instanceTool == 'packer':
           operation = 'build'
-          controller_packer.packerCrudOperation(operation, systemInstanceName, keyDir, imageTypeName, instanceNames, infraConfigFileAndPath)
+          controller_packer.packerCrudOperation(operation, systemInstanceName, keyDir, imageTypeName, instName, infraConfigFileAndPath)
         elif instanceTool == 'cloudformation':
           controller_cf.createStack(infraConfigFileAndPath, keyDir, 'image', 'images', instName)
           region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')

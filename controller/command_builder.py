@@ -14,6 +14,7 @@ import command_runner
 import logWriter
 import config_cliprocessor
 import config_fileprocessor
+import controller_terraform
 
 def getSlashForOS():
   if platform.system() == 'Windows':
@@ -270,12 +271,27 @@ def getVarFromOutput(tool, r, callInstanceName):
   tfOutputVarName = r[4]
 #  thismodule = sys.modules[__name__]
   if (tool=='terraform') or (tool=='packer'):
-    outputVar = getattr(command_runner, tfOutputVarName)
-    outputVar = outputVar.replace('"', '')
-    outputVar = outputVar.replace(',', '')
-    outputVar = outputVar.replace(' ', '')
-  if callInstanceName == "azdoAgents":
-    print("... outputVar is: ", outputVar)
+    print('controller_terraform.foundationApply is: ', str(controller_terraform.foundationApply))
+    print('controller_terraform.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
+    for key in controller_terraform.tfOutputDict:
+      print(key, " is: ", controller_terraform.tfOutputDict.get(key))
+      if key == inputVar:
+        print('1 match.')
+      if key == tfOutputVarName:
+#        print('2 match.')
+        outputVar = controller_terraform.tfOutputDict.get(key)
+#      if controller_terraform.tfOutputDict.get(key) == inputVar:
+#        print('3 match.')
+#      if controller_terraform.tfOutputDict.get(key) == tfOutputVarName:
+#        print('4 match.')
+#    quit('BREAKPOINT TO DEBUG NEW TERRAFORM OUTPUT.  ')
+#  if (tool=='packer'):
+#    outputVar = getattr(command_runner, tfOutputVarName)
+#    outputVar = outputVar.replace('"', '')
+#    outputVar = outputVar.replace(',', '')
+#    outputVar = outputVar.replace(' ', '')
+#  if callInstanceName == "azdoAgents":
+#    print("... outputVar is: ", outputVar)
   #The next 4 lines are a workaround for a bug that had been passing corrupted values for tfOutputVarName from command_runner in the getattr(command_runner, tfOutputVarName) command
   if outputVar.count("=") == 1:
     outputVar = outputVar[outputVar.index("=")+1:]
@@ -285,9 +301,12 @@ def getVarFromOutput(tool, r, callInstanceName):
     varSnip = " -var=\"" +inputVar + "="+outputVar+"\""  
   elif tool == 'packer':
     varSnip = " -var \"" +inputVar + "="+outputVar+"\""  
+#    print('varSnip is: ', varSnip)
+#    print('controller_terraform.foundationApply is: ', controller_terraform.foundationApply)
+#    print('controller_terraform.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
+#    print('packer trap.')
+#    sys.exit(1)
   #varSnip = formatPathForOS(varSnip)
-  elif tool == 'cloudformation':
-    quit('BREAKPOINT TO DEBUG OUTPUT VARS.')
   return varSnip
 
 def getVarFromCloudFormationOutput(r, infraConfigFileAndPath):
@@ -442,6 +461,7 @@ def getSecretVars(tool, keyDir, yamlInfraFileAndPath, moduleConfigFileAndPath, c
 
 def getBackendVars(tool, keyDir, yamlInfraFileAndPath, moduleConfigFileAndPath, cloud_vendor, foundationInstanceName, callInstanceName, instanceName):
   secretVarLines = []
+#  print('moduleConfigFileAndPath is: ', moduleConfigFileAndPath)
   typeOfLine = getTypeOfLine(moduleConfigFileAndPath)
   c = open(moduleConfigFileAndPath,'r')
   o = csv.reader(c)
