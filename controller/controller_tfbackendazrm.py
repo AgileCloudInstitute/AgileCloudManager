@@ -41,6 +41,7 @@ def createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir
     logWriter.writeLogVerbose("acm", logString)
     #First create storage account
     createStorageAccountCommand = "az storage account create --name " + storageAccountName + " --resource-group " + resourceGroupName + " --location " + resourceGroupRegion + " --sku Standard_LRS   --encryption-services blob " 
+    print('xxx createStorageAccountCommand is: ', createStorageAccountCommand)
     command_runner.runShellCommand(createStorageAccountCommand)  
     logString = "Finished running createStorageAccountCommand. "
     logWriter.writeLogVerbose("acm", logString)
