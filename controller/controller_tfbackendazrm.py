@@ -39,6 +39,11 @@ def createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir
     command_runner.getShellJsonResponse(myCmd)
     logString = "Finished running login command."
     logWriter.writeLogVerbose("acm", logString)
+    #set subscription
+    setSubscriptionCmd = 'az account set --subscription ' + subscriptionId
+    command_runner.getShellJsonResponse(setSubscriptionCmd)
+    logString = "Finished running setSubscription command."
+    logWriter.writeLogVerbose("acm", logString)
     #First create storage account
     createStorageAccountCommand = "az storage account create --name " + storageAccountName + " --resource-group " + resourceGroupName + " --location " + resourceGroupRegion + " --sku Standard_LRS   --encryption-services blob " 
     print('xxx createStorageAccountCommand is: ', createStorageAccountCommand)
