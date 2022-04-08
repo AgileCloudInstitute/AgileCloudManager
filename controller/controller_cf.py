@@ -96,7 +96,7 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
       logWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
   else:
-    cfDeployCommand = 'aws cloudformation create-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
+    cfDeployCommand = 'aws cloudformation create-stack --stack-name '+stackName+' --region '+region+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
     logString = 'Response from check existance of stack command is: False'
     logWriter.writeLogVerbose("acm", logString)
     logString = 'cfDeployCommand is: '+ cfDeployCommand
