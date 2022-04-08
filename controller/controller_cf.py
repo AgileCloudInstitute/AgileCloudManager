@@ -285,5 +285,6 @@ def getModuleConfigFileAndPath(infraConfigFileAndPath, typeParent, serviceType, 
     logString = "Template name is not valid.  Must have only one /.  "
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)
+  module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   return module_config_file_and_path
 
