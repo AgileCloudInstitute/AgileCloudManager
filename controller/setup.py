@@ -288,11 +288,11 @@ def checkDependencies():
 
   #git check
   gitVers = config_fileprocessor.getDependencyVersion(yaml_setup_config_file_and_path, 'git')
-  if gitVers.count('.') != 1:
-    logString = 'ERROR: The value you entered for git version in infrastructureConfig.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
+  if gitVers.count('.') != 0:
+    logString = 'ERROR: The value you entered for git version in infrastructureConfig.yaml is not valid.  Only the first block is accepted, as in \"x\" '
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)
-  if gitVers.count('.') == 1:
+  if gitVers.count('.') == 0:
     gitVers = gitVers + '.'
   gitCheck = None
   gitDependencyCheckCommand = "git --version"
