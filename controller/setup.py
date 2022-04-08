@@ -378,11 +378,7 @@ def cloneTheSourceCode():
   keysPathPlusSlash = keys+command_builder.getSlashForOS() 
   keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
   #WORK ITEM: Change the following line to make the file name cloud-agnostic
-  cloud = config_fileprocessor.getCloudName(yaml_infra_config_file_and_path)
-  if cloud == 'aws':
-    keys_file_and_path = keysPathPlusSlash+'iamUserKeys.yaml'    
-  elif cloud == 'azure':
-    keys_file_and_path = keysPathPlusSlash+'adUserKeys.yaml'
+  keys_file_and_path = keysPathPlusSlash+'keys.yaml'
   pword = config_fileprocessor.getFirstLevelValue(keys_file_and_path, 'gitPass')
   for sourceRepoInstance in sourceRepoInstanceNames:
     repoUrl = config_fileprocessor.getSourceCodeProperty(yaml_infra_config_file_and_path, 'source', sourceRepoInstance, 'repo')
