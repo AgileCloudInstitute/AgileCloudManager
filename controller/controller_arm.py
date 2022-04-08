@@ -60,6 +60,8 @@ def createDeployment(infraConfigFileAndPath, keyDir, caller, serviceType, instNa
   templatePathAndFile = app_parent_path + templateName
   templatePathAndFile = command_builder.formatPathForOS(templatePathAndFile)
   templateName, module_config_file_and_path = getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName, app_parent_path)
+  templateName = command_builder.formatPathForOS(templateName)
+  module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   print('templateName is: ', templateName)
   print('templatePathAndFile is: ', templatePathAndFile)
   print('module_config_file_and_path is: ',module_config_file_and_path)
