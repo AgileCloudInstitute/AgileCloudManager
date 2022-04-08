@@ -307,9 +307,11 @@ def configureSecrets(keyDir):
   fileName = outputDir+'/credentials'
   with open(fileName, 'w') as f:
     defaultLine = '[default]\n'
+    f.write(defaultLine)
     idLine = 'aws_access_key_id='+AWSAccessKeyId+'\n'
+    f.write(idLine)
     keyLine = 'aws_secret_access_key='+AWSSecretKey+'\n'
-    f.write('Hello World')
+    f.write(keyLine)
 
 def destroySecrets():
   filename = os.path.expanduser('~/.aws') + '/credentials'
