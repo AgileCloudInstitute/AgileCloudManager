@@ -65,9 +65,9 @@ def createDirectoryStructure():
   keysStarterPath = Path(keysStarterPath)
   if not os.path.exists(keysStarterPath):
     os.mkdir(keysStarterPath)
-    keysPathPlusSlash = str(keysStarterPath)+command_builder.getSlashForOS() 
-    keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
-    writeKeyFiles(keysPathPlusSlash)
+#    keysPathPlusSlash = str(keysStarterPath)+command_builder.getSlashForOS() 
+#    keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
+#    writeKeyFiles(keysPathPlusSlash)
 
   binariesPath = Path(binariesPath)
   if not os.path.exists(binariesPath):
