@@ -18,6 +18,7 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
   foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
+  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
   outputDict = {}
   if caller == 'networkFoundation':
     typeParent = caller
@@ -39,7 +40,7 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   cfTemplateFileAndPath = app_parent_path+templateName
   cfTemplateFileAndPath = command_builder.formatPathForOS(cfTemplateFileAndPath)
   ## STEP 2: Check to see if stack already exists
-  checkExistCmd = 'aws cloudformation describe-stacks --stack-name '+stackName
+  checkExistCmd = 'aws cloudformation describe-stacks --stack-name '+stackName+ ' --region '+region
   logString = "checkExistCmd is: "+checkExistCmd
   logWriter.writeLogVerbose("acm", logString)
   if checkIfStackExists(checkExistCmd):
@@ -109,6 +110,7 @@ def destroyStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
 #  foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
+  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
   if caller == 'networkFoundation':
 #    typeParent = caller
     serviceType = 'networkFoundation'
@@ -140,7 +142,7 @@ def destroyStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
     jsonStatus = command_runner.getShellJsonResponse(cfDeployCommand)
     logString = 'Initial response from stack command is: '+ str(jsonStatus)
     logWriter.writeLogVerbose("acm", logString)
-    trackStackProgress(thisStackId)
+    trackStackProgress(thisStackId, region)
 
 def listMatchingStacks(stackName, stackId):
   stackIdsList = []
@@ -155,11 +157,11 @@ def listMatchingStacks(stackName, stackId):
         stackIdsList.append(aStackId)
   return stackIdsList
 
-def trackStackProgress(stackId):
+def trackStackProgress(stackId, region):
   thisStatus = 'empty'
   n=0
   while thisStatus!='DELETE_COMPLETE':
-    checkCmd = 'aws cloudformation describe-stacks --stack-name '+stackId
+    checkCmd = 'aws cloudformation describe-stacks --stack-name '+stackId+ ' --region '+region
     jsonStatus = command_runner.getShellJsonResponse(checkCmd)
     responseData = yaml.safe_load(jsonStatus)
     for item in responseData['Stacks']:
