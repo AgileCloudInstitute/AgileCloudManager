@@ -5,6 +5,7 @@ import yaml
 import re
 import os
 import csv
+import platform
 
 import logWriter
 import config_cliprocessor
@@ -563,3 +564,16 @@ def getImageRepoDir(yamlConfigFileAndPath, instanceName):
   templateRepoDir = app_parent_path + templateRepo
   templateRepoDir = command_builder.formatPathForOS(templateRepoDir)
   return templateRepoDir
+
+def getYamlKeysFileAndPath(keyDir):
+  if platform.system() == "Windows":
+    if keyDir[:-1] != "\\":
+      keyDir = keyDir + "\\"
+  if platform.system() == "Linux":
+    if keyDir[:-1] != "/":
+      keyDir = keyDir + "/"
+  yamlKeysPath = keyDir.replace("\\\\","\\")
+  yamlKeysPath = command_builder.formatPathForOS(yamlKeysPath)
+  yamlKeysFileAndPath = yamlKeysPath + 'keys.yaml'
+  return yamlKeysFileAndPath
+ 
