@@ -347,12 +347,7 @@ def getSecretVarFromKeys(tool, keyDir, r, instanceName, cloud_vendor):
       keyDir = keyDir + "/"
   yamlKeysPath = keyDir.replace("\\\\","\\")
   yamlKeysPath = formatPathForOS(yamlKeysPath)
-  if cloud_vendor == "aws":
-    yamlKeysFileAndPath = yamlKeysPath + 'iamUserKeys.yaml'
-  if cloud_vendor == "azure":
-    yamlKeysFileAndPath = yamlKeysPath + 'adUserKeys.yaml'
-  else:
-    quitStr = "Cloud vendor " + "\"" + cloud_vendor + "\" is not currently supported.  Halting program so you can fix your configuration. "
+  yamlKeysFileAndPath = yamlKeysPath + 'keys.yaml'
   pub = config_cliprocessor.inputVars.get("pub")
   sec = config_cliprocessor.inputVars.get("sec")
   tfInputVarName = r[0]
@@ -988,16 +983,7 @@ def getKeyFileAndPath(keyDir, type_name, cloud_vendor):
       keyDir = keyDir + "/"
   keyDir = formatPathForOS(keyDir)
   dirOfSourceKeys = keyDir
-  if type_name == 'admin':  
-    if cloud_vendor == 'aws':
-      yaml_keys_file_and_path = dirOfSourceKeys + config_cliprocessor.inputVars.get('nameOfYamlKeys_IAM_File')
-    elif cloud_vendor == 'azure':
-      yaml_keys_file_and_path = dirOfSourceKeys + 'adUserKeys' + '.yaml'
-  else:  
-    if cloud_vendor == 'aws':
-      yaml_keys_file_and_path = dirOfSourceKeys + config_cliprocessor.inputVars.get('nameOfYamlKeys_AWS_Network_File')
-    elif cloud_vendor == 'azure':
-      yaml_keys_file_and_path = dirOfSourceKeys + config_cliprocessor.inputVars.get('nameOfYamlKeys_Azure_Network_File')
+  yaml_keys_file_and_path = dirOfSourceKeys + 'keys.yaml'
   return yaml_keys_file_and_path
 
 #This new function is for getting the specific location for the keys that the admin module creates for each system
@@ -1007,8 +993,5 @@ def getKeyFileLocation(instance_name, cloud_vendor):
   if not os.path.exists(outputDir):
     os.makedirs(outputDir)
   keys_file_and_path = 'invalid'
-  if cloud_vendor == 'aws':
-    keys_file_and_path = outputDir + config_cliprocessor.inputVars.get('nameOfYamlKeys_IAM_File')
-  elif cloud_vendor == 'azure':
-    keys_file_and_path = outputDir + 'adUserKeys' + '.yaml'
+  keys_file_and_path = outputDir + 'keys.yaml'
   return keys_file_and_path
