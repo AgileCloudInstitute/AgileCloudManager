@@ -326,6 +326,8 @@ def getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName
     logString = "Template name is not valid.  Must have only one /.  "
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)
+  templateName = command_builder.formatPathForOS(templateName)
+  module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   return templateName, module_config_file_and_path
 
 def assembleAndRunArmDeploymentCommand(module_config_file_and_path, keyDir, infraConfigFileAndPath, foundationInstanceName, organization, deploymentName, resourceGroupName, templatePathAndFile, outputDict):
