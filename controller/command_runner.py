@@ -103,10 +103,24 @@ def getAccountKey(commandToRun):
 def checkIfAzInstalled(commandToRun, vers):
     resp = json.loads(getShellJsonResponse(commandToRun))
     cliV = resp['azure-cli']
-    if cliV.startswith(str(vers)):
+#...start new
+    versParts = vers.split('.')
+    cliVParts = cliV.split('.')
+    print('versParts is: ', versParts)
+    print('cliVParts is: ', cliVParts)
+    if (int(cliVParts[0]) >= int(versParts[0])) and (int(cliVParts[1]) >= int(versParts[1])):
       logString = 'Dependency is installed.'
       logWriter.writeLogVerbose("acm", logString)
       return logString
+    else:
+      logString = "Wrong version of dependency is installed for azure-devops extension of azure-cli."
+      logWriter.writeLogVerbose("acm", logString)
+      return logString
+#...end new, start commented out old
+#    if cliV.startswith(str(vers)):
+#      logString = 'Dependency is installed.'
+#      logWriter.writeLogVerbose("acm", logString)
+#      return logString
     else:
       logString = "Wrong version of dependency is installed for azure-cli."
       logWriter.writeLogVerbose("acm", logString)
@@ -119,6 +133,8 @@ def checkIfAzdoInstalled(commandToRun, vers):
     azdoV = resp['extensions']['azure-devops']
     versParts = vers.split('.')
     azdoVParts = azdoV.split('.')
+    print('versParts is: ', versParts)
+    print('azdoVParts is: ', azdoVParts)
     if (int(azdoVParts[0]) >= int(versParts[0])) and (int(azdoVParts[1]) >= int(versParts[1])):
       logString = 'Dependency is installed.'
       logWriter.writeLogVerbose("acm", logString)
