@@ -112,10 +112,6 @@ def checkIfAzInstalled(commandToRun, vers):
       logString = 'Dependency is installed.'
       logWriter.writeLogVerbose("acm", logString)
       return logString
-    else:
-      logString = "Wrong version of dependency is installed for azure-devops extension of azure-cli."
-      logWriter.writeLogVerbose("acm", logString)
-      return logString
 #...end new, start commented out old
 #    if cliV.startswith(str(vers)):
 #      logString = 'Dependency is installed.'
