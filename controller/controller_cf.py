@@ -303,7 +303,8 @@ def configureSecrets(keyDir):
   AWSAccessKeyId = config_fileprocessor.getFirstLevelValue(yamlKeysFileAndPath, 'AWSAccessKeyId')
   AWSSecretKey = config_fileprocessor.getFirstLevelValue(yamlKeysFileAndPath, 'AWSSecretKey')
   outputDir = os.path.expanduser('~/.aws')
-  os.mkdir(outputDir)
+  if not os.path.isdir(outputDir):
+    os.mkdir(outputDir)
   fileName = outputDir+'/credentials'
   with open(fileName, 'w') as f:
     defaultLine = '[default]\n'
