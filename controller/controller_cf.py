@@ -299,8 +299,8 @@ def getModuleConfigFileAndPath(infraConfigFileAndPath, typeParent, serviceType, 
 
 def configureSecrets(keyDir): 
   yamlKeysFileAndPath = config_fileprocessor.getYamlKeysFileAndPath(keyDir)
-  AWSAccessKeyId = getFirstLevelValue(yamlFileAndPath, 'AWSAccessKeyId')
-  AWSSecretKey = getFirstLevelValue(yamlFileAndPath, 'AWSSecretKey')
+  AWSAccessKeyId = config_fileprocessor.getFirstLevelValue(yamlFileAndPath, 'AWSAccessKeyId')
+  AWSSecretKey = config_fileprocessor.getFirstLevelValue(yamlFileAndPath, 'AWSSecretKey')
   outputDir = os.path.expanduser('~/.aws')
   os.mkdir(outputDir)
   fileName = outputDir+'/credentials'
