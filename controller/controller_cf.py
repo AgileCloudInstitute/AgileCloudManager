@@ -259,7 +259,7 @@ def checkIfStackExists(cmd,counter=0):
     logString = str(data)
     logWriter.writeLogVerbose("shell", logString)
     return True
-  elif (process.returncode == 254) or (process.returncode == '254'):
+  elif (process.returncode == 254) or (process.returncode == '254') or (process.returncode == 255) or (process.returncode == '255'):
     return False
   else:
     if counter == 0:
