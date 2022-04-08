@@ -16,6 +16,8 @@ import config_cliprocessor
 import logWriter
 
 def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
+  if platform.system() == 'Linux':
+    configureSecrets(keyDir)
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
   foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
@@ -106,8 +108,11 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
       logString = 'ERROR: Stack create command failed.'
       logWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
+  destroySecrets()
 
 def destroyStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
+  if platform.system() == 'Linux':
+    configureSecrets(keyDir)
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
 #  foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
@@ -144,6 +149,7 @@ def destroyStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
     logString = 'Initial response from stack command is: '+ str(jsonStatus)
     logWriter.writeLogVerbose("acm", logString)
     trackStackProgress(thisStackId, region)
+  destroySecrets()
 
 def listMatchingStacks(stackName, stackId):
   stackIdsList = []
@@ -291,3 +297,22 @@ def getModuleConfigFileAndPath(infraConfigFileAndPath, typeParent, serviceType, 
   module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   return module_config_file_and_path
 
+def configureSecrets(keyDir): 
+  yamlKeysFileAndPath = config_fileprocessor.getYamlKeysFileAndPath(keyDir)
+  AWSAccessKeyId = getFirstLevelValue(yamlFileAndPath, 'AWSAccessKeyId')
+  AWSSecretKey = getFirstLevelValue(yamlFileAndPath, 'AWSSecretKey')
+  outputDir = os.path.expanduser('~/.aws')
+  os.mkdir(outputDir)
+  fileName = outputDir+'/credentials'
+  with open(fileName, 'w') as f:
+    defaultLine = '[default]\n'
+    idLine = 'aws_access_key_id='+AWSAccessKeyId+'\n'
+    keyLine = 'aws_secret_access_key='+AWSSecretKey+'\n'
+    f.write('Hello World')
+
+def destroySecrets():
+  filename = os.path.expanduser('~/.aws') + '/credentials'
+  try:
+    os.remove(filename)
+  except OSError:
+    pass
