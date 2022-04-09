@@ -17,12 +17,12 @@ import config_cliprocessor
 import logWriter
 
 def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
+  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
   if platform.system() == 'Linux':
-    configureSecrets(keyDir)
+    configureSecrets(keyDir, region)
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
   foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
-  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
   outputDict = {}
   if caller == 'networkFoundation':
     typeParent = caller
@@ -44,7 +44,7 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   cfTemplateFileAndPath = app_parent_path+templateName
   cfTemplateFileAndPath = command_builder.formatPathForOS(cfTemplateFileAndPath)
   ## STEP 2: Check to see if stack already exists
-  checkExistCmd = 'aws cloudformation describe-stacks --stack-name '+stackName+ ' --region '+region
+  checkExistCmd = 'aws cloudformation describe-stacks --stack-name '+stackName
   logString = "checkExistCmd is: "+checkExistCmd
   logWriter.writeLogVerbose("acm", logString)
   if checkIfStackExists(checkExistCmd):
@@ -96,7 +96,7 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
       logWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
   else:
-    cfDeployCommand = 'aws cloudformation create-stack --stack-name '+stackName+' --region '+region+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
+    cfDeployCommand = 'aws cloudformation create-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
     logString = 'Response from check existance of stack command is: False'
     logWriter.writeLogVerbose("acm", logString)
     logString = 'cfDeployCommand is: '+ cfDeployCommand
@@ -112,12 +112,13 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   destroySecrets()
 
 def destroyStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
+  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
   if platform.system() == 'Linux':
-    configureSecrets(keyDir)
+    configureSecrets(keyDir,region)
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
 #  foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
-  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
+#  region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
   if caller == 'networkFoundation':
 #    typeParent = caller
     serviceType = 'networkFoundation'
@@ -298,7 +299,7 @@ def getModuleConfigFileAndPath(infraConfigFileAndPath, typeParent, serviceType, 
   module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   return module_config_file_and_path
 
-def configureSecrets(keyDir): 
+def configureSecrets(keyDir,region): 
   yamlKeysFileAndPath = config_fileprocessor.getYamlKeysFileAndPath(keyDir)
   AWSAccessKeyId = config_fileprocessor.getFirstLevelValue(yamlKeysFileAndPath, 'AWSAccessKeyId')
   AWSSecretKey = config_fileprocessor.getFirstLevelValue(yamlKeysFileAndPath, 'AWSSecretKey')
@@ -314,8 +315,20 @@ def configureSecrets(keyDir):
     keyLine = 'aws_secret_access_key='+AWSSecretKey+'\n'
     f.write(keyLine)
 
+  configFileName = outputDir+'/config'
+  with open(configFileName, 'w') as f:
+    defaultLine = '[default]\n'
+    f.write(defaultLine)
+    regionLine = 'region='+region+'\n'
+    f.write(regionLine)
+
 def destroySecrets():
   filename = os.path.expanduser('~/.aws') + '/credentials'
+  try:
+    os.remove(filename)
+  except OSError:
+    pass
+  filename = os.path.expanduser('~/.aws') + '/config'
   try:
     os.remove(filename)
   except OSError:
