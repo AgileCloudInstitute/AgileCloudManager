@@ -170,7 +170,7 @@ def trackStackProgress(stackId, region):
   thisStatus = 'empty'
   n=0
   while thisStatus!='DELETE_COMPLETE':
-    checkCmd = 'aws cloudformation describe-stacks --stack-name '+stackId+ ' --region '+region
+    checkCmd = 'aws cloudformation describe-stacks --stack-name '+stackId
     jsonStatus = command_runner.getShellJsonResponse(checkCmd)
     responseData = yaml.safe_load(jsonStatus)
     for item in responseData['Stacks']:
