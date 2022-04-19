@@ -17,6 +17,7 @@ import controller_arm
 import changes_manifest
 import config_cliprocessor
 import controller_cf
+import command_builder
 
 def onFoundation(command, systemInstanceName, keyDir, source, yamlInfraConfig = 'default'):
   test = config_cliprocessor.inputVars.get("test")
@@ -25,8 +26,9 @@ def onFoundation(command, systemInstanceName, keyDir, source, yamlInfraConfig = 
   if yamlInfraConfig == "default":
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
   else:
-    infraConfigFileAndPath = config_cliprocessor.inputVars.get('userCallingDir') + yamlInfraConfig
+    infraConfigFileAndPath = config_cliprocessor.inputVars.get('acmConfigPath')+command_builder.getSlashForOS() + yamlInfraConfig
   typeName = 'networkFoundation'
+#  quit(infraConfigFileAndPath)
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(infraConfigFileAndPath)
   foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
 
@@ -216,7 +218,7 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
   else:
     useTheForce = False
   foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
-
+#  quit('do!')
   if isTfBackend == True:
     logString = "Halting program because we are leaving the destruction of terraform backends to be a manual step in the UI portal in order to protect your data. "
     logWriter.writeLogVerbose("acm", logString)
@@ -257,6 +259,7 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
   #add code to confirm that output operation succeeded.
   #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
   typeParent = 'systems'
+#  quit('gogo')
   for typeName in typesToDestroy:
     if typeName != "networkFoundation" and (typeName != "subnetForBuilds") and (typeName != "images"):
       changes_manifest.updateStartOfAServiceType(level, systemInstanceName, typeName)
@@ -279,6 +282,7 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
           if typeName == 'projects':
             controller_azdoproject.offProject(systemInstanceName, instName, infraConfigFileAndPath, keyDir)
           else:
+#            quit("oh!")
             if instanceTool == 'arm':
               controller_arm.destroyDeployment(systemInstanceName, keyDir, infraConfigFileAndPath, 'serviceInstance', typeName, instName)
             elif instanceTool == 'terraform':

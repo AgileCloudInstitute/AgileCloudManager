@@ -8,6 +8,7 @@ import workflow_system
 import logWriter
 import changes_manifest
 import config_cliprocessor
+import command_builder
 import changes_taxonomy
 
 def onPlatform(command):
@@ -35,7 +36,7 @@ def onPlatform(command):
     if infraConfigFile == "default":
       yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     else:
-      yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('userCallingDir') + infraConfigFile
+      yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('acmConfigPath')+command_builder.getSlashForOS() + infraConfigFile
     changes_manifest.updateStartOfASystem('platform', systemInstanceName, "In Process")
     if config_fileprocessor.checkTopLevelType(yaml_infra_config_file_and_path, "networkFoundation"):
       changes_manifest.updateStartOfAFoundation('platform', systemInstanceName, "In Process")
@@ -93,9 +94,12 @@ def offPlatform():
     if infraConfigFile == "default":
       yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     else:
-      yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('userCallingDir') + infraConfigFile
+      yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('acmConfigPath') +command_builder.getSlashForOS()+ infraConfigFile
+#    quit('koko 2')
     changes_manifest.updateStartOfASystem('platform', systemInstanceName, "In Process")
     hasFoundation = config_fileprocessor.checkTopLevelType(yaml_infra_config_file_and_path, "networkFoundation")
+    print(useTheForce, ' : ', hasFoundation)
+#    quit('vvv')
     if (useTheForce == True) and (hasFoundation):
       changes_manifest.updateStartOfSkipServicesSection()
       changes_manifest.updateStartOfAServicesSection('platform', systemInstanceName)
@@ -105,6 +109,7 @@ def offPlatform():
       changes_manifest.updateEndOfSkipServicesSection()
     else:
       changes_manifest.updateStartOfAServicesSection('platform', systemInstanceName)
+#      quit('before offServices() ')
       workflow_system.offServices('platform', systemInstanceName, keyDir, yamlPlatformConfigFileAndPath, yaml_infra_config_file_and_path)
 #      quit('3!')
       changes_manifest.updateEndOfAServicesSection('platform', systemInstanceName)

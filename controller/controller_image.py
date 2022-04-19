@@ -35,6 +35,7 @@ def buildImages(systemInstanceName, infraConfigFileAndPath, operation, keyDir):
           controller_cf.createStack(infraConfigFileAndPath, keyDir, 'image', 'images', instName)
           region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
           stackName = config_fileprocessor.getImagePropertyValue(infraConfigFileAndPath, imageTypeName, instName, 'stackName')
+          controller_cf.configureSecrets(keyDir,region)
           getImgIdCmd = 'aws cloudformation --region '+region+' describe-stacks --stack-name '+stackName
           logString = 'getImgIdCmd is: '+ getImgIdCmd
           logWriter.writeLogVerbose("acm", logString)
@@ -85,6 +86,7 @@ def buildImages(systemInstanceName, infraConfigFileAndPath, operation, keyDir):
                 logWriter.writeLogVerbose("acm", logString)
                 sys.exit(1)
               imageIsAvailable = False
+          controller_cf.destroySecrets()
           if stackCounter > 1:
             logString = 'ERROR: Only one stack with name '+stackName+'should have status CREATE_COMPLETE, but there are: '+str(stackCounter) 
             logWriter.writeLogVerbose("acm", logString)

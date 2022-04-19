@@ -3,7 +3,7 @@
 
 import yaml
 import re
-import os
+import sys
 import csv
 import platform
 
@@ -242,15 +242,15 @@ def getPropertyCoordinatesFromCSV(infraConfigFileAndPath, templateName, propName
   cloud = getCloudName(infraConfigFileAndPath)
   if len(cloud) < 2:
     quit("ERROR: cloud name not valid.  Add better validation checking to the code. ")
-  app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
   path_to_application_root = ''
   module_config_file_and_path = ''
   if templateName.count('/') == 2:
     nameParts = templateName.split("/")
     if (len(nameParts[0]) > 1) and (len(nameParts[1]) >1) and (len(nameParts[2]) > 1): 
       template_Name = nameParts[2]  
-      path_to_application_root = app_parent_path + nameParts[0] + "\\" + nameParts[1] + "\\"
-      module_config_file_and_path = app_parent_path + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
+      path_to_application_root = userCallingDir + nameParts[0] + "\\" + nameParts[1] + "\\"
+      module_config_file_and_path = userCallingDir + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
     else:
       quit('ERROR: templateName is not valid. ')
   else:  
@@ -560,8 +560,8 @@ def getCloudName(yamlConfigFileAndPath):
 def getImageRepoDir(yamlConfigFileAndPath, instanceName):
   #Note:  Here we are assuming a properly formatted input string with the repo name at the left of a single /.  Make sure to add proper validation later to ensure that any data passing through here is valid.  
   templateRepo = instanceName.split('/')[0] + '\\' + instanceName.split('/')[1]
-  app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
-  templateRepoDir = app_parent_path + templateRepo
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
+  templateRepoDir = userCallingDir + templateRepo
   templateRepoDir = command_builder.formatPathForOS(templateRepoDir)
   return templateRepoDir
 
@@ -577,3 +577,29 @@ def getYamlKeysFileAndPath(keyDir):
   yamlKeysFileAndPath = yamlKeysPath + 'keys.yaml'
   return yamlKeysFileAndPath
  
+def getGitPassFromSourceKeys(sourceKeys):
+  ### Get gitPass variable from the file indicated by the sourceKeys variable.  
+  gitPassCount = 0
+  gitPass = None
+  if sourceKeys != None:
+    with open(sourceKeys) as file:
+      for item in file:
+        itemParts = item.split(':')
+        if itemParts[0].replace(' ','') == 'gitPass':
+          gitPass = itemParts[1].replace(' ','')
+          gitPassCount += 1
+  else:
+    logString = "ERROR: ACM_SOURCE_KEYS environment variable was not found."
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if gitPassCount == 0:
+    logString = "ERROR: gitPass variable not found in sourceKeys file. "
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  elif gitPassCount > 1:
+    logString = "ERROR: Multiple values for gitPass were found in sourceKeys file.  Only one record for gitPass is allowed as input."
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  elif gitPassCount == 1:
+    pass
+  return gitPass

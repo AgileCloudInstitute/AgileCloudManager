@@ -80,7 +80,7 @@ def runPreOrPostProcessor(processorSpecs, operation):
   elif operation == 'off':
     location = processorSpecs['locationOff']
     command = processorSpecs['commandOff']
-  fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('app_parent_path')+location
+  fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('userCallingDir')+location
   fullyQualifiedPathToScript = command_builder.formatPathForOS(fullyQualifiedPathToScript)
   commandToRun = command.replace('location',fullyQualifiedPathToScript)
   runShellCommand(commandToRun)
@@ -218,6 +218,11 @@ def processDecodedLine(decodedline, lineNum, errIdx, commFragment):
     logString = "Error: No Images were found for Resource Group.  Halting program so you can check your configuration and identify the root of the problem. "
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)
+  if "Error:" in decodedline:
+    logString = decodedline+".  Halting program so you can check your configuration and identify the root of the problem. "
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+
 
   if "Destroy complete!" in decodedline:
     logString = "Found Destroy complete!!"

@@ -10,39 +10,27 @@ import setup
 import logWriter
 
 import sys
-import os
+#import os
 
 inputArgs=sys.argv
   
 def runInfraCommands():
-  userCallingDir = os.path.abspath(".")
-
-#  useTheForce = cliproc.inputVars.get("force")
-#  print("useTheForce is: ", useTheForce)
-#  test = cliproc.inputVars.get("test")
-#  typeOfTest = cliproc.inputVars.get("testType")
-#  if (test==True) and (typeOfTest=="workflow"):
-#    print("stub test stuff goes here.")
-#  print("test is: ", test)
-#  print("typeOfTest is: ", typeOfTest)
-#  quit("BREAKPOINT to debug --test")
+#  userCallingDir = os.path.abspath(".")
   if cliproc.domain == 'setup':
-#    quit('BREAKPOINT to debug setup.')
     if cliproc.command == 'on':
       setup.runSetup()
     elif cliproc.command == 'off':
       setup.undoSetup()
+#  if cliproc.domain == 'configure':
+##    quit('BREAKPOINT to debug configure.')
+#    if cliproc.command == 'on':
+#      setup.runConfigure()
+#    elif cliproc.command == 'off':
+#      setup.undoConfigure()
 
-  if cliproc.domain == 'configure':
-#    quit('BREAKPOINT to debug configure.')
-    if cliproc.command == 'on':
-      setup.runConfigure()
-    elif cliproc.command == 'off':
-      setup.undoConfigure()
-
-#  quit('!HALT!')
   #Figure out where to put the first logging command.  Leaving it here for now because we want to first create the location for the logs before writing to that location.
-  logWriter.replaceLogFile()
+  if (cliproc.domain == 'platform') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services'):
+    logWriter.replaceLogFile()
 
   if cliproc.domain == 'platform':
     if cliproc.command == 'on':
@@ -57,9 +45,6 @@ def runInfraCommands():
     changes_manifest.initializeChangesManagementDataStructures('foundation', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(changes_manifest.changesManifest)) + " changes. "
     logWriter.writeLogVerbose("acm", logString)
-    print('keyDir is: ', keyDir)
-#    quit("on stop")
-#..
     if cliproc.command == 'on':
       changes_manifest.updateStartOfPlatformRun('foundation', "In Process")
       changes_manifest.updateStartOfASystem('foundation', systemInstanceName, "In Process")
@@ -68,7 +53,6 @@ def runInfraCommands():
       changes_manifest.updateEndOfAFoundation('foundation', systemInstanceName)
       changes_manifest.updateEndOfASystem('foundation', systemInstanceName)
       changes_manifest.updateEndOfPlatformRun('foundation')
-
     elif cliproc.command == 'off':
       changes_manifest.updateStartOfPlatformRun('foundation', "In Process")
       changes_manifest.updateStartOfASystem('foundation', systemInstanceName, "In Process")
@@ -77,19 +61,13 @@ def runInfraCommands():
       changes_manifest.updateEndOfAFoundation('foundation', systemInstanceName)
       changes_manifest.updateEndOfASystem('foundation', systemInstanceName)
       changes_manifest.updateEndOfPlatformRun('foundation')
-
   elif cliproc.domain == 'services':
     keyDir = cliproc.inputVars.get('keysDir')
-    print('keyDir is: ', keyDir)
     yamlInfraConfigFileAndPath = cliproc.inputVars.get('yamlInfraConfigFileAndPath')
-    print('yamlInfraConfigFileAndPath is: ', yamlInfraConfigFileAndPath)
     systemInstanceName = config_fileprocessor.getFirstLevelValue(yamlInfraConfigFileAndPath, "name")
-    print('systemInstanceName is: ', systemInstanceName)
-#    quit('ff!')
     changes_manifest.initializeChangesManagementDataStructures('services', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(changes_manifest.changesManifest)) + " changes. "
     logWriter.writeLogVerbose("acm", logString)
-#    quit("on stop")
     if cliproc.command == 'on':
       changes_manifest.updateStartOfPlatformRun('services', "In Process")
       changes_manifest.updateStartOfASystem('services', systemInstanceName, "In Process")
@@ -98,9 +76,7 @@ def runInfraCommands():
       changes_manifest.updateEndOfAServicesSection('services', systemInstanceName)
       changes_manifest.updateEndOfASystem('services', systemInstanceName)
       changes_manifest.updateEndOfPlatformRun('services')
-#      quit("Hi! ...--- ")
     elif cliproc.command == 'off':
-#      quit('off stop')
       changes_manifest.updateStartOfPlatformRun('services', "In Process")
       changes_manifest.updateStartOfASystem('services', systemInstanceName, "In Process")
       changes_manifest.updateStartOfAServicesSection('services', systemInstanceName)
@@ -108,15 +84,11 @@ def runInfraCommands():
       changes_manifest.updateEndOfAServicesSection('services', systemInstanceName)
       changes_manifest.updateEndOfASystem('services', systemInstanceName)
       changes_manifest.updateEndOfPlatformRun('services')
-#      quit("Hi! ...+++ ")
-
   sys.exit(0)
 
 ##############################################################################
-### Create Infrastructure By Calling The Functions
+### Deploy Platform By Calling The Functions
 ##############################################################################
 
 cliproc.processInputArgs(inputArgs)
-
-
 runInfraCommands()

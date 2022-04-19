@@ -12,6 +12,8 @@ import command_builder
 domain = ''
 command = ''
 keysDir = ''
+sourceRepo = ''
+repoBranch = ''
 test = False
 testType = ''
 inputVars = {}
@@ -53,17 +55,23 @@ def processInputArgs(inputArgs):
   global domain
   global command
   global keysDir
+  global sourceRepo
+  global repoBranch
   global test
   global testType
 
+  sourceKeys = os.environ.get("ACM_SOURCE_KEYS")
   userCallingDir = str(os.path.abspath("."))+'\\'
   userCallingDir = command_builder.formatPathForOS(userCallingDir)
   path = Path(userCallingDir)
   app_parent_path = str(path.parent)+'\\'
   app_parent_path = command_builder.formatPathForOS(app_parent_path)
   #Get acmAdmin path
-  acmAdmin = str(app_parent_path) + command_builder.getSlashForOS() + 'acmAdmin'
+  #acmAdmin = str(app_parent_path) + command_builder.getSlashForOS() + 'acmAdmin'
+  acmAdmin = userCallingDir + command_builder.getSlashForOS() + 'acmAdmin'
   acmAdmin = command_builder.formatPathForOS(acmAdmin)
+  acmConfig = userCallingDir + command_builder.getSlashForOS() + 'acmConfig'
+  acmConfig = command_builder.formatPathForOS(acmConfig)
 
   dirOfYamlKeys = acmAdmin + '\\keys\\starter\\'
   dirOfYamlKeys = command_builder.formatPathForOS(dirOfYamlKeys)
@@ -73,11 +81,11 @@ def processInputArgs(inputArgs):
 
   dynamicVarsPath = acmAdmin+'\\dynamicVars\\'
   dynamicVarsPath = command_builder.formatPathForOS(dynamicVarsPath)
-  otherVarsPath = varsPath + '\\vars\\'
-  otherVarsPath = command_builder.formatPathForOS(otherVarsPath)
-  dirOfReleaseDefJsonParts = app_parent_path + "\\azure-building-blocks\\release-definitions\\json-fragments\\"
+#  otherVarsPath = varsPath + '\\vars\\'
+#  otherVarsPath = command_builder.formatPathForOS(otherVarsPath)
+  dirOfReleaseDefJsonParts = userCallingDir + "\\azure-building-blocks\\release-definitions\\json-fragments\\"
   dirOfReleaseDefJsonParts = command_builder.formatPathForOS(dirOfReleaseDefJsonParts)
-  dirOfReleaseDefYaml = app_parent_path + "\\azure-building-blocks\\release-definitions\\yaml-definition-files\\"
+  dirOfReleaseDefYaml = userCallingDir + "\\azure-building-blocks\\release-definitions\\yaml-definition-files\\"
   dirOfReleaseDefYaml = command_builder.formatPathForOS(dirOfReleaseDefYaml)
   yamlInfraConfigFileAndPath = ''
   yamlPlatformConfigFileAndPath = ''
@@ -86,9 +94,9 @@ def processInputArgs(inputArgs):
   pub = 'invalid'
   sec = 'invalid'
   #These next two /vars/vars/.. are temporary until we further revise the directory structure
-  tfvarsFileAndPath = varsPath+'\\vars'+"\\keys.tfvars"
+  tfvarsFileAndPath = varsPath+"\\keys.tfvars"
   tfvarsFileAndPath = command_builder.formatPathForOS(tfvarsFileAndPath)
-  tfBackendFileAndPath = otherVarsPath+"backend.tfvars"
+  tfBackendFileAndPath = varsPath+command_builder.getSlashForOS()+"backend.tfvars"
   tfBackendFileAndPath = command_builder.formatPathForOS(tfBackendFileAndPath)
   #Get logsPath
   if platform.system() == 'Windows':
@@ -132,6 +140,10 @@ def processInputArgs(inputArgs):
           for single in range(numSingles):  
             val = addSlashToString(val)  
           keysDir = val  
+        elif key == "sourceRepo":
+          sourceRepo = val
+        elif key == "repoBranch":
+          repoBranch = val
         elif key == "test":  
           testType = val
           test = True
@@ -142,8 +154,8 @@ def processInputArgs(inputArgs):
   keysDir = command_builder.formatPathForOS(keysDir)
   #Third, get any values ready for export as needed.
   if keySource == "keyFile":
-    yamlInfraConfigFileAndPath = userCallingDir + 'systemConfig.yaml'
-    yamlPlatformConfigFileAndPath = userCallingDir + 'platformConfig.yaml'
+    yamlInfraConfigFileAndPath = acmConfig +command_builder.getSlashForOS()+ 'systemConfig.yaml'
+    yamlPlatformConfigFileAndPath = acmConfig +command_builder.getSlashForOS()+ 'platformConfig.yaml'
     pathToApplicationRoot = app_parent_path + '\\terraform-aws-building-blocks\\'
     pathToApplicationRoot = command_builder.formatPathForOS(pathToApplicationRoot)
 
@@ -155,15 +167,13 @@ def processInputArgs(inputArgs):
     'pathToApplicationRoot': pathToApplicationRoot,
     'app_parent_path': app_parent_path,
     'acmAdminPath': acmAdmin,
+    'acmConfigPath': acmConfig,
     'varsPath': varsPath,
     'dirOfYamlKeys': dirOfYamlKeys,
     'dirOfReleaseDefJsonParts': dirOfReleaseDefJsonParts,
     'dirOfReleaseDefYaml': dirOfReleaseDefYaml,
     'dirOfOutput': dirOfOutput,
-    'nameOfYamlKeys_IAM_File': 'iamUserKeys.yaml',
     'nameOfYamlKeys_AWS_Network_File': 'generatedKeys.yaml',
-    'nameOfYamlKeys_Azure_AD_File': 'adUserKeys.yaml',
-    'nameOfYamlKeys_Azure_Network_File': 'adUserKeys.yaml',
     'tfvarsFileAndPath': tfvarsFileAndPath,
     'tfBackendFileAndPath': tfBackendFileAndPath,
     'verboseLogFilePath': verboseLogFilePath,
@@ -171,12 +181,14 @@ def processInputArgs(inputArgs):
     'userCallingDir': userCallingDir,
     'dependenciesPath': dependenciesPath,
     'dynamicVarsPath': dynamicVarsPath,
-    'otherVarsPath': otherVarsPath,
     'relativePathToInstances': relativePathToInstances,
     'keySource': keySource,
     'pub': pub,
     'sec': sec,
     'keysDir': keysDir,
+    'sourceKeys': sourceKeys,
+    'sourceRepo': sourceRepo,
+    'repoBranch': repoBranch,
     "test": test,
     "testType": testType, 
     'tfBkndAzureParams': {     'resGroupName': 'NA' }

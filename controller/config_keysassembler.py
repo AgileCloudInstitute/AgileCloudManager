@@ -21,6 +21,9 @@ def getBackendVars(infraConfigFileAndPath, keyDir, instName):
   print("1 debug. ")
   cloud = config_fileprocessor.getCloudName(infraConfigFileAndPath)
   yaml_keys_file_and_path = command_builder.getKeyFileAndPath(keyDir, 'systems', cloud)
+
+  print('yaml_keys_file_and_path is: ', yaml_keys_file_and_path)
+#  quit('r!')
   templateName = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, "tfBackend", instName, "templateName")
   backendType = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, "tfBackend", instName, "type")
   global backendVarsList
@@ -36,6 +39,8 @@ def getBackendVars(infraConfigFileAndPath, keyDir, instName):
     clientId = controller_tfbackendazrm.getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'clientId')
     backendVarsList.append({"key":"clientId", "value":clientId, "handled":False})
     clientSecret = controller_tfbackendazrm.getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'clientSecret')
+#    print(clientSecret)
+#    quit('w!')
     if clientSecret[0] == '-':
       clientSecret = '\'' + clientSecret + '\''
     backendVarsList.append({"key":"clientSecret", "value":clientSecret, "handled":False})
@@ -52,7 +57,7 @@ def getSourceLines(keyDir):
   global sourceLinesList
   sourceLinesList = []
   keyDir = formatKeyDir(keyDir)
-  sourceKeysFile = keyDir + "adUserKeys.yaml"
+  sourceKeysFile = keyDir + "keys.yaml"
 
   #get the source variables into a new array
   if os.path.isfile(sourceKeysFile):
@@ -170,7 +175,7 @@ def writeTheVarsFile(instName, yaml_infra_config_file_and_path, keyDir, cloud, t
     print("instName is: ", instName)
     print("keyDir is: ", keyDir)
     outputDir = getOutputDir(instName)
-    outputKeysFile = outputDir + "adUserKeys.yaml"
+    outputKeysFile = outputDir + "keys.yaml"
     if sourceOfCall == "admin":
       #this block ensures that anything already written to the destination file will remain in it, except for explicit changes handled by this function.
       if os.path.isfile(outputKeysFile):

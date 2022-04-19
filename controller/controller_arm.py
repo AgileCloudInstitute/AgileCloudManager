@@ -5,6 +5,7 @@ import json
 import sys
 import time
 import datetime
+import os
 
 import command_runner
 import command_builder
@@ -17,7 +18,7 @@ import logWriter
 def createDeployment(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   outputDict = {}
   ## STEP 1: Populate variables
-  app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
   yaml_keys_file_and_path = command_builder.getKeyFileAndPath(keyDir, 'systems', 'azure')
   foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
   if caller == 'networkFoundation':
@@ -57,15 +58,15 @@ def createDeployment(infraConfigFileAndPath, keyDir, caller, serviceType, instNa
   logWriter.writeLogVerbose("az-cli", logString)
 
   ## STEP 4: Get template and config variable mapping file
-  templatePathAndFile = app_parent_path + templateName
+  templatePathAndFile = userCallingDir + templateName
   templatePathAndFile = command_builder.formatPathForOS(templatePathAndFile)
-  templateName, module_config_file_and_path = getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName, app_parent_path)
+  templateName, module_config_file_and_path = getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName, userCallingDir)
   templateName = command_builder.formatPathForOS(templateName)
   module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   print('templateName is: ', templateName)
   print('templatePathAndFile is: ', templatePathAndFile)
   print('module_config_file_and_path is: ',module_config_file_and_path)
-  print('app_parent_path is: ',app_parent_path)
+  print('userCallingDir is: ',userCallingDir)
   ## STEP 5: Assemble and run command to deploy ARM template
   assembleAndRunArmDeploymentCommand(module_config_file_and_path, keyDir, infraConfigFileAndPath, instName, organization, deploymentName, resourceGroupName, templatePathAndFile, outputDict)
 
@@ -83,12 +84,12 @@ def createDeployment(infraConfigFileAndPath, keyDir, caller, serviceType, instNa
             templateName = config_fileprocessor.getImageTemplateName(infraConfigFileAndPath, 'images', instName)
             deploymentName = config_fileprocessor.getImagePropertyValue(infraConfigFileAndPath, 'images', instName, 'deploymentName')
             ## STEP 4: Get template and config variable mapping file
-            templatePathAndFile = app_parent_path + templateName
+            templatePathAndFile = userCallingDir + templateName
             templatePathAndFile = command_builder.formatPathForOS(templatePathAndFile)
             print('abc123 templatePathAndFile: ', templatePathAndFile)
             print('templateName is: ', templateName)
             print('deploymentName is: ', deploymentName)
-            templateName, module_config_file_and_path = getArmTemplateName(infraConfigFileAndPath, 'imageBuilds', 'images', instName, app_parent_path)
+            templateName, module_config_file_and_path = getArmTemplateName(infraConfigFileAndPath, 'imageBuilds', 'images', instName, userCallingDir)
             print('revised templateName is: ', templateName)
             print('module_config_file_and_path is: ', module_config_file_and_path)
 #            quit('Test output variables.')
@@ -120,7 +121,7 @@ def destroyDeployment(systemInstanceName, keyDir, infraConfigFileAndPath, caller
   loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
 
   ## STEP 3: Get template and config variable mapping file
-  templatePathAndFile = config_cliprocessor.inputVars.get('app_parent_path') + templateName
+  templatePathAndFile = config_cliprocessor.inputVars.get('userCallingDir') + templateName
   templatePathAndFile = command_builder.formatPathForOS(templatePathAndFile)
 
   ## STEP 4: delete deployment
@@ -253,6 +254,12 @@ def createImageTemplateAndDeployImage(resourceGroupName,subscriptionId, instName
   buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+imageTemplateName+' --action Run '
   jsonResponse = command_runner.getShellJsonResponse(buildImageCommand)
   print('Response from image build process is: ', str(jsonResponse))
+  roleFile = config_cliprocessor.inputVars.get('userCallingDir') + 'ad-role.json'
+  try:
+    os.remove(roleFile)
+  except OSError:
+    pass
+
   ##THE REST OF THIS FUNCTION IS JUST A TEST TO SEE IF A VM CAN BE CREATED FROM THE IMAGE
 
 
@@ -301,14 +308,14 @@ def checkRegistrationState(checkCmd):
   print('regState is: ', regState)
   return regState
 
-def getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName, app_parent_path):
+def getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName, userCallingDir):
 #..
   print('......................................................')
   print('infraConfigFileAndPath is: ', infraConfigFileAndPath)
   print('typeParent is: ', typeParent)
   print('serviceType is: ', serviceType)
   print('instName is: ', instName)
-  print('app_parent_path is: ', app_parent_path)
+  print('userCallingDir is: ', userCallingDir)
   print('......................................................')
 #..
   templateName = config_fileprocessor.getTemplateName(infraConfigFileAndPath, typeParent, serviceType, None, instName, None)  
@@ -316,7 +323,7 @@ def getArmTemplateName(infraConfigFileAndPath, typeParent, serviceType, instName
     nameParts = templateName.split("/")
     if (len(nameParts[0]) > 1) and (len(nameParts[1]) >1) and (len(nameParts[2]) > 1):
       templateName = nameParts[2]  
-      module_config_file_and_path = app_parent_path + nameParts[0] + '\\variableMaps\\' + templateName + '.csv'
+      module_config_file_and_path = userCallingDir + nameParts[0] + '\\variableMaps\\' + templateName + '.csv'
     else:
       logString = 'ERROR: templateName is not valid. '
       logWriter.writeLogVerbose("acm", logString)

@@ -22,7 +22,7 @@ import tarfile
 import shutil
 
 def writeKeyFiles(keysDir):
-  with open(keysDir+'adUserKeys.yaml', 'w') as file:
+  with open(keysDir+'keys.yaml', 'w') as file:
     file.write('secretsType: master\n')
     file.write('name: <put-actual-secret-value-here>\n')
     file.write('clientName: <put-actual-secret-value-here>\n')
@@ -50,7 +50,7 @@ def createDirectoryStructure():
   keysStarterPath = config_cliprocessor.inputVars.get('dirOfYamlKeys')
   varsPath = config_cliprocessor.inputVars.get('varsPath')
   dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
-  otherVarsPath = config_cliprocessor.inputVars.get('otherVarsPath')
+#  otherVarsPath = config_cliprocessor.inputVars.get('otherVarsPath')
   binariesPath = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
   logsPath = config_cliprocessor.inputVars.get('verboseLogFilePath')
 
@@ -89,10 +89,10 @@ def createDirectoryStructure():
   if not os.path.exists(dynamicVarsPath):
     os.mkdir(dynamicVarsPath)
 
-  otherVarsPath = Path(otherVarsPath)
-  print('.....++++  otherVarsPath is: ', otherVarsPath)
-  if not os.path.exists(otherVarsPath):
-    os.mkdir(otherVarsPath)
+#  otherVarsPath = Path(otherVarsPath)
+#  print('.....++++  otherVarsPath is: ', otherVarsPath)
+#  if not os.path.exists(otherVarsPath):
+#    os.mkdir(otherVarsPath)
 
   logsPath = Path(logsPath)
   if not os.path.exists(logsPath):
@@ -126,33 +126,6 @@ def recursiveDelete(startingPath):
   if os.path.exists(startingPath):
     shutil.rmtree(startingPath)
 
-def removeDirectoryStructure():
-  userCallingDir = os.path.abspath(".")
-  print('userCallingDir is: ', userCallingDir)
-  path = Path(userCallingDir)
-  parentPath = path.parent
-  print('parentPath is: ', parentPath)
-  print('Contents of parent directory BEFORE DELETION are: ')
-  for item in os.listdir(parentPath):
-    print('... ', item)
-  acmAdmin = str(parentPath) + command_builder.getSlashForOS() + 'acmAdmin'
-  acmAdmin = command_builder.formatPathForOS(acmAdmin)
-  adminPath = Path(acmAdmin)
-  recursiveDelete(adminPath)
-
-  configPath = os.path.abspath(".")
-  yaml_infra_config_file_and_path = configPath + command_builder.getSlashForOS() + "setupConfig.yaml"
-  yaml_infra_config_file_and_path = command_builder.formatPathForOS(yaml_infra_config_file_and_path)
-  sourceRepoInstanceNames = config_fileprocessor.getInstanceNames(yaml_infra_config_file_and_path, 'source')
-  print('Contents of parent directory AFTER DELETION are: ')
-  for item in os.listdir(parentPath):
-    if str(item) in sourceRepoInstanceNames:
-      print('..Repository that was installed with `acm config on` command: ', item)
-    else:
-      print('..NOT the result of `acm config on` command: ', item)
-  print("NOTE: You must delete repositories yourself.  `acm setup off` does not delete repositories because we do not want to destroy unsaved work with this command.  ")
-
-
 def downloadAndExtractBinary(url, dependencies_binaries_path):
   url_elements = url.split("/")
   file = url_elements[-1]
@@ -177,7 +150,7 @@ def downloadAndExtractBinary(url, dependencies_binaries_path):
 
 def getDependencies():
 #  userCallingDir = os.path.abspath(".")
-  configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
+  configPath = config_cliprocessor.inputVars.get('acmConfigPath') #os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
   yaml_setup_config_file_and_path = configPath + command_builder.getSlashForOS() + "setupConfig.yaml"
   yaml_setup_config_file_and_path = command_builder.formatPathForOS(yaml_setup_config_file_and_path)
 #  if 'ACM_SHARED_KEYS' in os.environ:
@@ -219,7 +192,7 @@ def getDependencies():
 def checkDependencies():
   logString = "Checking to see if required dependencies are installed..."
   logWriter.writeLogVerbose("acm", logString)
-  configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
+  configPath = config_cliprocessor.inputVars.get('acmConfigPath') #os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
   yaml_setup_config_file_and_path = configPath +command_builder.getSlashForOS() + "setupConfig.yaml"  
   yaml_setup_config_file_and_path = command_builder.formatPathForOS(yaml_setup_config_file_and_path)
   dependencies_binaries_path = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
@@ -363,15 +336,15 @@ def checkDependencies():
     sys.exit(1)
 
 def cloneTheSourceCode():
-  configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
+#  configPath = os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
+  configPath = config_cliprocessor.inputVars.get('acmConfigPath') #os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
   yaml_infra_config_file_and_path = configPath +command_builder.getSlashForOS() + "setupConfig.yaml"  
   yaml_infra_config_file_and_path = command_builder.formatPathForOS(yaml_infra_config_file_and_path)
-  appParentPath = config_cliprocessor.inputVars.get('app_parent_path')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
   sourceRepoInstanceNames = config_fileprocessor.getInstanceNames(yaml_infra_config_file_and_path, 'source')
-  userCallingDir = os.path.abspath(".")
-  path = Path(userCallingDir)
-  parentPath = path.parent
-  acmAdmin = str(parentPath) + command_builder.getSlashForOS() + 'acmAdmin'
+#  path = Path(userCallingDir)
+#  parentPath = path.parent
+  acmAdmin = userCallingDir + command_builder.getSlashForOS() + 'acmAdmin'
   acmAdmin = command_builder.formatPathForOS(acmAdmin)
   keys = acmAdmin + command_builder.getSlashForOS() + 'keys' + command_builder.getSlashForOS() + 'starter'
   keys = command_builder.formatPathForOS(keys)
@@ -387,7 +360,7 @@ def cloneTheSourceCode():
     repoUrlCred = repoUrlStart + pword + repoUrlEnd
     repoBranch = config_fileprocessor.getSourceCodeProperty(yaml_infra_config_file_and_path, 'source', sourceRepoInstance, 'branch')
     gitCloneCommand = "git clone -b " + repoBranch + " " + repoUrlCred
-    command_runner.runShellCommandInWorkingDir(gitCloneCommand, appParentPath)
+    command_runner.runShellCommandInWorkingDir(gitCloneCommand, userCallingDir)
   #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
 
 def writeTerraformRC(terraformRC):
@@ -403,28 +376,6 @@ def writeTerraformRC(terraformRC):
     print("}")
 
 def runConfigure():
-#2.3.22  app_parent_path = os.path.dirname(os.path.realpath("..\\"))
-#2.3.22  from_path = app_parent_path+"\\agile-cloud-manager"+"\\"+"move-to-directory-outside-app-path\\"
-#2.3.22  dest_path = app_parent_path+"\\config-outside-acm-path\\"
-#2.3.22  #Create destination directory if it does not already exist 
-#2.3.22  Path(dest_path).mkdir(parents=True, exist_ok=True)
-#2.3.22  #Copy config and secret templates outside app path before they can be safely populated
-#2.3.22  copy_tree(from_path, dest_path)
-#2.3.22  #Copy actual credentials into their destination.
-#2.3.22  if config_cliprocessor.inputVars.get("keysDir") == '':
-#2.3.22    #Git credentials
-#2.3.22    gitCredFileSrc = app_parent_path + "\\gitCred.yaml"
-#2.3.22    #azure credentials
-#2.3.22    azCredFileSrc = app_parent_path + "\\adUserKeys.yaml"
-#2.3.22  else:
-#2.3.22    #Git credentials
-#2.3.22    gitCredFileSrc = config_cliprocessor.inputVars.get("keysDir") + "\\gitCred.yaml"
-#2.3.22    #azure credentials
-#2.3.22    azCredFileSrc = config_cliprocessor.inputVars.get("keysDir") + "\\adUserKeys.yaml"
-#2.3.22  gitCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\gitCred.yaml"
-#2.3.22  azCredFileDest = app_parent_path + "\\config-outside-acm-path\\vars\\admin\\adUserKeys.yaml"
-#2.3.22  if os.path.exists(gitCredFileSrc): shutil.copyfile(gitCredFileSrc, gitCredFileDest)
-#2.3.22  if os.path.exists(azCredFileSrc): shutil.copyfile(azCredFileSrc, azCredFileDest)
   getDependencies()
   checkDependencies()
   cloneTheSourceCode()
@@ -459,10 +410,13 @@ def runConfigure():
 
 
 def undoConfigure():
-  config_path = config_cliprocessor.inputVars.get('acmAdminPath')
-  print('config_path is: ', config_path)
+  admin_path = config_cliprocessor.inputVars.get('acmAdminPath')
+  print('admin_path is: ', admin_path)
+  deleteLocalCopiesOfGitRepos()
+  admin_path = config_cliprocessor.inputVars.get('acmAdminPath')
+  print('admin_path is: ', admin_path)
   try:
-    shutil.rmtree(config_path, ignore_errors=True)
+    shutil.rmtree(admin_path, ignore_errors=True)
   except FileNotFoundError:
     logString = "The acmAdmin directory does not exist.  It may have already been deleted."
     logWriter.writeLogVerbose("acm", logString)
@@ -474,11 +428,77 @@ def undoConfigure():
       logString = "The /opt/acm/ directory does not exist.  It may have already been deleted."
       logWriter.writeLogVerbose("acm", logString)
     command_runner.runShellCommandInWorkingDir("dir", '/opt')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
+  callsToModulesDir = userCallingDir + command_builder.getSlashForOS() + 'calls-to-modules'
+  try:
+    shutil.rmtree(callsToModulesDir, ignore_errors=True)
+  except FileNotFoundError:
+    logString = "The calls-to-modules directory does not exist.  It may have already been deleted."
+    logWriter.writeLogVerbose("acm", logString)
 
+def deleteLocalCopiesOfGitRepos():
+  config_path = config_cliprocessor.inputVars.get('acmConfigPath')
+  print('config_path is: ', config_path)
+  if platform.system() == 'Linux':
+    gitRemoveCmd = 'rm -rf .git'
+  if platform.system() == 'Windows':
+    gitRemoveCmd = 'rmdir /s /q .git'
+  #Now get the names of all the repos that were imported. 
+  yaml_infra_config_file_and_path = config_path +command_builder.getSlashForOS() + "setupConfig.yaml"  
+  yaml_infra_config_file_and_path = command_builder.formatPathForOS(yaml_infra_config_file_and_path)
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
+  sourceRepoInstanceNames = config_fileprocessor.getInstanceNames(yaml_infra_config_file_and_path, 'source')
+  #Now delete the local copy of each imported repo.
+  for sourceRepoInstance in sourceRepoInstanceNames:
+    repoUrl = config_fileprocessor.getSourceCodeProperty(yaml_infra_config_file_and_path, 'source', sourceRepoInstance, 'repo')
+    repoUrlEnd = repoUrl.split("//")[1]
+    repoName = repoUrlEnd.split('/')[-1].replace('.git','')
+    repoPath = userCallingDir + command_builder.getSlashForOS() + repoName
+    print('repoPath is: ', repoPath)
+    command_runner.runShellCommandInWorkingDir(gitRemoveCmd, repoPath)
+    try:
+      shutil.rmtree(repoPath)
+    except FileNotFoundError:
+      logString = "The "+repoName+" directory does not exist.  It may have already been deleted."
+      logWriter.writeLogVerbose("acm", logString)
+  #No delete the acmConfig directory
+  command_runner.runShellCommandInWorkingDir(gitRemoveCmd, config_path)
+  try:
+    shutil.rmtree(config_path)
+  except FileNotFoundError:
+    logString = "The acmConfig directory does not exist.  It may have already been deleted."
+    logWriter.writeLogVerbose("acm", logString)
 
 def runSetup():
   createDirectoryStructure()
+  sourceKeys = config_cliprocessor.inputVars.get('sourceKeys')
+  gitPass = config_fileprocessor.getGitPassFromSourceKeys(sourceKeys)
+  sourceRepo = config_cliprocessor.inputVars.get('sourceRepo')
+  sourceRepo = command_builder.assembleSourceRepo(gitPass, sourceRepo)
+  cloneCommand = command_builder.assembleCloneCommand(sourceRepo)
+  print('gitPass is: ', gitPass)
+  print('sourceRepo is: ', sourceRepo)
+  print('cloneCommand is: ', cloneCommand)
+#  quit('y!.')
+  command_runner.runShellCommand(cloneCommand)
+  sourceRepoDestinationDir = sourceRepo.split('/')[-1].replace('.git','')
+  sourceRepoDestinationDir = config_cliprocessor.inputVars.get('userCallingDir') + sourceRepoDestinationDir
+  sourceRepoDestinationDir = command_builder.formatPathForOS(sourceRepoDestinationDir)
+  acmConfigPath = config_cliprocessor.inputVars.get('acmConfigPath')
+  acmConfigPath = command_builder.formatPathForOS(acmConfigPath)
+  print('sourceRepoDestinationDir is: ', sourceRepoDestinationDir)
+  print('acmConfigPath is: ', acmConfigPath)
+  os.rename(sourceRepoDestinationDir, acmConfigPath)
+  keysStarterPath = config_cliprocessor.inputVars.get('dirOfYamlKeys')
+  print('keysStarterPath is: ', keysStarterPath)
+  destinationKeys = keysStarterPath +command_builder.getSlashForOS()+'keys.yaml'
+#  shutil.copy(sourceKeys, keysStarterPath)
+  shutil.copy(sourceKeys, destinationKeys)
+  runConfigure()
+#  quit('BREAKPOINT to debug runSetup()')
 
 def undoSetup():
-  removeDirectoryStructure()
+  undoConfigure()
+#  quit('BREAKPOINT to debug undoSetup()')
+#  removeDirectoryStructure()
 

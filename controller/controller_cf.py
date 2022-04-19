@@ -18,10 +18,10 @@ import logWriter
 
 def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
-  if platform.system() == 'Linux':
-    configureSecrets(keyDir, region)
+#  if platform.system() == 'Linux':
+  configureSecrets(keyDir, region)
   ## STEP 1: Populate variables
-  app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
   foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
   outputDict = {}
   if caller == 'networkFoundation':
@@ -39,9 +39,9 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
     templateName = config_fileprocessor.getImagePropertyValue(infraConfigFileAndPath, 'images', instName, 'templateName')
     stackName = config_fileprocessor.getImagePropertyValue(infraConfigFileAndPath, 'images', instName, 'stackName')
   organization = config_fileprocessor.getFirstLevelValue(infraConfigFileAndPath, 'organization')
-  module_config_file_and_path = getModuleConfigFileAndPath(infraConfigFileAndPath, typeParent, serviceType, instName, app_parent_path)
+  module_config_file_and_path = getModuleConfigFileAndPath(infraConfigFileAndPath, typeParent, serviceType, instName, userCallingDir)
   deployVarsFragment = command_builder.getCloudFormationVarsFragment(keyDir, infraConfigFileAndPath, module_config_file_and_path, foundationInstanceName, None, instName, organization, caller, serviceType, outputDict)
-  cfTemplateFileAndPath = app_parent_path+templateName
+  cfTemplateFileAndPath = userCallingDir+templateName
   cfTemplateFileAndPath = command_builder.formatPathForOS(cfTemplateFileAndPath)
   ## STEP 2: Check to see if stack already exists
   checkExistCmd = 'aws cloudformation describe-stacks --stack-name '+stackName
@@ -113,8 +113,8 @@ def createStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
 
 def destroyStack(infraConfigFileAndPath, keyDir, caller, serviceType, instName):
   region = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'region')
-  if platform.system() == 'Linux':
-    configureSecrets(keyDir,region)
+  #if platform.system() == 'Linux':
+  configureSecrets(keyDir,region)
   ## STEP 1: Populate variables
   app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
 #  foundationInstanceName = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'instanceName')
@@ -303,7 +303,11 @@ def configureSecrets(keyDir,region):
   yamlKeysFileAndPath = config_fileprocessor.getYamlKeysFileAndPath(keyDir)
   AWSAccessKeyId = config_fileprocessor.getFirstLevelValue(yamlKeysFileAndPath, 'AWSAccessKeyId')
   AWSSecretKey = config_fileprocessor.getFirstLevelValue(yamlKeysFileAndPath, 'AWSSecretKey')
-  outputDir = os.path.expanduser('~/.aws')
+  outputDir = command_builder.formatPathForOS(os.path.expanduser('~/.aws'))
+  print('outputDir is: ', outputDir)
+#  winUserHome = os.environ.get('%UserProfile%')
+#  print('winUserHome is: ', winUserHome)
+#  quit('2@!')
   if not os.path.isdir(outputDir):
     os.mkdir(outputDir)
   fileName = outputDir+'/credentials'
@@ -323,12 +327,12 @@ def configureSecrets(keyDir,region):
     f.write(regionLine)
 
 def destroySecrets():
-  filename = os.path.expanduser('~/.aws') + '/credentials'
+  filename = command_builder.formatPathForOS(os.path.expanduser('~/.aws') + '/credentials')
   try:
     os.remove(filename)
   except OSError:
     pass
-  filename = os.path.expanduser('~/.aws') + '/config'
+  filename = command_builder.formatPathForOS(os.path.expanduser('~/.aws') + '/config')
   try:
     os.remove(filename)
   except OSError:

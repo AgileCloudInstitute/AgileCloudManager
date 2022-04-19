@@ -30,16 +30,19 @@ def terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFil
   templateName = config_fileprocessor.getTemplateName(infraConfigFileAndPath, typeParent, typeName, None, instanceName, None)  
   dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
   oldTfStateName = getBackedUpStateFileName(dynamicVarsPath, foundationInstanceName, templateName, instanceName)
-  app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
   relative_path_to_instances =  config_cliprocessor.inputVars.get('relativePathToInstances')
   path_to_application_root = ''
+  repoName = templateName.split('/')[0]
+#  print(repoName)
+#  quit(templateName)
   if templateName.count('/') == 2:
     nameParts = templateName.split("/")
     if (len(nameParts[0]) > 1) and (len(nameParts[1]) >1) and (len(nameParts[2]) > 1):
       relative_path_to_instances = nameParts[0] + '\\' + nameParts[1] + relative_path_to_instances  
       template_Name = nameParts[2]  
-      path_to_application_root = app_parent_path + nameParts[0] + "\\" + nameParts[1] + "\\"
-      module_config_file_and_path = app_parent_path + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
+      path_to_application_root = userCallingDir + nameParts[0] + "\\" + nameParts[1] + "\\"
+      module_config_file_and_path = userCallingDir + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
     else:
       logString = 'ERROR: templateName is not valid. '
       logWriter.writeLogVerbose("acm", logString)
@@ -52,9 +55,9 @@ def terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFil
   path_to_application_root = command_builder.formatPathForOS(path_to_application_root)
   module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
   relativePathToInstance = relative_path_to_instances + template_Name + "\\"
-  destinationCallParent = convertPathForOS(app_parent_path, relativePathToInstance)
+  destinationCallParent = convertPathForOS(userCallingDir, relativePathToInstance)
   #2. Then second instantiate call to module
-  destinationCallInstance = instantiateCallToModule(cloud, operation, keyDir, infraConfigFileAndPath, foundationInstanceName, parentInstanceName, typeName, module_config_file_and_path, path_to_application_root, instanceName, template_Name, oldTfStateName)
+  destinationCallInstance = instantiateCallToModule(cloud, operation, keyDir, infraConfigFileAndPath, foundationInstanceName, parentInstanceName, typeName, module_config_file_and_path, repoName, instanceName, template_Name, oldTfStateName)
   if os.path.exists(destinationCallInstance) and os.path.isdir(destinationCallInstance):
     #3. Then third assemble and run command
     assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, operation, infraConfigFileAndPath, foundationInstanceName, parentInstanceName, instanceName, destinationCallInstance, typeName, module_config_file_and_path)
@@ -278,7 +281,7 @@ def initializeTerraformBackend(cloud, operation, keyDir, yamlInfraFileAndPath, f
   command_runner.runTerraformCommand(initCommand, destinationCallInstance)	
   #Add error handling to validate that init command succeeded.
 
-def instantiateCallToModule(cloud, operation, keyDir, yaml_infra_config_file_and_path, foundationInstanceName, parentInstanceName, typeName, module_config_file_and_path, path_To_ApplicationRoot, instanceName, templateName, oldTfStateName):
+def instantiateCallToModule(cloud, operation, keyDir, yaml_infra_config_file_and_path, foundationInstanceName, parentInstanceName, typeName, module_config_file_and_path, repoName, instanceName, templateName, oldTfStateName):
   yamlConfigFileAndPath = yaml_infra_config_file_and_path
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(yamlConfigFileAndPath)
   if (foundationInstanceName is None) or (len(foundationInstanceName)==0):
@@ -292,8 +295,18 @@ def instantiateCallToModule(cloud, operation, keyDir, yaml_infra_config_file_and
     relativePathInstance = command_builder.getSlashForOS() + "calls-to-modules" + command_builder.getSlashForOS() + "instances" + command_builder.getSlashForOS() + templateName + command_builder.getSlashForOS() +foundationInstanceName+"-"+instanceName+"-" + templateName + command_builder.getSlashForOS()
     keyFile = foundationInstanceName + "-" + instanceName + "-" + templateName  
   keyFile = command_builder.formatPathForOS(keyFile)
-  sourceOfCallTemplate = convertPathForOS(path_To_ApplicationRoot, relativePathTemplate)
-  destinationCallInstance = convertPathForOS(path_To_ApplicationRoot, relativePathInstance)
+
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')+command_builder.getSlashForOS()
+  pathToTemplate = userCallingDir+repoName+command_builder.getSlashForOS()+'terraform'+command_builder.getSlashForOS()
+  sourceOfCallTemplate = convertPathForOS(pathToTemplate, relativePathTemplate)
+  destinationCallInstance = convertPathForOS(pathToTemplate, relativePathInstance)
+
+  print('sourceOfCallTemplate is: ', sourceOfCallTemplate)
+  print('relativePathTemplate is: ', relativePathTemplate)
+  print('destinationCallInstance is: ', destinationCallInstance)
+  print('userCallingDir is: ', userCallingDir)
+  print('relativePathInstance is: ', relativePathInstance)
+#  quit('T!')
   remoteBackend = False
   templateFileAndPath = sourceOfCallTemplate + "main.tf"
   if os.path.isfile(templateFileAndPath):
@@ -408,7 +421,7 @@ def saveAWSKeyFile(data_resources):
       secKey = i['instances'][0]['attributes']['secret']
       #Next: Save the new IAM user's keys in a yaml file for use creating and offing infrastructure.  NOTE: save this to a secrets vault instead of a file if you are using a vault.
       dict_file = [{'keyPairs' : [{'name': 'demoKeyPair', '_public_access_key': pubKey, '_secret_access_key': secKey} ]}]
-      yamlKeysNetworkFileAndPath = config_cliprocessor.inputVars.get('dirOfYamlKeys') + config_cliprocessor.inputVars.get('nameOfYamlKeys_AWS_Network_File')
+      yamlKeysNetworkFileAndPath = config_cliprocessor.inputVars.get('dirOfYamlKeys') + 'keys.yaml' #config_cliprocessor.inputVars.get('nameOfYamlKeys_AWS_Network_File')
       with open(yamlKeysNetworkFileAndPath, 'w') as file:
         documents = yaml.dump(dict_file, file)
 

@@ -75,6 +75,21 @@ def onPipeline(command, systemInstanceName, iName, infraConfigFileAndPath, keyDi
     releaseDefConstructorTemplateFile = dirOfReleaseDefJsonParts + 'releaseDefConstructorTemplate.json'
     artifactsTemplateFile = dirOfReleaseDefJsonParts + 'artifactsTemplate.json'
     vaultName = config_fileprocessor.getSecondLevelProperty(infraConfigFileAndPath, 'systems', 'releaseDefinitions', iName, 'vaultName')  
+
+    print('..............................................')
+    print('yamlFile is: ', yamlFile)
+    print('dirOfReleaseDefJsonParts is: ', dirOfReleaseDefJsonParts)
+    print('releaseDefConstructorTemplateFile is: ', releaseDefConstructorTemplateFile)
+    print('environmentTemplateFile is: ', environmentTemplateFile)
+    print('deployPhaseTemplateFile is: ', deployPhaseTemplateFile)
+    print('artifactsTemplateFile is: ', artifactsTemplateFile)
+    print('poolQueueId is: ', str(poolQueueId))
+    print('azuredevops_project_id is: ', str(azuredevops_project_id))
+    print('orgServiceURL is: ', orgServiceURL)
+    print('projName is: ', projName)
+    print('vaultName is: ', vaultName)
+    print('azuredevops_service_connection_id is: ', str(azuredevops_service_connection_id))
+
     try:
       releaseDefData = getReleaseDefData(yamlFile, dirOfReleaseDefJsonParts, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azuredevops_project_id, orgServiceURL, projName, vaultName, azuredevops_service_connection_id)
     except Exception as e:

@@ -172,12 +172,12 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
             else:  
               if tool == 'terraform':
                 if sourceField == 'cloudInit':
-                  appParentpath = config_cliprocessor.inputVars.get('app_parent_path')
+                  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
                   relativePathAndFile = str(props.get(prop))
                   if platform.system() == "Windows":
-                    appParentpath = formatPathForOS(appParentpath)
+                    userCallingDir = formatPathForOS(userCallingDir)
                     relativePathAndFile = formatPathForOS(relativePathAndFile)
-                  varSnip = " -var=\"" +inputVar + "="+appParentpath + relativePathAndFile +"\""  
+                  varSnip = " -var=\"" +inputVar + "="+userCallingDir + relativePathAndFile +"\""  
                   varSnip = formatPathForOS(varSnip)
                 else:
                   if callInstanceName == "azdoAgents":
@@ -185,12 +185,12 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
                   varSnip = " -var=\"" +inputVar + "="+str(props.get(prop)) +"\""  
               elif tool == 'packer':
                 if sourceField == 'init_script':
-                  appParentpath = config_cliprocessor.inputVars.get('app_parent_path')
+                  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
                   relativePathAndFile = str(props.get(prop))
                   if platform.system() == "Windows":
-                    appParentpath = formatPathForOS(appParentpath)
+                    userCallingDir = formatPathForOS(userCallingDir)
                     relativePathAndFile = formatPathForOS(relativePathAndFile)
-                  varSnip = " -var \"" +inputVar + "="+appParentpath + relativePathAndFile +"\""  
+                  varSnip = " -var \"" +inputVar + "="+userCallingDir + relativePathAndFile +"\""  
                   varSnip = formatPathForOS(varSnip)
                 else:
                   varSnip = " -var \"" +inputVar + "="+str(props.get(prop)) +"\""  
@@ -995,3 +995,31 @@ def getKeyFileLocation(instance_name, cloud_vendor):
   keys_file_and_path = 'invalid'
   keys_file_and_path = outputDir + 'keys.yaml'
   return keys_file_and_path
+
+def assembleCloneCommand(sourceRepo):
+  repoBranch = config_cliprocessor.inputVars.get('repoBranch')
+  print('.... repoBranch is: ', repoBranch)
+  print('mmm len(repoBranch) is: ', len(repoBranch))
+  if len(repoBranch) == 0:
+    branchPart = ''
+  else:
+    branchPart = ' --branch '+repoBranch+' '
+  cloneCommand = 'git clone '+branchPart+sourceRepo
+  return cloneCommand
+
+def assembleSourceRepo(gitPass, sourceRepo):
+  ### Assemble the URL to use to clone the repo that contains the configurtion.  
+#  sourceRepo = getCliVariable('sourceRepo')
+  if len(sourceRepo) == 0:
+    logString = 'ERROR: sourceRepo parameter must be properly included in your command.'
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if sourceRepo[0:8] != 'https://':
+    logString = 'ERROR: the sourceRepo parameter must begin with https://'
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  else:
+    print('Match!')
+    if gitPass != None:
+      sourceRepo = 'https://'+gitPass.strip()+'@'+sourceRepo[8:].strip()
+  return sourceRepo

@@ -12,7 +12,7 @@ import config_cliprocessor
 def packerCrudOperation(operation, systemInstanceName, keyDir, typeName, instanceName, yaml_infra_config_file_and_path):
   foundationInstanceName = config_fileprocessor.getFoundationInstanceName(yaml_infra_config_file_and_path)
   cloud = config_fileprocessor.getCloudName(yaml_infra_config_file_and_path)
-  app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
+  userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
   module_config_file_and_path = ''
   if len(cloud) < 2:
     logString = "ERROR: cloud name not valid.  Add better validation checking to the code. "
@@ -28,13 +28,13 @@ def packerCrudOperation(operation, systemInstanceName, keyDir, typeName, instanc
       relative_path_to_instances = nameParts[0] + '\\' + nameParts[1]
       relative_path_to_instances = command_builder.formatPathForOS(relative_path_to_instances)
       template_Name = nameParts[2]  
-      path_to_application_root = app_parent_path + nameParts[0] + "\\" + nameParts[1] + "\\"
+      path_to_application_root = userCallingDir + nameParts[0] + "\\" + nameParts[1] + "\\"
       path_to_application_root = command_builder.formatPathForOS(path_to_application_root)
-      module_config_file_and_path = app_parent_path + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
+      module_config_file_and_path = userCallingDir + nameParts[0] + '\\variableMaps\\' + template_Name + '.csv'
       module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
-      template_config_file_name = app_parent_path + nameParts[0] + '\\packer\\' + template_Name + '.json'
+      template_config_file_name = userCallingDir + nameParts[0] + '\\packer\\' + template_Name + '.json'
       template_config_file_name = command_builder.formatPathForOS(template_config_file_name)
-      startup_script_file_and_path = app_parent_path + nameParts[0] + '\\scripts\\' + 'fileName'
+      startup_script_file_and_path = userCallingDir + nameParts[0] + '\\scripts\\' + 'fileName'
       startup_script_file_and_path = command_builder.formatPathForOS(startup_script_file_and_path)
     else:
       logString = 'ERROR: templateName is not valid. '

@@ -80,5 +80,5 @@ def findVarReferences():
 #searchAllFilesForMatches("logWriter.assembleChangeTaxonomy(")
 #searchAllFilesForMatches("After update")
 #searchAllFilesForMatches("changes that will be made in this run are itemized in the changesManifest as follows:")
-searchAllFilesForMatches("log-verbose.log")
+searchAllFilesForMatches("nameOfYamlKeys_AWS")
 #searchAllFilesForMatches("match1 and match2 are:")

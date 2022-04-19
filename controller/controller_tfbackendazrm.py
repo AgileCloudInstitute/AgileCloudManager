@@ -32,7 +32,7 @@ def createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir
     storageAccountName = instName.lower() + orgName.lower()
     #ADD VALIDATION TO CONFIRM THAT storageAccountName IS NOT LONGER THAN 24 CHARACTERS TO PREVENT DOWNSTREAM ERROR.
     outputDir = config_keysassembler.getOutputDir(instName)
-    keysFile = outputDir + "adUserKeys.yaml"
+    keysFile = outputDir + "keys.yaml"
     #Login to az cli
     #### #The following command gets the client logged in and able to operate on azure repositories.
     myCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
@@ -68,6 +68,9 @@ def getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instNam
   varVal = ''
   rgNameCoords = config_fileprocessor.getPropertyCoordinatesFromCSV(infraConfigFileAndPath, templateName, propName)
   coordsParts = rgNameCoords.split("/")
+  print('rgNameCoords is: ', rgNameCoords)
+  print('coordsParts is: ', coordsParts)
+
   if coordsParts[0] == 'infrastructureConfig.yaml':
     if rgNameCoords.count('/') == 1:
       if coordsParts[1] == 'networkFoundation':
@@ -82,6 +85,12 @@ def getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instNam
   else:
     logString = "No match: ", coordsParts[1]
     logWriter.writeLogVerbose("acm", logString)
+  print('yaml_keys_file_and_path is: ', yaml_keys_file_and_path)
+  print('infraConfigFileAndPath is: ', infraConfigFileAndPath)
+  print('instName is: ', instName)
+  print('templateName is: ', templateName)
+  print('propName is: ', propName)
+
   return varVal
 
 def writeBackendFile(outputDir, storageAccountName, storageContainerName, subscriptionId, clientId, clientSecret, tenantId, resourceGroupName):

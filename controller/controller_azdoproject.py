@@ -159,8 +159,8 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     organization = organization.replace('"','')
     organization = organization.replace("'","")
     serviceEndPointName = '_' + instanceName
-    app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
-    endpointTemplate = app_parent_path + config_fileprocessor.getSecondLevelProperty(yaml_infra_config_file_and_path, 'systems', 'projects', instanceName, 'endpointTemplate')
+    userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
+    endpointTemplate = userCallingDir + config_fileprocessor.getSecondLevelProperty(yaml_infra_config_file_and_path, 'systems', 'projects', instanceName, 'endpointTemplate')
     if platform.system() == "Windows":
       endpointTemplate = endpointTemplate.replace('/','\\')
     else:
@@ -180,7 +180,7 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
   print("gitSourceUrl is: ", gitSourceUrl)
   print("organization is: ", organization)
   print("serviceEndPointName is: ", serviceEndPointName)
-  print("app_parent_path is: ", app_parent_path)
+  print("userCallingDir is: ", userCallingDir)
   print("endpointTemplate is: ", endpointTemplate)
   logString = "About to load the endpoint template from:  " + endpointTemplate
   logWriter.writeLogVerbose("acm", logString)

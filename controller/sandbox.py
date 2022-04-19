@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def writeKeyFiles(keysDir):
-  with open(keysDir+'adUserKeys.yaml', 'w') as file:
+  with open(keysDir+'keys.yaml', 'w') as file:
     file.write('secretsType: master\n')
     file.write('name: <put-actual-secret-value-here>\n')
     file.write('clientName: <put-actual-secret-value-here>\n')

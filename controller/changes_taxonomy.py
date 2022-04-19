@@ -150,7 +150,11 @@ def getInfraConfigFileAndPath(instanceName):
   if infraConfigFile == "default":
     yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
   else:
-    yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('userCallingDir') + infraConfigFile
+    yaml_infra_config_file_and_path = config_cliprocessor.inputVars.get('acmConfigPath') +command_builder.getSlashForOS()+ infraConfigFile
+  print("config_cliprocessor.inputVars.get('acmConfigPath') is: ", config_cliprocessor.inputVars.get('acmConfigPath'))
+  print('yaml_infra_config_file_and_path is: ', yaml_infra_config_file_and_path)
+  print('infraConfigFile is: ', infraConfigFile)
+#  quit('q!')
   return yaml_infra_config_file_and_path
 
 def createServiceTypeSummaryDict(numServiceInstanceNames, systemType):
