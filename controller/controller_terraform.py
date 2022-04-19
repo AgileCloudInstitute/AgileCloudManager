@@ -155,6 +155,7 @@ def assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, oper
   logString = "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
   logWriter.writeLogVerbose("acm", logString)
   logWriter.writeLogVerbose("acm", logString)
+  print('... destinationCallInstance is: ', destinationCallInstance)
 #  if systemInstanceName == "admin":
 #    import traceback
 #    traceback.print_stack()
