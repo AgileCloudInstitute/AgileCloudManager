@@ -404,9 +404,6 @@ def runConfigure():
 #>>    logString = str(e)
 #>>    logWriter.writeLogVerbose("acm", logString)
 
-#The next 2 lines are here for placekeeping.  make sure to move them to the appropriate place.
-#  addExteensionCommand = 'az extension add --name azure-devops'
-#  command_runner.runShellCommand(addExteensionCommand)
 
 
 def undoConfigure():
@@ -470,6 +467,11 @@ def deleteLocalCopiesOfGitRepos():
     logWriter.writeLogVerbose("acm", logString)
 
 def runSetup():
+  addExtensionCommand = 'az extension add --name azure-devops'
+  command_runner.runShellCommand(addExtensionCommand)
+  addAccountExtensionCommand = 'az extension add --upgrade -n account'
+  command_runner.runShellCommand(addAccountExtensionCommand)
+
   createDirectoryStructure()
   sourceKeys = config_cliprocessor.inputVars.get('sourceKeys')
   gitPass = config_fileprocessor.getGitPassFromSourceKeys(sourceKeys)

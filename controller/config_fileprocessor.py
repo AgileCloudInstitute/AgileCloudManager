@@ -511,14 +511,20 @@ def getSecondLevelProperty(yamlConfigFileAndPath, typeParent, typeName, instance
             for instancesOfType in childTypes: 
               if instancesOfType == typeName:  
                 for instance in childTypes.get(instancesOfType):
+                  print('instance is: ', str(instance))
                   if isinstance(instance, str):
                     logString = "instance is a string. "
                     logWriter.writeLogVerbose("acm", logString)
                   else: 
-                    propertyValue = instance.get(propertyName)
+                    if instance.get('instanceName') == instanceName:
+                      propertyValue = instance.get(propertyName)
       else:  
         logString = "The value given for for typeParent is NOT supported.  Please check your configuration file and the documentation."
         logWriter.writeLogVerbose("acm", logString)
+  if instanceName == 'AWS_BuildingBlocks':
+    print('instanceName is: ', instanceName)
+    print('propertyValue is: ', propertyValue)
+#    quit('$1!')
   return propertyValue
 
 def getThirdLevelProperty(yamlConfigFileAndPath, typeParent, typeChild, childName, grandChildType, grandChildName, propertyName):

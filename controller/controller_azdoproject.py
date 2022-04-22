@@ -171,6 +171,7 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     logString = "Error {0}".format(str(e.args[0])).encode("utf-8")
     logWriter.writeLogVerbose("acm", logString)
     exit(1)
+  print('instanceName is: ', instanceName)
   print("yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
   print("azPat is: ", azPat)
   print("gitUsername is: ", gitUsername)
@@ -182,6 +183,7 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
   print("serviceEndPointName is: ", serviceEndPointName)
   print("userCallingDir is: ", userCallingDir)
   print("endpointTemplate is: ", endpointTemplate)
+#  quit('t!')
   logString = "About to load the endpoint template from:  " + endpointTemplate
   logWriter.writeLogVerbose("acm", logString)
   with open(endpointTemplate, 'r') as f:
@@ -222,7 +224,7 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
   else:
     ##Add handling for the next line based on the value of rcode
     endPtId = rJson['id']
-    logString = "Just created service principal. "
+    logString = "Just created service principal with id: "+str(endPtId)
     logWriter.writeLogVerbose("acm", logString)
     try:
       azdoLoginCmd= "ECHO " + azPat + " | " + "az devops login --organization "+organization + " --debug "

@@ -2,6 +2,7 @@
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
 import json
+from types import NoneType
 import yaml
 import re
 import sys  
@@ -77,27 +78,29 @@ def onPipeline(command, systemInstanceName, iName, infraConfigFileAndPath, keyDi
     vaultName = config_fileprocessor.getSecondLevelProperty(infraConfigFileAndPath, 'systems', 'releaseDefinitions', iName, 'vaultName')  
 
     print('..............................................')
-    print('yamlFile is: ', yamlFile)
-    print('dirOfReleaseDefJsonParts is: ', dirOfReleaseDefJsonParts)
-    print('releaseDefConstructorTemplateFile is: ', releaseDefConstructorTemplateFile)
-    print('environmentTemplateFile is: ', environmentTemplateFile)
-    print('deployPhaseTemplateFile is: ', deployPhaseTemplateFile)
-    print('artifactsTemplateFile is: ', artifactsTemplateFile)
-    print('poolQueueId is: ', str(poolQueueId))
-    print('azuredevops_project_id is: ', str(azuredevops_project_id))
-    print('orgServiceURL is: ', orgServiceURL)
-    print('projName is: ', projName)
-    print('vaultName is: ', vaultName)
-    print('azuredevops_service_connection_id is: ', str(azuredevops_service_connection_id))
-
-    try:
-      releaseDefData = getReleaseDefData(yamlFile, dirOfReleaseDefJsonParts, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azuredevops_project_id, orgServiceURL, projName, vaultName, azuredevops_service_connection_id)
-    except Exception as e:
-      logString = "ERROR: The following exception was thrown while calling getReleaseDefData(...):  "
-      logWriter.writeLogVerbose("acm", logString)
-      logString = "Error {0}".format(str(e.args[0])).encode("utf-8")
-      logWriter.writeLogVerbose("acm", logString)
-      exit(1)
+    print('x yamlFile is: ', yamlFile)
+    print('x dirOfReleaseDefJsonParts is: ', dirOfReleaseDefJsonParts)
+    print('x releaseDefConstructorTemplateFile is: ', releaseDefConstructorTemplateFile)
+    print('x environmentTemplateFile is: ', environmentTemplateFile)
+    print('x deployPhaseTemplateFile is: ', deployPhaseTemplateFile)
+    print('x artifactsTemplateFile is: ', artifactsTemplateFile)
+    print('x poolQueueId is: ', str(poolQueueId))
+    print('x azuredevops_project_id is: ', str(azuredevops_project_id))
+    print('x orgServiceURL is: ', orgServiceURL)
+    print('x projName is: ', projName)
+    print('x vaultName is: ', vaultName)
+    print('x azuredevops_service_connection_id is: ', str(azuredevops_service_connection_id))
+#    quit('x!m!')
+    if vaultName == None:
+      vaultName = ''
+#    try:
+    releaseDefData = getReleaseDefData(yamlFile, dirOfReleaseDefJsonParts, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azuredevops_project_id, orgServiceURL, projName, vaultName, azuredevops_service_connection_id)
+#    except Exception as e:
+#      logString = "ERROR: The following exception was thrown while calling getReleaseDefData(...):  "
+#      logWriter.writeLogVerbose("acm", logString)
+#      logString = "Error {0}".format(str(e.args[0])).encode("utf-8")
+#      logWriter.writeLogVerbose("acm", logString)
+#      exit(1)
     logString = "--------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)
     logString = "revised releaseDefData is: "
@@ -113,6 +116,7 @@ def onPipeline(command, systemInstanceName, iName, infraConfigFileAndPath, keyDi
       exit(1)
     logString = "--------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)
+#    quit("555!")
     #//////////////////////////////////////////////////////////////////////////////////////////////
     #// Step Four: Create Release Definition By Making API Call.
     #//////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,13 +171,19 @@ def getKeyVaultTaskData(key_vault_name, dirOfReleaseDefJsonParts, key_vault_serv
 
 def getWorkflowTasksList(workflowTasksList, dirOfReleaseDefJsonParts, key_vault_name, key_vault_service_connection_id):
   taskDataList = []
-  if len(key_vault_name) > 3:
+  print('j!')
+#  print(key_vault_name)
+#  print('str(len(str(key_vault_name))) is: ', str(len(key_vault_name)))
+#  quit()
+  if key_vault_name:
     taskData = getKeyVaultTaskData(key_vault_name, dirOfReleaseDefJsonParts, key_vault_service_connection_id)
     taskDataList.append(taskData)
   for task_idx, task in enumerate(workflowTasksList):
     if task['type'] == 'Python':
       taskData = getPythonTaskData(task_idx, dirOfReleaseDefJsonParts, task)
       taskDataList.append(taskData)
+#  print(str(taskData))
+#  quit('k!')
   return taskDataList
 
 def getDeploymentInput(poolQueueId, dirOfReleaseDefJsonParts, deploymentInput):  
@@ -181,6 +191,9 @@ def getDeploymentInput(poolQueueId, dirOfReleaseDefJsonParts, deploymentInput):
   depInputTemplateFile = dirOfReleaseDefJsonParts + 'deploymentInputTemplate.json'  
   depInputData = json.load(open(depInputTemplateFile, 'r'))  
   downloadInputsList = []  
+  dinputsData = ''
+  print('deploymentInput is: ')
+  print(deploymentInput)
   for dInput in deploymentInput:  
     for dep_item in dInput:
       if re.match("artifactsDownloadInput", dep_item):  
@@ -194,17 +207,22 @@ def getDeploymentInput(poolQueueId, dirOfReleaseDefJsonParts, deploymentInput):
           downloadInputsList.append(artifactData)  
         dinputsData = {"downloadInputs": []}
         dinputsData['downloadInputs'] = downloadInputsList
-  depInputData['artifactsDownloadInput'] = dinputsData
+  if dinputsData != '':
+    depInputData['artifactsDownloadInput'] = dinputsData
   depInputData['queueId'] = poolQueueId
   return depInputData
   
 def getDeploymentPhaseData(phase_idx, dirOfReleaseDefJsonParts, deployPhase, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id):
   deployPhaseData = json.load(open(deployPhaseTemplateFile, 'r'))
+#  quit(deployPhase)
   #Now iterate the YAML input
   for depPhase_item in deployPhase:  
     if re.match("name", depPhase_item):  
       deployPhaseData['name'] = deployPhase.get(depPhase_item)
     if re.match("deploymentInput", depPhase_item):  
+      print('deployPhase is: ', deployPhase)
+      print('depPhase_item is: ', depPhase_item)
+
       depInput = getDeploymentInput(poolQueueId, dirOfReleaseDefJsonParts, deployPhase.get(depPhase_item))  
       deployPhaseData['deploymentInput'] = depInput  
     if re.match("workflowTasks", depPhase_item):  
@@ -254,6 +272,7 @@ def getVariablesData(variablesYAML):
 
 def getReleaseDefData(yamlInputFile, dirOfReleaseDefJsonParts, releaseDefConstructorTemplateFile, environmentTemplateFile, deployPhaseTemplateFile, artifactsTemplateFile, poolQueueId, azdo_project_id, azdo_organization_service_url, azdo_project_name, key_vault_name, key_vault_service_connection_id):
   with open(yamlInputFile) as f:
+    print('yyyyyyy yamlInputFile is: ', yamlInputFile)
     releaseDef_dict = yaml.safe_load(f)
     releaseDefData = json.load(open(releaseDefConstructorTemplateFile, 'r'))
     for item in releaseDef_dict:
@@ -262,6 +281,7 @@ def getReleaseDefData(yamlInputFile, dirOfReleaseDefJsonParts, releaseDefConstru
       if re.match("description", item):
         releaseDefData['description'] = releaseDef_dict.get(item)
       if re.match("environments", item):
+        print('xxxxxxxx environmentsList is: ', releaseDef_dict.get(item))
         environmentsDataList = getEnvironmentsDataList(releaseDef_dict.get(item), dirOfReleaseDefJsonParts, environmentTemplateFile, deployPhaseTemplateFile, poolQueueId, key_vault_name, key_vault_service_connection_id)
         releaseDefData['environments'] = environmentsDataList
       if re.match("variables", item):
