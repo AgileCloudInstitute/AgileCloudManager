@@ -2,7 +2,7 @@
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
 import json
-from types import NoneType
+#from types import NoneType
 import yaml
 import re
 import sys  

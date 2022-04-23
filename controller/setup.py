@@ -74,11 +74,11 @@ def createDirectoryStructure():
     if platform.system() == 'Windows':
       os.mkdir(binariesPath)
     elif platform.system() == 'Linux':
-      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
+      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than packer
       print('binariesPath is: ', str(binariesPath))
       binariesCommand = 'sudo mkdir '+str(binariesPath)
       command_runner.runShellCommand(binariesCommand)
-      chownCommand = 'sudo chown -R azureuser:azureuser '+str(binariesPath)
+      chownCommand = 'sudo chown -R packer:packer '+str(binariesPath)
       command_runner.runShellCommand(chownCommand)
 
   varsPath = Path(varsPath)
@@ -101,8 +101,8 @@ def createDirectoryStructure():
     elif platform.system() == 'Linux':
       logsCommand = 'sudo mkdir '+str(logsPath)
       command_runner.runShellCommand(logsCommand)
-      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than azureuser
-      chownCommand = 'sudo chown -R azureuser:azureuser '+str(logsPath)
+      #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than packer
+      chownCommand = 'sudo chown -R packer:packer '+str(logsPath)
       command_runner.runShellCommand(chownCommand)
       print('logsPath is: ', str(logsPath))
 #      quit('!!')
