@@ -473,7 +473,7 @@ def runSetup():
   command_runner.runShellCommand(addAccountExtensionCommand)
 
   createDirectoryStructure()
-  sourceKeys = config_cliprocessor.inputVars.get('sourceKeys')
+  sourceKeys = config_cliprocessor.inputVars.get('sourceKeys') + command_builder.getSlashForOS() + 'keys.yaml'
   gitPass = config_fileprocessor.getGitPassFromSourceKeys(sourceKeys)
   sourceRepo = config_cliprocessor.inputVars.get('sourceRepo')
   sourceRepo = command_builder.assembleSourceRepo(gitPass, sourceRepo)
