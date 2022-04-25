@@ -60,7 +60,9 @@ def processInputArgs(inputArgs):
   global test
   global testType
 
-  sourceKeys = os.environ.get("ACM_SOURCE_KEYS")
+#  sourceKeys = os.environ.get("ACM_SOURCE_KEYS")
+#  sourceKeys = os.environ.get("USER_HOME")
+  sourceKeys = str(Path.home())+command_builder.getSlashForOS()+'acmconfig'
   userCallingDir = str(os.path.abspath("."))+'\\'
   userCallingDir = command_builder.formatPathForOS(userCallingDir)
   path = Path(userCallingDir)

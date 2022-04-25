@@ -15,6 +15,9 @@ import sys
 inputArgs=sys.argv
   
 def runInfraCommands():
+#  sourceKeys = cliproc.inputVars.get('sourceKeys')
+#  print('sourceKeys is: ', sourceKeys)
+#  quit()
 #  userCallingDir = os.path.abspath(".")
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':

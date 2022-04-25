@@ -10,6 +10,8 @@ import json
 import platform
 import os
 import datetime
+
+import command_builder
 import command_runner
 import logWriter
 import config_cliprocessor
@@ -58,6 +60,7 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
               varSnip = getVarFromType(tool, row, callInstanceName, 2, parent.get(child), org)
               if inputVar == "cloudInit":
                 varSnip = varSnip.replace("\\\\", "\\")
+              print('mMmMmMmM ... varSnip is: ', varSnip)
       elif myType.count('/') == 2:
         if myType == 'systems/projects/code':
           parentPart = myType.split('/')[0]
@@ -101,6 +104,7 @@ def getVarFromUserConfig(tool, row, yamlInfraFileAndPath, parentInstanceName, ca
           type = my_dict.get(key)
           varSnip = getVarFromType(tool, row, callInstanceName, 1, type, org)
 #  varSnip = formatPathForOS(varSnip)
+  print('NnNnNnNnNnNnNnNn .....  varSnip is: ', varSnip)
   return varSnip
 
 def getVarFromType(tool, r, callInstanceName, layers, aType, org):
@@ -113,7 +117,19 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
   varSnip = "empty"
   for props in aType:
     if isinstance(props, str):
-      if inputVar == 'cidrBlocks': 
+      if inputVar == 'keySourceFile':
+        if props == 'keySourceFile':
+          if aType.get(props) == '$SOURCEKEYS':
+            keySourceFile = config_cliprocessor.inputVars.get('sourceKeys')+command_builder.getSlashForOS()+'keys.yaml'
+          else:
+            keySourceFile = aType.get(props)
+          if tool == 'terraform':
+            varSnip = " -var=\"" +inputVar + "="+keySourceFile +"\""  
+          elif tool == 'packer':
+            varSnip = " -var \"" +inputVar + "="+keySourceFile +"\""  
+          print('jjj  varSnip is: ', varSnip)
+#          quit('found keySourceFile! ')
+      elif inputVar == 'cidrBlocks': 
         if props == 'cidrBlocks':
           if aType.get(props) == 'admin':
             cidrBlocks = getAdminCidr()
@@ -158,6 +174,19 @@ def getVarFromType(tool, r, callInstanceName, layers, aType, org):
                 elif tool == 'packer':
                   varSnip = " -var \"" +inputVar + "="+str(pathStr) +"\""  
                 varSnip = formatPathForOS(varSnip)
+#            elif sourceField == 'keySourceFile':
+#              print('... mmm r is: ', str(r))
+#              print('prop is: ', prop)
+#              print('str(props.get(prop)) is: ', str(props.get(prop)))
+#              quit()
+#              configAndSecretsPath = config_cliprocessor.inputVars.get("configAndSecretsPath")
+#              pathStr = configAndSecretsPath + props.get(prop) + "\startup-script-demo.sh"
+#              pathStr = formatPathForOS(pathStr)
+#              if tool == 'terraform':
+#                varSnip = " -var=\"" +inputVar + "="+str(pathStr) +"\""  
+#              elif tool == 'packer':
+#                varSnip = " -var \"" +inputVar + "="+str(pathStr) +"\""  
+#              varSnip = formatPathForOS(varSnip)
             elif sourceField == 'instanceName':
               if myType == "admin":
                 if tool == 'terraform':
@@ -452,6 +481,7 @@ def getSecretVars(tool, keyDir, yamlInfraFileAndPath, moduleConfigFileAndPath, c
     exit(1)
   c.close()
   varSnip = formatPathForOS(varSnip)
+  print('............... bbbbb  tfvarsFileAndPath is: ', tfvarsFileAndPath)
   return varSnip
 
 def getBackendVars(tool, keyDir, yamlInfraFileAndPath, moduleConfigFileAndPath, cloud_vendor, foundationInstanceName, callInstanceName, instanceName):
@@ -890,6 +920,7 @@ def getVarsFragment(tool, keyDir, yamlInfraFileAndPath, moduleConfigFileAndPath,
   varSnip = "empty"
   varsFragment = ''
   varsFragment = readModuleConfigFile(tool, yamlInfraFileAndPath, moduleConfigFileAndPath, parentInstanceName, callInstanceName, org)
+  print('iiiii varsFragment is: ', varsFragment)
   varSnip = getSecretVars(tool, keyDir, yamlInfraFileAndPath, moduleConfigFileAndPath, cloud_vendor, foundationInstanceName)
   if varSnip != 'empty':
     if varSnip is not None:
@@ -932,6 +963,7 @@ def readModuleConfigFile(tool, yamlInfraFileAndPath, moduleConfigFileAndPath, pa
         varSnip = getVarFromUserConfig(tool, r, yamlInfraFileAndPath, parentInstanceName, callInstanceName, org)
         if varSnip != 'empty':
           varsFragment = varsFragment + varSnip
+        print('llllLLL varsFragment is: ', varsFragment) 
     elif r[1] == 'foundationOutput':
       if r[5] == 'no':
         varSnip = getVarFromOutput(tool, r, callInstanceName)

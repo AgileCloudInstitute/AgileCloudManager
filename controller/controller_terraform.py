@@ -155,7 +155,11 @@ def assembleAndRunCommand(cloud, systemInstanceName, keyDir, template_Name, oper
   logString = "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
   logWriter.writeLogVerbose("acm", logString)
   logWriter.writeLogVerbose("acm", logString)
-  print('... destinationCallInstance is: ', destinationCallInstance)
+  logString = '... destinationCallInstance is: '+ destinationCallInstance
+  logWriter.writeLogVerbose("acm", logString)
+
+#  if operation != 'output':
+#    quit('BREAKPOINT TO DEBUG SOURCE KEYS. ')
 #  if systemInstanceName == "admin":
 #    import traceback
 #    traceback.print_stack()
