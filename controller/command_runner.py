@@ -39,7 +39,9 @@ def getShellJsonResponse(cmd,counter=0):
   else:
     if counter < 11:  
       counter +=1 
-      logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the first attempt to fail. "
+      logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
+      logWriter.writeLogVerbose('acm', logString)
+      logString = "Attempt "+str(counter)+ " out of 10. "
       logWriter.writeLogVerbose('acm', logString)
       import time
       time.sleep(30)
