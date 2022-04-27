@@ -37,7 +37,7 @@ def getShellJsonResponse(cmd,counter=0):
     decodedData = data #.decode('utf-8')
     return decodedData
   else:
-    if counter == 0:
+    if counter < 11:  
       counter +=1 
       logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the first attempt to fail. "
       logWriter.writeLogVerbose('acm', logString)
