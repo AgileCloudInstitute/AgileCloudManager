@@ -227,8 +227,13 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     logString = "Just created service principal with id: "+str(endPtId)
     logWriter.writeLogVerbose("acm", logString)
     try:
-      azdoLoginCmd= "ECHO " + azPat + " | " + "az devops login --organization "+organization + " --debug "
-      command_runner.runShellCommand(azdoLoginCmd)
+#4/28      azdoLoginCmd= "ECHO " + azPat + " | " + "az devops login --organization "+organization + " --debug "
+#4/28      command_runner.runShellCommand(azdoLoginCmd)
+      print("4/28 logging out of az and of az devops to test if az devops commands can run simply using the environment variable.")
+      azdoLogoutCmd= "az devops logout --debug "
+      command_runner.runShellCommand(azdoLogoutCmd)
+      azLogoutCmd= "az logout --debug "
+      command_runner.runShellCommand(azLogoutCmd)
     except Exception as e:
       logString = "Error {0}".format(str(e.args[0])).encode("utf-8")
       logWriter.writeLogVerbose("acm", logString)
@@ -236,7 +241,7 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     logString = "-------------------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)
     logWriter.writeLogVerbose("acm", logString)
-    logString = "Just logged in to azdo. "
+#4/28    logString = "Just logged in to azdo. "
     logWriter.writeLogVerbose("acm", logString)
     logString = "-------------------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)

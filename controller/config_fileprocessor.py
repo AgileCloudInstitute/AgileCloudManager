@@ -475,6 +475,18 @@ def getTemplateName(yamlConfigFileAndPath, typeParent, typeName, typeGrandChild,
             for instancesOfTypes in resourceTypes:
               if instancesOfTypes.get("instanceName") == instanceName:
                 templateName = instancesOfTypes.get("templateName")
+  print('------------------------------------------------')
+  print('yamlConfigFileAndPath is: ', yamlConfigFileAndPath)
+  print('typeParent is: ', typeParent)
+  print('typeName is: ', typeName)
+  print('typeGrandChild is: ', typeGrandChild)
+  print('instanceName is: ', instanceName)
+  print('grandChildName is: ', grandChildName)
+  print('------------------------------------------------')
+  if instanceName == 'AZURE_BuildingBlocks':
+    import traceback
+    traceback.print_stack()
+#    sys.exit(1)
   return templateName
 
 

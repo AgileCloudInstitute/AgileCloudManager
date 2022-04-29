@@ -468,9 +468,9 @@ def deleteLocalCopiesOfGitRepos():
 
 def runSetup():
   addExtensionCommand = 'az extension add --name azure-devops'
-  command_runner.runShellCommand(addExtensionCommand)
+  command_runner.runShellCommandForTests(addExtensionCommand)
   addAccountExtensionCommand = 'az extension add --upgrade -n account'
-  command_runner.runShellCommand(addAccountExtensionCommand)
+  command_runner.runShellCommandForTests(addAccountExtensionCommand)
 
   createDirectoryStructure()
   sourceKeys = config_cliprocessor.inputVars.get('sourceKeys') + command_builder.getSlashForOS() + 'keys.yaml'

@@ -48,6 +48,7 @@ def terraformCrudOperation(operation, systemInstanceName, keyDir, infraConfigFil
       logWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
   else:  
+    print('templateName is: ', templateName)
     logString = "Template name is not valid.  Must have only one /.  "
     logWriter.writeLogVerbose("acm", logString)
     sys.exit(1)
