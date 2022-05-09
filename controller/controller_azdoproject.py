@@ -184,6 +184,35 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
   print("userCallingDir is: ", userCallingDir)
   print("endpointTemplate is: ", endpointTemplate)
 #  quit('t!')
+  if (len(serviceEndPointName) < 2) or (not serviceEndPointName):
+    logString = "ERROR: Invalid value for serviceEndPointName is as follows: "+serviceEndPointName
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if (len(gitSourceUrl) < 2) or (not gitSourceUrl):
+    logString = "ERROR: Invalid value for gitSourceUrl is as follows: "+gitSourceUrl
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if (len(gitUsername) < 2) or (not gitUsername):
+    logString = "ERROR: Invalid value for gitUsername is as follows: "+gitUsername
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if (len(gitPass) < 2) or (not gitPass):
+    logString = "ERROR: Invalid value for gitPass is as follows: "+gitPass
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if (len(str(pid)) < 2) or (not str(pid)):
+    logString = "ERROR: Invalid value for pid is as follows: "+str(pid)
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if (len(instanceName) < 2) or (not instanceName):
+    logString = "ERROR: Invalid value for instanceName is as follows: "+instanceName
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+  if (len(organization) < 2) or (not organization):
+    logString = "ERROR: Invalid value for organization is as follows: "+organization
+    logWriter.writeLogVerbose("acm", logString)
+    sys.exit(1)
+
   logString = "About to load the endpoint template from:  " + endpointTemplate
   logWriter.writeLogVerbose("acm", logString)
   with open(endpointTemplate, 'r') as f:
@@ -227,13 +256,13 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     logString = "Just created service principal with id: "+str(endPtId)
     logWriter.writeLogVerbose("acm", logString)
     try:
-#4/28      azdoLoginCmd= "ECHO " + azPat + " | " + "az devops login --organization "+organization + " --debug "
-#4/28      command_runner.runShellCommand(azdoLoginCmd)
-      print("4/28 logging out of az and of az devops to test if az devops commands can run simply using the environment variable.")
-      azdoLogoutCmd= "az devops logout --debug "
-      command_runner.runShellCommand(azdoLogoutCmd)
-      azLogoutCmd= "az logout --debug "
-      command_runner.runShellCommand(azLogoutCmd)
+      azdoLoginCmd= "ECHO " + azPat + " | " + "az devops login --organization "+organization + " --debug "
+      command_runner.runShellCommand(azdoLoginCmd)
+#4/28      print("4/28 logging out of az and of az devops to test if az devops commands can run simply using the environment variable.")
+#4/28      azdoLogoutCmd= "az devops logout --debug "
+#4/28      command_runner.runShellCommand(azdoLogoutCmd)
+#4/28      azLogoutCmd= "az logout --debug "
+#4/28      command_runner.runShellCommand(azLogoutCmd)
     except Exception as e:
       logString = "Error {0}".format(str(e.args[0])).encode("utf-8")
       logWriter.writeLogVerbose("acm", logString)
@@ -241,7 +270,7 @@ def importCodeIntoRepo(keyDir, typeName, instanceName, yaml_infra_config_file_an
     logString = "-------------------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)
     logWriter.writeLogVerbose("acm", logString)
-#4/28    logString = "Just logged in to azdo. "
+    logString = "Just logged in to azdo. "
     logWriter.writeLogVerbose("acm", logString)
     logString = "-------------------------------------------------------------------"
     logWriter.writeLogVerbose("acm", logString)

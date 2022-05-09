@@ -365,6 +365,7 @@ def createAzdoServiceEndpointApiRequest(data, azdo_organization_name, azPAT):
       logString = "Error {0}".format(str(e.args[0])).encode("utf-8")
       logWriter.writeLogVerbose("acm", logString)
       exit(1)
+#    quit("BREAKPOINT TO DEBUG service endpoint creation request.")
     try:
       r = requests.post(url, data=json.dumps(data), headers=headers)
       logString = "2 test  "
