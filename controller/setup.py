@@ -346,7 +346,8 @@ def cloneTheSourceCode():
 #  parentPath = path.parent
   acmAdmin = userCallingDir + command_builder.getSlashForOS() + 'acmAdmin'
   acmAdmin = command_builder.formatPathForOS(acmAdmin)
-  keys = acmAdmin + command_builder.getSlashForOS() + 'keys' + command_builder.getSlashForOS() + 'starter'
+#  keys = acmAdmin + command_builder.getSlashForOS() + 'keys' + command_builder.getSlashForOS() + 'starter'
+  keys = config_cliprocessor.inputVars.get('dirOfYamlKeys')
   keys = command_builder.formatPathForOS(keys)
   keysPathPlusSlash = keys+command_builder.getSlashForOS() 
   keysPathPlusSlash = command_builder.formatPathForOS(keysPathPlusSlash)
@@ -452,12 +453,14 @@ def deleteLocalCopiesOfGitRepos():
     repoName = repoUrlEnd.split('/')[-1].replace('.git','')
     repoPath = userCallingDir + command_builder.getSlashForOS() + repoName
     print('repoPath is: ', repoPath)
-    command_runner.runShellCommandInWorkingDir(gitRemoveCmd, repoPath)
-    try:
-      shutil.rmtree(repoPath)
-    except FileNotFoundError:
-      logString = "The "+repoName+" directory does not exist.  It may have already been deleted."
-      logWriter.writeLogVerbose("acm", logString)
+    #Delete the repo if it exists locally.  This handles case where repo was NOT cloned locally due to incomplete setup. 
+    if os.path.exists(repoPath):
+      command_runner.runShellCommandInWorkingDir(gitRemoveCmd, repoPath)
+      try:
+        shutil.rmtree(repoPath)
+      except FileNotFoundError:
+        logString = "The "+repoName+" directory does not exist.  It may have already been deleted."
+        logWriter.writeLogVerbose("acm", logString)
   #No delete the acmConfig directory
   command_runner.runShellCommandInWorkingDir(gitRemoveCmd, config_path)
   try:

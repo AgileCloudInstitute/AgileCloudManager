@@ -75,9 +75,17 @@ def processInputArgs(inputArgs):
   acmConfig = userCallingDir + command_builder.getSlashForOS() + 'acmConfig'
   acmConfig = command_builder.formatPathForOS(acmConfig)
 
-  dirOfYamlKeys = acmAdmin + '\\keys\\starter\\'
+  if platform.system() == 'Windows':
+    acmUserHome = os.path.expanduser("~")+'/acm/'
+  elif platform.system() == 'Linux':
+    acmUserHome = '/usr/acm/'
+
+  if not os.path.exists(acmUserHome):
+    os.makedirs(acmUserHome, exist_ok=True) 
+
+  dirOfYamlKeys = acmUserHome + '\\keys\\starter\\'
   dirOfYamlKeys = command_builder.formatPathForOS(dirOfYamlKeys)
-  dirOfOutput = acmAdmin + '\\keys\\' 
+  dirOfOutput = acmUserHome + '\\keys\\' 
   dirOfOutput = command_builder.formatPathForOS(dirOfOutput)
   varsPath = acmAdmin + command_builder.getSlashForOS() + 'vars'
 

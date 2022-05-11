@@ -259,25 +259,20 @@ def runTerraformCommand(commandToRun, workingDir):
       thetext=line.decode('utf-8').rstrip('\r|\n')
       decodedline=ansi_escape.sub('', thetext)
       logWriter.writeLogVerbose("terraform", decodedline)
-#      print('commFragment is: ', commFragment)
       if 'Outputs' in decodedline:
         reachedOutputs = True
       if (commFragment == 'output'):
-        print('decodedLine is: ', decodedline)
         if (decodedline.count('=') == 1):
           lineParts = decodedline.split('=')
           key = lineParts[0].replace(' ','').replace('"','').replace("'","")
           value = lineParts[1].replace(' ','').replace('"','').replace("'","")
           controller_terraform.tfOutputDict[key] = value
-  #          print('controller_terraform.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
       if (commFragment != 'output') and (controller_terraform.foundationApply == True):
-        print('decodedLine is: ', decodedline)
         if (decodedline.count('=') == 1) and (reachedOutputs == True):
           lineParts = decodedline.split('=')
           key = lineParts[0].replace(' ','').replace('"','').replace("'","")
           value = lineParts[1].replace(' ','').replace('"','').replace("'","")
           controller_terraform.tfOutputDict[key] = value
-#          print('controller_terraform.tfOutputDict is: ', str(controller_terraform.tfOutputDict))
       errIdx = processDecodedLine(decodedline, lineNum, errIdx, commFragment)
     else:
       break
