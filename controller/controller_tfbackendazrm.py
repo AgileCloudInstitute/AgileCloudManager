@@ -5,10 +5,11 @@ import config_fileprocessor
 import command_builder
 import command_runner
 import logWriter
+import controller_arm
 
 backendFile = ''
 
-def createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir):
+def createTfBackend(instName, infraConfigFileAndPath, keyDir, paramsDict):
   import config_keysassembler
   cloud = config_fileprocessor.getCloudName(infraConfigFileAndPath)
   yaml_keys_file_and_path = command_builder.getKeyFileAndPath(keyDir, 'systems', cloud)
@@ -63,6 +64,85 @@ def createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir
     storageContainerName = 'systems'.lower()
     createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
     command_runner.getShellJsonResponse(createStorageContainerCommand)  
+  elif backendType == 'azurerm2': 
+#  elif len(paramsDict) > 0:
+    caller = paramsDict["caller"]
+    serviceType = paramsDict["serviceType"]
+    print("infraConfigFileAndPath is: ", infraConfigFileAndPath)
+    print("keyDir is: ", keyDir)
+    print('caller is: ', caller)
+    print("serviceType is: ", serviceType)
+    print("instName is: ", instName)
+#    quit('hohoho!')
+
+    controller_arm.createDeployment(infraConfigFileAndPath, keyDir, 'serviceInstance', serviceType, instName)
+#...
+    print('ab1')
+    config_keysassembler.writeTheVarsFile(instName, infraConfigFileAndPath, keyDir, cloud, None, "tfBackend", None, None)
+    #Get the variable values
+    print('ab2')
+#    resourceGroupName = getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'resourceGroupName')
+    resourceGroupRegion = getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'resourceGroupRegion')
+    subscriptionId = getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'subscriptionId')
+    clientId = getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'clientId')
+    clientSecret = getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'clientSecret')
+    tenantId = getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, 'tenantId')
+    orgName = config_fileprocessor.getFirstLevelValue(infraConfigFileAndPath, "organization")
+#...
+    resourceGroupName = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, "tfBackend", instName, "resourceGroupName")
+    storageAccountName = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, "tfBackend", instName, "storageAccountName")
+    print("storageAccountName is: ", storageAccountName)
+    print("resourceGroupName is: ", resourceGroupName)
+    print("resourceGroupRegion is: ", resourceGroupRegion)
+    print("subscriptionId is: ", subscriptionId)
+    print("clientId is: ", clientId)
+    print("clientSecret is: ", clientSecret)
+    print("tenantId is: ", tenantId)
+    print("orgName is: ", orgName)
+#    quit(':::0:::')
+#...
+#    storageAccountName = instName.lower() + orgName.lower()
+    #ADD VALIDATION TO CONFIRM THAT storageAccountName IS NOT LONGER THAN 24 CHARACTERS TO PREVENT DOWNSTREAM ERROR.
+    outputDir = config_keysassembler.getOutputDir(instName)
+    keysFile = outputDir + "keys.yaml"
+    #Login to az cli
+    #### #The following command gets the client logged in and able to operate on azure repositories.
+    myCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
+    command_runner.getShellJsonResponse(myCmd)
+    logString = "Finished running login command."
+    logWriter.writeLogVerbose("acm", logString)
+    #set subscription
+    setSubscriptionCmd = 'az account set --subscription ' + subscriptionId
+    command_runner.getShellJsonResponse(setSubscriptionCmd)
+    logString = "Finished running setSubscription command."
+    logWriter.writeLogVerbose("acm", logString)
+#    #First create storage account
+#    createStorageAccountCommand = "az storage account create --name " + storageAccountName + " --resource-group " + resourceGroupName + " --location " + resourceGroupRegion + " --sku Standard_LRS   --encryption-services blob " 
+#    print('xxx createStorageAccountCommand is: ', createStorageAccountCommand)
+#    command_runner.runShellCommand(createStorageAccountCommand)  
+#    logString = "Finished running createStorageAccountCommand. "
+#    logWriter.writeLogVerbose("acm", logString)
+    print('ab3')
+    print("resourceGroupName is: ", resourceGroupName)
+    print("storageAccountName is: ", storageAccountName)
+
+    getAccountKeyCommand = "az storage account keys list --resource-group " + resourceGroupName + " --account-name " + storageAccountName + " --query [0].value -o tsv "
+    print("getAccountKeyCommand is: ", getAccountKeyCommand)
+    accountKey = command_runner.getAccountKey(getAccountKeyCommand)  
+    print('ab4')
+
+    #Then create the 6 storage containers within the storage account to correspond with the sections in infrastructureConfig 
+    # Adding .lower() to the string declarations as a reminder that the azure portal only seems to accept lower case.  If you remove .lower() , then the containers that have camel case names like networkFoundation will NOT be created.
+    storageContainerName = 'networkFoundation'.lower()
+    print('accountKey is: ', accountKey)
+#    quit('BREAKPOINT TO DEBUG TFBACKEND')
+ #   createStorageContainerCommand = "az storage container create -n " + storageContainerName + " --fail-on-exist --account-name " + storageAccountName + " --account-key " + accountKey  
+ #   command_runner.getShellJsonResponse(createStorageContainerCommand)  
+    with open(keysFile, "a+") as f:  # append mode
+      f.write("storage_account_name:"+storageAccountName+"\n")
+      f.write("container_name:"+storageContainerName+"\n")
+      f.write("tfBackendStorageAccessKey:"+accountKey+"\n")
+#...
 
 def getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instName, templateName, propName):
   varVal = ''
@@ -90,7 +170,8 @@ def getTfBackendPropVal(yaml_keys_file_and_path, infraConfigFileAndPath, instNam
   print('instName is: ', instName)
   print('templateName is: ', templateName)
   print('propName is: ', propName)
-
+  print('varVal is: ', varVal)
+#  quit('gggggggggg')
   return varVal
 
 def writeBackendFile(outputDir, storageAccountName, storageContainerName, subscriptionId, clientId, clientSecret, tenantId, resourceGroupName):

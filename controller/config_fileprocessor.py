@@ -260,11 +260,18 @@ def getPropertyCoordinatesFromCSV(infraConfigFileAndPath, templateName, propName
   coordinates = ''
   path_to_application_root = command_builder.formatPathForOS(path_to_application_root)
   module_config_file_and_path = command_builder.formatPathForOS(module_config_file_and_path)
+
+  print("path_to_application_root is: ", path_to_application_root)
+  print("module_config_file_and_path is: ", module_config_file_and_path)
+  print("propName is: ", propName)
+
   c = open(module_config_file_and_path,'r')
   o = csv.reader(c)
   for r in o:
     if r[0] == propName:
       coordinates = r[1] + '/' + r[2]
+  print("coordinates is: ", coordinates)
+#  quit("y@!")
   return coordinates
 
 def getCodeInstanceNames(yamlFileAndPath, projInst):

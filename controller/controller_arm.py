@@ -41,12 +41,25 @@ def createDeployment(infraConfigFileAndPath, keyDir, caller, serviceType, instNa
     outputDict['typeParent'] = typeParent
     outputDict['resourceGroupName'] = foundationResourceGroupName
     outputDict['deploymentName'] = foundationDeploymentName
+    print('foundationResourceGroupName is: ', foundationResourceGroupName)
+    print('foundationDeploymentName is: ', foundationDeploymentName)
+    print('str(outputDict) is: ', str(outputDict))
   organization = config_fileprocessor.getFirstLevelValue(infraConfigFileAndPath, 'organization')
   subscriptionId = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
   clientId = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
   clientSecret = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
   tenantId = config_fileprocessor.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
+  print('resourceGroupName is: ', resourceGroupName)
+  print('resourceGroupRegion is: ', resourceGroupRegion)
+  print('templateName is: ', templateName)
+  print('deploymentName is: ', deploymentName)
+  print('organization is: ', organization)
+  print('subscriptionId is: ', subscriptionId)
+  print('clientId is: ', clientId)
+  print('clientSecret is: ', clientSecret)
+  print('tenantId is: ', tenantId)
 
+#  quit("BREAKPOINT TO DEBUG ARM TEMPLATE. ")
   ## STEP 2: Login to az cli and set subscription
   loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
 

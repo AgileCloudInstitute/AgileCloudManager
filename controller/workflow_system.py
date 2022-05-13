@@ -173,12 +173,17 @@ def onServices(command, level, systemInstanceName, keyDir, infraConfigFileAndPat
 #          quit('debug preprocessor')
           instanceTool = config_fileprocessor.getSystemPropertyValue(infraConfigFileAndPath, serviceType, instName, 'tool')
           if instanceTool =='arm':
-            controller_arm.createDeployment(infraConfigFileAndPath, keyDir, 'serviceInstance', serviceType, instName)
+            if serviceType == "tfBackend":
+              armParamsDict = {"caller":'serviceInstance', "serviceType":serviceType}
+              controller_tfbackendazrm.createTfBackend(instName, infraConfigFileAndPath, keyDir, armParamsDict)
+            else:
+              controller_arm.createDeployment(infraConfigFileAndPath, keyDir, 'serviceInstance', serviceType, instName)
           elif instanceTool == 'cloudformation':
             controller_cf.createStack(infraConfigFileAndPath, keyDir, 'serviceInstance', serviceType, instName)
-          else:# instanceTool != 'arm':
+          else:
             if serviceType == "tfBackend":
-              controller_tfbackendazrm.createTfBackend(systemInstanceName, instName, infraConfigFileAndPath, keyDir)
+              paramsDict = {}
+              controller_tfbackendazrm.createTfBackend(instName, infraConfigFileAndPath, keyDir, paramsDict)
             elif serviceType == "releaseDefinitions":
               controller_release.onPipeline(command, systemInstanceName, instName, infraConfigFileAndPath, keyDir)
             elif serviceType == 'projects':
@@ -220,9 +225,10 @@ def offServices(level, systemInstanceName, keyDir, yamlPlatformConfigFileAndPath
   foundationTool = config_fileprocessor.getTopLevelProperty(infraConfigFileAndPath, 'networkFoundation', 'tool')
 #  quit('do!')
   if isTfBackend == True:
-    logString = "Halting program because we are leaving the destruction of terraform backends to be a manual step in the UI portal in order to protect your data. "
-    logWriter.writeLogVerbose("acm", logString)
-    sys.exit(1)
+    if not useTheForce:
+      logString = "Halting program because we are leaving the destruction of terraform backends to be a manual step in the UI portal in order to protect your data. "
+      logWriter.writeLogVerbose("acm", logString)
+      sys.exit(1)
   elif (isReleaseDef == True):
     if useTheForce:
       if checkDestroyType('projects', infraConfigFileAndPath):
