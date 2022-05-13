@@ -8,6 +8,7 @@ import workflow_platform
 import workflow_system
 import setup
 import logWriter
+import config_validator
 
 import sys
 #import os
@@ -19,6 +20,7 @@ def runInfraCommands():
 #  print('sourceKeys is: ', sourceKeys)
 #  quit()
 #  userCallingDir = os.path.abspath(".")
+  config_validator.processAcmConfig()
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':
       setup.runSetup()
