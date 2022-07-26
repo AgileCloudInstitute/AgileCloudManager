@@ -1,0 +1,299 @@
+# This file replaces all the config files for the demo platform 1 that 
+# is initially used to set up backends, admin, agents, and project with releases.
+
+#Start tfbackend system
+tfbackend:
+  keysDir: $Default
+  forceDelete: True
+  cloud: azure
+  organization: a1b2c
+  tags:
+    networkName: name-of-vnet
+    systemName: name-of-system
+    environmentName: name-of-environment
+    ownerName: name-of-owner
+  serviceTypes:
+    tfBackend:
+      instances:
+        - instanceName: adminAccounts
+          deploymentName: adminAccountsTfBackend
+          templateName: azure-building-blocks/arm/tfbackend.json
+          emptyTemplateName: azure-building-blocks/arm/empty.template.json
+          controller: arm
+          type: azurerm2
+          preprocessor: 
+            locationOn: azure-building-blocks/scripts/hello1.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello2.py
+            commandOff: python $location
+          postprocessor:
+            locationOn: azure-building-blocks/scripts/hello3.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello4.py
+            commandOff: python $location
+          keyVaultName: adminAccountsBackend
+          keyName: adminAccountsBackendKey
+          environment: Dev
+          resourceGroupName: adminAccountsTfBackendDev
+          resourceGroupRegion: westus
+          mappedVariables:
+            storageAccountName: $customFunction.addOrganization.adminaccounts
+            environmentName: $this.tags.environmentName
+            resourceGroupRegion: $this.resourceGroupRegion
+        - instanceName: pipelineAgents
+          deploymentName: pipelineAgentsTfBackend
+          templateName: azure-building-blocks/arm/tfbackend.json
+          emptyTemplateName: azure-building-blocks/arm/empty.template.json
+          controller: arm
+          type: azurerm2
+          preprocessor: 
+            locationOn: azure-building-blocks/scripts/hello1.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello2.py
+            commandOff: python $location
+          postprocessor:
+            locationOn: azure-building-blocks/scripts/hello3.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello4.py
+            commandOff: python $location
+          keyVaultName: azdoAgentsBackend
+          keyName: azdoAgentsBackendKey
+          environment: Dev
+          resourceGroupName: pipelineAgentsTfBackend
+          resourceGroupRegion: westus
+          mappedVariables:
+            storageAccountName: $customFunction.addOrganization.pipelineagents
+            environmentName: $this.tags.environmentName
+            resourceGroupRegion: $this.resourceGroupRegion
+        - instanceName: projectManagement
+          deploymentName: projectManagementTfBackend
+          templateName: azure-building-blocks/arm/tfbackend.json
+          emptyTemplateName: azure-building-blocks/arm/empty.template.json
+          controller: arm
+          type: azurerm2
+          preprocessor: 
+            locationOn: azure-building-blocks/scripts/hello1.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello2.py
+            commandOff: python $location
+          postprocessor:
+            locationOn: azure-building-blocks/scripts/hello3.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello4.py
+            commandOff: python $location
+          keyVaultName: projectManagementBackend
+          keyName: projectManagementBackendKey
+          environment: Dev
+          resourceGroupName: projectManagementTfBackend
+          resourceGroupRegion: westus
+          mappedVariables:
+            storageAccountName: $customFunction.addOrganization.projectmanagement
+            environmentName: $this.tags.environmentName
+            resourceGroupRegion: $this.resourceGroupRegion
+# Start admin system
+admin:
+  keysDir: $Output\adminAccounts
+  cloud: azure
+  organization: a1b2c
+  tags:
+    networkName: name-of-vnet
+    systemName: name-of-system
+    environmentName: name-of-environment
+    ownerName: name-of-owner
+  foundation:
+    instanceName: admin
+    templateName: azure-building-blocks/terraform/foundationAdmin
+    controller: terraform
+    mappedVariables:
+      resourceGroupName: admin
+      resourceGroupRegion: westus
+      subscriptionId: $keys
+      tenantId: $keys
+      clientId: $keys
+      clientSecret: $keys
+    backendVariables:
+      storage_account_name: $keys.storageAccountName
+      container_name: $keys
+      key: adminaccounts.networkfoundation.tfstate
+      access_key: $keys.tfBackendStorageAccessKey
+  serviceTypes:
+    admin:
+      sharedVariables:
+        mappedVariables:
+          subscriptionId: $keys
+          tenantId: $keys
+          clientId: $keys
+          clientSecret: $keys
+      instances:
+        - instanceName: pipelineAgents
+          templateName: azure-building-blocks/terraform/admin-agents
+          controller: terraform
+          mappedVariables:
+            instanceName: $this.instance
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: adminaccounts.pipelineagents.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+        - instanceName: projectManagement
+          templateName: azure-building-blocks/terraform/ad-admin
+          controller: terraform
+          mappedVariables:
+            instanceName: $this.instance
+            resourceGroupName: $this.foundationMapped.resourceGroupName
+            resourceGroupRegion: $this.foundationMapped.resourceGroupRegion
+            keyVaultName: $customFunction.addOrganization.projectmanagement
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: adminaccounts.projectmanagement.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+    adminduplicatetestonly:
+      sharedVariables:
+        mappedVariables:
+          subscriptionId: $keys
+          tenantId: $keys
+          clientId: $keys
+          clientSecret: $keys
+      instances:
+        - instanceName: pipelineAgents
+          templateName: azure-building-blocks/terraform/admin-agents
+          controller: terraform
+          mappedVariables:
+            instanceName: $this.instance
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: adminaccounts.pipelineagents.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+
+# Start agents system
+agents:
+  keysDir: $Output\pipelineAgents
+  cloud: azure
+  organization: a1b2c
+  tags:
+    networkName: name-of-vnet
+    systemName: name-of-system
+    environmentName: name-of-environment
+    ownerName: name-of-owner
+  foundation:
+    instanceName: demo
+    templateName: azure-building-blocks/terraform/foundation
+    controller: terraform
+    resourceGroupRegion: westus
+    mappedVariables:
+      subscriptionId: $keys
+      tenantId: $keys
+      clientId: $keys
+      clientSecret: $keys
+      resourceGroupName: azdo-agents
+      resourceGroupRegion: $this.foundation.resourceGroupRegion
+      keySourceFile: C:\projects\a\shared\keys\2nd\keys.yaml
+      file_secret_name: acmSecretsFile
+      vaultName: agentsFoundationVault
+      cidrSubnetPacker: 10.0.9.0/24
+    backendVariables:
+      storage_account_name: $keys.storageAccountName
+      container_name: $keys
+      access_key: $keys.tfBackendStorageAccessKey
+      key: agents.networkfoundation.tfstate
+    images:
+      - instanceName: RHEL73_AZDO_Agent
+        templateName: azure-building-blocks/packer/rhel7-azure-arm-azdo-agent
+        controller: packer
+        keySourceFile: C:\projects\a\shared\keys\2nd\keys.yaml
+        mappedVariables:
+          ssh_user: packer
+          ssh_pass: just-me-123
+          file_secret_name: acmSecretsFile
+          vault_name: agentsFoundationVault
+          init_script: $customFunction.addPath.\azure-building-blocks\scripts\rhel7-startup-azdo-agent.sh
+          new_image_name: $this.instance.instanceName
+          region: $this.foundation.resourceGroupRegion
+          resource_group: $foundationOutput.pipes_resource_group_name
+          az_server: $keys.azdoOrgServiceURL
+          az_pat: $keys.azdoOrgPAT
+          tenant_id: $foundationOutput
+          subscription_id: $foundationOutput
+          client_secret: $keys.clientSecret
+          client_id: $keys.clientId
+  serviceTypes:
+    subnetsWithScaleSet:
+      sharedVariables:
+        mappedVariables:
+          vnetName: $foundationOutput.vnetName
+          resourceGroupName: $foundationOutput.pipes_resource_group_name
+          clientSecret: $keys
+          clientId: $keys
+          tenantId: $foundationOutput.tenant_id
+          subscriptionId: $foundationOutput.subscription_id
+      instances:
+        - instanceName: azdoAgents
+          templateName: azure-building-blocks/terraform/snet-agents
+          controller: terraform
+          mappedVariables:
+            imageName: RHEL73_AZDO_Agent
+            cidrSubnet: 10.0.6.0/24
+            adminUser: azureuser
+            adminPwd: abc-some-pwd-123
+            cloudInit: $customFunction.addPath.\azure-building-blocks\scripts\startup-script-demo.sh
+            storageAccountDiagName: $foundationOutput.storageAccountDiagName
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: agents.azdo-subnet.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+#Start projectmgt system
+projectmgt:
+  keysDir: $Output\projectManagement
+  forceDelete: True
+  cloud: azure
+  organization: a1b2c
+  serviceTypes:
+    projects:
+      sharedVariables:
+        mappedVariables:
+            subscriptionName: $keys
+            subscriptionId: $keys
+            tenantId: $keys
+            clientName: $keys
+            clientId: $keys
+            clientSecret: $keys
+            azdoOrgPAT: $keys
+            azdoOrgServiceURL: $keys
+      instances:
+        - instanceName: AWS_BuildingBlocks
+          templateName: azure-building-blocks/terraform/azdo-project
+          controller: terraform
+          sourceRepo: https://github.com/AgileCloudInstitute/aws-building-blocks.git
+          endpointTemplate: azure-building-blocks/api/azdo-service-conn-other-git.json
+          repoName: AWS_ExampleCode
+          mappedVariables:
+            repoName: $this.instance.repoName
+            projectName: $this.instance.instanceName
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: projects.project.AWS_BuildingBlocks.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+        - instanceName: AZURE_BuildingBlocks
+          templateName: azure-building-blocks/terraform/azdo-project
+          controller: terraform
+          sourceRepo: https://github.com/AgileCloudInstitute/azure-building-blocks.git
+          endpointTemplate: azure-building-blocks/api/azdo-service-conn-other-git.json
+          repoName: AZURE_ExampleCode
+          mappedVariables:
+            repoName: $this.instance.repoName
+            projectName: $this.instance.instanceName
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: projects.project.AZURE_BuildingBlocks.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+    releaseDefinitions:
+      instances: 
+        - instanceName: ACM_DemoRelease
+          templateName: azure-building-blocks/release-definitions/yaml-definition-files/ACM_DemoRelease.yaml
+          controller: azdoRelease
+          projectName: AZURE_BuildingBlocks
