@@ -28,7 +28,11 @@ class TestControllerArm(unittest.TestCase):
     if inputType == 'sanitized':
       inputsDir = str(pathlib.Path(__file__).parent.resolve())+'/input-files'
     elif inputType == 'secret':
-      inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+      if platform.system() == 'Windows':
+        inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+      elif platform.system() == 'Linux':
+        inputsDir = os.path.expanduser('~') + '/acmconfig/'
+    print('platform.system() is: ', platform.system())
     inputsDir = self.formatPathForOS(inputsDir)
     # acmKeysDir is the staging ground that ACM will use to create and destroy transitory key files during operations.
     acmKeysDir = self.getAcmKeysDir()
@@ -53,6 +57,13 @@ class TestControllerArm(unittest.TestCase):
     config_cliprocessor.inputVars["tfvarsFileAndPath"] = varsFileAndPath
     config_cliprocessor.inputVars["userCallingDir"] = userCallingDir
     config_cliprocessor.inputVars["verboseLogFilePath"] = verboseLogFilePath
+
+  def getPython(self):
+    if platform.system() == 'Windows':
+      pythonName = 'python'
+    elif platform.system() == 'Linux':
+      pythonName = 'python3'
+    return pythonName
 
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
@@ -211,8 +222,8 @@ class TestControllerArm(unittest.TestCase):
         'resourceGroupRegion': 'westus',
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'resourceGroupName': '$this.foundation',
           'vpcCIDR': '10.0.0.0/16',
@@ -301,8 +312,8 @@ class TestControllerArm(unittest.TestCase):
               'imageName': 'arm-image', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'KeyName': '$keys.KeyName', 
                 'InstanceType': 't2.small', 

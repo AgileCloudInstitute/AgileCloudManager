@@ -55,6 +55,13 @@ class TestCommandBuilder(unittest.TestCase):
     config_cliprocessor.inputVars["userCallingDir"] = userCallingDir
     config_cliprocessor.inputVars["verboseLogFilePath"] = verboseLogFilePath
 
+  def getPython(self):
+    if platform.system() == 'Windows':
+      pythonName = 'python'
+    elif platform.system() == 'Linux':
+      pythonName = 'python3'
+    return pythonName
+
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
     # This is NOT where the keys will be sourced from.
@@ -269,11 +276,11 @@ class TestCommandBuilder(unittest.TestCase):
         'instanceName': 'custom', 
         'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
         'controller': '$customController.aws-building-blocks/controllers/customController.py', 
-        'controllerCommand': 'python $location', 
+        'controllerCommand': self.getPython()+' $location', 
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'vpcCIDR': '10.0.0.0/16',
           'secondString': 'bencher',
@@ -292,7 +299,7 @@ class TestCommandBuilder(unittest.TestCase):
             'instanceName': 'custom-image', 
             'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
             'controller': '$customController.aws-building-blocks/controllers/customController.py', 
-            'controllerCommand': 'python $location', 
+            'controllerCommand': self.getPython()+' $location', 
             'canine': 'describesadog',
             'feline': 'cat-like',
             'mappedVariables': {
@@ -342,12 +349,12 @@ class TestCommandBuilder(unittest.TestCase):
               'instanceName': 'custom-scaleset', 
               'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
               'controller': '$customController.aws-building-blocks/controllers/customController.py', 
-              'controllerCommand': 'python $location', 
+              'controllerCommand': self.getPython()+' $location', 
               'imageName': 'image-demo', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'KeyName': '$keys.KeyName', 
                 'InstanceType': 't2.small', 
@@ -390,8 +397,8 @@ class TestCommandBuilder(unittest.TestCase):
         'resourceGroupRegion': 'westus',
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'resourceGroupName': '$this.foundation',
           'vpcCIDR': '10.0.0.0/16',
@@ -480,8 +487,8 @@ class TestCommandBuilder(unittest.TestCase):
               'imageName': 'arm-image', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'KeyName': '$keys.KeyName', 
                 'InstanceType': 't2.small', 
@@ -522,8 +529,8 @@ class TestCommandBuilder(unittest.TestCase):
         'resourceGroupRegion': 'westus',
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'subscriptionId': '$keys',
           'tenantId': '$keys',
@@ -617,8 +624,8 @@ class TestCommandBuilder(unittest.TestCase):
               'imageName': 'arm-image', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'KeyName': '$keys.KeyName', 
                 'InstanceType': 't2.small', 

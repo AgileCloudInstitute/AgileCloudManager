@@ -31,9 +31,18 @@ class TestControllerPacker(unittest.TestCase):
     if inputType == 'sanitized':
       inputsDir = str(pathlib.Path(__file__).parent.resolve())+'/input-files'
     elif inputType == 'secret':
-      inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+      if platform.system() == 'Windows':
+        inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+      elif platform.system() == 'Linux':
+        inputsDir = os.path.expanduser('~') + '/acmconfig/'
     else:
-      inputsDir = os.path.expanduser('~') + '/acm/keys/'+inputType+'/'
+      if platform.system() == 'Windows':
+        inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+#        inputsDir = os.path.expanduser('~') + '/acm/keys/'+inputType+'/'
+      elif platform.system() == 'Linux':
+#        inputsDir = os.path.expanduser('~') + '/acmconfig/'
+        inputsDir = os.path.expanduser('~') + '/acmconfig2/adminAccounts/'
+
     inputsDir = self.formatPathForOS(inputsDir)
     # acmKeysDir is the staging ground that ACM will use to create and destroy transitory key files during operations.
     acmKeysDir = self.getAcmKeysDir()
@@ -84,6 +93,13 @@ class TestControllerPacker(unittest.TestCase):
     config_cliprocessor.inputVars["userCallingDir"] = userCallingDir
     config_cliprocessor.inputVars["verboseLogFilePath"] = verboseLogFilePath
 
+  def getPython(self):
+    if platform.system() == 'Windows':
+      pythonName = 'python'
+    elif platform.system() == 'Linux':
+      pythonName = 'python3'
+    return pythonName
+
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
     # This is NOT where the keys will be sourced from.
@@ -127,6 +143,8 @@ class TestControllerPacker(unittest.TestCase):
         print('The invalid input for keysDir is: ', propVal)
         quit('ERROR: Invalid input for keysDir.')
     propVal = self.formatPathForOS(propVal)
+    print('xxx ...  propVal is: ', propVal)
+#    quit('cc==dd==ff')
     return propVal
 
 
@@ -409,8 +427,8 @@ class TestControllerPacker(unittest.TestCase):
         'resourceGroupRegion': 'westus',
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'subscriptionId': '$keys',
           'tenantId': '$keys',
@@ -514,8 +532,8 @@ class TestControllerPacker(unittest.TestCase):
               'imageName': 'arm-image', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'KeyName': '$keys.KeyName', 
                 'InstanceType': 't2.small', 
@@ -555,7 +573,8 @@ class TestControllerPacker(unittest.TestCase):
 #UNCOMMENT THE FOLLOWING FUNCTION BECAUSE IT IS CRITICAL.  WE ARE JUST COMMENTING IT DURING DEVELOPMENT OF OTHER THINGS FOR CLARITY.
   def getSystemConfig_TfBackendAzrm(self):
     systemConfig = {
-      'keysDir': '$Output\\adminAccounts', 
+#      'keysDir': '$Output\\adminAccounts', 
+      'keysDir': '$Default', 
       'forceDelete': 'True',
       'cloud': 'azure', 
       'organization': 'a1b2c', 
@@ -572,15 +591,15 @@ class TestControllerPacker(unittest.TestCase):
               'type': 'azurerm2',
               'preprocessor': {
                 'locationOn': 'azure-building-blocks/scripts/hello1.py',
-                'commandOn': 'python $location',
+                'commandOn': self.getPython()+' $location',
                 'locationOff': 'azure-building-blocks/scripts/hello2.py',
-                'commandOff': 'python $location'
+                'commandOff': self.getPython()+' $location'
               },
               'postprocessor': {
                 'locationOn': 'azure-building-blocks/scripts/hello3.py',
-                'commandOn': 'python $location',
+                'commandOn': self.getPython()+' $location',
                 'locationOff': 'azure-building-blocks/scripts/hello4.py',
-                'commandOff': 'python $location'
+                'commandOff': self.getPython()+' $location'
               },
               'keyVaultName': 'adminAccountsBackend',
               'keyName': 'adminAccountsBackendKey',

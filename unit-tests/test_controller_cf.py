@@ -1,4 +1,4 @@
-from msilib.schema import ServiceControl
+#from msilib.schema import ServiceControl
 import unittest
 import os
 import platform
@@ -32,7 +32,10 @@ class TestControllerCf(unittest.TestCase):
     if inputType == 'sanitized':
       inputsDir = str(pathlib.Path(__file__).parent.resolve())+'/input-files'
     elif inputType == 'secret':
-      inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+      if platform.system() == 'Windows':
+        inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
+      elif platform.system() == 'Linux':
+        inputsDir = os.path.expanduser('~') + '/acmconfig/'
     else:
       inputsDir = os.path.expanduser('~') + '/acm/keys/'+inputType+'/'
     inputsDir = self.formatPathForOS(inputsDir)
@@ -89,6 +92,12 @@ class TestControllerCf(unittest.TestCase):
     app_parent_path = self.formatPathForOS(app_parent_path)
     config_cliprocessor.inputVars["app_parent_path"] = app_parent_path
 
+  def getPython(self):
+    if platform.system() == 'Windows':
+      pythonName = 'python'
+    elif platform.system() == 'Linux':
+      pythonName = 'python3'
+    return pythonName
 
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
@@ -312,8 +321,8 @@ class TestControllerCf(unittest.TestCase):
         'region': 'us-west-2',
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'vpcCIDR': '10.0.0.0/16',
           'secondString': 'bencher',
@@ -380,8 +389,8 @@ class TestControllerCf(unittest.TestCase):
               'imageName': 'cf-image-demo',
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': 'python $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': 'python $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': 'python $location'}, 
+              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'VpcId': '$customFunction.foundationOutput.VpcId',
                 'RouteTableId': '$customFunction.foundationOutput.RouteTableId',

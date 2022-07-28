@@ -3,7 +3,7 @@
 
 import sys
 import io
-from turtle import st
+#from turtle import st
 
 from config_fileprocessor import config_fileprocessor
 from command_formatter import command_formatter
