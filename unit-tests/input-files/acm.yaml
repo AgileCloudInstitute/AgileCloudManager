@@ -35,7 +35,7 @@ tfbackend:
           keyName: adminAccountsBackendKey
           environment: Dev
           resourceGroupName: adminAccountsTfBackendDev
-          resourceGroupRegion: westus
+          resourceGroupRegion: eastus
           mappedVariables:
             storageAccountName: $customFunction.addOrganization.adminaccounts
             environmentName: $this.tags.environmentName
@@ -60,7 +60,7 @@ tfbackend:
           keyName: azdoAgentsBackendKey
           environment: Dev
           resourceGroupName: pipelineAgentsTfBackend
-          resourceGroupRegion: westus
+          resourceGroupRegion: eastus
           mappedVariables:
             storageAccountName: $customFunction.addOrganization.pipelineagents
             environmentName: $this.tags.environmentName
@@ -85,7 +85,7 @@ tfbackend:
           keyName: projectManagementBackendKey
           environment: Dev
           resourceGroupName: projectManagementTfBackend
-          resourceGroupRegion: westus
+          resourceGroupRegion: eastus
           mappedVariables:
             storageAccountName: $customFunction.addOrganization.projectmanagement
             environmentName: $this.tags.environmentName
@@ -106,7 +106,7 @@ admin:
     controller: terraform
     mappedVariables:
       resourceGroupName: admin
-      resourceGroupRegion: westus
+      resourceGroupRegion: eastus
       subscriptionId: $keys
       tenantId: $keys
       clientId: $keys
@@ -181,7 +181,7 @@ agents:
     instanceName: demo
     templateName: azure-building-blocks/terraform/foundation
     controller: terraform
-    resourceGroupRegion: westus
+    resourceGroupRegion: eastus
     mappedVariables:
       subscriptionId: $keys
       tenantId: $keys
