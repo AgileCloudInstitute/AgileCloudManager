@@ -535,7 +535,7 @@ class command_builder:
   def getValueForOneMappedVariable(self, mappedVariables, varName, tool, keyDir, systemConfig, instance, varLines, outputDict):
     cr = command_runner()
     if mappedVariables.get(varName).startswith('$env.'):
-      envVarName = input.replace('$env.', '')
+      envVarName = mappedVariables.get(varName).replace('$env.', '')
       if envVarName in os.environ:
         value = os.environ.get(envVarName)
       else:
