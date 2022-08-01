@@ -42,7 +42,7 @@ class TestControllerPacker(unittest.TestCase):
       elif platform.system() == 'Linux':
 #        inputsDir = os.path.expanduser('~') + '/acmconfig/'
         inputsDir = os.path.expanduser('~') + '/acmconfig2/adminAccounts/'
-
+ 
     inputsDir = self.formatPathForOS(inputsDir)
     # acmKeysDir is the staging ground that ACM will use to create and destroy transitory key files during operations.
     acmKeysDir = self.getAcmKeysDir()
@@ -68,30 +68,46 @@ class TestControllerPacker(unittest.TestCase):
     config_cliprocessor.inputVars['relativePathToInstances'] = relativePathToInstances
     config_cliprocessor.inputVars['dynamicVarsPath'] = dynamicVarsPath
     config_cliprocessor.inputVars['dirOfYamlKeys'] = inputsDir
+    dirOfOutput = self.getAcmUserHome() + '\\keys\\' 
+    dirOfOutput = self.formatPathForOS(dirOfOutput)
     if inputType == 'sanitized':
       config_cliprocessor.inputVars['dirOfOutput'] = inputsDir
-    elif inputType == 'secret':
-      config_cliprocessor.inputVars['dirOfOutput'] = self.formatPathForOS(str(pathlib.Path(inputsDir).parent.resolve())+'/')
+#    elif inputType == 'secret':
+#      config_cliprocessor.inputVars['dirOfOutput'] = self.formatPathForOS(str(pathlib.Path(inputsDir).parent.resolve())+'/')
     else:
-      config_cliprocessor.inputVars['dirOfOutput'] = self.formatPathForOS(str(pathlib.Path(inputsDir).parent.resolve())+'/')
-      acmAdmin = userCallingDir + '/acmAdmin'
-      acmAdmin = self.formatPathForOS(acmAdmin)
-      varsPath = acmAdmin + '/vars'
-      tfvarsFileAndPath = varsPath+"\\keys.tfvars"
-      tfvarsFileAndPath = self.formatPathForOS(tfvarsFileAndPath)
-      tfBackendFileAndPath = varsPath+"/backend.tfvars"
-      tfBackendFileAndPath = self.formatPathForOS(tfBackendFileAndPath)
-      config_cliprocessor.inputVars["tfBackendFileAndPath"] = tfBackendFileAndPath
-      print('tfBackendFileAndPath is: ', tfBackendFileAndPath)
-      if platform.system() == 'Windows':
-        dependenciesBinariesPath = acmAdmin + '/binaries/'
-        dependenciesBinariesPath = self.formatPathForOS(dependenciesBinariesPath)
-      elif platform.system() == 'Linux':
-        dependenciesBinariesPath = '/opt/acm/'
-      config_cliprocessor.inputVars['dependenciesBinariesPath'] = dependenciesBinariesPath
-    config_cliprocessor.inputVars["tfvarsFileAndPath"] = varsFileAndPath
+      config_cliprocessor.inputVars['dirOfOutput'] = dirOfOutput #self.formatPathForOS(str(pathlib.Path(inputsDir).parent.resolve())+'/')
+    #--Start test removing 2 character indent
+    acmAdmin = userCallingDir + '/acmAdmin'
+    acmAdmin = self.formatPathForOS(acmAdmin)
+    varsPath = acmAdmin + '/vars'
+    tfvarsFileAndPath = varsPath+"\\keys.tfvars"
+    tfvarsFileAndPath = self.formatPathForOS(tfvarsFileAndPath)
+    tfBackendFileAndPath = varsPath+"/backend.tfvars"
+    tfBackendFileAndPath = self.formatPathForOS(tfBackendFileAndPath)
+    config_cliprocessor.inputVars["tfBackendFileAndPath"] = tfBackendFileAndPath
+    print('tfBackendFileAndPath is: ', tfBackendFileAndPath)
+    if platform.system() == 'Windows':
+      dependenciesBinariesPath = acmAdmin + '/binaries/'
+      dependenciesBinariesPath = self.formatPathForOS(dependenciesBinariesPath)
+    elif platform.system() == 'Linux':
+      dependenciesBinariesPath = '/opt/acm/'
+    config_cliprocessor.inputVars['dependenciesBinariesPath'] = dependenciesBinariesPath
+    #--End test removing 2 character indent
+#Test comment out next line and replace with line after it.
+#    config_cliprocessor.inputVars["tfvarsFileAndPath"] = varsFileAndPath
+    config_cliprocessor.inputVars["tfvarsFileAndPath"] = tfvarsFileAndPath
     config_cliprocessor.inputVars["userCallingDir"] = userCallingDir
     config_cliprocessor.inputVars["verboseLogFilePath"] = verboseLogFilePath
+
+  def getAcmUserHome(self):
+    if platform.system() == 'Windows':
+      acmUserHome = os.path.expanduser("~")+'/acm/'
+    elif platform.system() == 'Linux':
+      acmUserHome = '/usr/acm/'
+    if not os.path.exists(acmUserHome):
+      os.makedirs(acmUserHome, exist_ok=True) 
+    return acmUserHome
+
 
   def getPython(self):
     if platform.system() == 'Windows':
@@ -128,6 +144,7 @@ class TestControllerPacker(unittest.TestCase):
   #@public
   def getKeyDir(self, systemConfig, config_cliprocessor):
     propVal = systemConfig.get("keysDir")
+    print('+++ propVal from systemConfig is: ', propVal)
     if propVal == '$Default':
       propVal = config_cliprocessor.inputVars.get('dirOfYamlKeys')
     elif '$Output' in propVal:
@@ -412,12 +429,13 @@ class TestControllerPacker(unittest.TestCase):
       input = input[:-2] + '\n'
     return input
 
+#      'keysDir': '$Default', 
 #UNCOMMENT THE FOLLOWING FUNCTION BECAUSE IT IS CRITICAL.  WE ARE JUST COMMENTING IT DURING DEVELOPMENT OF OTHER THINGS FOR CLARITY.
   def getSystemConfig_TerraformPacker(self):
     systemConfig = {
-      'keysDir': '$Default', 
+      'keysDir': '$Output\\adminAccounts', 
       'cloud': 'azure', 
-      'organization': 'a1b2c', 
+      'organization': 'tstaxy', 
       'tags': {'networkName': 'name-of-vnet', 'systemName': 'name-of-system', 'environmentName': 'name-of-environment', 'ownerName': 'name-of-owner'}, 
       'foundation': {
         'instanceName': 'tf-test', 
@@ -573,11 +591,11 @@ class TestControllerPacker(unittest.TestCase):
 #UNCOMMENT THE FOLLOWING FUNCTION BECAUSE IT IS CRITICAL.  WE ARE JUST COMMENTING IT DURING DEVELOPMENT OF OTHER THINGS FOR CLARITY.
   def getSystemConfig_TfBackendAzrm(self):
     systemConfig = {
-#      'keysDir': '$Output\\adminAccounts', 
-      'keysDir': '$Default', 
+      'keysDir': '$Output\\adminAccounts', 
+#this is not the original.  This should be wrong and is thus commented out.      'keysDir': '$Default', 
       'forceDelete': 'True',
       'cloud': 'azure', 
-      'organization': 'a1b2c', 
+      'organization': 'tstaxy', 
       'tags': {'networkName': 'name-of-vnet', 'systemName': 'name-of-system', 'environmentName': 'name-of-environment', 'ownerName': 'name-of-owner'}, 
       'serviceTypes': {
         'tfBackend': {
@@ -604,7 +622,7 @@ class TestControllerPacker(unittest.TestCase):
               'keyVaultName': 'adminAccountsBackend',
               'keyName': 'adminAccountsBackendKey',
               'environment': 'Dev',
-              'resourceGroupName': 'adminAccountsTfBackendDev',
+              'resourceGroupName': 'adminAccountsTfBackendDevTest',
               'resourceGroupRegion': 'westus',
               'mappedVariables': {
                 'storageAccountName': '$customFunction.addOrganization.adminaccounts',
@@ -637,6 +655,7 @@ class TestControllerPacker(unittest.TestCase):
     typeGrandChild = None
     typeInstanceName = None
 
+#    quit(keyDir)
     # Eigth, destroy real foundation and real image that were used in this test
     ct = controller_terraform()
     ct.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
@@ -681,7 +700,7 @@ class TestControllerPacker(unittest.TestCase):
 'owner="name-of-owner"',
 'makePath="userCallingDir\\azure-building-blocks\\arm"',
 'now="20220624125048860330"',
-'addOrgTest="somestringa1b2c"'
+'addOrgTest="somestringtstaxy"'
     ]
     cb = command_builder()
     systemConfig = self.getSystemConfig_TerraformPacker()
@@ -690,6 +709,8 @@ class TestControllerPacker(unittest.TestCase):
     mappedVariables = systemConfig.get('foundation').get('mappedVariables')
     tool = 'terraform'
     outputDict = {}
+    print("xxxzzzvvv config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
+#    quit('ddddddd')
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
     print('returnVal is: ', returnVal)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
@@ -733,6 +754,9 @@ class TestControllerPacker(unittest.TestCase):
     typeGrandChild = None
     typeInstanceName = None
 
+    print("... config_cliprocessor.inputVars['dirOfOutput'] is: ", config_cliprocessor.inputVars['dirOfOutput'])
+    print('...xxx   keyDir is: ', keyDir)
+#    quit('sdfghjkl')
     # Fourth, create real foundation and real image to make sure that foundationOutput and mostRecentImage functions work properly
     ct = controller_terraform()
     ct.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
@@ -772,7 +796,7 @@ class TestControllerPacker(unittest.TestCase):
 "secondVar": "two-value", 
 "makePath": "userCallingDir\\\\\\\\azure-building-blocks\\\\arm", 
 "currentDateTimeAlphaNumeric": "20220630135850574988", 
-"addOrgTest": "somestringa1b2c"
+"addOrgTest": "somestringtstaxy"
     }
 
     outputDict = {}
@@ -811,7 +835,7 @@ class TestControllerPacker(unittest.TestCase):
 'makePath="userCallingDir\\\\azure-building-blocks\\arm"',
 'now="20220629152616440812"',
 'imageId="empty_image"',
-'addOrgTest="somestringa1b2c"',
+'addOrgTest="somestringtstaxy"',
 'resourceGroupName="myEmptyTestRG"',
 'clientSecret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"',
 'clientId="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"',

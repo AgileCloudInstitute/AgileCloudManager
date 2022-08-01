@@ -49,7 +49,7 @@ class config_fileprocessor:
       if len(propParts) == 2:
         if propParts[0] == '$Output':
           outputDir = config_cliprocessor.inputVars.get('dirOfOutput')
-          propVal = outputDir + propParts[1] 
+          propVal = outputDir +'/'+ propParts[1] 
         else:
           print('The invalid input for keysDir is: ', propVal)
           quit('ERROR: Invalid input for keysDir.')
@@ -58,6 +58,9 @@ class config_fileprocessor:
         quit('ERROR: Invalid input for keysDir.')
     cmdfrmtr = command_formatter()
     propVal = cmdfrmtr.formatPathForOS(propVal)
+    print("bbb propVal is: ", propVal)
+    print("qqwweerrttyy config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
+#    quit('jjkkll')
     return propVal
 
   #@public

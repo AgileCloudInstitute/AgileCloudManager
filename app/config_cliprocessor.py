@@ -75,7 +75,7 @@ def processInputArgs(inputArgs):
   #  pathToApplicationRoot = ''
     keySource = 'keyFile'
     pub = 'invalid'
-    sec = 'invalid'
+    sec = 'invalid' 
     #These next two /vars/vars/.. are temporary until we further revise the directory structure
     tfvarsFileAndPath = varsPath+"\\keys.tfvars"
     tfvarsFileAndPath = cmdfrmtr.formatPathForOS(tfvarsFileAndPath)

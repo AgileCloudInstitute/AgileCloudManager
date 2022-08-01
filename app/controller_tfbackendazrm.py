@@ -57,15 +57,17 @@ class controller_tfbackendazrm:
       logString = "Finished running setSubscription command."
       lw.writeLogVerbose("acm", logString)
       getAccountKeyCommand = "az storage account keys list --resource-group " + resourceGroupName + " --account-name " + storageAccountName + " --query [0].value -o tsv "
+      print('bbbnnn keysFile is: ', keysFile)
       logString = "getAccountKeyCommand is: "+ getAccountKeyCommand
       lw.writeLogVerbose("acm", logString)
       accountKey = cr.getAccountKey(getAccountKeyCommand)  
       #Then create the 6 storage containers within the storage account to correspond with the sections in infrastructureConfig 
       # Adding .lower() to the string declarations as a reminder that the azure portal only seems to accept lower case.  If you remove .lower() , then the containers that have camel case names like networkFoundation will NOT be created.
       storageContainerName = 'networkFoundation'.lower()
-#      print('keysFile is: ', keysFile)
-#      quit("---vvv---zzz===aaa")
       with open(keysFile, "a+") as f:  # append mode
         f.write("storage_account_name:"+storageAccountName+"\n")
         f.write("container_name:"+storageContainerName+"\n")
         f.write("tfBackendStorageAccessKey:"+accountKey+"\n")
+      print('keysFile is: ', keysFile)
+      print('accountKey is: ', accountKey)
+#      quit("---vvv---zzz===aaa")

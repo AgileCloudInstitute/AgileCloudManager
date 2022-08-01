@@ -26,7 +26,7 @@ class controller_terraform:
 
   def __init__(self):  
     pass
-
+ 
   #@public
   def terraformCrudOperation(self, operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName):
     myLogWriter = log_writer()

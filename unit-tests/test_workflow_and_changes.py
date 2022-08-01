@@ -6,14 +6,14 @@ import sys
 import os
 
 #Run the tests in this file by running the following command in the terminal:
-#python -m unittest acm-tests/test_workflow_platform.py
+#python -m unittest agile-cloud-manager/unit-tests/test_workflow_and_changes.py
 
 class test_workflow_platform(unittest.TestCase):
 #  logVerbose = "C:\\projects\\acm\\Dec2021\\config-outside-acm-path\\logs\\log-verbose.log"
   logVerbose = ''
 
   def addAcmDirToPath(self):
-    acmDir = str(pathlib.Path(__file__).parent.resolve().parent.resolve())+'/agile-cloud-manager'
+    acmDir = str(pathlib.Path(__file__).parent.resolve().parent.resolve())+'/app'
     acmDir = self.formatPathForOS(acmDir)
     sys.path.insert(0, acmDir)
 
