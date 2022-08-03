@@ -83,7 +83,8 @@ def processInputArgs(inputArgs):
     tfBackendFileAndPath = cmdfrmtr.formatPathForOS(tfBackendFileAndPath)
     #Get logsPath
     if platform.system() == 'Windows':
-      verboseLogFilePath = acmAdmin + cmdfrmtr.getSlashForOS() + 'logs'
+#      verboseLogFilePath = acmAdmin + cmdfrmtr.getSlashForOS() + 'logs'
+      verboseLogFilePath = acmUserHome + cmdfrmtr.getSlashForOS() + 'logs'
       verboseLogFilePath = cmdfrmtr.formatPathForOS(verboseLogFilePath)
     elif platform.system() == 'Linux':
       verboseLogFilePath = '/var/log/acm/'

@@ -88,6 +88,8 @@ class log_writer:
           backupAcmSummaryLogFileAndPath = backupAcmSummaryLogFileAndPath.replace('.log','')+'.a.log'
         os.rename(acmSummaryLogFileAndPath, backupAcmSummaryLogFileAndPath)
 #    self.writeLogVerbose("acm", timeString)
+    if not os.path.exists(verboseLogFilePath):
+      os.makedirs(verboseLogFilePath)
     self.writeMetaLog("acm", timeString)
  #   print('timeString is: ', timeString)
  #   quit('jojo!')
