@@ -9,7 +9,6 @@ import os
 #python -m unittest agile-cloud-manager/unit-tests/test_workflow_and_changes.py
 
 class test_workflow_platform(unittest.TestCase):
-#  logVerbose = "C:\\projects\\acm\\Dec2021\\config-outside-acm-path\\logs\\log-verbose.log"
   logVerbose = ''
 
   def addAcmDirToPath(self):
@@ -58,7 +57,6 @@ class test_workflow_platform(unittest.TestCase):
     self.logVerbose = self.formatPathForOS(logVerbose)
     lw = log_writer()
     lw.replaceLogFile()
-#    quit('debug lw.replace')
 
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
@@ -148,7 +146,7 @@ class test_workflow_platform(unittest.TestCase):
     import config_cliprocessor
     from log_writer import log_writer
     self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-    wfplat1 = workflow_platform()
+    wfplat1 = workflow_platform() 
     wfplat1.onPlatform()
     numChangeReportsExpected = 54
     numChangesExpected = 80
@@ -168,9 +166,9 @@ class test_workflow_platform(unittest.TestCase):
     returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
     self.assertTrue(returnBool)
 
-###Add a test case to validate the force flag
-##  def test_platformOffForce(self):
-##    self.assertTrue(True)
+####Add a test case to validate the force flag
+###  def test_platformOffForce(self):
+###    self.assertTrue(True)
 
   def test_foundationOn(self):
     self.addAcmDirToPath()

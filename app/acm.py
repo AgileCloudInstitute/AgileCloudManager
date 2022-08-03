@@ -21,16 +21,17 @@ def runInfraCommands():
   cv = config_validator()
   ws = workflow_setup()
 
+  lw.replaceLogFile()
+  cv.processAcmConfig()
+
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':
       ws.runSetup()
     elif cliproc.command == 'off':
       ws.undoSetup()
 
-  #Figure out where to put the first logging command.  Leaving it here for now because we want to first create the location for the logs before writing to that location.
-  if (cliproc.domain == 'platform') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):
-    lw.replaceLogFile()
-    cv.processAcmConfig()
+#  #Figure out where to put the first logging command.  Leaving it here for now because we want to first create the location for the logs before writing to that location.
+#  if (cliproc.domain == 'platform') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):
 
   if cliproc.domain == 'platform':
     if cliproc.command == 'on':

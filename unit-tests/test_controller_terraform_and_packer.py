@@ -171,9 +171,6 @@ class TestControllerPacker(unittest.TestCase):
     fragParts = varsFragment.split(' ')
     varFilePart = 'empty'
     for part in fragParts:
-#      if tool == 'customController':
-#        if part.startswith('--varsfile://'):
-#          varFilePart = part
       if tool == 'arm':
         if '--parameters' not in part:
           varFilePart = part
@@ -181,9 +178,6 @@ class TestControllerPacker(unittest.TestCase):
         if part.startswith('-var-file='):
           varFilePart = part
       if tool == 'packer':
-#        print('len(fragParts) is: ', len(fragParts))
-#        print('fragParts is: ', str(fragParts))
-#        print('packer part is: ', part)
         if part.startswith('-var-file='):
           varFilePart = part
     print('varFilePart is: ', varFilePart)
@@ -191,8 +185,6 @@ class TestControllerPacker(unittest.TestCase):
     if varFilePart == 'empty':
       logString = "ERROR: varsFragment did not include a properly formed --varFile:// flag. "
       quit(logString)
-#    if tool == 'customController':
-#      acmKeysFile = varFilePart.replace('--varsfile://','').replace(' ', '')
     if tool == 'arm':
       acmKeysFile = varFilePart.replace('--parameters','').replace(' ', '')
     elif tool == 'terraform':
@@ -201,14 +193,10 @@ class TestControllerPacker(unittest.TestCase):
       acmKeysFile = varFilePart.replace('-var-file=','').replace(' ', '').replace('"','')
     returnVal = False
     with open(acmKeysFile, "rb" ) as f:
-#      if (tool == 'customController') or (tool == 'arm'):
-#        returnedData = json.load(f)
       if tool == 'terraform':
         returnedData = f.read().decode().splitlines()
       elif tool == 'packer':
         returnedData = json.load(f)
-#    if tool == 'customController':
-#      varsObject = returnedData
     if tool == 'arm':
       varsObject = returnedData['parameters']
       correctExpectedResponse = correctExpectedResponse[0]['parameters']
@@ -223,18 +211,6 @@ class TestControllerPacker(unittest.TestCase):
     if len(varsObject) != len(correctExpectedResponse):
       quit('ERROR: vars file has the wrong number of lines.  ')
     for item in varsObject:
-#      if tool == 'customController':
-#        if len(dict(item)) != 1:
-#          quit('ERROR: len(dict(item)) != 1')
-#        for key in dict(item).keys():
-#          for d in correctExpectedResponse:
-#            if key in d.keys():
-#                if key == 'now':
-#                  if d[key] != dict(item)[key]:
-#                    if len(d[key]) == len(dict(item)[key]):
-#                      numMatchesFound +=1
-#                if d[key] == dict(item)[key]:
-#                  numMatchesFound +=1
       if tool == 'arm':
           for d in correctExpectedResponse:
             if item == d:

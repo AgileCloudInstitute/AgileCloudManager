@@ -468,7 +468,7 @@ class controller_terraform:
     if "Error:" in decodedline:
       logString = decodedline+".  Halting program so you can check your configuration and identify the root of the problem. "
       myLogWriter.writeLogVerbose("acm", logString)
-      sys.exit(1)
+      sys.exit(1) 
     if "Destroy complete!" in decodedline:
       logString = "Found Destroy complete!!"
       myLogWriter.writeLogVerbose("acm", logString)

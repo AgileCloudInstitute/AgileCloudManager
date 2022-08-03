@@ -27,12 +27,16 @@ class log_writer:
     current_GMT = time.gmtime()
     ts = calendar.timegm(current_GMT)
     timeString = "Time Stamp at start of log is: " + str(ts)
+#    print('xxx verboseLogFileAndPath is: ', verboseLogFileAndPath)
+#    quit('asdfgtrewq')
     if os.path.exists(verboseLogFileAndPath):
+      print('a ----------------------------------------------------------------------------------')
       first_line = ''
       with open(verboseLogFileAndPath) as f:
         first_line = f.readline()
-#      print('1 first_line is: ', first_line)
+      print('1 first_line is: ', first_line)
       if "[ acm ] Time Stamp at start of log is:" in first_line:
+        print('b ----------------------------------------------------------------------------------')
         time_stamp_string = first_line.replace("[ acm ] Time Stamp at start of log is:", "")
         time_stamp_string = time_stamp_string.replace(" ", "")
         verboseLogFileAndPath_part = verboseLogFileAndPath.replace(".log", "")
@@ -40,43 +44,54 @@ class log_writer:
         backupVerboseLogFileAndPath = "".join(backupVerboseLogFileAndPath.splitlines())
         if os.path.exists(backupVerboseLogFileAndPath):
           backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          print('c ----------------------------------------------------------------------------------')
         #consider making this recursive N times if necessary
         if os.path.exists(backupVerboseLogFileAndPath):
           backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          print('d ----------------------------------------------------------------------------------')
         #consider making this recursive N times if necessary
         if os.path.exists(backupVerboseLogFileAndPath):
           backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          print('e ----------------------------------------------------------------------------------')
         #consider making this recursive N times if necessary
         if os.path.exists(backupVerboseLogFileAndPath):
           backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          print('f ----------------------------------------------------------------------------------')
         os.rename(verboseLogFileAndPath, backupVerboseLogFileAndPath)
     if os.path.exists(acmSummaryLogFileAndPath):
+      print('g ----------------------------------------------------------------------------------')
       first_line = ''
       with open(acmSummaryLogFileAndPath) as f:
         first_line = f.readline()
-#      print("2 first_line is: ", first_line)
+      print("2 first_line is: ", first_line)
       if "[ acm ] Time Stamp at start of log is:" in first_line:
+        print('h ----------------------------------------------------------------------------------')
         time_stamp_string = first_line.replace("[ acm ] Time Stamp at start of log is:", "")
         time_stamp_string = time_stamp_string.replace(" ", "")
         acmSummaryLogFileAndPath_part = acmSummaryLogFileAndPath.replace(".log", "")
         backupAcmSummaryLogFileAndPath = acmSummaryLogFileAndPath_part + "-" + time_stamp_string + ".log"
         backupAcmSummaryLogFileAndPath = "".join(backupAcmSummaryLogFileAndPath.splitlines())
         if os.path.exists(backupAcmSummaryLogFileAndPath):
+          print('i ----------------------------------------------------------------------------------')
           backupAcmSummaryLogFileAndPath = backupAcmSummaryLogFileAndPath.replace('.log','')+'.a.log'
         #consider making this recursive N times if necessary
         if os.path.exists(backupAcmSummaryLogFileAndPath):
+          print('j ----------------------------------------------------------------------------------')
           backupAcmSummaryLogFileAndPath = backupAcmSummaryLogFileAndPath.replace('.log','')+'.a.log'
         #consider making this recursive N times if necessary
         if os.path.exists(backupAcmSummaryLogFileAndPath):
+          print('k ----------------------------------------------------------------------------------')
           backupAcmSummaryLogFileAndPath = backupAcmSummaryLogFileAndPath.replace('.log','')+'.a.log'
         #consider making this recursive N times if necessary
         if os.path.exists(backupAcmSummaryLogFileAndPath):
+          print('L ----------------------------------------------------------------------------------')
           backupAcmSummaryLogFileAndPath = backupAcmSummaryLogFileAndPath.replace('.log','')+'.a.log'
         os.rename(acmSummaryLogFileAndPath, backupAcmSummaryLogFileAndPath)
 #    self.writeLogVerbose("acm", timeString)
     self.writeMetaLog("acm", timeString)
  #   print('timeString is: ', timeString)
  #   quit('jojo!')
+    print('m ----------------------------------------------------------------------------------')
 
   #@public
   def writeLogVerbose(self, tool, line):  
