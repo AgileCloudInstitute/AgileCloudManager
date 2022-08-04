@@ -33,7 +33,7 @@ class controller_arm:
     yaml_keys_file_and_path = cf.getKeyFileAndPath(keyDir)
     print("keyDir is: ", keyDir)
     print("userCallingDir is: ", userCallingDir)
-    print("yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
+    print("eee yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
 #    quit('<---c--->')
     if caller == 'networkFoundation':
       typeParent = caller
