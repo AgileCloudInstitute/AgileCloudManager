@@ -149,7 +149,8 @@ class workflow_system:
         controllerCommand = systemConfig.get("foundation").get("controllerCommand")
         mappedVariables = systemConfig.get("foundation").get("mappedVariables")
         serviceType = None
-        instance = None
+#        instance = None
+        instance = systemConfig.get("foundation")
         ccust = controller_custom()
         ccust.runCustomController('off', systemConfig, controllerPath, controllerCommand, mappedVariables, serviceType, instance)
       else:

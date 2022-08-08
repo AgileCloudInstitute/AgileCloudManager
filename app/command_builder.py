@@ -713,7 +713,4 @@ class command_builder:
     else: 
       #Handle plaintext variables that do not require coordinate searching
       value = mappedVariables.get(varName)
-#    print('aaa mappedVariables.get(varName) is: ', mappedVariables.get(varName))
-#    print('aaa varName is: ', varName)
-#    print('... ccc value is: ', value)
     return value
