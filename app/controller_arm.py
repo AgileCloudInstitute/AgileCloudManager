@@ -304,12 +304,14 @@ class controller_arm:
     lw = log_writer()
     ## STEP 5: Assemble deployment command
     from command_builder import command_builder
-    cb = command_builder()
+    cb = command_builder() 
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict)
     print("--- deployVarsFragment is: ", deployVarsFragment)
     deployCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+deployVarsFragment
     logString = '--- deployCmd is: '+ deployCmd
     lw.writeLogVerbose("az-cli", logString)
+#    if 'devenvimages' in deployCmd:
+#      quit("::---x---:::")
     ## STEP 6: Run Deployment command and check results
     jsonStatus = self.getShellJsonResponse(deployCmd)
     print('jsonStatus is: ', jsonStatus)
@@ -321,9 +323,10 @@ class controller_arm:
       outputs = jsonStatus['properties']['outputs']
       self.foundationOutput = outputs
       print('outputs is: ', str(outputs))
-      for thisOutput in outputs:
-        print('thisOutput is: ', str(thisOutput))
-        print('outputs[thisOutput]["value"] is: ', str(outputs[thisOutput]['value']))
+      if not outputs == None:
+        for thisOutput in outputs:
+          print('thisOutput is: ', str(thisOutput))
+          print('outputs[thisOutput]["value"] is: ', str(outputs[thisOutput]['value']))
 
 #    if onlyFoundationOutput:
 #      quit('giraffe!')

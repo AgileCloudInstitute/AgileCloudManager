@@ -666,31 +666,31 @@ class changes_manifest:
     match = False
     #2 update change in changesManifest
     for changesBlock in self.changesManifest:
-      print('1')
+#      print('1')
       if changesBlock["changeIndex"] == chgIdx:
-        print('2')
+#        print('2')
         if changesBlock["changeType"] == "End of a services section":
-          print('3')
+#          print('3')
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
-            print('4')
+#            print('4')
             for changeItems in cc.changesList:
-              print('5')
+#              print('5')
               if changeItems['key'] == "platform/system:"+systemInstanceName+"/services": 
-                print('6')
+#                print('6')
                 for changeItem in changeItems['changes']:
-                  print('7')
+#                  print('7')
                   if "all services summary status changed from In Process to Completed" in changeItem:
-                    print('8')
+#                    print('8')
                     for changeElement in changesBlock['changes']:
-                      print('9')
+#                      print('9')
                       affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
                       if changeElement['affectedUnit'] == affUnitName:
-                        print('10')
+#                        print('10')
                         if changeElement["Status"].replace('To ','') == "Completed":
-                          print('11')
+#                          print('11')
                           changeElement["changeCompleted"] = True
                           match = True
-    print('692  ...  match is: ', match)
+#    print('692  ...  match is: ', match)
 #    quit('--3-4-5-6-7-8-9')
     self.validateChangeManifest((len(ct.changeReports)-1))
     self.emitChangesToLogs()

@@ -58,8 +58,8 @@ class config_fileprocessor:
         quit('ERROR: Invalid input for keysDir.')
     cmdfrmtr = command_formatter()
     propVal = cmdfrmtr.formatPathForOS(propVal)
-    print("bbb propVal is: ", propVal)
-    print("qqwweerrttyy config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
+#    print("bbb propVal is: ", propVal)
+#    print("qqwweerrttyy config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
 #    quit('jjkkll')
     return propVal
 

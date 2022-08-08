@@ -21,6 +21,7 @@ class controller_custom:
   #@public
   def runCustomController(self, operation, systemConfig, controllerPath, controllerCommand, mappedVariables, serviceType, instance):
     cf = command_formatter()
+    lw = log_writer()
     cmdPrefix = ""
     if ("$location" in controllerCommand) and (not controllerCommand.startswith("$location")):
       cmdParts = controllerCommand.split("$location")
@@ -36,8 +37,8 @@ class controller_custom:
     outputDict = {'calledFromCustomController':True}
     varsFragment = cbldr.getVarsFragment(systemConfig, serviceType, instance, mappedVariables, 'customController', outputDict)
     controllerCommand = cmdPrefix+fullControllerPath+' '+operation+' '+varsFragment
-    print('controllerCommand is: ', controllerCommand)
-    print('varsFragment is: ', varsFragment)
+    logString = 'controllerCommand is: '+ controllerCommand
+    lw.writeLogVerbose('shell', logString)
     self.runShellCommand(controllerCommand)
 
 
@@ -60,7 +61,7 @@ class controller_custom:
           lineParts = decodedline.split(' = ')
           lineDict = {'varName':lineParts[0].replace(' ', ''), 'varValue':lineParts[1].replace(' ','')}
           self.outputVariables.append(lineDict)
-          print('self.outputVariables is: ', self.outputVariables)
+#          print('self.outputVariables is: ', self.outputVariables)
         if decodedline.startswith('Output variables:'):
           captureOutputs = True
         lw.writeLogVerbose("shell", decodedline)

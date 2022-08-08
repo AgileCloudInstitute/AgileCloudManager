@@ -27,14 +27,10 @@ class workflow_platform:
     typeOfTest = config_cliprocessor.inputVars.get("testType")
     yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    print('............................. 1 len(ct_on.changeReports) is: ', len(ct_on.changeReports))
     cm_on.initializeChangesManagementDataStructures(ct_on, cc_on, 'platform', command)
-    print('............................. 2 len(ct_on.changeReports) is: ', len(ct_on.changeReports))
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_on.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    print('............................. 3 len(ct_on.changeReports) is: ', len(ct_on.changeReports))
     cm_on.updateStartOfPlatformRun(ct_on, cc_on, 'platform', "In Process")
-    print('............................. 4 len(ct_on.changeReports) is: ', len(ct_on.changeReports))
     for systemInstanceName in platformConfig:
       cm_on.updateStartOfASystem(ct_on, cc_on, 'platform', systemInstanceName, "In Process")
       if cfp.systemHasFoundation(platformConfig.get(systemInstanceName)):

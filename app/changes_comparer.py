@@ -99,10 +99,10 @@ class changes_comparer:
     logString = "    command is: " + command
     if self.writeLogBoolean:
       lw.writeMetaLog("acm", logString)
-    print("stepsLast is: ", stepsLast)
-    print("stepsSecondToLast is: ", stepsSecondToLast)
-    print("overallStatusLast is: ", overallStatusLast)
-    print("overallStatusSecondToLast is: ", overallStatusSecondToLast)
+#    print("stepsLast is: ", stepsLast)
+#    print("stepsSecondToLast is: ", stepsSecondToLast)
+#    print("overallStatusLast is: ", overallStatusLast)
+#    print("overallStatusSecondToLast is: ", overallStatusSecondToLast)
   #  quit('jonesy gogo')
     if stepsLast == stepsSecondToLast:
       if overallStatusLast != overallStatusSecondToLast:
@@ -333,7 +333,7 @@ class changes_comparer:
           secondToLastDict = secondServiceType
       typeDict = {"type":typeName, "lastDict":lastDict, "secondToLastDict":secondToLastDict}
       typesList.append(typeDict)
-    print('typesList is: ', typesList)
+#    print('typesList is: ', typesList)
     for type in typesList:
       changeKey = "platform/system:"+systemInstanceName+"/serviceTypes/"+type['type'] #tfBackend
       logString = "                    " + type['type'] + " summary is as follows: "

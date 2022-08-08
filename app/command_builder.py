@@ -569,6 +569,9 @@ class command_builder:
           logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
           quit(logString)
     elif mappedVariables.get(varName).startswith("$this"):
+#      print('mappedVariables is: ', mappedVariables)
+      print('mappedVariables.get(varName) is: ', mappedVariables.get(varName))
+      print('varName is: ', varName)
       if (not mappedVariables.get(varName).startswith('$this.instance')) and (not mappedVariables.get(varName).startswith('$this.tags')) and (not mappedVariables.get(varName).startswith('$this.foundation')):
         logString = "ERROR: Illegal syntax for "+varName+":  "+mappedVariables.get(varName)
         quit(logString)
@@ -580,10 +583,12 @@ class command_builder:
       else:
         logString = 'ERROR: $this statement had an illegal number of dots ( . ).  Only either one or 2 dots are allowed in each $this statement.  '
         quit(logString)
+      print('varToCheck is: ', varToCheck)
       if mappedVariables.get(varName).startswith("$this.foundationMapped"):
         value = systemConfig.get('foundation').get('mappedVariables').get(varToCheck)
       if (str(mappedVariables.get(varName)).startswith('$this.foundation')) and (not mappedVariables.get(varName).startswith("$this.foundationMapped")):
         value = systemConfig.get('foundation').get(varToCheck)
+        print('... uuu value is: ', value)
       elif mappedVariables.get(varName).startswith("$this.instance"):
         value = instance.get(varToCheck)
       elif mappedVariables.get(varName).startswith("$this.tags"):
@@ -669,6 +674,8 @@ class command_builder:
             dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
           rootString = instance.get('instanceName')
           value = (rootString+dt).replace(' ','').lower()
+#          print('eee value is: ', value)
+#          quit('---...---987')
         else:
           logString = "ERROR: imageTemplateName function call must have exactly one dot in format: $customFunction.imageTemplateName"
           quit(logString)
@@ -706,4 +713,7 @@ class command_builder:
     else: 
       #Handle plaintext variables that do not require coordinate searching
       value = mappedVariables.get(varName)
+#    print('aaa mappedVariables.get(varName) is: ', mappedVariables.get(varName))
+#    print('aaa varName is: ', varName)
+#    print('... ccc value is: ', value)
     return value

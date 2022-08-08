@@ -28,6 +28,7 @@ class workflow_system:
   def onFoundation(self, systemInstanceName, systemConfig):
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
+    cr = command_runner()
     cfp = config_fileprocessor()
     ccf = controller_cf()
     ctf = controller_terraform()
@@ -45,13 +46,13 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
-        command_runner.runPreOrPostProcessor(preprocessor, 'on')
+        cr.runPreOrPostProcessor(preprocessor, 'on')
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
         pass
-      if foundationTool == 'arm':
-        carm.createDeployment(systemConfig, systemConfig.get("foundation"), 'networkFoundation', 'networkFoundation')
+      if foundationTool == 'arm': 
+        carm.createDeployment(systemConfig, systemConfig.get("foundation"), 'networkFoundation', 'networkFoundation', False)
       elif foundationTool == 'cloudformation':
         ccf.createStack(systemConfig, systemConfig.get("foundation"), keyDir, 'networkFoundation', None, foundationInstanceName)
         if "images" in systemConfig.get("foundation").keys():
@@ -93,7 +94,7 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
-        command_runner.runPreOrPostProcessor(postprocessor, 'on')
+        cr.runPreOrPostProcessor(postprocessor, 'on')
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -103,6 +104,7 @@ class workflow_system:
   def offFoundation(self, systemInstanceName, systemConfig):
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
+    cr = command_runner()
     cfp = config_fileprocessor()
     ccf = controller_cf()
     ctf = controller_terraform()
@@ -115,7 +117,7 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
-        command_runner.runPreOrPostProcessor(preprocessor, 'off')
+        cr.runPreOrPostProcessor(preprocessor, 'off')
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -156,7 +158,7 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
-        command_runner.runPreOrPostProcessor(postprocessor, 'off')
+        cr.runPreOrPostProcessor(postprocessor, 'off')
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)

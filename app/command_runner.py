@@ -83,6 +83,7 @@ class command_runner:
   #@public
   def runPreOrPostProcessor(self, processorSpecs, operation):
     cf = command_formatter()
+    lw = log_writer()
     if operation == 'on':
       location = processorSpecs['locationOn']
       command = processorSpecs['commandOn']
@@ -92,15 +93,16 @@ class command_runner:
     fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('userCallingDir')+location
     fullyQualifiedPathToScript = cf.formatPathForOS(fullyQualifiedPathToScript)
     logString = "fullyQualifiedPathToScript is: "+fullyQualifiedPathToScript
-    print(logString)
+    lw.writeLogVerbose('shell', logString)
     if os.path.isfile(fullyQualifiedPathToScript):
       commandToRun = command.replace('$location',fullyQualifiedPathToScript)
       logString = "commandToRun is: "+commandToRun
-      print(logString)
+      lw.writeLogVerbose('shell', logString)
       self.runShellCommand(commandToRun)
     else: 
       logString = "ERROR: "+fullyQualifiedPathToScript+" is not a valid path. "
-      quit(logString)
+      lw.writeLogVerbose('shell', logString)
+      sys.exit(1)
 
   #@public
   def getAccountKey(self, commandToRun):

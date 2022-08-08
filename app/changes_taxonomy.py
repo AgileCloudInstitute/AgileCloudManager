@@ -226,7 +226,7 @@ class changes_taxonomy:
       except UnicodeEncodeError as e:
         print(counterOutputLine.encode('utf-8'))
         print("The preceding line is returned here as a byte array because it threw a UnicodeEncodeError which was handled by encoding its as utf-8, which returns a byte array.  ")
-      print('xxx test self.changeReports is: ', str(self.changeReports))
+#      print('xxx test self.changeReports is: ', str(self.changeReports))
 #      print('self.changeCounter is: ', self.changeCounter)
 #      quit('---xxx---')
       redundant = cc.runComparer(level, self.changeReports, False) 
