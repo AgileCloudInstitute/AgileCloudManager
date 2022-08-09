@@ -20,7 +20,7 @@ tfbackend:
           templateName: azure-building-blocks/arm/tfbackend.json
           emptyTemplateName: azure-building-blocks/arm/empty.template.json
           controller: arm
-          type: azurerm2
+          type: azurerm
           preprocessor: 
             locationOn: azure-building-blocks/scripts/hello1.py
             commandOn: python $location
@@ -45,7 +45,7 @@ tfbackend:
           templateName: azure-building-blocks/arm/tfbackend.json
           emptyTemplateName: azure-building-blocks/arm/empty.template.json
           controller: arm
-          type: azurerm2
+          type: azurerm
           preprocessor: 
             locationOn: azure-building-blocks/scripts/hello1.py
             commandOn: python $location
@@ -70,7 +70,7 @@ tfbackend:
           templateName: azure-building-blocks/arm/tfbackend.json
           emptyTemplateName: azure-building-blocks/arm/empty.template.json
           controller: arm
-          type: azurerm2
+          type: azurerm
           preprocessor: 
             locationOn: azure-building-blocks/scripts/hello1.py
             commandOn: python $location

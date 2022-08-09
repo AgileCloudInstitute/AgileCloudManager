@@ -26,7 +26,7 @@ class config_keysassembler:
     yaml_keys_file_and_path = cfm.getKeyFileAndPath(keyDir)
     backendType = instance.get("type")
     self.backendVarsList = []
-    if backendType == 'azurerm2':  
+    if backendType == 'azurerm':  
       #Get the variable values
       resourceGroupName = instance.get("resourceGroupName")
       self.backendVarsList.append({"key":"resourceGroupName", "value":resourceGroupName, "handled":False})

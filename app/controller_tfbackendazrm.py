@@ -28,7 +28,7 @@ class controller_tfbackendazrm:
     backendType = instance.get("type")
     logString = "backendType is: " + backendType
     lw.writeLogVerbose("acm", logString)
-    if backendType == 'azurerm2': 
+    if backendType == 'azurerm': 
       serviceType = paramsDict["serviceType"]
       onlyFoundationOutput = False
       ca = controller_arm()

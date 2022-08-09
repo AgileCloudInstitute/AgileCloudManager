@@ -582,7 +582,7 @@ class TestControllerPacker(unittest.TestCase):
               'templateName': 'azure-building-blocks/arm/tfbackend.json',
               'emptyTemplateName': 'azure-building-blocks/arm/empty.template.json',
               'controller': 'arm',
-              'type': 'azurerm2',
+              'type': 'azurerm',
               'preprocessor': {
                 'locationOn': 'azure-building-blocks/scripts/hello1.py',
                 'commandOn': self.getPython()+' $location',
