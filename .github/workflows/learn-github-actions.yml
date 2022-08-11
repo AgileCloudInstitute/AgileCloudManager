@@ -7,21 +7,28 @@ jobs:
   put-secret-into-file:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: '14'
-#      - run: npm install -g bats
-#      - run: bats -v
-      - run: echo ${{ secrets.EXAMPLE }}
-      - run: echo ${{ secrets.HUSH }}
-#      - run: ls -al
-#      - run: ls -al ..
-#      - run: ls -al ../..
-#      - run: whoami
-      - run: mkdir /home/runner/stuff
-      - run: echo ${{ secrets.EXAMPLE }} > /home/runner/stuff/secrets.txt
-      - run: echo ${{ secrets.HUSH }} > /home/runner/stuff/hush.txt
-#      - run: ls -al /home/runner/stuff
-      - run: cat /home/runner/stuff/secrets.txt
-      - run: cat /home/runner/stuff/hush.txt
+      - shell: bash
+        env:
+          ORG_SECRET: ${{ secrets.EXAMPLE }}
+          REPO_SECRET: ${{ secrets.HUSH }}
+        run: mkdir /home/runner/stuff
+        run: |
+          echo "$ORG_SECRET"
+        run: |
+          echo "$REPO_SECRET"
+        run: |
+          echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
+        run: |
+          echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
+        run: cat /home/runner/stuff/secrets.txt
+        run: cat /home/runner/stuff/hush.txt
+
+#    steps:
+#      - uses: actions/checkout@v3
+#      - run: echo ${{ secrets.EXAMPLE }}
+#      - run: echo ${{ secrets.HUSH }}
+#      - run: mkdir /home/runner/stuff
+#      - run: echo ${{ secrets.EXAMPLE }} > /home/runner/stuff/secrets.txt
+#      - run: echo ${{ secrets.HUSH }} > /home/runner/stuff/hush.txt
+#      - run: cat /home/runner/stuff/secrets.txt
+#      - run: cat /home/runner/stuff/hush.txt
