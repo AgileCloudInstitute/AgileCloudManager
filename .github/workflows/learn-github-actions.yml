@@ -10,20 +10,14 @@ jobs:
       - uses: actions/checkout@v3
       - shell: bash
         env:
-          REPO_SECRET: ${{ secrets.HUSH }}
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
-          echo "$REPO_SECRET"
           echo "$ACM_SECRET"
+          echo '--------------------'
           mkdir /home/runner/stuff
-          echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
           echo "$ACM_SECRET" > /home/runner/stuff/acm.txt
-          cat /home/runner/stuff/hush.txt
-          cat /home/runner/stuff/acm.txt
-          cat -n /home/runner/stuff/hush.txt
           cat -n /home/runner/stuff/acm.txt
           ls -al
-          wc -w /home/runner/stuff/hush.txt
           wc -w /home/runner/stuff/acm.txt
 
 #    steps:
