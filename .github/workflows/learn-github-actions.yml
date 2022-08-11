@@ -16,4 +16,4 @@ jobs:
       - run: ls -al ..
       - run: ls -al ../..
       - run: whoami
-      - run: ls -al /home/docker
+      - run: ls -al /home/runner
