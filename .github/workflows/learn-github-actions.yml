@@ -1,3 +1,4 @@
+# https://docs.github.com/en/actions/examples
 name: learn-github-actions
 on: [push]
 jobs:
@@ -10,3 +11,4 @@ jobs:
           node-version: '14'
       - run: npm install -g bats
       - run: bats -v
+      - echo: ${{ secrets.EXAMPLE }}
