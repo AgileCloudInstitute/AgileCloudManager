@@ -21,4 +21,18 @@ jobs:
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
           git --version
-          sudo apt install -y openssl curl dos2unix
+          sudo apt install -y dos2unix
+          ## Install Terraform
+          cd /home/runner
+          mkdir terraform-download
+          cd terraform-download
+          wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+          unzip terraform_0.12.24_linux_amd64.zip
+          #Move the terraform binary into a folder that is listed as part of the PATH variable.  
+          echo '~------------------------'
+          ls -al /home/runner/
+          echo '~/tf-d------------------------'
+          ls -al /home/runner/terraform-download
+          mv terraform /usr/local/bin/
+          echo '/usr/local/bin/------------------------'
+          ls -al /usr/local/bin/
