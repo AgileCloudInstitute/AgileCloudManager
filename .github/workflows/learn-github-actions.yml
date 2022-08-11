@@ -18,13 +18,13 @@ jobs:
           cat -n /home/runner/stuff/acm.txt
           echo 'wc-----------------------------------'
           wc -w /home/runner/stuff/acm.txt
-          mkdir /var/log/acm
+          sudo mkdir /var/log/acm
           echo 'log-----------------------------------'
           ls -al /var/log
-          mkdir /opt/acm
+          sudo mkdir /opt/acm
           echo 'opt-----------------------------------'
           ls -al /opt
-          mkdir /usr/acm
+          sudo mkdir /usr/acm
           echo 'usr-----------------------------------'
           ls -al /usr
 
