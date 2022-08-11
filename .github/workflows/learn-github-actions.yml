@@ -11,17 +11,14 @@ jobs:
         env:
           ORG_SECRET: ${{ secrets.EXAMPLE }}
           REPO_SECRET: ${{ secrets.HUSH }}
-        run: mkdir /home/runner/stuff
         run: |
           echo "$ORG_SECRET"
-        run: |
           echo "$REPO_SECRET"
-        run: |
+          mkdir /home/runner/stuff
           echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
-        run: |
           echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
-        run: cat /home/runner/stuff/secrets.txt
-        run: cat /home/runner/stuff/hush.txt
+          cat /home/runner/stuff/secrets.txt
+          cat /home/runner/stuff/hush.txt
 
 #    steps:
 #      - uses: actions/checkout@v3
