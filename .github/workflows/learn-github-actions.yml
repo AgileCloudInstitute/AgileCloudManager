@@ -32,6 +32,6 @@ jobs:
           mv terraform /usr/local/bin/
           echo 'and---------------------------------'
           cd /home/runner
-          apt install -y telnet
-          apt -y install ansible
-          apt install -y azure-cli
+          sudo apt install -y telnet
+          sudo apt -y install ansible
+          sudo apt install -y azure-cli
