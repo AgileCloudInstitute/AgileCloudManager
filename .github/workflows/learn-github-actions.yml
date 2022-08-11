@@ -12,13 +12,20 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
-          echo "$ACM_SECRET"
-          echo '--------------------'
           mkdir /home/runner/stuff
           echo "$ACM_SECRET" > /home/runner/stuff/acm.txt
+          echo 'cat-----------------------------------'
           cat -n /home/runner/stuff/acm.txt
-          ls -al
+          echo 'wc-----------------------------------'
           wc -w /home/runner/stuff/acm.txt
+          echo 'var-----------------------------------'
+          ls -al /var
+          echo 'log-----------------------------------'
+          ls -al /var/log
+          echo 'opt-----------------------------------'
+          ls -al /opt
+          echo 'usr-----------------------------------'
+          ls -al /usr
 
 #    steps:
 #      - uses: actions/checkout@v3
