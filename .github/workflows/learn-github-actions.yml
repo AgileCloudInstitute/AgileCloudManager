@@ -29,10 +29,9 @@ jobs:
           wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
           unzip terraform_0.12.24_linux_amd64.zip
           #Move the terraform binary into a folder that is listed as part of the PATH variable.  
-          echo '~------------------------'
-          ls -al /home/runner/
-          echo '~/tf-d------------------------'
-          ls -al /home/runner/terraform-download
           mv terraform /usr/local/bin/
-          echo '/usr/local/bin/------------------------'
-          ls -al /usr/local/bin/
+          echo 'and---------------------------------'
+          cd /home/runner
+          apt install -y telnet
+          apt -y install ansible
+          apt install -y azure-cli
