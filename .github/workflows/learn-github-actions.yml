@@ -11,25 +11,13 @@ jobs:
       - shell: bash
         env:
           ORG_SECRET: ${{ secrets.ACM_STARTER }}
+          REPO_SECRET: ${{ secrets.HUSH }}
         run: |
           echo "$ORG_SECRET"
-#          mkdir /home/runner/stuff
-#          echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
-#          cat /home/runner/stuff/secrets.txt
-#          ls -al
-
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        env:
-#          ORG_SECRET: ${{ secrets.ACM_STARTER }}
-#          REPO_SECRET: ${{ secrets.HUSH }}
-#        run: |
-#          echo "$ORG_SECRET"
-#          echo "$REPO_SECRET"
-#          mkdir /home/runner/stuff
-#          echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
-#          echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
-#          cat /home/runner/stuff/secrets.txt
-#          cat /home/runner/stuff/hush.txt
-#          ls -al
+          echo "$REPO_SECRET"
+          mkdir /home/runner/stuff
+          echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
+          echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
+          cat /home/runner/stuff/secrets.txt
+          cat /home/runner/stuff/hush.txt
+          ls -al
