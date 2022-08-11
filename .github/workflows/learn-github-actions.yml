@@ -20,6 +20,7 @@ jobs:
           echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
           cat /home/runner/stuff/secrets.txt
           cat /home/runner/stuff/hush.txt
+          ls -al
 
 #    steps:
 #      - uses: actions/checkout@v3
