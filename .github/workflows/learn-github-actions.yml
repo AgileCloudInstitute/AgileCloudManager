@@ -16,6 +16,7 @@ jobs:
           mkdir /home/runner/stuff
           echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
           cat /home/runner/stuff/secrets.txt
+          grep -c . /home/runner/stuff/secrets.txt
           ls -al
 
 #    steps:
