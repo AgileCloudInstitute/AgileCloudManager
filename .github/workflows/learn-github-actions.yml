@@ -19,12 +19,15 @@ jobs:
           echo 'wc-----------------------------------'
           wc -w /home/runner/stuff/acm.txt
           sudo mkdir /var/log/acm
+          sudo chown -R runner:runner /var/log/acm
           echo 'log-----------------------------------'
           ls -al /var/log
           sudo mkdir /opt/acm
+          sudo chown -R runner:runner /opt/acm
           echo 'opt-----------------------------------'
           ls -al /opt
           sudo mkdir /usr/acm
+          sudo chown -R runner:runner /usr/acm
           echo 'usr-----------------------------------'
           ls -al /usr
 
