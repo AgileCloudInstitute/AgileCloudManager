@@ -18,6 +18,7 @@ jobs:
           cat /home/runner/stuff/secrets.txt
           cat -n /home/runner/stuff/secrets.txt
           ls -al
+          wc -w /home/runner/stuff/secrets.txt
 
 #    steps:
 #      - uses: actions/checkout@v3
