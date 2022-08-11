@@ -16,33 +16,111 @@ jobs:
           echo "$ACM_SECRET" > /home/runner/stuff/acm.txt
           echo 'cat-----------------------------------'
           cat -n /home/runner/stuff/acm.txt
-          echo 'wc-----------------------------------'
-          wc -w /home/runner/stuff/acm.txt
           sudo mkdir /var/log/acm
           sudo chown -R runner:runner /var/log/acm
-          echo 'log-----------------------------------'
-          ls -al /var/log
           sudo mkdir /opt/acm
           sudo chown -R runner:runner /opt/acm
-          echo 'opt-----------------------------------'
-          ls -al /opt
           sudo mkdir /usr/acm
           sudo chown -R runner:runner /usr/acm
-          echo 'usr-----------------------------------'
-          ls -al /usr
 
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        env:
-#          ORG_SECRET: ${{ secrets.ACM_STARTER }}
-#          REPO_SECRET: ${{ secrets.HUSH }}
-#        run: |
-#          echo "$ORG_SECRET"
-#          echo "$REPO_SECRET"
-#          mkdir /home/runner/stuff
-#          echo "$ORG_SECRET" > /home/runner/stuff/secrets.txt
-#          echo "$REPO_SECRET" > /home/runner/stuff/hush.txt
-#          cat /home/runner/stuff/secrets.txt
-#          cat /home/runner/stuff/hush.txt
-#          ls -al
+          echo "Start stuff to be translated into ubuntu--------------------------------------------------"
+#          dnf install -y git 
+#          #Check version
+          git --version
+
+#          ## Next, Install dependencies using the just updated certificate:  
+#          dnf install -y openssl curl dos2unix
+
+#          ## Install Terraform
+#          cd /home/$USR_NM
+#          mkdir terraform-download
+#          cd terraform-download
+#          wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+#          unzip terraform_0.12.24_linux_amd64.zip
+#          #Move the terraform binary into a folder that is listed as part of the PATH variable.  
+#          mv terraform /usr/local/bin/
+#          cd /home/$USR_NM
+
+#          #Have to install epel using rpm because dnf could not see epel-release
+#          echo "About to install ansible, epel, and telnet"
+#          dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+#          dnf install -y telnet
+#          dnf -y install ansible
+  
+#          ##Install the Azure CLI using the following 3 steps:  
+#          rpm --import https://packages.microsoft.com/keys/microsoft.asc
+
+#          sh -c 'echo -e "[azure-cli]
+#          name=Azure CLI
+#          baseurl=https://packages.microsoft.com/yumrepos/azure-cli
+#          enabled=1
+#          gpgcheck=1
+#          gpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
+
+#          dnf install -y azure-cli
+
+#          #Install Powershell in the following steps:
+#          mkdir /home/$USR_NM/powershell-download
+#          cd /home/$USR_NM/powershell-download
+#          dnf install -y wget
+#          wget https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/powershell-7.1.3-1.rhel.7.x86_64.rpm
+#          dnf install -y powershell-7.1.3-1.rhel.7.x86_64.rpm
+
+#          #-->echo "About to add extra libraries:"
+#          wget -P /etc/yum.repos.d/ https://packages.efficios.com/repo.files/EfficiOS-RHEL7-x86-64.repo
+#          rpmkeys --import https://packages.efficios.com/rhel/repo.key
+#          curl https://packages.microsoft.com/config/rhel/8/prod.repo > ./microsoft-prod.repo
+#          cp ./microsoft-prod.repo /etc/yum.repos.d/
+
+#          chown -R $USR_NM:$USR_NM /home/$USR_NM/terraform-download
+#          chown -R $USR_NM:$USR_NM /home/$USR_NM/agent-download
+#          chown -R $USR_NM:$USR_NM /home/$USR_NM
+
+#          echo "About to dnf clean all "
+#          yum clean all
+
+
+#          echo "About to switch to $USR_NM, then install awscli.  "
+#          su - $USR_NM << EOF
+#          echo "User from whoami is: "
+#          whoami
+#          echo "About to install awscli "
+#          pip3 install awscli --upgrade --user
+#          echo "About to e o f "
+#          EOF
+
+#          pip3 install requests
+#          pip3 install pyyaml
+#          pip3 install IPy
+
+#          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
+#          chown -R $USR_NM:$USR_NM /etc/ansible
+
+#          echo "--------------------------------------------------"
+#          echo "About to dnf update"
+#          dnf update -y --skip-broken --allowerasing --nobest 
+#          echo "Done with dnf update. "
+#          echo "--------------------------------------------------"
+#          echo "About to echo $USR_NM : "
+#          echo $USR_NM
+
+#          dnf install python3.8 -y
+#          dnf remove python3.6 -y
+#          rm -rf /usr/bin/python3
+#          mv /usr/bin/python3.8 /usr/bin/python3
+
+#          python3 --version
+
+#          dnf install -y python3-setuptools
+#          dnf install python3-pip -y
+
+#          python3 -m pip install pyyaml
+#          python3 -m pip install requests
+#          python3 -m pip install awscli
+
+#          #Set alias so python commands use python3
+#          echo "alias python=python3" >> /etc/bashrc
+
+#          dnf clean all
+#          dnf update python3 -y
+#          python3 --version
