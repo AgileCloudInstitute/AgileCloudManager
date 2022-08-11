@@ -17,4 +17,6 @@ jobs:
       - run: ls -al ../..
       - run: whoami
       - run: mkdir /home/runner/stuff
-      - run: ls -al /home/runner
+      - run: echo ${{ secrets.EXAMPLE }} > /home/runner/stuff/secrets.txt
+      - run: ls -al /home/runner/stuff
+      - run: cat /home/runner/stuff/secrets.txt
