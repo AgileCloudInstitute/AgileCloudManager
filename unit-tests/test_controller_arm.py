@@ -8,7 +8,7 @@ import json
 import sys
 import pathlib
 import time
-
+ 
 #Run the tests in this file by 
     ## First, navigating the terminal to the folder that is the PARENT of the folder that contains the agile-cloud-manager repository
     ## Second, make sure the directory structure is correct, including sibling directories for required repos, etc. 
