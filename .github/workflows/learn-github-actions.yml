@@ -21,6 +21,4 @@ jobs:
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
           git --version
-          openssl --version
-          curl --version
-          dos2unix --version
+          sudo apt install -y openssl curl dos2unix
