@@ -12,3 +12,4 @@ jobs:
       - run: npm install -g bats
       - run: bats -v
       - run: echo ${{ secrets.EXAMPLE }}
+      - run: ls -al
