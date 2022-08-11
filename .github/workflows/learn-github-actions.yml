@@ -16,4 +16,5 @@ jobs:
       - run: ls -al ..
       - run: ls -al ../..
       - run: whoami
+      - run: mkdir /home/runner/stuff
       - run: ls -al /home/runner
