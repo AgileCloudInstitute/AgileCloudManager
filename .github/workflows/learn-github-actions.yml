@@ -13,5 +13,4 @@ jobs:
       - run: bats -v
       - run: echo ${{ secrets.EXAMPLE }}
       - run: ls -al
-      - run: cd ..
-      - run: ls -al
+      - run: ls -al ..
