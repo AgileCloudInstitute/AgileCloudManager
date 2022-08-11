@@ -1,22 +1,24 @@
 # https://docs.github.com/en/actions/examples
-name: learn-github-actions
+# check-bats-version
+# learn-github-actions
+name: org-secret-into-file
 on: [push]
 jobs:
-  check-bats-version:
+  put-secret-into-file:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
+#      - uses: actions/setup-node@v3
+#        with:
+#          node-version: '14'
+#      - run: npm install -g bats
+#      - run: bats -v
       - run: echo ${{ secrets.EXAMPLE }}
-      - run: ls -al
-      - run: ls -al ..
-      - run: ls -al ../..
-      - run: whoami
+#      - run: ls -al
+#      - run: ls -al ..
+#      - run: ls -al ../..
+#      - run: whoami
       - run: mkdir /home/runner/stuff
       - run: echo ${{ secrets.EXAMPLE }} > /home/runner/stuff/secrets.txt
-      - run: ls -al /home/runner/stuff
+#      - run: ls -al /home/runner/stuff
       - run: cat /home/runner/stuff/secrets.txt
