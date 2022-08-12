@@ -37,7 +37,10 @@ jobs:
           pip3 install requests
           pip3 install pyyaml
           pip3 install IPy
-          which ansible
-          echo 'then--------------------------------'
           python3 --version
           python --version
+          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
+          sudo chown -R runner:runner /opt/pipx_bin/ansible
+          echo 'then--------------------------------'
+          apt update
+          apt clean all
