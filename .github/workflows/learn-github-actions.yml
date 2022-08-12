@@ -42,5 +42,5 @@ jobs:
           #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
           sudo chown -R runner:runner /opt/pipx_bin/ansible
           echo 'then--------------------------------'
-          sudo apt update
-          sudo apt clean all
+          sudo apt update && sudo apt upgrade
+          sudo apt clean
