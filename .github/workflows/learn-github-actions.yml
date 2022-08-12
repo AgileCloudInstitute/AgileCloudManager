@@ -33,8 +33,11 @@ jobs:
           echo 'and---------------------------------'
           cd /home/runner
           sudo apt -y install ansible
-          echo 'then--------------------------------'
           aws --version
           pip3 install requests
           pip3 install pyyaml
           pip3 install IPy
+          which ansible
+          echo 'then--------------------------------'
+          python3 --version
+          python --version
