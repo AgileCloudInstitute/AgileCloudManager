@@ -16,9 +16,6 @@ jobs:
           mkdir /home/runner/keys/starter
           mkdir /home/runner/acmconfig/
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-#          echo "$ACM_SECRET" > /home/runner/keys/starter/keys.yaml
-#          echo 'cat-----------------------------------'
-#          cat -n /home/runner/keys/starter/keys.yaml
           sudo mkdir /var/log/acm
           sudo chown -R runner:runner /var/log/acm
           sudo mkdir /opt/acm
@@ -72,9 +69,12 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
-#          rm /home/runner/keys/starter/keys.yaml
           rm /home/runner/acmconfig
 
 #Next step is to put the secrets into the locations where acm can see them.
 #Then make sure the directories are created for the setup command to use to install things.
 #Also make sure that secrets have been destroyed
+#          echo "$ACM_SECRET" > /home/runner/keys/starter/keys.yaml
+#          echo 'cat-----------------------------------'
+#          cat -n /home/runner/keys/starter/keys.yaml
+#          rm /home/runner/keys/starter/keys.yaml
