@@ -156,7 +156,7 @@ class test_workflow_platform(unittest.TestCase):
     self.assertTrue(returnBool)
 
 #  def test_platformOff(self):
-#    self.addAcmDirToPath()
+#    self.addAcmDirToPath() 
 #    from workflow_platform import workflow_platform
 #    import config_cliprocessor 
 #    from log_writer import log_writer

@@ -1,12 +1,12 @@
 ## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
-from config_fileprocessor import config_fileprocessor
-from workflow_system import workflow_system
-from log_writer import log_writer
-from changes_manifest import changes_manifest
-from changes_taxonomy import changes_taxonomy
-from changes_comparer import changes_comparer
+from app.config_fileprocessor import config_fileprocessor
+from app.workflow_system import workflow_system
+from app.log_writer import log_writer
+from app.changes_manifest import changes_manifest
+from app.changes_taxonomy import changes_taxonomy
+from app.changes_comparer import changes_comparer
 import config_cliprocessor
 
 class workflow_platform:
