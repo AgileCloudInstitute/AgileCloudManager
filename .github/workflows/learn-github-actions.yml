@@ -49,6 +49,29 @@ jobs:
           echo 'then--------------------------------'
           sudo apt update && sudo apt upgrade
           sudo apt clean
+      - shell: bash
+        name: Configure agent
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+        run: |
+          echo "Current working directory is: "
+          pwd
+          echo 'Contents are: --------------------------------------------------'
+          ls -al
+          echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+          cd /home/runner/work/agile-cloud-manager/
+          echo "Current working directory is: "
+          pwd
+          echo 'Contents are: --------------------------------------------------'
+          ls -al
+          cd /home/runner/work/
+          echo "Current working directory is: "
+          pwd
+          echo 'Contents are: --------------------------------------------------'
+          ls -al
+
+
+
 
 #Next step is to put the secrets into the locations where acm can see them.
 #Then make sure the directories are created for the setup command to use to install things.
