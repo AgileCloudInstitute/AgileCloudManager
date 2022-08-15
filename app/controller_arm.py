@@ -208,7 +208,7 @@ class controller_arm:
     roleDefCreateCommand = 'az role definition create --subscription '+subscriptionId+' --role-definition @ad-role.json'
     jsonResponse = self.getShellJsonResponse(roleDefCreateCommand)
     #Grant the role definition to the managed service identity
-    imageRoleAssignmentCommand = 'az role assignment create --assignee '+msiFullId+' --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName
+#    imageRoleAssignmentCommand = 'az role assignment create --assignee '+msiFullId+' --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName
     imageRoleAssignmentCommand = 'az role assignment create --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName+' --assignee-object-id '+servicePrincipalId+' --assignee-principal-type ServicePrincipal'
     jsonResponse = self.getShellJsonResponse(imageRoleAssignmentCommand)
     imageRoleAssignmentCommand = 'az role assignment create --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName+' --assignee-object-id '+clientId+' --assignee-principal-type ServicePrincipal'

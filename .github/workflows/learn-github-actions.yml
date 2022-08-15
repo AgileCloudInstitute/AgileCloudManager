@@ -6,18 +6,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - shell: bash
+        name: Configure agent
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
-          mkdir /home/runner/stuff
-          echo "$ACM_SECRET" > /home/runner/stuff/acm.txt
+          mkdir /home/runner/keys
+          mkdir /home/runner/keys/starter
+          echo "$ACM_SECRET" > /home/runner/keys/starter/keys.yaml
           echo 'cat-----------------------------------'
-          cat -n /home/runner/stuff/acm.txt
+          cat -n /home/runner/keys/starter/keys.yaml
           sudo mkdir /var/log/acm
           sudo chown -R runner:runner /var/log/acm
           sudo mkdir /opt/acm
           sudo chown -R runner:runner /opt/acm
           sudo mkdir /usr/acm
+          sudo mkdir /usr/acm/keys
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
           git --version
@@ -44,3 +47,7 @@ jobs:
           echo 'then--------------------------------'
           sudo apt update && sudo apt upgrade
           sudo apt clean
+
+#Next step is to put the secrets into the locations where acm can see them.
+#Then make sure the directories are created for the setup command to use to install things.
+#Also make sure that secrets have been destroyed

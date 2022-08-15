@@ -244,7 +244,7 @@ class TestControllerArm(unittest.TestCase):
             'deploymentName': 'imagetest',
             'templateName': 'azure-building-blocks/arm/empty.image.json',
             'emptyTemplateName': 'azure-building-blocks/arm/empty.template.json',
-            'controller': 'arm',
+            'controller': 'arm', 
             'resourceGroupName': 'myEmptyTestRG',
             'resourceGroupRegion': 'eastus',
             'imageName': 'testimage',
