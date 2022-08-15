@@ -10,6 +10,7 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
+          pwd
           mkdir /home/runner/keys
           mkdir /home/runner/keys/starter
           echo "$ACM_SECRET" > /home/runner/keys/starter/keys.yaml
