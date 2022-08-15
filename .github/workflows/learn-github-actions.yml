@@ -50,8 +50,6 @@ jobs:
           sudo apt clean
       - shell: bash
         name: Run setup on
-        env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
           echo "Current working directory is: "
           pwd
@@ -65,11 +63,15 @@ jobs:
           ls -al
           python agile-cloud-manager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
       - shell: bash
-        name: Delete Secrets
+        name: Run test_workflow_and_changes.py
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
-          rm /home/runner/acmconfig
+          python -m unittest agile-cloud-manager/unit-tests/test_workflow_and_changes.py
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
 
 #Next step is to put the secrets into the locations where acm can see them.
 #Then make sure the directories are created for the setup command to use to install things.
