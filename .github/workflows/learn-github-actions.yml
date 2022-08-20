@@ -67,7 +67,7 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
         run: |
-          python -m unittest unit-tests.test_workflow_and_changes
+          python -m unittest unitTests.test_workflow_and_changes
       - shell: bash
         name: Delete Secrets
         run: |
