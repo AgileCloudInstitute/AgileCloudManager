@@ -71,6 +71,13 @@ jobs:
           pwd
           echo "................about to list contents"
           ls -al
+          echo "................about to cd /home/runner/work/AgileCloudManager/ "
+          cd /home/runner/work/AgileCloudManager/
+          echo "Current working directory is: "
+          pwd
+          echo 'Contents are: --------------------------------------------------'
+          ls -al
+          echo ".................about to run unit test"
           python -m unittest unitTests.test_workflow_and_changes
       - shell: bash
         name: Delete Secrets
