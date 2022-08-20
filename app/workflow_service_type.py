@@ -12,7 +12,6 @@ from controller_tfbackendazrm import controller_tfbackendazrm
 from controller_arm import controller_arm
 from controller_cf import controller_cf
 from log_writer import log_writer
-import config_cliprocessor
 from config_fileprocessor import config_fileprocessor
 from changes_manifest import changes_manifest
 from changes_taxonomy import changes_taxonomy
@@ -25,6 +24,7 @@ class workflow_service_type:
 
   #@public
   def onServiceType(self, cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, typesToCreate):
+    import config_cliprocessor
     lw = log_writer()
     if level == 'serviceinstance':
       instanceName = config_cliprocessor.inputVars.get('serviceInstance')
@@ -45,6 +45,7 @@ class workflow_service_type:
     cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, serviceType)
 
   def onServiceTypeInstance(self, cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, instance):
+    import config_cliprocessor
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
     cfp = config_fileprocessor()
@@ -58,6 +59,9 @@ class workflow_service_type:
     operation = 'on'
     instName = instance.get("instanceName")
     cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, serviceType, instName)
+    print('test is: ', test)
+    print('typeOfTest is: ', typeOfTest )
+#    quit('nn ---  yuio')
     if (test==True) and (typeOfTest=="workflow"):
       # Skip the else block when this workflow test is running.
       pass
@@ -106,6 +110,7 @@ class workflow_service_type:
 
   #@public
   def offServiceTypeGeneral(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent):
+    import config_cliprocessor
     lw = log_writer()
     if level == 'serviceinstance':
       instanceName = config_cliprocessor.inputVars.get('serviceInstance')
@@ -142,6 +147,7 @@ class workflow_service_type:
           cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
 
   def offServiceTypeGeneralInstance(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance):
+    import config_cliprocessor
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
     cfp = config_fileprocessor()
@@ -211,6 +217,7 @@ class workflow_service_type:
 
 
   def callOnServiceDirectly(self, level):
+    import config_cliprocessor
     cfp = config_fileprocessor()
     lw = log_writer()
     cm_son = changes_manifest()
@@ -247,6 +254,7 @@ class workflow_service_type:
 #    quit('---000---999')
 
   def callOffServiceDirectly(self, level):
+    import config_cliprocessor
     cfp = config_fileprocessor()
     lw = log_writer()
     cm_stoff = changes_manifest()

@@ -7,7 +7,6 @@ import time
 import calendar
 import sys
 
-import config_cliprocessor
 from command_formatter import command_formatter
 
 class log_writer:
@@ -17,8 +16,14 @@ class log_writer:
  
   #@public
   def replaceLogFile(self):
+    print('start of replaceLogFile()')
+    import config_cliprocessor
+    import traceback
+    traceback.print_stack()
+#    ok = False
     cft = command_formatter()
     verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
+    print('ee verboseLogFilePath is: ', verboseLogFilePath)
     verboseLogFileAndPath = verboseLogFilePath + '/log-verbose.log'
     verboseLogFileAndPath = cft.formatPathForOS(verboseLogFileAndPath)
     acmSummaryLogFileAndPath = verboseLogFilePath + '/log-acm-summary.log'
@@ -27,10 +32,13 @@ class log_writer:
     ts = calendar.timegm(current_GMT)
     timeString = "Time Stamp at start of log is: " + str(ts)
     if os.path.exists(verboseLogFileAndPath):
+      print('1 x')
       first_line = ''
       with open(verboseLogFileAndPath) as f:
         first_line = f.readline()
       if "[ acm ] Time Stamp at start of log is:" in first_line:
+        print('2 x')
+#        ok = True
         time_stamp_string = first_line.replace("[ acm ] Time Stamp at start of log is:", "")
         time_stamp_string = time_stamp_string.replace(" ", "")
         verboseLogFileAndPath_part = verboseLogFileAndPath.replace(".log", "")
@@ -48,11 +56,49 @@ class log_writer:
         if os.path.exists(backupVerboseLogFileAndPath):
           backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
         os.rename(verboseLogFileAndPath, backupVerboseLogFileAndPath)
+      else:
+#///
+        if os.path.isfile(verboseLogFileAndPath):
+          time_stamp_string = ''
+          with open(verboseLogFileAndPath,'r') as fin:
+            lines = fin.readlines()
+          for line in lines:
+            # do something
+            if "[ acm ] Time Stamp at start of log is:" in line:
+              print('99 x')
+              time_stamp_string = line.replace("[ acm ] Time Stamp at start of log is:", "")
+              time_stamp_string = time_stamp_string.replace(" ", "")
+              quit('---888rrr!!!')
+          verboseLogFileAndPath_part = verboseLogFileAndPath.replace(".log", "")
+          if len(time_stamp_string) == 0:
+            backupVerboseLogFileAndPath = verboseLogFileAndPath_part + "-" + str(ts) + "TIMEERROR.log"
+            backupVerboseLogFileAndPath = "".join(backupVerboseLogFileAndPath.splitlines())
+          else:
+            backupVerboseLogFileAndPath = verboseLogFileAndPath_part + "-" + time_stamp_string + ".log"
+            backupVerboseLogFileAndPath = "".join(backupVerboseLogFileAndPath.splitlines())
+          if os.path.exists(backupVerboseLogFileAndPath):
+            backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          #consider making this recursive N times if necessary
+          if os.path.exists(backupVerboseLogFileAndPath):
+            backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          #consider making this recursive N times if necessary
+          if os.path.exists(backupVerboseLogFileAndPath):
+            backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          #consider making this recursive N times if necessary
+          if os.path.exists(backupVerboseLogFileAndPath):
+            backupVerboseLogFileAndPath = backupVerboseLogFileAndPath.replace('.log','')+'.a.log'
+          os.rename(verboseLogFileAndPath, backupVerboseLogFileAndPath)
+
+#///
+
+
     if os.path.exists(acmSummaryLogFileAndPath):
+      print('3 x')
       first_line = ''
       with open(acmSummaryLogFileAndPath) as f:
         first_line = f.readline()
       if "[ acm ] Time Stamp at start of log is:" in first_line:
+        print('4 x')
         time_stamp_string = first_line.replace("[ acm ] Time Stamp at start of log is:", "")
         time_stamp_string = time_stamp_string.replace(" ", "")
         acmSummaryLogFileAndPath_part = acmSummaryLogFileAndPath.replace(".log", "")
@@ -71,11 +117,17 @@ class log_writer:
           backupAcmSummaryLogFileAndPath = backupAcmSummaryLogFileAndPath.replace('.log','')+'.a.log'
         os.rename(acmSummaryLogFileAndPath, backupAcmSummaryLogFileAndPath)
     if not os.path.exists(verboseLogFilePath):
+      print('5 x')
       os.makedirs(verboseLogFilePath)
     self.writeMetaLog("acm", timeString)
+    print('end of replaceLogFile()')
+#    if not ok:
+#      print(ok)
+#      quit('lkjhgfdsa')
 
   #@public
   def writeLogVerbose(self, tool, line):  
+    import config_cliprocessor
     cft = command_formatter()
     verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
     verboseLogFileAndPath = verboseLogFilePath + '/log-verbose.log'
@@ -93,6 +145,7 @@ class log_writer:
 
   #@public
   def writeMetaLog(self, tool, line):
+    import config_cliprocessor
     cft = command_formatter()
     verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
     ##Add work item to set up logic for log file time stamps in names, etc.

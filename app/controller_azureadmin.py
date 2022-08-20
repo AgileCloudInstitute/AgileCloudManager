@@ -4,7 +4,6 @@
 from command_formatter import command_formatter
 from command_runner import command_runner
 from config_keysassembler import config_keysassembler
-import config_cliprocessor
 from log_writer import log_writer
 
 import platform
@@ -19,6 +18,7 @@ class controller_azureadmin:
  
   #@public
   def cleanUp(self, operation, systemConfig, instance, typeName, instanceName, destinationCallInstance, myTfCtrlr):
+    import config_cliprocessor
     crun = command_runner()
     myKeysAssmblr = config_keysassembler()
     myCmdFrmtr = command_formatter()

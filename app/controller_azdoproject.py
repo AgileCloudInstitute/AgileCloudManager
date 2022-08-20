@@ -6,7 +6,6 @@ import platform
 import sys
 
 from config_fileprocessor import config_fileprocessor
-import config_cliprocessor
 from command_runner import command_runner
 from command_formatter import command_formatter
 from log_writer import log_writer
@@ -18,6 +17,7 @@ class controller_azdoproject:
  
   #@public
   def onProject(self, serviceType, systemConfig, instance):
+    import config_cliprocessor
     fproc = config_fileprocessor()
     cmd_fmrtr = command_formatter()
     lw = log_writer()
@@ -139,6 +139,7 @@ class controller_azdoproject:
 
   #@public
   def importCodeIntoRepo(self, keyDir, instance, tf_ctrlr):
+    import config_cliprocessor
     cfgfproc = config_fileprocessor()
     cmd_fmrtr = command_formatter()
     cmd_rnr = command_runner()

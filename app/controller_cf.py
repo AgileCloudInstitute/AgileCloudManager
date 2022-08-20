@@ -12,7 +12,6 @@ from command_runner import command_runner
 from command_builder import command_builder
 from command_formatter import command_formatter
 from config_fileprocessor import config_fileprocessor
-import config_cliprocessor
 from log_writer import log_writer
 
 class controller_cf:
@@ -22,6 +21,7 @@ class controller_cf:
  
   #@public
   def createStack(self, systemConfig, instance, keyDir, caller, serviceType, instName):
+    import config_cliprocessor
     #NOTE: THIS ADDS A REQUIREMENT THAT REGION FOR ENTIRE SYSTEM MUST BE DEFINED IN THE FOUNDATION BLOCK.
     region = systemConfig.get("foundation").get("region")
     self.configureSecrets(keyDir, region)
@@ -120,6 +120,7 @@ class controller_cf:
 
   #@public
   def destroyStack(self, systemConfig, instance, keyDir, caller):
+    import config_cliprocessor
     cr = command_runner()
     cf = command_formatter()
     lw = log_writer()

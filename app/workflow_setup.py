@@ -4,7 +4,6 @@
 from command_runner import command_runner 
 from command_formatter import command_formatter
 from config_fileprocessor import config_fileprocessor 
-import config_cliprocessor
 from log_writer import log_writer
 
 import os
@@ -26,6 +25,7 @@ class workflow_setup:
 
   #@private
   def createDirectoryStructure(self):
+    import config_cliprocessor
     crnr = command_runner()
     acmAdminPath = config_cliprocessor.inputVars.get('acmAdminPath')
     keysParentPath = config_cliprocessor.inputVars.get('dirOfOutput')
@@ -110,6 +110,7 @@ class workflow_setup:
 
   #@private
   def getDependencies(self):
+    import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
     configPath = config_cliprocessor.inputVars.get('acmConfigPath') 
@@ -136,6 +137,7 @@ class workflow_setup:
 
   #@private
   def checkDependencies(self):
+    import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
     lw = log_writer()
@@ -276,6 +278,7 @@ class workflow_setup:
 
   #@private
   def cloneTheSourceCode(self):
+    import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
     cfp = config_fileprocessor()
@@ -326,6 +329,7 @@ class workflow_setup:
 
   #@private
   def undoConfigure(self):
+    import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
     lw = log_writer()
@@ -355,6 +359,7 @@ class workflow_setup:
 
   #@private
   def deleteLocalCopiesOfGitRepos(self):
+    import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
     lw = log_writer()
@@ -536,6 +541,7 @@ class workflow_setup:
 
   #@private
   def assembleCloneCommand(self, sourceRepo):
+    import config_cliprocessor
     repoBranch = config_cliprocessor.inputVars.get('repoBranch')
     if len(repoBranch) == 0:
       branchPart = ''
@@ -546,6 +552,7 @@ class workflow_setup:
  
   #@public
   def runSetup(self):
+    import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
     addExtensionCommand = 'az extension add --name azure-devops'

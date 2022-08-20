@@ -5,8 +5,12 @@ import platform
 import sys
 import os
 
+#https://docs.python.org/3/tutorial/modules.html#importing-from-a-package
+
 #Run the tests in this file by running the following command in the terminal:
-#python -m unittest agile-cloud-manager/unit-tests/test_workflow_and_changes.py
+#python -m unittest AgileCloudManager.unitTests.test_workflow_and_changes
+#python -m unittest AgileCloudManager.unitTests.test_controller_arm
+
 
 class test_workflow_platform(unittest.TestCase):
   logVerbose = ''
@@ -18,26 +22,13 @@ class test_workflow_platform(unittest.TestCase):
 
   def setAcmVariables(self, log_writer, myCliProc, testType):
     # inputsDir is where the key files originate.  These will be sourced before you use ACM
-#    if inputType == 'sanitized':
     inputsDir = str(pathlib.Path(__file__).parent.resolve())+'/input-files'
-#    elif inputType == 'secret':
-#      inputsDir = os.path.expanduser('~') + '/acm/keys/starter/'
-#    else:
-#      inputsDir = os.path.expanduser('~') + '/acm/keys/'+inputType+'/'
     inputsDir = self.formatPathForOS(inputsDir)
     myCliProc.inputVars['dirOfYamlKeys'] = inputsDir
-#    if inputType == 'sanitized':
     myCliProc.inputVars['dirOfOutput'] = inputsDir
-#    elif inputType == 'secret':
-#      config_cliprocessor.inputVars['dirOfOutput'] = self.formatPathForOS(str(pathlib.Path(inputsDir).parent.resolve())+'/')
-
     # acmKeysDir is the staging ground that ACM will use to create and destroy transitory key files during operations.
     acmKeysDir = self.getAcmKeysDir()
     acmKeysDir = self.formatPathForOS(acmKeysDir)
-#    varsFileAndPath = acmKeysDir+'/keys.tfvars'
-#    varsFileAndPath = self.formatPathForOS(varsFileAndPath)
-#    userCallingDir = str(os.path.abspath("."))+'\\'
-#    userCallingDir = self.formatPathForOS(userCallingDir)
     #Get logsPath
     if platform.system() == 'Windows':
       #putting log into acmKeysDir because this is just a test.
@@ -48,15 +39,30 @@ class test_workflow_platform(unittest.TestCase):
       verboseLogFilePath = '/var/log/acm/'
     yamlFileAndPath = str(pathlib.Path(__file__).parent.resolve())+'/input-files/acm.yaml'
     yamlFileAndPath = self.formatPathForOS(yamlFileAndPath)
-    print('yamlFileAndPath is: ', yamlFileAndPath)
+    print('xx yamlFileAndPath is: ', yamlFileAndPath)
     myCliProc.inputVars['yamlInfraConfigFileAndPath'] = yamlFileAndPath
     myCliProc.inputVars['test'] = True
     myCliProc.inputVars['testType'] = testType
     myCliProc.inputVars['verboseLogFilePath'] = verboseLogFilePath
     logVerbose = verboseLogFilePath + "/log-verbose.log"
     self.logVerbose = self.formatPathForOS(logVerbose)
+    print("xx myCliProc.inputVars['verboseLogFilePath'] is: ", myCliProc.inputVars['verboseLogFilePath'])
+    print('xx self.logVerbose is: ', self.logVerbose)
+#    quit('++--55--44++')
+#    if os.path.isfile(self.logVerbose):
+#      count1 = 0
+#      with open(self.logVerbose) as f1:
+#        count1 = sum(1 for _ in f1)
+#      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx count1 is: ', count1)
     lw = log_writer()
     lw.replaceLogFile()
+#      count2 = 0
+#      with open(self.logVerbose) as f2:
+#        count2 = sum(1 for _ in f2)
+#      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx count2 is: ', count2)
+#      print('self.logVerbose is: ', self.logVerbose)
+#      if count1 != count2:
+#        quit('---000999888777666555444333222111---')
 
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
@@ -143,11 +149,15 @@ class test_workflow_platform(unittest.TestCase):
 
 
   def test_platformOn(self):
-#    self.addAcmDirToPath()
-    from app.workflow_platform import workflow_platform
-    import app.config_cliprocessor
-    from app.log_writer import log_writer
-    self.setAcmVariables(log_writer, app.config_cliprocessor, "workflow")
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_platform import workflow_platform
+    import AgileCloudManager.app.config_cliprocessor
+    from AgileCloudManager.app.log_writer import log_writer
+#    from workflow_platform import workflow_platform
+#    import config_cliprocessor
+#    from log_writer import log_writer
+#    cliproc.processInputArgs(['AgileCloudManager\\app\\acm.py', 'platform', 'on'])
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
     wfplat1 = workflow_platform() 
     wfplat1.onPlatform()
     numChangeReportsExpected = 54

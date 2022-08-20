@@ -101,58 +101,66 @@ def processInputArgs(inputArgs):
     relativePathToInstances = cmdfrmtr.formatPathForOS(relativePathToInstances)
 
     print("len(inputArgs) is: ", len(inputArgs))
-
-    #First process the domain and the command
-    if len(inputArgs) > 1:
-      domain = inputArgs[1]
-      command = inputArgs[2]
-      print("domain is: ... ", domain)
-      print("command is: ... ", command)
-      if (domain != 'platform') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'configure') and (domain != 'serviceType') and (domain != 'serviceInstance'):
-        logString = "Error: You must specify a valid value for the first parameter.  Either platform, foundation, services, serviceType, serviceInstance, setup, or configure now, but other valid values may be added in future releases.  "
-        print(logString)
-        sys.exit(1)
-    #Second, set any values conditionally based on flags entered by the user in the command line.  Add functionality here in future releases.
-    if len(inputArgs) > 2:      #loop through the cli input, validate it, and return the set properties.
-      for i in inputArgs[3:]:       # i is an item from inputArgs.
-        print("i is: ", i)
-        if i.count("=") == 1:
-          iParts = i.split("=")
-          key = iParts[0]
-          val = iParts[1]
-          if key == "keysDir":  
-            numSingles = cmdfrmtr.countSingleSlashesInString(val)  
-            for single in range(numSingles):  
-              val = cmdfrmtr.addSlashToString(val)  
-            keysDir = val
-          elif key == "sourceRepo":
-            sourceRepo = val
-          elif key == "repoBranch":
-            repoBranch = val
-          elif key == "test":  
-            testType = val
-            test = True
-          elif key == "systemName":
-            systemName = val
-          elif key == "serviceType":
-            serviceType = val
-          elif key == "serviceInstance":
-            serviceInstance = val
-        else:
-          logString = "Your input contained a malformed parameter: " + i
+    print('inputArgs is: ', inputArgs)
+    print('inputArgs[0] is: ', inputArgs[0])
+    print('inputArgs[1] is: ', inputArgs[1])
+#    quit('--bb--@!')
+    if ('unittest' in inputArgs[0]):
+      domain = 'unittest'
+    elif ('unittest' not in inputArgs[0]):
+      #First process the domain and the command
+      if len(inputArgs) > 1:
+        domain = inputArgs[1]
+        command = inputArgs[2]
+        print("domain is: ... ", domain)
+        print("command is: ... ", command)
+        if (domain != 'platform') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'configure') and (domain != 'serviceType') and (domain != 'serviceInstance'):
+          logString = "Error: You must specify a valid value for the first parameter.  Either platform, foundation, services, serviceType, serviceInstance, setup, or configure now, but other valid values may be added in future releases.  "
           print(logString)
           sys.exit(1)
-    #Next, make sure that systemName has been specified if domain is foundation or services.
-    if (domain == "foundation") or (domain == "services"):
-      if systemName == '':
-        logString = "ERROR: You must specify systemName when running foundation and services commands."
-        quit(logString)
-    keysDir = cmdfrmtr.formatPathForOS(keysDir)
-    #Third, get any values ready for export as needed.
-    if keySource == "keyFile":
-      yamlInfraConfigFileAndPath = acmConfig +cmdfrmtr.getSlashForOS()+ 'acm.yaml'
-  #    pathToApplicationRoot = app_parent_path + '\\terraform-aws-building-blocks\\'
-  #    pathToApplicationRoot = cmdfrmtr.formatPathForOS(pathToApplicationRoot)
+      #Second, set any values conditionally based on flags entered by the user in the command line.  Add functionality here in future releases.
+      if len(inputArgs) > 2:      #loop through the cli input, validate it, and return the set properties.
+        for i in inputArgs[3:]:       # i is an item from inputArgs.
+          print("i is: ", i)
+          if i.count("=") == 1:
+            iParts = i.split("=")
+            key = iParts[0]
+            val = iParts[1]
+            if key == "keysDir":  
+              numSingles = cmdfrmtr.countSingleSlashesInString(val)  
+              for single in range(numSingles):  
+                val = cmdfrmtr.addSlashToString(val)  
+              keysDir = val
+            elif key == "sourceRepo":
+              sourceRepo = val
+            elif key == "repoBranch":
+              repoBranch = val
+            elif key == "test":  
+              testType = val
+              test = True
+            elif key == "systemName":
+              systemName = val
+            elif key == "serviceType":
+              serviceType = val
+            elif key == "serviceInstance":
+              serviceInstance = val
+          else:
+            logString = "Your input contained a malformed parameter: " + i
+            print(logString)
+            sys.exit(1)
+      #Next, make sure that systemName has been specified if domain is foundation or services.
+      if (domain == "foundation") or (domain == "services"):
+        if systemName == '':
+          logString = "ERROR: You must specify systemName when running foundation and services commands."
+          quit(logString)
+      keysDir = cmdfrmtr.formatPathForOS(keysDir)
+      #Third, get any values ready for export as needed.
+      if keySource == "keyFile":
+        yamlInfraConfigFileAndPath = acmConfig +cmdfrmtr.getSlashForOS()+ 'acm.yaml'
+    #    pathToApplicationRoot = app_parent_path + '\\terraform-aws-building-blocks\\'
+    #    pathToApplicationRoot = cmdfrmtr.formatPathForOS(pathToApplicationRoot)
+    print('yy verboseLogFilePath is: ', verboseLogFilePath)
+#    quit('==777==666')
     #Fourth, assemble the input variables into a dict
     inputVars =  {
       'yamlInfraConfigFileAndPath': yamlInfraConfigFileAndPath,

@@ -8,7 +8,7 @@ import io
 from config_fileprocessor import config_fileprocessor
 from command_formatter import command_formatter
 from log_writer import log_writer
-import config_cliprocessor
+
 
 class changes_taxonomy:
   
@@ -26,7 +26,9 @@ class changes_taxonomy:
   def assembleChangeTaxonomy(self, level, command):
     cfp = config_fileprocessor()
     lw = log_writer()
+    import config_cliprocessor
     yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    print("ww config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath') is: ", config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath'))
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
     if level == 'platform':
       self.createTopLevelOfChangeTaxonomy(command, platformConfig)
@@ -199,6 +201,7 @@ class changes_taxonomy:
 
   #@public
   def storeChangeTaxonomy(self, cc, level, outputLine):
+    import config_cliprocessor
     lw = log_writer()
     cf = command_formatter()
     self.changeCounter += 1

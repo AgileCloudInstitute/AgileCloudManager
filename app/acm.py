@@ -21,7 +21,8 @@ def runInfraCommands():
   cv = config_validator()
   ws = workflow_setup()
 
-  lw.replaceLogFile()
+  if cliproc.domain != 'unittest' :
+    lw.replaceLogFile()
 
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':
@@ -63,7 +64,8 @@ def runInfraCommands():
     elif cliproc.command == 'off':
       wfst.callOffServiceDirectly('serviceinstance')
 
-  sys.exit(0)
+  if cliproc.domain != 'unittest' :
+    sys.exit(0)
 
 ##############################################################################
 ### Deploy Platform By Calling The Functions

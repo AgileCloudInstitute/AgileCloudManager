@@ -8,7 +8,6 @@ import re
 from command_builder import command_builder
 from command_formatter import command_formatter
 from log_writer import log_writer
-import config_cliprocessor
   
 class controller_packer:
   
@@ -21,6 +20,7 @@ class controller_packer:
   
   #@public
   def packerCrudOperation(self, operation, systemConfig, image):
+    import config_cliprocessor
     lw = log_writer()
     cf = command_formatter()
     cloud = systemConfig.get("cloud")
@@ -64,6 +64,7 @@ class controller_packer:
 
   #@private
   def assembleAndRunPackerCommand(self, operation, systemConfig, image, template_config_file_name):
+    import config_cliprocessor
     lw = log_writer()
     commandToRun = 'invalid value must be reset below'
     tool = "packer"
@@ -101,6 +102,7 @@ class controller_packer:
 
   #@private
   def getImageRepoDir(self, image):
+    import config_cliprocessor
     cf = command_formatter()
     #Note:  Here we are assuming a properly formatted input string with the repo name at the left of the first / , and with the template name at the right of the last / , with an optional intermediary directory in between. 
     if image.get('templateName').count('/') == 2:

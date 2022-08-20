@@ -1,8 +1,6 @@
 ## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
-import config_cliprocessor
-
 import platform
 import os 
 
@@ -79,6 +77,7 @@ class command_formatter:
   #This function is for getting the specific location for the keys that the admin module creates for each system
   #@public
   def getKeyFileLocation(self, instance_name):
+    import config_cliprocessor
     outputDir = config_cliprocessor.inputVars.get("dirOfOutput") + instance_name + "\\"
     outputDir = self.formatPathForOS(outputDir)
     if not os.path.exists(outputDir):

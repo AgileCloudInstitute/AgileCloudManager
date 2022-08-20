@@ -15,7 +15,6 @@ from log_writer import log_writer
 from command_formatter import command_formatter
 from controller_azureadmin import controller_azureadmin
 from controller_azdoproject import controller_azdoproject
-import config_cliprocessor
 
 class controller_terraform:
 
@@ -29,6 +28,7 @@ class controller_terraform:
  
   #@public
   def terraformCrudOperation(self, operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName):
+    import config_cliprocessor
     myLogWriter = log_writer()
     myCmdFormatter = command_formatter()
     if "foundation" in systemConfig.keys():
@@ -135,6 +135,7 @@ class controller_terraform:
 
   #@private
   def instantiateCallToModule(self, systemConfig, keyDir, foundationInstanceName, typeName, repoName, instanceName, templateName, oldTfStateName):
+    import config_cliprocessor
     myLogWriter = log_writer()
     myCmdFormatter = command_formatter()
     if (foundationInstanceName is None) or (len(foundationInstanceName)==0):
@@ -180,6 +181,7 @@ class controller_terraform:
 
   #@private
   def createCallDirectoryAndFile(self, sourceOfCallTemplate, destinationCallInstance, newPointerLineWindows, oldTfStateName):
+    import config_cliprocessor
     myLogWriter = log_writer()
     keySource = config_cliprocessor.inputVars.get('keySource')
     Path(destinationCallInstance).mkdir(parents=True, exist_ok=True)
@@ -252,6 +254,7 @@ class controller_terraform:
 
   #@private
   def initializeTerraformBackend(self, systemConfig, keyDir, typeName, destinationCallInstance, remoteBackend, instanceName):
+    import config_cliprocessor
     myLogWriter = log_writer()
     binariesPath = config_cliprocessor.inputVars.get('dependenciesBinariesPath') 
     if remoteBackend is True: 
@@ -293,6 +296,7 @@ class controller_terraform:
 
   #@private
   def assembleAndRunCommand(self, systemConfig, instance, operation, instanceName, destinationCallInstance, typeName):
+    import config_cliprocessor
     myLogWriter = log_writer()
     if typeName == 'networkFoundation':
       global foundationApply
@@ -359,6 +363,7 @@ class controller_terraform:
 
   #@private
   def cleanupAfterOperation(self, destinationCallInstance, destinationCallParent, foundationInstanceName, templateName, instanceName, key_source):
+    import config_cliprocessor
     myLogWriter = log_writer()
     dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
     if key_source =="keyFile":

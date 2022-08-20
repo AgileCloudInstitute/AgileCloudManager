@@ -1,7 +1,6 @@
 ## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
-import config_cliprocessor
 from config_fileprocessor import config_fileprocessor
 from controller_custom import controller_custom
 from controller_arm import controller_arm
@@ -54,6 +53,7 @@ class command_builder:
 
   #@private
   def getTerraformParamsFile(self, varLines):
+    import config_cliprocessor
     cfmtr = command_formatter()
     lw = log_writer()
     tfvarsFileAndPath = config_cliprocessor.inputVars.get("tfvarsFileAndPath")
@@ -72,6 +72,7 @@ class command_builder:
 
   #@private
   def getPackerParamsFile(self, varLines):
+    import config_cliprocessor
     cfmtr = command_formatter()
     lw = log_writer()
     tfvarsFileAndPath = config_cliprocessor.inputVars.get("tfvarsFileAndPath")
@@ -90,6 +91,7 @@ class command_builder:
 
   #@private
   def getCustomControllerParamsFile(self, customLineDictsList, instance):
+    import config_cliprocessor
     cfmtr = command_formatter()
     lw = log_writer()
     userCallingDir = config_cliprocessor.inputVars.get("userCallingDir")
@@ -114,6 +116,7 @@ class command_builder:
 
   #@private
   def getArmParamsFile(self, varLines):
+    import config_cliprocessor
     cfmtr = command_formatter()
     lw = log_writer()
     varsFileAndPath = config_cliprocessor.inputVars.get("tfvarsFileAndPath")
@@ -168,6 +171,7 @@ class command_builder:
 
   #private
   def getBackendVars(self, backendVarCoordinates, tool, keyDir):
+    import config_cliprocessor
     cfmtr = command_formatter()
     lw = log_writer()
     secretVarLines = []
@@ -449,6 +453,7 @@ class command_builder:
 
   #@private
   def addPathFunction(self,funcCoordParts):
+    import config_cliprocessor
     cfmtr = command_formatter()
     if len(funcCoordParts) == 3:
       valRoot = funcCoordParts[2]
@@ -478,6 +483,7 @@ class command_builder:
 
   #@private
   def getSecretMappedVariables(self, mappedVariables, tool, keyDir):
+    import config_cliprocessor
     cfmtr = command_formatter()
     lw = log_writer()
     secretVarLines = []
@@ -518,6 +524,7 @@ class command_builder:
 
   #@private
   def getCloudFormationParamsFile(self, varLines):
+    import config_cliprocessor
     lw = log_writer()
     varsFileAndPath = config_cliprocessor.inputVars.get("tfvarsFileAndPath")
     if len(varLines)>0:

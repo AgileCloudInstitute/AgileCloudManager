@@ -11,7 +11,6 @@ import subprocess
 
 from command_formatter import command_formatter
 from config_fileprocessor import config_fileprocessor
-import config_cliprocessor
 from log_writer import log_writer
 
 class controller_arm:
@@ -23,6 +22,7 @@ class controller_arm:
  
   #@public
   def createDeployment(self, systemConfig, instance, caller, serviceType, onlyFoundationOutput):
+    import config_cliprocessor
     cf = command_formatter()
     lw = log_writer()
     outputDict = {}
@@ -91,6 +91,7 @@ class controller_arm:
 
   #@public
   def destroyDeployment(self, systemConfig, instance, caller):
+    import config_cliprocessor
     cf = command_formatter()
     lw = log_writer()
     ## STEP 1: Populate variables
@@ -184,6 +185,7 @@ class controller_arm:
 
   #@private
   def createImageTemplateAndDeployImage(self, systemConfig, serviceType, instance, templatePathAndFile, deploymentName, subscriptionId, clientId):
+    import config_cliprocessor
     resourceGroupName = instance.get('resourceGroupName')
     # create user assigned identity for image builder to access the storage account where the script is located
     dateTimeCode = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')

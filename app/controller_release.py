@@ -12,7 +12,6 @@ from command_runner import command_runner
 from command_formatter import command_formatter
 from controller_terraform import controller_terraform
 from log_writer import log_writer
-import config_cliprocessor
 from config_fileprocessor import config_fileprocessor
 
 class controller_release:
@@ -22,6 +21,7 @@ class controller_release:
  
   #@public
   def onPipeline(self, serviceType, systemConfig, instance):
+    import config_cliprocessor
     crnr = command_runner()
     cmd_fmtr = command_formatter()
     ctf = controller_terraform()

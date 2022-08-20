@@ -39,7 +39,7 @@ tfbackend:
           mappedVariables:
             storageAccountName: $customFunction.addOrganization.adminaccounts
             environmentName: $this.tags.environmentName
-            resourceGroupRegion: $this.resourceGroupRegion
+            resourceGroupRegion: $this.instance.resourceGroupRegion
         - instanceName: pipelineAgents
           deploymentName: pipelineAgentsTfBackend
           templateName: azure-building-blocks/arm/tfbackend.json
@@ -64,7 +64,7 @@ tfbackend:
           mappedVariables:
             storageAccountName: $customFunction.addOrganization.pipelineagents
             environmentName: $this.tags.environmentName
-            resourceGroupRegion: $this.resourceGroupRegion
+            resourceGroupRegion: $this.instance.resourceGroupRegion
         - instanceName: projectManagement
           deploymentName: projectManagementTfBackend
           templateName: azure-building-blocks/arm/tfbackend.json
@@ -89,7 +89,7 @@ tfbackend:
           mappedVariables:
             storageAccountName: $customFunction.addOrganization.projectmanagement
             environmentName: $this.tags.environmentName
-            resourceGroupRegion: $this.resourceGroupRegion
+            resourceGroupRegion: $this.instance.resourceGroupRegion
 # Start admin system
 admin:
   keysDir: $Output\adminAccounts

@@ -41,6 +41,10 @@ class changes_comparer:
     logString = "    SYSTEMS:  Each system in the platform will be summarized one at a time as follows:  "
     if self.writeLogBoolean:
       lw.writeMetaLog("acm", logString)
+    print('self.writeLogBoolean is: ', self.writeLogBoolean)
+    print('len(changeReports) is: ', len(changeReports))
+#    if len(changeReports) > 2:
+#      quit('---567890poiuyt')
     for changeDict in reversed(changeReports):
       if changeDictReverseCounter < 2:
         lineDict = self.getLineDict(changeDict)
@@ -81,6 +85,8 @@ class changes_comparer:
     stepsLast = ''
     stepsSecondToLast = ''
     for changeDict in reversed(changeReports):
+      print('changeDict is: ', changeDict)
+#      quit('--polkjmnbvxx')
       if reverseCounter < 2:
         lineDict = self.getLineDict(changeDict)
         command = lineDict['command']

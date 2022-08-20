@@ -6,7 +6,6 @@ import re
 import sys
 
 from command_formatter import command_formatter
-import config_cliprocessor
 from log_writer import log_writer
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
@@ -20,6 +19,7 @@ class controller_custom:
 
   #@public
   def runCustomController(self, operation, systemConfig, controllerPath, controllerCommand, mappedVariables, serviceType, instance):
+    import config_cliprocessor
     cf = command_formatter()
     lw = log_writer()
     cmdPrefix = ""

@@ -12,7 +12,6 @@ from controller_arm import controller_arm
 from controller_cf import controller_cf
 from log_writer import log_writer
 from config_keysassembler import config_keysassembler
-import config_cliprocessor
 from config_fileprocessor import config_fileprocessor
 from changes_manifest import changes_manifest
 from changes_taxonomy import changes_taxonomy
@@ -26,6 +25,7 @@ class workflow_system:
  
   #@public
   def onFoundation(self, systemInstanceName, systemConfig):
+    import config_cliprocessor
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
     cr = command_runner()
@@ -39,7 +39,9 @@ class workflow_system:
     foundationInstanceName = systemConfig.get("foundation").get("instanceName")
     foundationTool = systemConfig.get("foundation").get("controller")
     operation = 'on'
-
+    print('test is: ', test)
+    print('typeOfTest is: ', typeOfTest )
+#    quit('ss ---  yuio')
     if (test==True) and (typeOfTest=="workflow"):
       # Skip the else block in this case because we are just testing the workflow.
       pass
@@ -102,6 +104,7 @@ class workflow_system:
 
   #@public
   def offFoundation(self, systemInstanceName, systemConfig):
+    import config_cliprocessor
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
     cr = command_runner()
@@ -164,7 +167,7 @@ class workflow_system:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
         pass
-
+ 
   #@public
   def onServices(self, cm, ct, cc, level, systemInstanceName, systemConfig):
     wst_on = workflow_service_type()
@@ -227,6 +230,8 @@ class workflow_system:
 
   #@public
   def skipServices(self, level, systemInstanceName, yamlInfraConfig = 'default'):
+    import config_cliprocessor
+
     lw = log_writer()
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
@@ -249,6 +254,7 @@ class workflow_system:
       changes_manifest.updateEndOfAServiceType(level, systemInstanceName, typeName)
 
   def callOnFoundationDirectly(self):
+    import config_cliprocessor
     cfp = config_fileprocessor()
     lw = log_writer()
     cm_fon = changes_manifest()
@@ -276,6 +282,7 @@ class workflow_system:
     cm_fon.updateEndOfPlatformRun(ct_fon, cc_fon, 'foundation')
 
   def callOffFoundationDirectly(self):
+    import config_cliprocessor
     cfp = config_fileprocessor()
     lw = log_writer()
     cm_foff = changes_manifest()
@@ -303,6 +310,7 @@ class workflow_system:
     cm_foff.updateEndOfPlatformRun(ct_foff, cc_foff, 'foundation')
 
   def callOnServicesDirectly(self):
+    import config_cliprocessor
     cfp = config_fileprocessor()
     lw = log_writer()
     cm_son = changes_manifest()
@@ -330,6 +338,7 @@ class workflow_system:
     cm_son.updateEndOfPlatformRun(ct_son, cc_son, 'services')
 
   def callOffServicesDirectly(self):
+    import config_cliprocessor
     cfp = config_fileprocessor()
     lw = log_writer()
     cm_soff = changes_manifest()

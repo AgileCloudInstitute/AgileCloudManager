@@ -96,6 +96,9 @@ class changes_manifest:
 
   #@public
   def initializeChangesManagementDataStructures(self, ct, cc, level, command):
+    import config_cliprocessor
+    print("00 config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath') is: ", config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath'))
+
     ct.assembleChangeTaxonomy(level, command)
     logString = " At beginning, changeTaxonomy is: " + str(ct.changeTaxonomy)
     outputLine = "[ acm ] " + logString

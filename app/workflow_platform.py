@@ -1,13 +1,13 @@
 ## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
-from app.config_fileprocessor import config_fileprocessor
-from app.workflow_system import workflow_system
-from app.log_writer import log_writer
-from app.changes_manifest import changes_manifest
-from app.changes_taxonomy import changes_taxonomy
-from app.changes_comparer import changes_comparer
-import config_cliprocessor
+print('inside workflow_platform.py')
+from config_fileprocessor import config_fileprocessor
+from workflow_system import workflow_system
+from log_writer import log_writer
+from changes_manifest import changes_manifest
+from changes_taxonomy import changes_taxonomy
+from changes_comparer import changes_comparer
 
 class workflow_platform:
   
@@ -16,6 +16,10 @@ class workflow_platform:
  
   #@public
   def onPlatform(self):
+    import config_cliprocessor
+
+    print("rr config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath') is: ", config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath'))
+
     wfsys = workflow_system()
     cfp = config_fileprocessor()
     cm_on = changes_manifest()
@@ -25,6 +29,9 @@ class workflow_platform:
     command = 'on'
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
+    print('test is: ', test)
+    print('typeOfTest is: ', typeOfTest )
+#    quit('tt ---  yuio')
     yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
     cm_on.initializeChangesManagementDataStructures(ct_on, cc_on, 'platform', command)
@@ -62,6 +69,8 @@ class workflow_platform:
 
   #@public
   def offPlatform(self):
+    import config_cliprocessor
+
     wfsys = workflow_system()
     cfp = config_fileprocessor()
     cm_off = changes_manifest()

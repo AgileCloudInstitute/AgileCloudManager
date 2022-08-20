@@ -3,8 +3,6 @@
 
 import yaml
 
-import config_cliprocessor
-
 class config_validator:
   
   def __init__(self):  
@@ -12,6 +10,7 @@ class config_validator:
  
   #@public
   def processAcmConfig(self):
+    import config_cliprocessor
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     #First, validate that every system has a unique name in acm.yaml
     typesList = []

@@ -9,7 +9,6 @@ import json
 import sys 
 import os
 
-import config_cliprocessor
 from command_formatter import command_formatter
 from log_writer import log_writer
 
@@ -82,6 +81,7 @@ class command_runner:
 
   #@public
   def runPreOrPostProcessor(self, processorSpecs, operation):
+    import config_cliprocessor
     cf = command_formatter()
     lw = log_writer()
     if operation == 'on':

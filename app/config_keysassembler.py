@@ -5,7 +5,6 @@ import os
 import platform
 
 from log_writer import log_writer
-import config_cliprocessor
 from config_fileprocessor import config_fileprocessor
 from command_formatter import command_formatter
 
@@ -135,6 +134,7 @@ class config_keysassembler:
 
   #@public
   def getOutputDir(self, instName):
+    import config_cliprocessor
     cfm = command_formatter()
     outputDir = config_cliprocessor.inputVars.get('dirOfOutput')
     outputDir = outputDir + instName

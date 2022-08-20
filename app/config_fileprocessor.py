@@ -1,7 +1,6 @@
 ## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
-import config_cliprocessor
 from command_formatter import command_formatter
 
 import yaml
@@ -19,6 +18,7 @@ class config_fileprocessor:
 
   #@public
   def getPlatformConfig(self, yamlFileAndPath):
+    print('qq yamlFileAndPath is: ', yamlFileAndPath)
     with open(yamlFileAndPath) as f:  
       topLevel_dict = yaml.safe_load(f)
     return topLevel_dict
@@ -41,6 +41,7 @@ class config_fileprocessor:
 
   #@public
   def getKeyDir(self, systemConfig):
+    import config_cliprocessor
     propVal = systemConfig.get("keysDir")
     if propVal == '$Default':
       propVal = config_cliprocessor.inputVars.get('dirOfYamlKeys')
