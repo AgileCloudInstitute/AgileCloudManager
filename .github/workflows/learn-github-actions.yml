@@ -56,12 +56,12 @@ jobs:
           echo 'Contents are: --------------------------------------------------'
           ls -al
           echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-          cd /home/runner/work/agile-cloud-manager/
+          cd /home/runner/work/AgileCloudManager/
           echo "Current working directory is: "
           pwd
           echo 'Contents are: --------------------------------------------------'
           ls -al
-          python agile-cloud-manager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
       - shell: bash
         name: Run test_workflow_and_changes.py
         env:
