@@ -145,6 +145,7 @@ class test_workflow_platform(unittest.TestCase):
     if (len(changeReportLines)==numChangeReportsExpected) and (numChanges==numChangesExpected) and(numChangesCompleted==numChangesExpected):
       returnBool = True
     print('self.logVerbose is: ', str(self.logVerbose))
+    print('hjk returnBool is: ', returnBool)
     return returnBool
 
 
