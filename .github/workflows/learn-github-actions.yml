@@ -78,7 +78,7 @@ jobs:
           echo 'Contents are: --------------------------------------------------'
           ls -al
           echo ".................about to run unit test"
-          python -m unittest unitTests.test_workflow_and_changes
+          python -m unittest AgileCloudManager.unitTests.test_workflow_and_changes
       - shell: bash
         name: Delete Secrets
         run: |
