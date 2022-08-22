@@ -472,6 +472,7 @@ class command_builder:
 
   #@private
   def getVarFromOutput(self, tool, tfOutputVarName):
+    print('nn tfOutputVarName is: ', tfOutputVarName)
     if len(tfOutputVarName) == 0:
       logString = "ERROR: There were no foundation output variables.  Has your foundation already been deleted?  Or is your foundation configuration failing to produce output variables?"
       quit(logString)

@@ -13,7 +13,7 @@ import time
     ## First, navigating the terminal to the folder that is the PARENT of the folder that contains the agile-cloud-manager repository
     ## Second, make sure the directory structure is correct, including sibling directories for required repos, etc. 
     ## Third, running the following command in the terminal:
-       #python -m unittest agile-cloud-manager/unit-tests/test_controller_arm.py
+       #python -m unittest AgileCloudManager/unitTests/test_controller_arm.py
   
 class TestControllerArm(unittest.TestCase):
 
