@@ -1,4 +1,4 @@
-name: org-secret-into-file
+name: unit-tests-linux
 on: [push]
 jobs:
   put-secret-into-file:
@@ -96,6 +96,23 @@ jobs:
           ls -al
           echo ".................about to run unit test"
           python -m unittest AgileCloudManager.unitTests.test_controller_custom
+      - shell: bash
+        name: Run test_controller_cf.py
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+        run: |
+          echo "................about to pwd"
+          pwd
+          echo "................about to list contents"
+          ls -al
+          echo "................about to cd /home/runner/work/AgileCloudManager/ "
+          cd /home/runner/work/AgileCloudManager/
+          echo "Current working directory is: "
+          pwd
+          echo 'Contents are: --------------------------------------------------'
+          ls -al
+          echo ".................about to run unit test"
+          python -m unittest AgileCloudManager.unitTests.test_controller_cf
       - shell: bash
         name: Delete Secrets
         run: |
