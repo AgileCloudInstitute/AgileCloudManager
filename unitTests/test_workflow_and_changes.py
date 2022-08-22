@@ -165,9 +165,9 @@ class test_workflow_platform(unittest.TestCase):
     numChangesExpected = 80
     returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
     print('test returnVal is: ', returnBool)
-    self.assertTrue(False)
+#    self.assertTrue(False)
 #    quit('BREAK THE WORKFLOW WITH QUIT COMMAND')
-#    self.assertTrue(returnBool)
+    self.assertTrue(returnBool)
 
 #  def test_platformOff(self):
 #    self.addAcmDirToPath() 
