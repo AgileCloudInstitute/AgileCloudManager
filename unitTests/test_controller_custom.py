@@ -305,6 +305,7 @@ class TestControllerCustom(unittest.TestCase):
       structureIsCorrect = True
     print("structureIsCorrect is: ", structureIsCorrect)
     self.deleteAcmKeys()
+    print('test returnVal is: ', structureIsCorrect)
     self.assertTrue(structureIsCorrect)
 
 
@@ -334,9 +335,9 @@ class TestControllerCustom(unittest.TestCase):
     tool = 'customController'
     outputDict = {}
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
-    print('returnVal is: ', returnVal)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 
@@ -374,9 +375,9 @@ class TestControllerCustom(unittest.TestCase):
     tool = 'customController'
     outputDict = {}
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, image, image.get('mappedVariables'), tool, outputDict, correctExpectedResponse)
-    print('returnVal is: ', returnVal)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 
@@ -420,9 +421,9 @@ class TestControllerCustom(unittest.TestCase):
     tool = 'customController'
     outputDict = {}
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, instance.get('mappedVariables'), tool, outputDict, correctExpectedResponse)
-    print('returnVal is: ', returnVal)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 if __name__ == '__main__':

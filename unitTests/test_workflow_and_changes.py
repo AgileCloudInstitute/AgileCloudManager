@@ -164,6 +164,7 @@ class test_workflow_platform(unittest.TestCase):
     numChangeReportsExpected = 54
     numChangesExpected = 80
     returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    print('test returnVal is: ', returnBool)
     self.assertTrue(returnBool)
 
 #  def test_platformOff(self):

@@ -471,10 +471,10 @@ class TestControllerCf(unittest.TestCase):
     outputDict = {}
 
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
-    print('returnVal is: ', returnVal)
 
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
@@ -586,7 +586,7 @@ class TestControllerCf(unittest.TestCase):
       returnVal = False
     print("returnValImg is: ", str(returnValImg))
     print("instanceReturnVal is: ", str(instanceReturnVal))
-    print("returnVal is: ", str(returnVal))
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 

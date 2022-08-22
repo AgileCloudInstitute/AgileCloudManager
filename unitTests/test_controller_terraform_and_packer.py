@@ -12,7 +12,7 @@ import time
     ## First, navigating the terminal to the folder that is the PARENT of the folder that contains the agile-cloud-manager code.
     ## Second, make sure the directory structure is correct, including sibling directories for required repos, etc. 
     ## Third, running the following command in the terminal:
-       #python -m unittest agile-cloud-manager/unit-tests/test_controller_terraform_and_packer.py
+       #python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer
   
 class TestControllerPacker(unittest.TestCase):
   
@@ -688,9 +688,9 @@ class TestControllerPacker(unittest.TestCase):
     print("xxxzzzvvv config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
 #    quit('ddddddd')
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
-    print('returnVal is: ', returnVal)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
@@ -836,6 +836,7 @@ class TestControllerPacker(unittest.TestCase):
     else:
       returnVal = False
     #Finally, complete the test
+    print('test returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 
