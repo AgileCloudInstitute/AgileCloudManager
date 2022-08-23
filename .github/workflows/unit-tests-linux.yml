@@ -24,6 +24,7 @@ jobs:
           sudo mkdir /usr/acm
           sudo mkdir /usr/acm/keys
           sudo mkdir /usr/acm/keys/adminAccounts
+          sudo chown -R runner:runner /usr/acm
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
