@@ -179,7 +179,6 @@ class TestControllerCf(unittest.TestCase):
     for item in varsObject:
       if tool == 'cloudformation':
         for d in correctExpectedResponse:
-          print('d is: ', str(d))
           print('item is: ', str(item))
           # First, split the line into units that can be compared.
           leftItemParts = item['ParameterKey']
@@ -445,9 +444,9 @@ class TestControllerCf(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_cf_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
 {'ParameterKey': 'vpcCIDR', 'ParameterValue': '10.0.0.0/16'}, 
 {'ParameterKey': 'secondString', 'ParameterValue': 'bencher'}, 
@@ -480,17 +479,17 @@ class TestControllerCf(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_cf_image_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    from controller_image import controller_image
-    from controller_cf import controller_cf
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    from AgileCloudManager.app.controller_image import controller_image
+    from AgileCloudManager.app.controller_cf import controller_cf
 
     # First, set variables to pull the real secrets to we can create the foundation
-    self.setAcmVariables(config_cliprocessor, 'secret')
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor, 'secret')
 
     # Second, set the values that will be passed into the call to  that will create the foundation.
     systemConfig = self.getSystemConfig_CloudFormation()
-    keyDir = self.getKeyDir(systemConfig, config_cliprocessor)
+    keyDir = self.getKeyDir(systemConfig, AgileCloudManager.app.config_cliprocessor)
     caller = 'networkFoundation'
     serviceType = None
     instance = systemConfig.get("foundation")
@@ -577,7 +576,7 @@ class TestControllerCf(unittest.TestCase):
     print('instanceReturnVal is: ', instanceReturnVal)
 
     # Destroy the resources that were created during this test.
-    self.destroyInfrastructureUsedInTest(config_cliprocessor, controller_cf)
+    self.destroyInfrastructureUsedInTest(AgileCloudManager.app.config_cliprocessor, controller_cf)
 
     # Only return true if both the image test and the instance test each returned True
     if (returnValImg == True) and (instanceReturnVal == True):

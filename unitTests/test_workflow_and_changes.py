@@ -9,7 +9,6 @@ import os
 
 #Run the tests in this file by running the following command in the terminal:
 #python -m unittest AgileCloudManager.unitTests.test_workflow_and_changes
-#python -m unittest AgileCloudManager.unitTests.test_controller_arm
 
 
 class test_workflow_platform(unittest.TestCase):
@@ -154,9 +153,6 @@ class test_workflow_platform(unittest.TestCase):
     from AgileCloudManager.app.workflow_platform import workflow_platform
     import AgileCloudManager.app.config_cliprocessor
     from AgileCloudManager.app.log_writer import log_writer
-#    from workflow_platform import workflow_platform
-#    import config_cliprocessor
-#    from log_writer import log_writer
 #    cliproc.processInputArgs(['AgileCloudManager\\app\\acm.py', 'platform', 'on'])
     self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
     wfplat1 = workflow_platform() 
@@ -165,148 +161,146 @@ class test_workflow_platform(unittest.TestCase):
     numChangesExpected = 80
     returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
     print('test returnVal is: ', returnBool)
-#    self.assertTrue(False)
-#    quit('BREAK THE WORKFLOW WITH QUIT COMMAND')
     self.assertTrue(returnBool)
 
-#  def test_platformOff(self):
-#    self.addAcmDirToPath() 
-#    from workflow_platform import workflow_platform
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    wfplat2 = workflow_platform()
-#    wfplat2.offPlatform()
-#    numChangeReportsExpected = 54
-#    numChangesExpected = 80
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_platformOff(self):
+    self.addAcmDirToPath() 
+    from AgileCloudManager.app.workflow_platform import workflow_platform
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    wfplat2 = workflow_platform()
+    wfplat2.offPlatform()
+    numChangeReportsExpected = 54
+    numChangesExpected = 80
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
 ####Add a test case to validate the force flag
 ###  def test_platformOffForce(self):
 ###    self.assertTrue(True)
 
-#  def test_foundationOn(self):
-#    self.addAcmDirToPath()
-#    from workflow_system import workflow_system
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    wfsys1 = workflow_system()
-#    wfsys1.callOnFoundationDirectly()
-#    numChangeReportsExpected = 6
-#    numChangesExpected = 8
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_foundationOn(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_system import workflow_system
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    wfsys1 = workflow_system()
+    wfsys1.callOnFoundationDirectly()
+    numChangeReportsExpected = 6
+    numChangesExpected = 8
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_foundationOff(self):
-#    self.addAcmDirToPath()
-#    from workflow_system import workflow_system
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    wfsys1 = workflow_system()
-#    wfsys1.callOffFoundationDirectly()
-#    numChangeReportsExpected = 6
-#    numChangesExpected = 8
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_foundationOff(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_system import workflow_system
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    wfsys1 = workflow_system()
+    wfsys1.callOffFoundationDirectly()
+    numChangeReportsExpected = 6
+    numChangesExpected = 8
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_servicesOn(self):
-#    self.addAcmDirToPath()
-#    from workflow_system import workflow_system
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    wfsys1 = workflow_system()
-#    wfsys1.callOnServicesDirectly()
-#    numChangeReportsExpected = 16
-#    numChangesExpected = 23
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_servicesOn(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_system import workflow_system
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    wfsys1 = workflow_system()
+    wfsys1.callOnServicesDirectly()
+    numChangeReportsExpected = 16
+    numChangesExpected = 23
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_servicesOff(self):
-#    self.addAcmDirToPath()
-#    from workflow_system import workflow_system
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    wfsys1 = workflow_system()
-#    wfsys1.callOffServicesDirectly()
-#    numChangeReportsExpected = 16
-#    numChangesExpected = 23
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_servicesOff(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_system import workflow_system
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    wfsys1 = workflow_system()
+    wfsys1.callOffServicesDirectly()
+    numChangeReportsExpected = 16
+    numChangesExpected = 23
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_serviceTypeOn(self):
-#    self.addAcmDirToPath()
-#    from workflow_service_type import workflow_service_type
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    config_cliprocessor.inputVars['serviceType'] = "admin"
-#    level = "servicetype"
-#    wfSvcTyp1 = workflow_service_type()
-#    wfSvcTyp1.callOnServiceDirectly(level)
-#    numChangeReportsExpected = 12
-#    numChangesExpected = 17
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_serviceTypeOn(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_service_type import workflow_service_type
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    AgileCloudManager.app.config_cliprocessor.inputVars['serviceType'] = "admin"
+    level = "servicetype"
+    wfSvcTyp1 = workflow_service_type()
+    wfSvcTyp1.callOnServiceDirectly(level)
+    numChangeReportsExpected = 12
+    numChangesExpected = 17
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_serviceTypeOff(self):
-#    self.addAcmDirToPath()
-#    from workflow_service_type import workflow_service_type
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    config_cliprocessor.inputVars['serviceType'] = "admin"
-#    level = "servicetype"
-#    wfSvcTyp1 = workflow_service_type()
-#    wfSvcTyp1.callOffServiceDirectly(level)
-#    numChangeReportsExpected = 12
-#    numChangesExpected = 17
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_serviceTypeOff(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_service_type import workflow_service_type
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    AgileCloudManager.app.config_cliprocessor.inputVars['serviceType'] = "admin"
+    level = "servicetype"
+    wfSvcTyp1 = workflow_service_type()
+    wfSvcTyp1.callOffServiceDirectly(level)
+    numChangeReportsExpected = 12
+    numChangesExpected = 17
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_serviceInstanceOn(self):
-#    self.addAcmDirToPath()
-#    from workflow_service_type import workflow_service_type
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    config_cliprocessor.inputVars['serviceType'] = "admin"
-#    config_cliprocessor.inputVars['serviceInstance'] = "projectManagement"
-#    level = "serviceinstance"
-#    wfSvcTyp1 = workflow_service_type()
-#    wfSvcTyp1.callOnServiceDirectly(level)
-#    numChangeReportsExpected = 10
-#    numChangesExpected = 14
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_serviceInstanceOn(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_service_type import workflow_service_type
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    AgileCloudManager.app.config_cliprocessor.inputVars['serviceType'] = "admin"
+    AgileCloudManager.app.config_cliprocessor.inputVars['serviceInstance'] = "projectManagement"
+    level = "serviceinstance"
+    wfSvcTyp1 = workflow_service_type()
+    wfSvcTyp1.callOnServiceDirectly(level)
+    numChangeReportsExpected = 10
+    numChangesExpected = 14
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
-#  def test_serviceInstanceOff(self):
-#    self.addAcmDirToPath()
-#    from workflow_service_type import workflow_service_type
-#    import config_cliprocessor 
-#    from log_writer import log_writer
-#    self.setAcmVariables(log_writer, config_cliprocessor, "workflow")
-#    config_cliprocessor.inputVars['systemName'] = "admin"
-#    config_cliprocessor.inputVars['serviceType'] = "admin"
-#    config_cliprocessor.inputVars['serviceInstance'] = "projectManagement"
-#    level = "serviceinstance"
-#    wfSvcTyp1 = workflow_service_type()
-#    wfSvcTyp1.callOffServiceDirectly(level)
-#    numChangeReportsExpected = 10
-#    numChangesExpected = 14
-#    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
-#    self.assertTrue(returnBool)
+  def test_serviceInstanceOff(self):
+    self.addAcmDirToPath()
+    from AgileCloudManager.app.workflow_service_type import workflow_service_type
+    import AgileCloudManager.app.config_cliprocessor 
+    from AgileCloudManager.app.log_writer import log_writer
+    self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
+    AgileCloudManager.app.config_cliprocessor.inputVars['systemName'] = "admin"
+    AgileCloudManager.app.config_cliprocessor.inputVars['serviceType'] = "admin"
+    AgileCloudManager.app.config_cliprocessor.inputVars['serviceInstance'] = "projectManagement"
+    level = "serviceinstance"
+    wfSvcTyp1 = workflow_service_type()
+    wfSvcTyp1.callOffServiceDirectly(level)
+    numChangeReportsExpected = 10
+    numChangesExpected = 14
+    returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
+    self.assertTrue(returnBool)
 
 
 

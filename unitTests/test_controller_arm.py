@@ -148,8 +148,6 @@ class TestControllerArm(unittest.TestCase):
 #            dval = 'null'
             dkey = d
             dval = correctExpectedResponse[d]['value']
-            print('d is: ', str(d))
-            print('type(d) is: ', type(d))
 ##            if len(dict(d))==1:
 ##              for k in dict(d).keys():
 #            if len(d)==1:
@@ -157,8 +155,6 @@ class TestControllerArm(unittest.TestCase):
 #                dkey = k
 ##                dval = dict(d)[k]
 #                dval = d[k]
-            print('dkey is: ', dkey)
-            print('dval is: ', dval)
             if item == dkey:
               if item == 'now':
                 if len(dval) == len(jsonObject[item]['value']):
@@ -350,9 +346,9 @@ class TestControllerArm(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_ARM_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
     {
       "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#", 
@@ -389,12 +385,12 @@ class TestControllerArm(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_ARM_image_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    from controller_arm import controller_arm
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    from AgileCloudManager.app.controller_arm import controller_arm
 
     # First, set variables to pull the real secrets to we can create the empty foundation
-    self.setAcmVariables(config_cliprocessor, 'secret')
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor, 'secret')
     systemConfig = self.getSystemConfigFoundation_ARM()
 
     # Next, create real foundation and real image to make sure that foundationOutput and mostRecentImage functions work properly

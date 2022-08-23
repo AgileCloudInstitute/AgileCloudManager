@@ -655,9 +655,9 @@ class TestCommandBuilder(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_customcontroller_foundation_VarsFragmentStructure(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     structureIsCorrect = False
     systemConfig = self.getSystemConfigFoundation_Custom()
     serviceType = None
@@ -677,9 +677,9 @@ class TestCommandBuilder(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_customcontroller_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
       {"vpcCIDR": "10.0.0.0/16"}, 
       {"secondString": "bencher"}, 
@@ -709,9 +709,9 @@ class TestCommandBuilder(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_customcontroller_image_and_services_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
       {"KeyName": "example-KeyName"}, 
       {"InstanceType": "t2.small"}, 
@@ -749,9 +749,9 @@ class TestCommandBuilder(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_customcontroller_serviceinstance_VarsFragment_Contents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
       {"firstSharedVariable": "justthis"}, 
       {"KeyName": "example-KeyName"}, 
@@ -795,9 +795,9 @@ class TestCommandBuilder(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_ARM_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
 
     correctExpectedResponse = [
       {"resourceGroupName": "myEmptyTestRG"}, 
@@ -829,9 +829,9 @@ class TestCommandBuilder(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_terraform_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
 'subscriptionId="example-subscriptionId"',
 'tenantId="example-tenantId"',

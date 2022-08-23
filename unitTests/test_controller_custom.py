@@ -288,9 +288,9 @@ class TestControllerCustom(unittest.TestCase):
 
   def test_foundation_VarsFragmentStructure(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     structureIsCorrect = False
     systemConfig = self.getSystemConfigFoundation_Custom()
     serviceType = None
@@ -311,9 +311,9 @@ class TestControllerCustom(unittest.TestCase):
 
   def test_customcontroller_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
       {"vpcCIDR": "10.0.0.0/16"}, 
       {"secondString": "bencher"}, 
@@ -343,9 +343,9 @@ class TestControllerCustom(unittest.TestCase):
 
   def test_customcontroller_image_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
       {"KeyName": "example-KeyName"}, 
       {"InstanceType": "t2.small"}, 
@@ -383,9 +383,9 @@ class TestControllerCustom(unittest.TestCase):
 
   def test_customcontroller_serviceinstance_VarsFragment_Contents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
       {"firstSharedVariable": "justthis"}, 
       {"KeyName": "example-KeyName"}, 

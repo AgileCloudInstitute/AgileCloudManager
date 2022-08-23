@@ -314,7 +314,6 @@ class TestControllerPacker(unittest.TestCase):
         print('leftItemParts is: ', str(leftItemParts))
         print('rightItemParts is: ', str(rightItemParts))
         for d in correctExpectedResponse:
-            print('d is: ', str(d))
             rightDParts = correctExpectedResponse.get(d)
             leftDParts = d
             if item == d:
@@ -653,45 +652,45 @@ class TestControllerPacker(unittest.TestCase):
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
 
-#UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
-  def test_terraform_foundation_VarsFragmentContents(self):
-    self.addAcmDirToPath()
-    from AgileCloudManager.app.command_builder import command_builder
-    import AgileCloudManager.app.config_cliprocessor
-    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
-    correctExpectedResponse = [
-'subscriptionId="example-subscriptionId"',
-'tenantId="example-tenantId"',
-'clientId="example-clientId"',
-'clientSecret="example-clientSecret"',
-'resourceGroupRegion="eastus"',
-'resourceGroupName="myEmptyTestRG"',
-'vpcCIDR="10.0.0.0/16"',
-'secondString="bencher"',
-'clientName="example-clientName"',
-'subName="example-subscriptionName"',
-'labrador="isadog"',
-'tName="isabird"',
-'networkName="name-of-vnet"',
-'owner="name-of-owner"',
-'makePath="userCallingDir\\azure-building-blocks\\arm"',
-'now="20220624125048860330"',
-'addOrgTest="somestringtstaxy"'
-    ]
-    cb = command_builder()
-    systemConfig = self.getSystemConfig_TerraformPacker()
-    serviceType = None
-    instance = systemConfig.get("foundation")
-    mappedVariables = systemConfig.get('foundation').get('mappedVariables')
-    tool = 'terraform'
-    outputDict = {}
-    print("xxxzzzvvv config_cliprocessor.inputVars.get('dirOfOutput') is: ", AgileCloudManager.app.config_cliprocessor.inputVars.get('dirOfOutput'))
-#    quit('ddddddd')
-    returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
-    #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
-    self.deleteAcmKeys()
-    print('test_terraform_foundation_VarsFragmentContents() returnVal is: ', returnVal)
-    self.assertTrue(returnVal)
+##UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
+#  def test_terraform_foundation_VarsFragmentContents(self):
+#    self.addAcmDirToPath()
+#    from AgileCloudManager.app.command_builder import command_builder
+#    import AgileCloudManager.app.config_cliprocessor
+#    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
+#    correctExpectedResponse = [
+#'subscriptionId="example-subscriptionId"',
+#'tenantId="example-tenantId"',
+#'clientId="example-clientId"',
+#'clientSecret="example-clientSecret"',
+#'resourceGroupRegion="eastus"',
+#'resourceGroupName="myEmptyTestRG"',
+#'vpcCIDR="10.0.0.0/16"',
+#'secondString="bencher"',
+#'clientName="example-clientName"',
+#'subName="example-subscriptionName"',
+#'labrador="isadog"',
+#'tName="isabird"',
+#'networkName="name-of-vnet"',
+#'owner="name-of-owner"',
+#'makePath="userCallingDir\\azure-building-blocks\\arm"',
+#'now="20220624125048860330"',
+#'addOrgTest="somestringtstaxy"'
+#    ]
+#    cb = command_builder()
+#    systemConfig = self.getSystemConfig_TerraformPacker()
+#    serviceType = None
+#    instance = systemConfig.get("foundation")
+#    mappedVariables = systemConfig.get('foundation').get('mappedVariables')
+#    tool = 'terraform'
+#    outputDict = {}
+#    print("xxxzzzvvv config_cliprocessor.inputVars.get('dirOfOutput') is: ", AgileCloudManager.app.config_cliprocessor.inputVars.get('dirOfOutput'))
+##    quit('ddddddd')
+#    returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
+#    #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
+#    self.deleteAcmKeys()
+#    print('test_terraform_foundation_VarsFragmentContents() returnVal is: ', returnVal)
+#    self.assertTrue(returnVal)
 
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_packer_image_VarsFragmentContents(self):
