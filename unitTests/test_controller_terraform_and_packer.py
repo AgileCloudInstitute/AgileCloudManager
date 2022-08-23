@@ -656,9 +656,9 @@ class TestControllerPacker(unittest.TestCase):
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_terraform_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    self.setAcmVariables(config_cliprocessor)
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor)
     correctExpectedResponse = [
 'subscriptionId="example-subscriptionId"',
 'tenantId="example-tenantId"',
@@ -685,27 +685,27 @@ class TestControllerPacker(unittest.TestCase):
     mappedVariables = systemConfig.get('foundation').get('mappedVariables')
     tool = 'terraform'
     outputDict = {}
-    print("xxxzzzvvv config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
+    print("xxxzzzvvv config_cliprocessor.inputVars.get('dirOfOutput') is: ", AgileCloudManager.app.config_cliprocessor.inputVars.get('dirOfOutput'))
 #    quit('ddddddd')
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
-    print('test returnVal is: ', returnVal)
+    print('test_terraform_foundation_VarsFragmentContents() returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 #UNCOMMENT THIS NEXT FUNCTION BECAUSE IT WORKS FINE.  JUST COMMENTING IT HERE SO WE CAN ISOLATE OTHER TESTS BELOW IT DURING DEVELOPMENT.
   def test_packer_image_VarsFragmentContents(self):
     self.addAcmDirToPath()
-    from command_builder import command_builder
-    import config_cliprocessor
-    from controller_arm import controller_arm
-    from controller_terraform import controller_terraform
-    from controller_image import controller_image
-    from controller_tfbackendazrm import controller_tfbackendazrm
-    from controller_packer import controller_packer
+    from AgileCloudManager.app.command_builder import command_builder
+    import AgileCloudManager.app.config_cliprocessor
+    from AgileCloudManager.app.controller_arm import controller_arm
+    from AgileCloudManager.app.controller_terraform import controller_terraform
+    from AgileCloudManager.app.controller_image import controller_image
+    from AgileCloudManager.app.controller_tfbackendazrm import controller_tfbackendazrm
+    from AgileCloudManager.app.controller_packer import controller_packer
 
     # First, set variables to pull the real secrets to we can create the tfbackend
-    self.setAcmVariables(config_cliprocessor, 'secret')
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor, 'secret')
 
     # Second, Create the terraform backend
     systemConfig = self.getSystemConfig_TfBackendAzrm()
@@ -716,13 +716,15 @@ class TestControllerPacker(unittest.TestCase):
     tfbknd = controller_tfbackendazrm()
     tfbknd.createTfBackend(systemConfig, instance, armParamsDict)
 
+#    quit('1...')
+
     # Third, set the values that will be passed into the call to terraformCrudOperation that will create the foundation.
     instanceName = systemConfig.get('serviceTypes').get(serviceType).get('instances')[0].get('instanceName')
     secretType = 'secret_'+instanceName
-    self.setAcmVariables(config_cliprocessor, secretType)
+    self.setAcmVariables(AgileCloudManager.app.config_cliprocessor, secretType)
     systemConfig = self.getSystemConfig_TerraformPacker()
     operation = 'on'
-    keyDir = self.getKeyDir(systemConfig, config_cliprocessor)
+    keyDir = self.getKeyDir(systemConfig, AgileCloudManager.app.config_cliprocessor)
     instance = None
     typeParent = 'none'
     typeName = 'networkFoundation'
@@ -730,7 +732,7 @@ class TestControllerPacker(unittest.TestCase):
     typeGrandChild = None
     typeInstanceName = None
 
-    print("... config_cliprocessor.inputVars['dirOfOutput'] is: ", config_cliprocessor.inputVars['dirOfOutput'])
+    print("... config_cliprocessor.inputVars['dirOfOutput'] is: ", AgileCloudManager.app.config_cliprocessor.inputVars['dirOfOutput'])
     print('...xxx   keyDir is: ', keyDir)
 #    quit('sdfghjkl')
     # Fourth, create real foundation and real image to make sure that foundationOutput and mostRecentImage functions work properly
@@ -829,14 +831,14 @@ class TestControllerPacker(unittest.TestCase):
 
     instanceReturnVal = self.checkVarsReturnedAgainstExpected(cbdr, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
     print('instanceReturnVal is: ', instanceReturnVal)
-    self.destroyInfrastructureUsedInTest(config_cliprocessor, controller_terraform, controller_arm)
+    self.destroyInfrastructureUsedInTest(AgileCloudManager.app.config_cliprocessor, controller_terraform, controller_arm)
 
     if (returnValPkr == True) and (instanceReturnVal == True):
       returnVal = True
     else:
       returnVal = False
     #Finally, complete the test
-    print('test returnVal is: ', returnVal)
+    print('test_packer_image_VarsFragmentContents( returnVal is: ', returnVal)
     self.assertTrue(returnVal)
 
 

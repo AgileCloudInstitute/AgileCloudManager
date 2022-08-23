@@ -9,6 +9,7 @@ jobs:
         name: Configure agent
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: |
           echo "Current working directory is: "
           pwd
@@ -22,6 +23,8 @@ jobs:
           sudo chown -R runner:runner /opt/acm
           sudo mkdir /usr/acm
           sudo mkdir /usr/acm/keys
+          sudo mkdir /usr/acm/keys/adminAccounts
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
           git --version

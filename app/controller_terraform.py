@@ -471,6 +471,7 @@ class controller_terraform:
       myLogWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
     if "Error:" in decodedline:
+      quit(decodedline)
       logString = decodedline+".  Halting program so you can check your configuration and identify the root of the problem. "
       myLogWriter.writeLogVerbose("acm", logString)
       sys.exit(1) 
