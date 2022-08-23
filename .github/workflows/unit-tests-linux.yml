@@ -67,6 +67,21 @@ jobs:
           ls -al
           python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
       - shell: bash
+        name: Run test_command_builder
+        run: |
+          echo "................about to pwd"
+          pwd
+          echo "................about to list contents"
+          ls -al
+          echo "................about to cd /home/runner/work/AgileCloudManager/ "
+          cd /home/runner/work/AgileCloudManager/
+          echo "Current working directory is: "
+          pwd
+          echo 'Contents are: --------------------------------------------------'
+          ls -al
+          echo ".................about to run unit test"
+          python -m unittest AgileCloudManager.unitTests.test_command_builder
+      - shell: bash
         name: Run test_workflow_and_changes.py
         run: |
           echo "................about to pwd"
