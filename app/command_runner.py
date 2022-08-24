@@ -33,11 +33,44 @@ class command_runner:
     lw.writeLogVerbose("acm", logString)
     logString = "cmd is: " + cmd
     lw.writeLogVerbose("acm", logString)
+
+    #These next 6 lines added 24 August to handle azure latency problem with empty results and exit code 0
+    logString = "type(data) is: "+str(type(data))
+    lw.writeLogVerbose("acm", logString)
+    logString = "type(list(data)) is: "+str(type(list(data)))
+    lw.writeLogVerbose("acm", logString)
+    logString = "len(list(data)) is: "+ str(len(list(data)))
+    lw.writeLogVerbose("acm", logString)
+
     if process.returncode == 0:
-      logString = str(data)
-      lw.writeLogVerbose("shell", logString)
-      decodedData = data #.decode('utf-8')
-      return decodedData
+
+#...
+      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
+      if len(list(data)) == 0:
+        if counter < 11:
+          counter +=1 
+          logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
+          lw.writeLogVerbose('acm', logString)
+          logString = "Attempt "+str(counter)+ " out of 10. "
+          lw.writeLogVerbose('acm', logString)
+          import time
+          time.sleep(30)
+          data = self.getShellJsonResponse(cmd,counter)
+          return data
+        else:  
+          logString = "Error: " + str(err)
+          lw.writeLogVerbose("shell", logString)
+          logString = "Error: Return Code is: " + str(process.returncode)
+          lw.writeLogVerbose("shell", logString)
+          logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+      else:
+#...
+        logString = str(data)
+        lw.writeLogVerbose("shell", logString)
+        decodedData = data #.decode('utf-8')
+        return decodedData
     else:
       if counter < 11:
         counter +=1 

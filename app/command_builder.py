@@ -692,7 +692,7 @@ class command_builder:
           imageNameRoot = funcCoordParts[2]
           resourceGroupName = systemConfig.get('foundation').get("resourceGroupName")
           getImagesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.Compute/images '
-          imgsJSON = cr.getShellJsonResponse(getImagesCmd)
+          imgsJSON = cr.getShellJsonResponse(getImagesCmd) 
           imageNamesList = []
           imgsJSON = yaml.safe_load(imgsJSON)  
           for image in imgsJSON:
