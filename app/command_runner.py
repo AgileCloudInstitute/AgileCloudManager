@@ -47,7 +47,7 @@ class command_runner:
     if process.returncode == 0:
 #...
 #      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
-      if ("az resource list --resource-group" in cmd) ("--resource-type Microsoft.Compute/images" in cmd) and (len(list(data)) == 0):
+      if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(list(data)) == 0):
         if counter < 11:
           counter +=1 
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
