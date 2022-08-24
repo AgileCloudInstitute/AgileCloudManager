@@ -41,8 +41,11 @@ class command_runner:
     lw.writeLogVerbose("acm", logString)
     logString = "type(list(data)) is: "+str(type(list(data)))
     lw.writeLogVerbose("acm", logString)
-    logString = "len(list(data)) is: "+ str(len(list(data)))
+    logString = "str(data).replace(" ","") is: "+str(data).replace(" ","")
     lw.writeLogVerbose("acm", logString)
+    logString = "len(str(data).replace(" ","")) is: "+len(str(data).replace(" ",""))
+    lw.writeLogVerbose("acm", logString)
+ 
     if process.returncode == 0:
 #...
 #      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
