@@ -33,6 +33,8 @@ class command_runner:
     lw.writeLogVerbose("acm", logString)
     logString = "cmd is: " + cmd
     lw.writeLogVerbose("acm", logString)
+    logString = "inside command_runner"
+    lw.writeLogVerbose("acm", logString)
 
     #These next 6 lines added 24 August to handle azure latency problem with empty results and exit code 0
     logString = "type(data) is: "+str(type(data))
@@ -43,10 +45,9 @@ class command_runner:
     lw.writeLogVerbose("acm", logString)
 
     if process.returncode == 0:
-
 #...
-      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
-      if len(list(data)) == 0:
+#      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
+      if ("az resource list --resource-group" in cmd) ("--resource-type Microsoft.Compute/images" in cmd) and (len(list(data)) == 0):
         if counter < 11:
           counter +=1 
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
