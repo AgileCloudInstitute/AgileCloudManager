@@ -387,7 +387,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   e2e-tests-linux-arm:
-    needs: [misc-unit-tests, cloudformation-unit-tests, terraform-packer-unit-tests, arm-template-unit-tests]
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -488,7 +488,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   e2e-tests-linux-cloudformation:
-    needs: [misc-unit-tests, cloudformation-unit-tests, terraform-packer-unit-tests, arm-template-unit-tests]
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -589,7 +589,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   e2e-tests-linux-custom:
-    needs: [misc-unit-tests, cloudformation-unit-tests, terraform-packer-unit-tests, arm-template-unit-tests]
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -690,7 +690,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   e2e-tests-linux-projects:
-    needs: [misc-unit-tests, cloudformation-unit-tests, terraform-packer-unit-tests, arm-template-unit-tests]
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
