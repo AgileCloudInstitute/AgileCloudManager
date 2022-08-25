@@ -691,11 +691,13 @@ class command_builder:
         if tool == "arm":
           imageNameRoot = funcCoordParts[2]
           resourceGroupName = systemConfig.get('foundation').get("resourceGroupName")
-          getImagesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.Compute/images '
+#25Aug          getImagesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.Compute/images '
+          getImagesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
           imgsJSON = cr.getShellJsonResponse(getImagesCmd) 
+#          print("imgsJSON", str(imgsJSON))
           imageNamesList = []
           imgsJSON = yaml.safe_load(imgsJSON)  
-          for image in imgsJSON:
+          for image in imgsJSON['data']:
             if imageNameRoot in image['name']:
               imageNamesList.append(image.get("name"))
           sortedImageList = list(sorted(imageNamesList))
@@ -704,6 +706,8 @@ class command_builder:
           else:
             logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
             quit(logString)
+#          print("value is: ", value)
+#          quit("25Aug cb")
         elif tool == "cloudformation":
           from controller_cf import controller_cf
           iccf = controller_cf()

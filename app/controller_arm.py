@@ -136,7 +136,7 @@ class controller_arm:
       logString = 'provisioningState is: '+ state
       lw.writeLogVerbose("az-cli", logString)
       if state == 'Succeeded':
-        logString = "Finished running deployment command."
+        logString = "Finished running deployment command in destroyDeployment()."
         lw.writeLogVerbose("az-cli", logString)
       else:
         logString = "ERROR: provisioningState for the deployment is NOT Succeeded. "
@@ -223,12 +223,16 @@ class controller_arm:
     outputDict['dateTimeCode'] = dateTimeCode
     self.assembleAndRunArmDeploymentCommand(systemConfig, serviceType, instance, templatePathAndFile, resourceGroupName, deploymentName, outputDict, False)
     imageTemplateNameRoot = instance.get('instanceName')
-    getImageTemplatesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.VirtualMachineImages/imageTemplates '
+#25Aug_old    getImageTemplatesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.VirtualMachineImages/imageTemplates '
+#25Aug_1st    getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' | project name, resourceGroup | sort by name asc\""
+    getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
+
+    print("getImageTemplatesCmd is: ", getImageTemplatesCmd)
     imgTemplatesJSON = self.getShellJsonResponse(getImageTemplatesCmd)
     print('str(imgTemplatesJSON) is: ', imgTemplatesJSON) 
     imageTemplateNamesList = []
     imgTemplatesJSON = yaml.safe_load(imgTemplatesJSON)  
-    for imageTemplate in imgTemplatesJSON:
+    for imageTemplate in imgTemplatesJSON['data']:
       print('-------------------------------------------------------')
       print("imageTemplate is: ", imageTemplate)
       print('imageTemplateNameRoot is: ', imageTemplateNameRoot)
@@ -240,6 +244,9 @@ class controller_arm:
     newestTemplateName = sortedImageTemplateList[-1]
     #Build the image from the template you just created.  
     buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
+    logString = "buildImageCommand is: "+buildImageCommand
+    lw = log_writer()
+    lw.writeLogVerbose("acm", logString)
     jsonResponse = self.getShellJsonResponse(buildImageCommand)
     roleFile = config_cliprocessor.inputVars.get('userCallingDir') + 'ad-role.json'
     try:
@@ -333,7 +340,7 @@ class controller_arm:
 #    if onlyFoundationOutput:
 #      quit('giraffe!')
     if state == 'Succeeded':
-      logString = "Finished running deployment command."
+      logString = "Finished running deployment command in assembleAndRunDeploymentCommand()."
       lw.writeLogVerbose("az-cli", logString)
     else:
       logString = "ERROR: provisioningState for the deployment is NOT Succeeded. "
