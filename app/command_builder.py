@@ -557,6 +557,10 @@ class command_builder:
         logString = 'ERROR: '+envVarName+' is not among your environment variables. '
         quit(logString)
     elif mappedVariables.get(varName).startswith("$keys"):
+      print('zzz tool is: ', tool)
+      print('zzz varName is: ', varName)
+      print('zzz keyDir is: ', keyDir)
+      print('zzz mappedVariables.get(varName) is: ', mappedVariables.get(varName))
       #This is handled in a separate block below in this function
       if tool == "arm":
         #For ARM templates, vars get placed in a params file to obscure them from logs.  
