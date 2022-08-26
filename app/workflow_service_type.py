@@ -104,13 +104,13 @@ class workflow_service_type:
 #          ctf.terraformCrudOperation(operation, systemInstanceName, keyDir, systemConfig, instance, 'systems', None, None, instName)
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, 'systems', serviceType, None, instName)
 #              terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
-      quit('BREAK tfBackend2')
 
       postprocessor = instance.get("postprocessor")
       if postprocessor:
         crnr.runPreOrPostProcessor(postprocessor, 'on')
       else:
         pass
+    quit('BREAK tfBackend2')
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, serviceType, instName)
 
   #@public
