@@ -71,7 +71,6 @@ class workflow_service_type:
         crnr.runPreOrPostProcessor(preprocessor, 'on') 
       else:
         pass
-
       instanceTool = instance.get("controller")
       print('instanceTool is: ', instanceTool)
       print('serviceType is: ', serviceType)
@@ -79,6 +78,7 @@ class workflow_service_type:
         if serviceType == "tfBackend":
           armParamsDict = {"caller":'serviceInstance', "serviceType":serviceType}
           ctfbknd.createTfBackend(systemConfig, instance, armParamsDict)
+          print('hkjgfdsa')
           quit('BREAK tfBackend1')
         else:
           carm.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, False)
