@@ -70,5 +70,7 @@ class controller_tfbackendazrm:
         f.write("container_name:"+storageContainerName+"\n")
         f.write("tfBackendStorageAccessKey:"+accountKey+"\n")
       print('keysFile is: ', keysFile)
+      print('storage_account_name is: ', storageAccountName)
       print('accountKey is: ', accountKey)
+      print('container_name is: ', storageContainerName)
 #      quit("---vvv---zzz===aaa")
