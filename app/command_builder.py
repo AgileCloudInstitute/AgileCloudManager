@@ -405,6 +405,7 @@ class command_builder:
     for varName in mappedVariables:
       #THIRD, get the value for each variable
       value = self.getValueForOneMappedVariable(mappedVariables, varName, tool, keyDir, systemConfig, instance, varLines, outputDict)
+      print('ddd value is: ', value)
       #FOURTH, Now add the value you just calculated into the result of this function
       if tool == "arm":
         varLine = self.getArmVarLine(varName, value)
@@ -424,6 +425,7 @@ class command_builder:
       else:
         logString = "ERROR: Invalid controller name: "+tool
         quit(logString)
+      print('ddd varLines is: ', str(varLines))
     print('end varLines is: ', str(varLines))
     #SIXTH, return the variables
     if (tool == "arm") or (tool == "cloudformation") or (tool == "customController") or (tool == "terraform") or (tool == "packer"):
