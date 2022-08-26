@@ -425,6 +425,7 @@ class command_builder:
       else:
         logString = "ERROR: Invalid controller name: "+tool
         quit(logString)
+      print('ddd mappedVariables is: ', str(mappedVariables))
       print('ddd varLines is: ', str(varLines))
     print('end varLines is: ', str(varLines))
     #SIXTH, return the variables
