@@ -79,7 +79,7 @@ class workflow_service_type:
           armParamsDict = {"caller":'serviceInstance', "serviceType":serviceType}
           ctfbknd.createTfBackend(systemConfig, instance, armParamsDict)
           print('hkjgfdsa')
-          quit('BREAK tfBackend1')
+#          quit('BREAK tfBackend1')
         else:  
           carm.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, False)
       elif instanceTool == 'cloudformation':
@@ -110,7 +110,7 @@ class workflow_service_type:
         crnr.runPreOrPostProcessor(postprocessor, 'on')
       else:
         pass
-    quit('BREAK tfBackend2')
+#    quit('BREAK tfBackend2')
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, serviceType, instName)
 
   #@public
