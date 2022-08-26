@@ -39,8 +39,12 @@ class command_builder:
       varsFragment = self.getTerraformParamsFile(varLines)
     elif tool == "packer":
       varsFragment = self.getPackerParamsFile(varLines)
+    print('serviceType is: ', serviceType)
+    print('tool is: ', tool)
+    print('callingClass is: ', callingClass)
+
     print('xzs varsFragment is: ', varsFragment)
-    quit('poiuytrewq')
+#    quit('poiuytrewq')
     return varsFragment
 
   #@public
