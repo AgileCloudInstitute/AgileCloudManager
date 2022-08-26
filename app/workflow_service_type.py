@@ -75,11 +75,11 @@ class workflow_service_type:
       instanceTool = instance.get("controller")
       print('instanceTool is: ', instanceTool)
       print('serviceType is: ', serviceType)
-      quit('BREAK tfBackend')
       if instanceTool =='arm':
         if serviceType == "tfBackend":
           armParamsDict = {"caller":'serviceInstance', "serviceType":serviceType}
           ctfbknd.createTfBackend(systemConfig, instance, armParamsDict)
+          quit('BREAK tfBackend1')
         else:
           carm.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, False)
       elif instanceTool == 'cloudformation':
@@ -104,6 +104,7 @@ class workflow_service_type:
 #          ctf.terraformCrudOperation(operation, systemInstanceName, keyDir, systemConfig, instance, 'systems', None, None, instName)
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, 'systems', serviceType, None, instName)
 #              terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
+      quit('BREAK tfBackend2')
 
       postprocessor = instance.get("postprocessor")
       if postprocessor:
