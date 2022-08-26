@@ -71,7 +71,11 @@ class workflow_service_type:
         crnr.runPreOrPostProcessor(preprocessor, 'on') 
       else:
         pass
+
       instanceTool = instance.get("controller")
+      print('instanceTool is: ', instanceTool)
+      print('serviceType is: ', serviceType)
+      quit('BREAK tfBackend')
       if instanceTool =='arm':
         if serviceType == "tfBackend":
           armParamsDict = {"caller":'serviceInstance', "serviceType":serviceType}

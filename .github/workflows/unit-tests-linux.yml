@@ -1,5 +1,8 @@
 name: unit-tests-linux
-on: [push]
+on:
+  push:
+    branches:
+      - dev
 jobs:
   e2e-tests-linux-projects:
     runs-on: ubuntu-latest
