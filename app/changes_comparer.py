@@ -85,7 +85,7 @@ class changes_comparer:
     stepsLast = ''
     stepsSecondToLast = ''
     for changeDict in reversed(changeReports):
-      print('changeDict is: ', changeDict)
+#      print('changeDict is: ', changeDict)
 #      quit('--polkjmnbvxx')
       if reverseCounter < 2:
         lineDict = self.getLineDict(changeDict)
