@@ -31,7 +31,7 @@ class controller_tfbackendazrm:
     if backendType == 'azurerm': 
       serviceType = paramsDict["serviceType"]
       onlyFoundationOutput = False
-      quit('BREAK TEST')
+#      quit('BREAK TEST') 
       ca = controller_arm()
       ca.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, onlyFoundationOutput)
       cka.writeTheVarsFile(systemConfig, instance, "tfBackend", None, None)
