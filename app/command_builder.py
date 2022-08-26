@@ -424,6 +424,7 @@ class command_builder:
       else:
         logString = "ERROR: Invalid controller name: "+tool
         quit(logString)
+    print('end varLines is: ', str(varLines))
     #SIXTH, return the variables
     if (tool == "arm") or (tool == "cloudformation") or (tool == "customController") or (tool == "terraform") or (tool == "packer"):
       return varLines
@@ -731,4 +732,5 @@ class command_builder:
     else: 
       #Handle plaintext variables that do not require coordinate searching
       value = mappedVariables.get(varName)
+    print('end value is: ', value)
     return value
