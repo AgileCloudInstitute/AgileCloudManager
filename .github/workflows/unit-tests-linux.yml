@@ -24,7 +24,7 @@ jobs:
           export ACM_VAR_ONE=/home/runner/acmconfig/keys.yaml
           #sudo echo "export ACM_VAR_ONE=/home/runner/acmconfig/keys.yaml" >> /etc/environment
           #sudo echo "export ACM_VAR_ONE=/home/runner/acmconfig/keys.yaml" >> /etc/bashrc
-          sudo echo "export ACM_VAR_ONE=/home/runner/acmconfig/keys.yaml" >> /etc/profile
+          #sudo echo "export ACM_VAR_ONE=/home/runner/acmconfig/keys.yaml" >> /etc/profile
           sudo mkdir /var/log/acm
           sudo chown -R runner:runner /var/log/acm
           sudo mkdir /opt/acm
@@ -37,7 +37,7 @@ jobs:
           export ACM_VAR_TWO=/usr/acm/keys/adminAccounts/keys.yaml
           #sudo echo "export ACM_VAR_TWO=/usr/acm/keys/adminAccounts/keys.yaml" >> /etc/environment
           #sudo echo "export ACM_VAR_TWO=/usr/acm/keys/adminAccounts/keys.yaml" >> /etc/bashrc
-          sudo echo "export ACM_VAR_TWO=/usr/acm/keys/adminAccounts/keys.yaml" >> /etc/profile
+          #sudo echo "export ACM_VAR_TWO=/usr/acm/keys/adminAccounts/keys.yaml" >> /etc/profile
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
           git --version
