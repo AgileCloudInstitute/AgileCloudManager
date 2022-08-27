@@ -13,6 +13,8 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_VAR_ONE: /home/runner/acmconfig/keys.yaml
+          ACM_VAR_TWO: /usr/acm/keys/adminAccounts/keys.yaml
         run: |
           az extension add --name resource-graph
           echo "Current working directory is: "
