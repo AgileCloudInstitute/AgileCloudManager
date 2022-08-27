@@ -554,6 +554,9 @@ class command_builder:
     cr = command_runner()
     if mappedVariables.get(varName).startswith('$env.'):
       envVarName = mappedVariables.get(varName).replace('$env.', '')
+      print('varName is: ', varName)
+      print('envVarName is: ', envVarName)
+      print('os.environ is: ', str(os.environ))
       if envVarName in os.environ:
         value = os.environ.get(envVarName)
       else:
