@@ -557,6 +557,8 @@ class command_builder:
       print('varName is: ', varName)
       print('envVarName is: ', envVarName)
       print('os.environ is: ', str(os.environ))
+      print("ACM_VAR_ONE:", os.environ.get('ACM_VAR_ONE', '<unset>'))
+      print("ACM_VAR_TWO:", os.environ.get('ACM_VAR_TWO', '<unset>'))
       if envVarName in os.environ:
         value = os.environ.get(envVarName)
       else:
