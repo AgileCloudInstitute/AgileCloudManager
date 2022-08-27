@@ -21,6 +21,7 @@ jobs:
           mkdir /home/runner/keys/starter
           mkdir /home/runner/acmconfig/
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          export ACM_VAR_ONE=/home/runner/acmconfig/keys.yaml
           sudo mkdir /var/log/acm
           sudo chown -R runner:runner /var/log/acm
           sudo mkdir /opt/acm
@@ -30,6 +31,7 @@ jobs:
           sudo mkdir /usr/acm/keys/adminAccounts
           sudo chown -R runner:runner /usr/acm 
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          export ACM_VAR_TWO=/usr/acm/keys/adminAccounts/keys.yaml
           sudo chown -R runner:runner /usr/acm
           echo 'new------------------'
           git --version
