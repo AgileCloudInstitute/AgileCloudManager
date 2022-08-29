@@ -69,47 +69,58 @@ jobs:
       - shell: bash
         name: Run setup on
         run: |
-          echo "Current working directory is: "
-          pwd
-          echo 'Contents are: --------------------------------------------------'
-          ls -al
-          echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
           cd /home/runner/work/AgileCloudManager/
-          echo "Current working directory is: "
-          pwd
-          echo 'Contents are: --------------------------------------------------'
-          ls -al
           python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects1.git
       - shell: bash
-        name: Run platform on
+        name: Run tfbackend services on
         run: |
-          echo "................about to pwd"
-          pwd
-          echo "................about to list contents"
-          ls -al
-          echo "................about to cd /home/runner/work/AgileCloudManager/ "
           cd /home/runner/work/AgileCloudManager/
-          echo "Current working directory is: "
-          pwd
-          echo 'Contents are: --------------------------------------------------'
-          ls -al
-          echo ".................about to run e2e test"
-          python AgileCloudManager/app/acm.py platform on
+          python AgileCloudManager/app/acm.py services on systemName=tfbackend
       - shell: bash
-        name: Run platform off
+        name: Run admin foundation on
         run: |
-          echo "................about to pwd"
-          pwd
-          echo "................about to list contents"
-          ls -al
-          echo "................about to cd /home/runner/work/AgileCloudManager/ "
           cd /home/runner/work/AgileCloudManager/
-          echo "Current working directory is: "
-          pwd
-          echo 'Contents are: --------------------------------------------------'
-          ls -al
-          echo ".................about to run e2e test"
-          python AgileCloudManager/app/acm.py platform off
+          python AgileCloudManager/app/acm.py foundation on systemName=admin
+      - shell: bash
+        name: Run admin services on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py services on systemName=admin
+      - shell: bash
+        name: Run agents foundation on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py foundation on systemName=agents
+      - shell: bash
+        name: Run agents services on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py services on systemName=agents
+      - shell: bash
+        name: Run agents services off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py services off systemName=agents
+      - shell: bash
+        name: Run agents foundation off off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py foundation off systemName=agents
+      - shell: bash
+        name: Run admin services off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py services off systemName=admin
+      - shell: bash
+        name: Run admin foundation off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py foundation off systemName=admin
+      - shell: bash
+        name: Run tfbackend services off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py services off systemName=tfbackend
       - shell: bash
         name: Delete Secrets
         run: |
