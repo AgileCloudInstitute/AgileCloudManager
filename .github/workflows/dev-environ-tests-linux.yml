@@ -29,5 +29,5 @@ jobs:
           git remote set-url origin $repoWithToken
           git branch -M test
           git add --all
-          git commit -m "more upgrades"
+          #git commit -m "more upgrades"
           git push --force -u origin test
