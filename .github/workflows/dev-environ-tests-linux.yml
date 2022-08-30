@@ -22,8 +22,10 @@ jobs:
           #repoWithToken="https://"$gitPass$repoPart2
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           repoWithTokenAndName="https://AgileCloudInstitute:"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
           git init
-          git config --global url."$repoWithTokenAndName".insteadOf "https://github.com"
+          #git config --global url."$repoWithTokenAndName".insteadOf "https://github.com"
           git remote set-url origin $repoWithToken
           git add --all
           git commit -m "more upgrades"
