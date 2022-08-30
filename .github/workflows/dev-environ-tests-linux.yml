@@ -10,6 +10,7 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           az extension add --name resource-graph
           echo "Current working directory is: "
@@ -18,7 +19,10 @@ jobs:
           mkdir /home/runner/acmconfig/
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           sudo chown -R runner:runner /home/runner/acmconfig
+          #repoWithToken="https://"$gitPass$repoPart2
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git init
+          git remote set-url origin $repoWithToken
           git add --all
           git commit -m "more upgrades"
           git branch -M test
