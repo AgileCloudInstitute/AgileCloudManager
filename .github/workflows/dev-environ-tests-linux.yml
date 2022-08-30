@@ -27,7 +27,7 @@ jobs:
           git init
           #git config --global url."$repoWithTokenAndName".insteadOf "https://github.com"
           git remote set-url origin $repoWithToken
+          git branch -M test
           git add --all
           git commit -m "more upgrades"
-          git branch -M test
           git push --force -u origin test
