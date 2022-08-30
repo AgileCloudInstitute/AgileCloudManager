@@ -4,7 +4,7 @@ on:
     branches:
       - dev
 jobs:
-  e2e-tests-linux-projects:
+  e2e-tests-linux-terraform-packer:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -72,6 +72,26 @@ jobs:
           cd /home/runner/work/AgileCloudManager/
           python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
       - shell: bash
+        name: Run tfbackend serviceType on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceType on systemName=tfbackend serviceType=tfBackend
+      - shell: bash
+        name: Run tfbackend serviceType off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceType off systemName=tfbackend serviceType=tfBackend
+      - shell: bash
+        name: Run tfbackend serviceInstance on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+      - shell: bash
+        name: Run tfbackend serviceInstance off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+      - shell: bash
         name: Run tfbackend services on
         run: |
           cd /home/runner/work/AgileCloudManager/
@@ -121,26 +141,8 @@ jobs:
         run: |
           cd /home/runner/work/AgileCloudManager/
           python AgileCloudManager/app/acm.py services off systemName=tfbackend
-      - shell: bash
-        name: Run tfbackend serviceType on
-        run: |
-          cd /home/runner/work/AgileCloudManager/
-          python AgileCloudManager/app/acm.py serviceTyoe on systemName=tfbackend serviceType=tfBackend
-      - shell: bash
-        name: Run tfbackend serviceType off
-        run: |
-          cd /home/runner/work/AgileCloudManager/
-          python AgileCloudManager/app/acm.py serviceTyoe off systemName=tfbackend serviceType=tfBackend
-      - shell: bash
-        name: Run tfbackend serviceInstance on
-        run: |
-          cd /home/runner/work/AgileCloudManager/
-          python AgileCloudManager/app/acm.py serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
-      - shell: bash
-        name: Run tfbackend serviceInstance off
-        run: |
-          cd /home/runner/work/AgileCloudManager/
-          python AgileCloudManager/app/acm.py serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+
+
       - shell: bash
         name: Delete Secrets
         run: |
