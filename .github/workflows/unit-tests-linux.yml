@@ -122,16 +122,26 @@ jobs:
           cd /home/runner/work/AgileCloudManager/
           python AgileCloudManager/app/acm.py services off systemName=tfbackend
       - shell: bash
+        name: Run tfbackend serviceType on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceTyoe on systemName=tfbackend serviceType=tfBackend
+      - shell: bash
+        name: Run tfbackend serviceType off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceTyoe off systemName=tfbackend serviceType=tfBackend
+      - shell: bash
+        name: Run tfbackend serviceInstance on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+      - shell: bash
+        name: Run tfbackend serviceInstance off
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+      - shell: bash
         name: Delete Secrets
         run: |
           rm /home/runner/acmconfig/keys.yaml
-
-
-
-#Next step is to put the secrets into the locations where acm can see them.
-#Then make sure the directories are created for the setup command to use to install things.
-#Also make sure that secrets have been destroyed
-#          echo "$ACM_SECRET" > /home/runner/keys/starter/keys.yaml
-#          echo 'cat-----------------------------------'
-#          cat -n /home/runner/keys/starter/keys.yaml
-#          rm /home/runner/keys/starter/keys.yaml
