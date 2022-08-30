@@ -281,7 +281,7 @@ class controller_terraform:
       cb = command_builder()
       backendVars = cb.getBackendVarsFragment(backendVarCoordinates, tool, keyDir)
       print('backendVars is: ', backendVars)
-
+ 
       initCommand= binariesPath + "terraform init -backend=true " + backendVars
     else:
       initCommand = binariesPath + 'terraform init '

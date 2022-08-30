@@ -418,7 +418,7 @@ class TestControllerPacker(unittest.TestCase):
         'controller': 'terraform',
         'resourceGroupName': 'myEmptyTestRG',
         'resourceGroupRegion': 'eastus',
-        'canary': 'isabird',
+        'canary': 'isabird', 
         'labrador': 'isadog',
         'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
         'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 

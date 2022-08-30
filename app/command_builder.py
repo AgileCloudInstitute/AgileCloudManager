@@ -181,7 +181,11 @@ class command_builder:
     cfmtr = command_formatter()
     lw = log_writer()
     secretVarLines = []
+#    print('backendVarCoordinates is: ', backendVarCoordinates)
+#    quit('---b!')
     for backendVar in backendVarCoordinates:
+#      if backendVar == 'key':
+#        print('1 backendVar is: ', backendVar)
       if backendVarCoordinates.get(backendVar).startswith("$keys"):
         secretVarLine = self.getSecretVarFromKeys(tool, keyDir, backendVar, backendVarCoordinates.get(backendVar))
         if 'empty' not in secretVarLine:
@@ -192,6 +196,10 @@ class command_builder:
           secretVarLine = self.getSecretVarFromUserConfig(tool, backendVar, backendVarCoordinates.get(backendVar))
           if 'empty' not in secretVarLine:
             secretVarLines.append(secretVarLine.replace(" ", ""))
+#          if backendVar == 'key':
+#            print('2 backendVar is: ', backendVar)
+#            print('secretVarLine is: ', secretVarLine)
+#    print('a secretVarLines is: ', secretVarLines)
     if len(secretVarLines)>0:
       tfBackendFileAndPath = config_cliprocessor.inputVars.get("tfBackendFileAndPath")
       if tool == 'terraform':
@@ -208,6 +216,9 @@ class command_builder:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     varSnip = cfmtr.formatPathForOS(varSnip)
+#    print('varSnip is: ', varSnip)
+#    print('b secretVarLines is: ', secretVarLines)
+#    quit('a---!')
     return varSnip
 
   #@private

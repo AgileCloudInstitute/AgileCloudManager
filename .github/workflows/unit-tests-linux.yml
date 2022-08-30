@@ -70,7 +70,7 @@ jobs:
         name: Run setup on
         run: |
           cd /home/runner/work/AgileCloudManager/
-          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects1.git
+          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
       - shell: bash
         name: Run tfbackend services on
         run: |
@@ -102,7 +102,7 @@ jobs:
           cd /home/runner/work/AgileCloudManager/
           python AgileCloudManager/app/acm.py services off systemName=agents
       - shell: bash
-        name: Run agents foundation off off
+        name: Run agents foundation off
         run: |
           cd /home/runner/work/AgileCloudManager/
           python AgileCloudManager/app/acm.py foundation off systemName=agents
