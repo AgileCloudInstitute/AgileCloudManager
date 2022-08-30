@@ -690,6 +690,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   e2e-tests-linux-terraform-packer:
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -826,8 +827,6 @@ jobs:
         run: |
           cd /home/runner/work/AgileCloudManager/
           python AgileCloudManager/app/acm.py services off systemName=tfbackend
-
-
       - shell: bash
         name: Delete Secrets
         run: |
