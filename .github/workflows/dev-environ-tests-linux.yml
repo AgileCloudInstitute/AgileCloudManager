@@ -1,7 +1,7 @@
 name: dev-environ-tests-linux
 on: [push]
 jobs:
-  unit-tests-linux-misc:
+  push-to-test-branch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,3 +18,8 @@ jobs:
           mkdir /home/runner/acmconfig/
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           sudo chown -R runner:runner /home/runner/acmconfig
+          git init
+          git add --all
+          git commit -m "more upgrades"
+          git branch -M test
+          git push --force -u origin test
