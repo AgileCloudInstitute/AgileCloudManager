@@ -13,14 +13,16 @@ jobs:
         run: |
           pip install -U pyinstaller
           cd app
-          #cd into /app directory
           rm __init__.py
           pyinstaller acm.py
-          #copy the dist/acm folder into somewhere that is inside the PATH or add it to the PATH.
           sudo cp -r dist/acm /usr/local/bin
           sudo chown -R runner:runner /usr/local/bin/acm
           echo "........................About to ls -al /usr/local/bin "
           ls -al /usr/local/bin
+          echo "++++++++++++++++++++++++About to hash /usr/local/bin/acm"
+          hash /usr/local/bin/acm
+          echo "------------------------About to hash /usr/local/bin/acm.py"
+          hash /usr/local/bin/acm.py
   e2e-tests-cloudformation:
     needs: [create-exe-and-add-to-path]
     runs-on: ubuntu-latest
