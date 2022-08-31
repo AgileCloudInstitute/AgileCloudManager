@@ -2,7 +2,7 @@ name: test-environ-tests-linux
 on:
   push:
     branches:
-      - test
+      - dev
 jobs:
   create-exe-and-add-to-path:
     runs-on: ubuntu-latest
