@@ -25,6 +25,11 @@ jobs:
           hash /usr/local/bin/acm
           echo "------------------------About to hash /usr/local/bin/acm.py"
           hash /usr/local/bin/acm.py
+          echo "++++++++++++++++++++++++About to hash /usr/local/bin/acm/acm"
+          hash /usr/local/bin/acm/acm
+          echo "------------------------About to hash /usr/local/bin/acm/acm.py"
+          hash /usr/local/bin/acm/acm.py
+
   e2e-tests-cloudformation:
     needs: [create-exe-and-add-to-path]
     runs-on: ubuntu-latest
