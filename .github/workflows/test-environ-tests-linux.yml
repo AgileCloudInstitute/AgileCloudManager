@@ -30,7 +30,7 @@ jobs:
           cd dist/acm
           echo "........................About to ls -al"
           ls -al
-          sudo cp dist/acm/acm /usr/local/bin
+          sudo cp acm /usr/local/bin
   e2e-tests-cloudformation:
     needs: [create-exe-and-add-to-path]
     runs-on: ubuntu-latest
