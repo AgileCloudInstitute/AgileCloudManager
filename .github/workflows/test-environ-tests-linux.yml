@@ -19,6 +19,8 @@ jobs:
           sudo chown -R runner:runner /usr/local/bin/acm
           echo "........................About to ls -al /usr/local/bin "
           ls -al /usr/local/bin
+          echo "........................About to ls -al /usr/local/bin/acm "
+          ls -al /usr/local/bin/acm
           echo "++++++++++++++++++++++++About to hash /usr/local/bin/acm"
           hash /usr/local/bin/acm
           echo "------------------------About to hash /usr/local/bin/acm.py"
