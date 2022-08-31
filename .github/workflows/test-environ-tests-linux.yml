@@ -1,0 +1,32 @@
+name: test-environ-tests-linux
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  create-exe-and-add-to-path:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - shell: bash
+        name: Create exe and add exe to PATH
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
+        run: |
+          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          #git config --global user.name "AgileCloudInstitute"
+          #git init
+          #git remote set-url origin $repoWithToken
+          #git branch -M test
+          #git add --all
+          #git push --force -u origin test
+          pip install -U pyinstaller
+          echo "........................About to ls -al"
+          ls -al
+          #cd into /app directory
+          #rm __init__.py
+          #pyinstaller acm.py
+          #copy the dist/acm folder into somewhere that is inside the PATH or add it to the PATH.
+
+
