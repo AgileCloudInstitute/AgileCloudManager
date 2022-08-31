@@ -29,15 +29,14 @@ jobs:
           hash /usr/local/bin/acm/acm
           echo "------------------------About to hash /usr/local/bin/acm/acm.py"
           hash /usr/local/bin/acm/acm.py
-      - shell: bash
-        name: Setup acm on
-        run: |
+          sudo mkdir /home/runner/testdir
+          sudo chown runner:runner /home/runner/testdir
+          cd /home/runner/testdir
+          echo 'About to setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
-          echo "........................About to ls -al"
-          ls -al
-      - shell: bash
-        name: Setup acm off
-        run: |
+          echo "........................About to ls -al /home/runner/testdir"
+          ls -al /home/runner/testdir
+          echo 'About to setup off'
           acm setup off
           echo "........................About to ls -al"
           ls -al
