@@ -22,11 +22,11 @@ jobs:
           #git add --all
           #git push --force -u origin test
           pip install -U pyinstaller
+          cd app
+          #cd into /app directory
+          rm __init__.py
+          pyinstaller acm.py
+          #copy the dist/acm folder into somewhere that is inside the PATH or add it to the PATH.
+          cd dist/acm
           echo "........................About to ls -al"
           ls -al
-          #cd into /app directory
-          #rm __init__.py
-          #pyinstaller acm.py
-          #copy the dist/acm folder into somewhere that is inside the PATH or add it to the PATH.
-
-
