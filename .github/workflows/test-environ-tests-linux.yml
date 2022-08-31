@@ -28,6 +28,7 @@ jobs:
           pyinstaller acm.py
           #copy the dist/acm folder into somewhere that is inside the PATH or add it to the PATH.
           sudo cp -r dist/acm /usr/local/bin
+          sudo chown -R runner:runner /usr/local/bin/acm
           echo "........................About to ls -al /usr/local/bin "
           ls -al /usr/local/bin
   e2e-tests-cloudformation:
