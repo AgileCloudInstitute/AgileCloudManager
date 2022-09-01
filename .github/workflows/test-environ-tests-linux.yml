@@ -43,6 +43,8 @@ jobs:
           sudo chown -R runner:runner /usr/local/bin
           echo ".........................About to ls -al /usr/local/bin"
           ls -al /usr/local/bin
+          cd ../..
+          rm -rf dist
       - shell: bash
         name: Configure agent
         env:
@@ -106,8 +108,8 @@ jobs:
           pwd
           echo '........................About to ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/'
           ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/
-          echo '........................About to ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/acmConfig/ '
-          ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/acmConfig/
+          #echo '........................About to ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/acmConfig/ '
+          #ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/acmConfig/
           echo '........................About to setup off'
           acm setup off
           echo "........................About to ls -al"
