@@ -100,6 +100,8 @@ jobs:
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
           echo "........................About to ls -al "
           ls -al 
+      - name: Setup Off
+        run: |
           echo '........................About to setup off'
           acm setup off
           echo "........................About to ls -al"
