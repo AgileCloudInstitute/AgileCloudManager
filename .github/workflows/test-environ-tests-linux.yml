@@ -102,6 +102,12 @@ jobs:
           ls -al 
       - name: Setup Off
         run: |
+          echo '........................About to pwd'
+          pwd
+          echo '........................About to ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/'
+          ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/
+          echo '........................About to ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/acmConfig/ '
+          ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/acmConfig/
           echo '........................About to setup off'
           acm setup off
           echo "........................About to ls -al"
