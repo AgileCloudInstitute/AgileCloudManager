@@ -35,9 +35,12 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
-          ls -R
+          echo "-------------------------About to ls -al current directory "
+          ls -al
           sudo cp -R . /usr/local/bin/. 
           sudo chown -R runner:runner /usr/local/bin
+          echo ".........................About to ls -al /usr/local/bin"
+          ls -al /usr/local/bin
       - name: Setup On
         run: |
           sudo mkdir /home/runner/testdir
