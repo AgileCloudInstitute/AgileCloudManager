@@ -29,7 +29,6 @@ jobs:
     needs: [create-exe-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact
@@ -55,6 +54,7 @@ jobs:
           echo "........................About to ls -al"
           ls -al
 
+#      - uses: actions/checkout@v2
 #/////////////////////
 #          sudo cp -r dist/acm /usr/local/bin
 #          sudo chown -R runner:runner /usr/local/bin/acm
