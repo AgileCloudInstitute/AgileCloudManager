@@ -104,6 +104,7 @@ jobs:
           ls -al 
       - name: Setup Off
         run: |
+          cd /home/runner/testdir
           echo '........................About to pwd'
           pwd
           echo '........................About to ls -al /home/runner/work/AgileCloudManager/AgileCloudManager/'
