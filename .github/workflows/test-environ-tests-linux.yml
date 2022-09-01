@@ -24,7 +24,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: acm-artifact
-          path: acm_build.tar
+          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
   e2e-tests-cloudformation:
     needs: [create-exe-and-upload-artifact]
     runs-on: ubuntu-latest
