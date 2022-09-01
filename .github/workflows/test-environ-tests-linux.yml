@@ -16,6 +16,10 @@ jobs:
           rm __init__.py
           pyinstaller acm.py
           tar -cvf acm_build.tar dist/acm
+          echo "...................About to pwd"
+          pwd
+          echo "...................About to ls -al "
+          ls -al
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
