@@ -34,6 +34,8 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
+          tar -xvf acm_build.tar
+          rm acm_build.tar
           echo "-------------------------About to ls -al current directory "
           ls -al
           sudo cp -R . /usr/local/bin/. 
