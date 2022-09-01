@@ -36,6 +36,7 @@ jobs:
         run: |
           tar -xvf acm_build.tar
           rm acm_build.tar
+          cd dist/acm
           echo "-------------------------About to ls -al current directory "
           ls -al
           sudo cp -R . /usr/local/bin/. 
