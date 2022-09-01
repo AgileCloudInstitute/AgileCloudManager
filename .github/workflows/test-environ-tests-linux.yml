@@ -34,7 +34,23 @@ jobs:
         with:
           name: acm-artifact
       - name: Display structure of downloaded files
-        run: ls -R
+        run: |
+          ls -R
+          sudo cp -R . /usr/local/bin/. 
+          sudo chown -R runner:runner /usr/local/bin
+      - name: Setup On
+          run: |
+          sudo mkdir /home/runner/testdir
+          sudo chown runner:runner /home/runner/testdir
+          cd /home/runner/testdir
+          echo 'About to setup on'
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          echo "........................About to ls -al "
+          ls -al 
+          echo '........................About to setup off'
+          acm setup off
+          echo "........................About to ls -al"
+          ls -al
 
 #/////////////////////
 #          sudo cp -r dist/acm /usr/local/bin
