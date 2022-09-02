@@ -14,13 +14,14 @@ jobs:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: |
+          #$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
           import os
           print("Current working directory is: ", str(os.path.abspath(".")))
           import subprocess
           #https://aka.ms/installazurecliwindows
           #https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi
           print("About to curl for the msi")
-          result = subprocess.run(['curl', '-L -o AzureCLI.msi https://aka.ms/installazurecliwindows'], stdout=subprocess.PIPE)
+          result = subprocess.run(['curl', '-L -o .\AzureCLI.msi https://aka.ms/installazurecliwindows'], stdout=subprocess.PIPE)
           result.stdout
           #result = subprocess.run(['az', 'extension add --name resource-graph'], stdout=subprocess.PIPE)
           #result = subprocess.run(['az', '--version'], stdout=subprocess.PIPE)
