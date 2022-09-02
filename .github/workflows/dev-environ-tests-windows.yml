@@ -19,7 +19,7 @@ jobs:
           subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
           subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
           subprocess.check_call([sys.executable, "-m", "pip", "install", "IPy"])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "zipfile"])
+          #subprocess.check_call([sys.executable, "-m", "pip", "install", "zipfile"])
           print('Python version is: ', str(sys.version_info[0]),'.',str(sys.version_info[1]))
           import os
           print("Current working directory is: ", str(os.path.abspath(".")))
@@ -53,9 +53,11 @@ jobs:
           os.chdir('D:\\Users\\runner\\terraform-download\\')
           import requests
           res = requests.get('https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip')
-          import zipfile
-          with zipfile.ZipFile(res,"r") as zip_ref:
-            zip_ref.extractall("D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
+          #import zipfile
+          import shutil
+          shutil.unpack_archive(res, "D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
+          #with zipfile.ZipFile(res,"r") as zip_ref:
+          #  zip_ref.extractall("D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
           #Install ansible
           os.chdir('D:\\Users\\runner\\')
           subprocess.check_call([sys.executable, "-m", "pip", "install", ansible])
