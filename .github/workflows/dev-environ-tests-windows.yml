@@ -17,6 +17,8 @@ jobs:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: |
+          import sys
+          print('Python version is: ', str(sys.version_info[0]),'.',str(sys.version_info[1]))
           import os
           print("Current working directory is: ", str(os.path.abspath(".")))
           import subprocess
