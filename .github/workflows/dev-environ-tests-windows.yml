@@ -16,10 +16,10 @@ jobs:
         run: |
           import subprocess
           import sys
-          subprocess.check_call([sys.executable, "-m", "pip", "install", requests])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", pyyaml])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", IPy])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", zipfile])
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "IPy"])
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "zipfile"])
           print('Python version is: ', str(sys.version_info[0]),'.',str(sys.version_info[1]))
           import os
           print("Current working directory is: ", str(os.path.abspath(".")))
