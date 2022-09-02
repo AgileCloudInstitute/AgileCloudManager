@@ -44,7 +44,7 @@ jobs:
           output = subprocess.getoutput('git --version')
           print(output)
           ## Install Terraform
-          os.chdir('D:\Users\runner\')
+          os.chdir('D:\\Users\\runner\\')
           pathlib.Path("D:\\Users\\runner\\terraform-download\\").mkdir(parents=True, exist_ok=True)
           os.chdir('D:\\Users\\runner\\terraform-download\\')
           import requests
