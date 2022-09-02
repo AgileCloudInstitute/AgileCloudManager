@@ -24,14 +24,16 @@ jobs:
           import subprocess
           print("About to az --version")
           mycmd = "az --version"
-          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-          while(True):
-            # returns None while subprocess is running
-            retcode = p.poll() 
-            line = p.stdout.readline()
-            print('x: ', line)
-            if retcode is not None:
-              break
+          output = subprocess.getoutput(mycmd)
+          print(output)
+          #p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          #while(True):
+          #  # returns None while subprocess is running
+          #  retcode = p.poll() 
+          #  line = p.stdout.readline()
+          #  print('x: ', line)
+          #  if retcode is not None:
+          #    break
           #https://aka.ms/installazurecliwindows
           #https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi
           #print("About to curl for the msi")
