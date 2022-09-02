@@ -14,11 +14,13 @@ jobs:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: |
+          import os
+          print("Current working directory is: ", str(os.path.abspath(".")))
           import subprocess
-          result = subprocess.run(['az', 'extension add --name resource-graph'], stdout=subprocess.PIPE)
+          #result = subprocess.run(['az', 'extension add --name resource-graph'], stdout=subprocess.PIPE)
+          result = subprocess.run(['az', '--version'], stdout=subprocess.PIPE)
           result.stdout
           #az extension add --name resource-graph
-          print("Current working directory is: ", str(os.path.abspath(".")))
 #\          cd
 #\          mkdir C:\Users\runner\keys
 #\          mkdir C:\Users\runner\keys\starter
