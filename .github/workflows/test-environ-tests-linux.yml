@@ -420,17 +420,21 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
+          mkdir /home/runner/acmhome
+          sudo chown runner:runner /home/runner/acmhome
+          cd /home/runner/acmhome
           tar -xvf acm_build.tar
           rm acm_build.tar
-          cd dist/acm
-          echo "-------------------------About to ls -al current directory "
-          ls -al
-          sudo cp -R . /usr/local/bin/. 
-          sudo chown -R runner:runner /usr/local/bin
-          echo ".........................About to ls -al /usr/local/bin"
-          ls -al /usr/local/bin
-          cd ../..
-          rm -rf dist
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          #cd dist/acm
+          #echo "-------------------------About to ls -al current directory "
+          #ls -al
+          #sudo cp -R . /usr/local/bin/. 
+          #sudo chown -R runner:runner /usr/local/bin
+          #echo ".........................About to ls -al /usr/local/bin"
+          #ls -al /usr/local/bin
+          #cd ../..
+          #rm -rf dist
       - shell: bash
         name: Configure agent
         env:
@@ -481,6 +485,7 @@ jobs:
           sudo apt clean
       - name: Setup On
         run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
@@ -491,17 +496,20 @@ jobs:
       - shell: bash
         name: Run platform on
         run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform on
       - shell: bash
         name: Run platform off
         run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform off
       - name: Setup Off
         run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
           acm setup off
@@ -520,17 +528,24 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
+          mkdir /home/runner/acmhome
+          sudo chown runner:runner /home/runner/acmhome
+          cd /home/runner/acmhome
           tar -xvf acm_build.tar
           rm acm_build.tar
-          cd dist/acm
-          echo "-------------------------About to ls -al current directory "
-          ls -al
-          sudo cp -R . /usr/local/bin/. 
-          sudo chown -R runner:runner /usr/local/bin
-          echo ".........................About to ls -al /usr/local/bin"
-          ls -al /usr/local/bin
-          cd ../..
-          rm -rf dist
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          #/////
+          #tar -xvf acm_build.tar
+          #rm acm_build.tar
+          #cd dist/acm
+          #echo "-------------------------About to ls -al current directory "
+          #ls -al
+          #sudo cp -R . /usr/local/bin/. 
+          #sudo chown -R runner:runner /usr/local/bin
+          #echo ".........................About to ls -al /usr/local/bin"
+          #ls -al /usr/local/bin
+          #cd ../..
+          #rm -rf dist
       - shell: bash
         name: Configure agent
         env:
@@ -620,17 +635,24 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
+          mkdir /home/runner/acmhome
+          sudo chown runner:runner /home/runner/acmhome
+          cd /home/runner/acmhome
           tar -xvf acm_build.tar
           rm acm_build.tar
-          cd dist/acm
-          echo "-------------------------About to ls -al current directory "
-          ls -al
-          sudo cp -R . /usr/local/bin/. 
-          sudo chown -R runner:runner /usr/local/bin
-          echo ".........................About to ls -al /usr/local/bin"
-          ls -al /usr/local/bin
-          cd ../..
-          rm -rf dist
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          #////////////////
+          #tar -xvf acm_build.tar
+          #rm acm_build.tar
+          #cd dist/acm
+          #echo "-------------------------About to ls -al current directory "
+          #ls -al
+          #sudo cp -R . /usr/local/bin/. 
+          #sudo chown -R runner:runner /usr/local/bin
+          #echo ".........................About to ls -al /usr/local/bin"
+          #ls -al /usr/local/bin
+          #cd ../..
+          #rm -rf dist
       - shell: bash
         name: Configure agent
         env:
@@ -720,17 +742,24 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
+          mkdir /home/runner/acmhome
+          sudo chown runner:runner /home/runner/acmhome
+          cd /home/runner/acmhome
           tar -xvf acm_build.tar
           rm acm_build.tar
-          cd dist/acm
-          echo "-------------------------About to ls -al current directory "
-          ls -al
-          sudo cp -R . /usr/local/bin/. 
-          sudo chown -R runner:runner /usr/local/bin
-          echo ".........................About to ls -al /usr/local/bin"
-          ls -al /usr/local/bin
-          cd ../..
-          rm -rf dist
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          #/////////////
+          #tar -xvf acm_build.tar
+          #rm acm_build.tar
+          #cd dist/acm
+          #echo "-------------------------About to ls -al current directory "
+          #ls -al
+          #sudo cp -R . /usr/local/bin/. 
+          #sudo chown -R runner:runner /usr/local/bin
+          #echo ".........................About to ls -al /usr/local/bin"
+          #ls -al /usr/local/bin
+          #cd ../..
+          #rm -rf dist
       - shell: bash
         name: Configure agent
         env:
