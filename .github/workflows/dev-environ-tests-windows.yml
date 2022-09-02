@@ -41,7 +41,7 @@ jobs:
           #wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
           curl -L -o terraform_0.12.24_linux_amd64.zip https://releases.hashicorp.com/terraform/0.12.24/
           unzip terraform_0.12.24_linux_amd64.zip
-          echo $PATH
+          echo %PATH%
 #          #Move the terraform binary into a folder that is listed as part of the PATH variable.  
 #          mv terraform /usr/local/bin/
 #          echo 'and---------------------------------'
