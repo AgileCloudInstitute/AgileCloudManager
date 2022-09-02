@@ -26,9 +26,9 @@ jobs:
           #result = subprocess.run(['curl', '-L -o .\AzureCLI.msi https://aka.ms/installazurecliwindows'], stdout=subprocess.PIPE)
           #result.stdout
           #result = subprocess.run(['az', 'extension add --name resource-graph'], stdout=subprocess.PIPE)
-          #result = subprocess.run(['az', '--version'], stdout=subprocess.PIPE)
-          print("About to dir")
-          result = subprocess.run(['dir'], stdout=subprocess.PIPE)
+          print("About to az --version")
+          result = subprocess.run(['az', '--version'], stdout=subprocess.PIPE)
+          #result = subprocess.run(['dir'], stdout=subprocess.PIPE)
           result.stdout
           #az extension add --name resource-graph
 #\          cd
