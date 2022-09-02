@@ -53,9 +53,11 @@ jobs:
           os.chdir('D:\\Users\\runner\\terraform-download\\')
           import requests
           res = requests.get('https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip')
+          with open("terraform_0.12.24_linux_amd64.zip", "wb") as f:
+            f.write(response.content)
           #import zipfile
           import shutil
-          shutil.unpack_archive(res, "D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
+          shutil.unpack_archive("terraform_0.12.24_linux_amd64.zip", "D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
           #with zipfile.ZipFile(res,"r") as zip_ref:
           #  zip_ref.extractall("D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
           #Install ansible
