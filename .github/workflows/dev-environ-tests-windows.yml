@@ -8,13 +8,17 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - shell: cmd
+      - shell: python
         name: Configure agent
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-        run: az extension add --name resource-graph
-#\          echo "Current working directory is: "
+        run: |
+          import subprocess
+          result = subprocess.run(['az', 'extension add --name resource-graph'], stdout=subprocess.PIPE)
+          result.stdout
+          #az extension add --name resource-graph
+          print("Current working directory is: ", str(os.path.abspath(".")))
 #\          cd
 #\          mkdir C:\Users\runner\keys
 #\          mkdir C:\Users\runner\keys\starter
