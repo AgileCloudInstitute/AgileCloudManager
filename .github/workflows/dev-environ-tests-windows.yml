@@ -22,16 +22,26 @@ jobs:
           import os
           print("Current working directory is: ", str(os.path.abspath(".")))
           import subprocess
+          print("About to az --version")
+          mycmd = "az --version"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print('x: ', line)
+            if retcode is not None:
+              break
           #https://aka.ms/installazurecliwindows
           #https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi
           #print("About to curl for the msi")
           #result = subprocess.run(['curl', '-L -o .\AzureCLI.msi https://aka.ms/installazurecliwindows'], stdout=subprocess.PIPE)
           #result.stdout
           #result = subprocess.run(['az', 'extension add --name resource-graph'], stdout=subprocess.PIPE)
-          print("About to az --version")
-          result = subprocess.run(['az', '--version'], stdout=subprocess.PIPE)
+          #print("About to az --version")
+          #result = subprocess.run(['az', '--version'], stdout=subprocess.PIPE)
           #result = subprocess.run(['dir'], stdout=subprocess.PIPE)
-          result.stdout
+          #result.stdout
           #az extension add --name resource-graph
 #\          cd
 #\          mkdir C:\Users\runner\keys
