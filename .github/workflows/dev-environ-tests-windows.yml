@@ -59,8 +59,9 @@ jobs:
           print("x5")
           res = requests.get('https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip')
           print("x6")
-          with open("D:\\Users\\runner\\terraform-download\\terraform_0.12.24_linux_amd64.zip", "wb") as f:
-            f.write(response.content)
+          res.raise_for_status() # ensure we notice bad responses
+          with open("terraform_0.12.24_linux_amd64.zip", "wb") as f:
+            f.write(res.content)
           print("x7")
           #import zipfile
           import shutil
