@@ -48,20 +48,30 @@ jobs:
           output = subprocess.getoutput('git --version')
           print(output)
           ## Install Terraform
+          print("x1")
           os.chdir('D:\\Users\\runner\\')
+          print("x2")
           pathlib.Path("D:\\Users\\runner\\terraform-download\\").mkdir(parents=True, exist_ok=True)
+          print("x3")
           os.chdir('D:\\Users\\runner\\terraform-download\\')
+          print("x4")
           import requests
+          print("x5")
           res = requests.get('https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip')
+          print("x6")
           with open("terraform_0.12.24_linux_amd64.zip", "wb") as f:
             f.write(response.content)
+          print("x7")
           #import zipfile
           import shutil
+          print("x8")
           shutil.unpack_archive("terraform_0.12.24_linux_amd64.zip", "D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
+          print("x9")
           #with zipfile.ZipFile(res,"r") as zip_ref:
           #  zip_ref.extractall("D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
           #Install ansible
           os.chdir('D:\\Users\\runner\\')
+          print("x10")
           subprocess.check_call([sys.executable, "-m", "pip", "install", ansible])
           print('About to: ansible --version')
           output = subprocess.getoutput('ansible --version')
