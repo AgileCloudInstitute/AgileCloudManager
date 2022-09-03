@@ -85,7 +85,7 @@ jobs:
           print(output)
           #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
           #sudo chown -R runner:runner /opt/pipx_bin/ansible
-      - shell: bash
+      - shell: python
         name: Run setup on
         run: |
           print("jit")
