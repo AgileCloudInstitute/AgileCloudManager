@@ -88,7 +88,8 @@ jobs:
       - shell: bash
         name: Run setup on
         run: |
-          print('About to: echo Current working directory is: ')
+          print("About to echo Current working directory is ")
+          print("jit")
           output = subprocess.getoutput('echo "Current working directory is: "')
           print(output)
           print('About to: cd')
