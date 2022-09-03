@@ -127,7 +127,7 @@ jobs:
             line = p.stdout.readline()
             print(line)
             if retcode is not None:
-              break
+              break 
 #      - shell: bash
 #        name: Run test_command_builder
 #        run: |
