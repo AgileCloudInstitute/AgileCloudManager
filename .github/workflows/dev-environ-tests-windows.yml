@@ -89,6 +89,7 @@ jobs:
         name: Run setup on
         run: |
           import subprocess
+          import os
           print("jit")
           output = subprocess.getoutput('echo "Current working directory is: "')
           print(output)
