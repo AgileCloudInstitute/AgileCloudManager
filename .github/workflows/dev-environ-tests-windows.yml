@@ -83,22 +83,51 @@ jobs:
           print('About to: aws --version')
           output = subprocess.getoutput('aws --version')
           print(output)
-#          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
-#          sudo chown -R runner:runner /opt/pipx_bin/ansible
-#      - shell: bash
-#        name: Run setup on
-#        run: |
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
+          #sudo chown -R runner:runner /opt/pipx_bin/ansible
+      - shell: bash
+        name: Run setup on
+        run: |
+          print('About to: echo "Current working directory is: "')
+          output = subprocess.getoutput('echo "Current working directory is: "')
+          print(output)
+          print('About to: cd')
+          output = subprocess.getoutput('cd')
+          print(output)
+          print('About to: echo "Contents are: --------------------------------------------------"')
+          output = subprocess.getoutput('echo "Contents are: --------------------------------------------------"')
+          print(output)          
+          print('About to: dir')
+          output = subprocess.getoutput('dir')
+          print(output)
+          print('About to: echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"')
+          output = subprocess.getoutput('echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"')
+          print(output)
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: echo "Current working directory is: "')
+          output = subprocess.getoutput('echo "Current working directory is: "')
+          print(output)
+          print('About to: cd')
+          output = subprocess.getoutput('cd')
+          print(output)
+          print('About to: echo "Contents are: --------------------------------------------------"')
+          output = subprocess.getoutput('echo "Contents are: --------------------------------------------------"')
+          print(output)
+          print('About to: dir')
+          output = subprocess.getoutput('dir')
+          print(output)
+          print('About to: acm setup on')
+          output = subprocess.getoutput('dir')
+          print(output)
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break
 #      - shell: bash
 #        name: Run test_command_builder
 #        run: |
