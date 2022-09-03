@@ -73,7 +73,7 @@ jobs:
           #Install ansible
           os.chdir('D:\\Users\\runner\\')
           print("x10")
-          subprocess.check_call([sys.executable, "-m", "pip", "install", ansible])
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "ansible"])
           print('About to: ansible --version')
           output = subprocess.getoutput('ansible --version')
           print(output)
