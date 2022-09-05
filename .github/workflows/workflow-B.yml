@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: foo
-        uses: AgileCloudManager/.github/actions/ubuntu-provisioner@dev
+        uses: ./.github/actions/ubuntu-provisioner
         with:
           who-to-greet: 'Mona the Octocat'
       - run: echo random-number ${{ steps.foo.outputs.random-number }}
