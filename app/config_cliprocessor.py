@@ -46,6 +46,10 @@ def processInputArgs(inputArgs):
     global inputVars
     cmdfrmtr = command_formatter()
     sourceKeys = str(Path.home())+cmdfrmtr.getSlashForOS()+'acmconfig'
+    print('str(Path.home()) is: ', str(Path.home()))
+    print('cmdfrmtr.getSlashForOS() is: ', cmdfrmtr.getSlashForOS())
+    print('sourceKeys is: ', sourceKeys)
+    quit('jtyre!')
     userCallingDir = str(os.path.abspath("."))+'\\'
     userCallingDir = cmdfrmtr.formatPathForOS(userCallingDir)
     path = Path(userCallingDir)
