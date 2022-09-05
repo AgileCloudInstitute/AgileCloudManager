@@ -7,7 +7,7 @@ jobs:
   call-workflow:
     uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-A.yml@v1
   call-workflow-passing-data:
-    uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-B.yml@main
+    uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-B.yml@dev
     with:
       username: AgileCloudInstitute
     secrets:
