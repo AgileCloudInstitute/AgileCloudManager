@@ -14,13 +14,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - shell: bash
-        name: Do anything
+        name: Echo variables
         env:
           USERNAME: ${{ inputs.username }}
           TOKEN: ${{ secrets.token }}
         run: | 
           echo "username is $USERNAME"
           echo "token is: $TOKEN"
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to say hello
+    steps:
+      - uses: actions/checkout@v3
+      - id: foo
+        uses: actions/ubuntu-provisioner@dev
+        with:
+          who-to-greet: 'Mona the Octocat'
+      - run: echo random-number ${{ steps.foo.outputs.random-number }}
+        shell: bash
+
 #      - uses: octo-org/my-action@v1
 #        with:
 #          username: ${{ inputs.username }}
