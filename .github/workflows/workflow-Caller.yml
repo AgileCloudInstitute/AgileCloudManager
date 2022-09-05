@@ -1,0 +1,15 @@
+name: Call a reusable workflow
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  call-workflow:
+    uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-A.yml@v1
+  call-workflow-passing-data:
+    uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-B.yml@main
+    with:
+      username: AgileCloudInstitute
+    secrets:
+      token: ${{ secrets.HUSH }}
+#Documentation of this sample at: https://docs.github.com/en/actions/using-workflows/reusing-workflows#example-caller-workflow

@@ -1,0 +1,13 @@
+name: workflow-called-without-parameters
+on:
+  push:
+    branches:
+      - test
+jobs:
+  push-to-test-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - shell: bash
+        name: Do anything
+        run: echo "Successfully triggered test-environ-workflow"
