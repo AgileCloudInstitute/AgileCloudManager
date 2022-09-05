@@ -49,7 +49,7 @@ def processInputArgs(inputArgs):
     print('str(Path.home()) is: ', str(Path.home()))
     print('cmdfrmtr.getSlashForOS() is: ', cmdfrmtr.getSlashForOS())
     print('sourceKeys is: ', sourceKeys)
-    quit('jtyre!')
+#    quit('jtyre!')
     userCallingDir = str(os.path.abspath("."))+'\\'
     userCallingDir = cmdfrmtr.formatPathForOS(userCallingDir)
     path = Path(userCallingDir)
