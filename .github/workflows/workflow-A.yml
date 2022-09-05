@@ -1,8 +1,5 @@
 name: workflow-called-without-parameters
-on:
-  push:
-    branches:
-      - test
+on: workflow_call
 jobs:
   push-to-test-branch:
     runs-on: ubuntu-latest
