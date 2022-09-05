@@ -500,6 +500,7 @@ class workflow_setup:
     gitPassCount = 0
     gitPass = None
     if sourceKeys != None:
+      print('ccc sourceKeys is: ', str(sourceKeys))
       with open(sourceKeys) as file:
         for item in file:
           print('ccc item is: ', str(item))
