@@ -502,6 +502,7 @@ class workflow_setup:
     if sourceKeys != None:
       with open(sourceKeys) as file:
         for item in file:
+          print('ccc item is: ', str(item))
           itemParts = item.split(':')
           if itemParts[0].replace(' ','') == 'gitPass':
             gitPass = itemParts[1].replace(' ','')
