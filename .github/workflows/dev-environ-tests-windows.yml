@@ -118,6 +118,17 @@ jobs:
           print('About to: dir')
           output = subprocess.getoutput('dir')
           print(output)
+          #
+          print('About to: dir C:\\Users')
+          output = subprocess.getoutput('dir C:\\Users')
+          print(output)
+          print('About to: dir C:\\Users\\runner')
+          output = subprocess.getoutput('dir C:\\Users\\runner')
+          print(output)
+          print('About to: dir C:\\Users\\runneradmin')
+          output = subprocess.getoutput('dir C:\\Users\\runneradmin')
+          print(output)
+          #
           print('About to: acm setup on')
           output = subprocess.getoutput('dir')
           print(output)
