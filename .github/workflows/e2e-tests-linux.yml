@@ -18,7 +18,7 @@ jobs:
         run: | 
           echo "ACM_SECRET is $ACM_SECRET"
           echo "ACM_SECOND is: $ACM_SECOND"
-          exit 1
+          #exit 1
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact
