@@ -28,6 +28,12 @@ runs:
     - shell: bash
       name: Configure agent
       run: |
+        echo "Secrets one is: "
+        echo "${{ inputs.acm-secrets-one  }}"
+        echo "Secrets twp is: "
+        echo "${{ inputs.acm-second-secrets  }}" 
+        echo "Iterating one gives: "
+        for each in "${{ inputs.acm-secrets-one  }}"; do echo "$each"; done
         az extension add --name resource-graph
         echo "Current working directory is: "
         pwd
