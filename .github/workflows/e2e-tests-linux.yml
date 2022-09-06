@@ -1,15 +1,30 @@
 name: e2e Tests for Ubuntu
 on:
   workflow_call:
+    secrets:
+      ACM_SECRET:
+        required: true
+      ACM_SECOND:
+        required: true
 jobs:
   e2e-tests-linux-arm:
     runs-on: ubuntu-latest
     steps:
+      - shell: bash
+        name: Echo variables
+        env:
+          ACM_SECRET: ${{ secrets.ACM_SECRET }}
+          ACM_SECOND: ${{ secrets.ACM_SECOND }}
+        run: | 
+          echo "ACM_SECRET is $ACM_SECRET"
+          echo "ACM_SECOND is: $ACM_SECOND"
+          exit 1
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
+
           mkdir /home/runner/acmhome
           sudo chown runner:runner /home/runner/acmhome
           mv acm_build.tar /home/runner/acmhome
