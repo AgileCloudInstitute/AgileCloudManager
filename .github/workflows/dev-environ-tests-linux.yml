@@ -152,6 +152,9 @@ jobs:
   e2e-tests-linux:
     needs: [create-exe-and-upload-artifact]
     uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/e2e-tests-linux.yml@dev
+    secrets:
+      ACM_SECRET: ${{ secrets.ACM_REPO }}
+      ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
   push-to-test-branch:
     needs: [e2e-tests-linux]
     runs-on: ubuntu-latest
