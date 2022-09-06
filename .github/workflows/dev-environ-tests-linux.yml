@@ -153,7 +153,7 @@ jobs:
     needs: [create-exe-and-upload-artifact]
     uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/e2e-tests-linux.yml@dev
   push-to-test-branch:
-    needs: [e2e-tests-linux-arm, e2e-tests-linux-cloudformation, e2e-tests-linux-custom, e2e-tests-linux-terraform-packer ]
+    needs: [e2e-tests-linux]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
