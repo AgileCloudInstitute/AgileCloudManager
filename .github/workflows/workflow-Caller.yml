@@ -4,8 +4,6 @@ on:
     branches:
       - dev
 jobs:
-  call-workflow:
-    uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-A.yml@dev
   call-workflow-passing-data:
     uses: AgileCloudInstitute/AgileCloudManager/.github/workflows/workflow-B.yml@dev
     with:
