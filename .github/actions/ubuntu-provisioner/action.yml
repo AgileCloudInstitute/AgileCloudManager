@@ -5,6 +5,12 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  acm-secrets-one:
+    description: 'Multi-line secrets file'
+    required: true
+  acm-second-secrets:
+    description: 'Another multi-line secrets file'
+    required: true
 outputs:
   random-number:
     description: "Random number"
@@ -21,9 +27,6 @@ runs:
       shell: bash          
     - shell: bash
       name: Configure agent
-      env:
-        ACM_SECRET: ${{ secrets.ACM_REPO }}
-        ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
       run: |
         az extension add --name resource-graph
         echo "Current working directory is: "
@@ -31,7 +34,7 @@ runs:
         mkdir /home/runner/keys
         mkdir /home/runner/keys/starter
         mkdir /home/runner/acmconfig/
-        echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+        echo "${{ inputs.acm-secrets-one  }}" > /home/runner/acmconfig/keys.yaml
         sudo mkdir /var/log/acm
         sudo chown -R runner:runner /var/log/acm
         sudo mkdir /opt/acm
@@ -40,7 +43,7 @@ runs:
         sudo mkdir /usr/acm/keys
         sudo mkdir /usr/acm/keys/adminAccounts
         sudo chown -R runner:runner /usr/acm
-        echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+        echo "${{ inputs.acm-second-secrets  }}" > /usr/acm/keys/adminAccounts/keys.yaml
         sudo chown -R runner:runner /usr/acm
         echo 'new------------------'
         git --version

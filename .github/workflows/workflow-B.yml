@@ -8,6 +8,10 @@ on:
     secrets:
       token:
         required: true
+      ACM_SECRET:
+        required: true
+      ACM_SECOND:
+        required: true
 jobs:
   example_job:
     name: Pass input and secrets to my-action
@@ -30,6 +34,8 @@ jobs:
         uses: ./.github/actions/ubuntu-provisioner
         with:
           who-to-greet: 'Mona the Octocat'
+          acm-secrets-one: ${{ secrets.ACM_SECRET }}
+          acm-second-secrets: ${{ secrets.ACM_SECOND }}
       - run: echo random-number ${{ steps.foo.outputs.random-number }}
         shell: bash
 

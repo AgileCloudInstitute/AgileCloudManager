@@ -12,4 +12,7 @@ jobs:
       username: AgileCloudInstitute
     secrets:
       token: ${{ secrets.HUSH }}
+      ACM_SECRET: ${{ secrets.ACM_REPO }}
+      ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+
 #Documentation of this sample at: https://docs.github.com/en/actions/using-workflows/reusing-workflows#example-caller-workflow
