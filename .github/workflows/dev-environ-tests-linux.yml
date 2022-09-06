@@ -181,6 +181,7 @@ jobs:
           tar -xvf acm_build.tar
           rm acm_build.tar
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+      - uses: actions/checkout@v3
       - id: foo
         uses: ./.github/actions/ubuntu-provisioner
         with:
@@ -247,6 +248,7 @@ jobs:
           tar -xvf acm_build.tar
           rm acm_build.tar
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+      - uses: actions/checkout@v3
       - id: foo
         uses: ./.github/actions/ubuntu-provisioner
         with:
@@ -313,6 +315,7 @@ jobs:
           tar -xvf acm_build.tar
           rm acm_build.tar
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+      - uses: actions/checkout@v3
       - id: foo
         uses: ./.github/actions/ubuntu-provisioner
         with:
@@ -379,6 +382,7 @@ jobs:
           tar -xvf acm_build.tar
           rm acm_build.tar
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+      - uses: actions/checkout@v3
       - id: foo
         uses: ./.github/actions/ubuntu-provisioner
         with:
