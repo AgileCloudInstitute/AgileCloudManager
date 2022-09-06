@@ -14,6 +14,14 @@ jobs:
           who-to-greet: 'Mona the Octocat'
           acm-secrets-one: ${{ secrets.ACM_SECRET }}
           acm-second-secrets: ${{ secrets.ACM_SECOND }}
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - shell: bash
         name: Run setup on
         run: |
