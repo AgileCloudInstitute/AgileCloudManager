@@ -482,6 +482,7 @@ jobs:
 #        with:
 #          name: acm-artifact
 #          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
+#          retention-days: 1
 #  e2e-tests-linux-arm:
 #    needs: [create-exe-and-upload-artifact]
 #    runs-on: ubuntu-latest
