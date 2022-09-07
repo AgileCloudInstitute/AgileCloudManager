@@ -43,7 +43,7 @@ jobs:
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git clone --branch release-linux $repoWithToken
+          git clone --branch release-linux --single-branch $repoWithToken
           echo "About to list contents of directory"
           ls -al
           echo "About to create release"
