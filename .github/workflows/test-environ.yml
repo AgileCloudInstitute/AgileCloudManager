@@ -54,14 +54,11 @@ jobs:
           git init
           echo "About to 2"
           git remote add origin $repoWithToken
-          echo "About to 3"
-          git show-ref  
-          echo "About to 4"
+          #git show-ref  
           #git branch -M release-linux
-          echo "About to 5"
           #git add --all
           #git push --force -u origin release-linux
-          echo "About to 6"
+          echo "About to 3"
           git push --force -u origin HEAD:release-linux
 #  push-to-staging-branch:
 #    needs: [create-exe]
