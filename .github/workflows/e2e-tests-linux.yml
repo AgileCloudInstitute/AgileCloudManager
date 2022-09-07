@@ -24,7 +24,6 @@ jobs:
           name: acm-artifact
       - name: Display structure of downloaded files
         run: |
-
           mkdir /home/runner/acmhome
           sudo chown runner:runner /home/runner/acmhome
           mv acm_build.tar /home/runner/acmhome
@@ -35,6 +34,16 @@ jobs:
       - uses: actions/checkout@v3
       - id: ConfigureUbuntuAgent
         uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
+          cat /home/runner/acmconfig/keys.yaml
       - name: Setup On
         shell: bash
         env:
@@ -45,6 +54,8 @@ jobs:
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
           echo "About to print ACM_SECRET"
           echo "$ACM_SECRET"
+          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
+          cat /home/runner/acmconfig/keys.yaml
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
