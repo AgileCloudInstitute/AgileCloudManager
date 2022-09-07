@@ -49,12 +49,19 @@ jobs:
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
+          git config --global init.defaultBranch release-linux
+          echo "About to 1"
           git init
+          echo "About to 2"
           git remote add origin $repoWithToken
+          echo "About to 3"
           git show-ref  
+          echo "About to 4"
           #git branch -M release-linux
+          echo "About to 5"
           #git add --all
           #git push --force -u origin release-linux
+          echo "About to 6"
           git push --force -u origin HEAD:release-linux
 #  push-to-staging-branch:
 #    needs: [create-exe]
