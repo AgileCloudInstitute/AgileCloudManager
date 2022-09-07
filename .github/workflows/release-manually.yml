@@ -51,11 +51,11 @@ jobs:
           releaseFile="empty"
           for f in $(pwd); do
             echo "a"
-            echo f
-            if [[ f == "acm_linux_"* ]] && [[ f == *".tar" ]]; then
+            echo "$f"
+            if [[ "$f" == "acm_linux_"* ]] && [[ "$f" == *".tar" ]]; then
               echo "b"
-              echo f
-              releaseFile=f
+              echo "$f"
+              releaseFile="$f"
             fi
           done
           echo "About to print name of file"
