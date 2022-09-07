@@ -46,7 +46,13 @@ jobs:
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
           VERSION: ${{ inputs.version }}
           DESCRIPTION: ${{ inputs.description }}
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git clone --branch release-linux $repoWithToken
+          echo "About to list contents of directory"
+          ls -al
+          echo "About to create release"
           # This draft uses documentation from: https://docs.github.com/en/rest/releases/releases#create-a-release
           # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
           # GitHub CLI api
@@ -62,4 +68,3 @@ jobs:
            -F draft=false \
            -F prerelease=false \
            -F generate_release_notes=false 
-
