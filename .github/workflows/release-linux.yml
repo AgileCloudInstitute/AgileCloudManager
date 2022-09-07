@@ -2,7 +2,7 @@ name: dev-environ-tests-linux
 on:
   push:
     branches:
-      - dev
+      - release-linux
 jobs:
   unit-tests-linux-misc:
     runs-on: ubuntu-latest
