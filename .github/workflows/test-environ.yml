@@ -56,8 +56,11 @@ jobs:
           git remote add origin $repoWithToken
           #git show-ref  
           #git branch -M release-linux
-          #git add --all
           echo "About to 3"
+          git add --all
+          echo "About to 4"
+          git commit -m 'release contents'
+          echo "About to 5"
           git push --force -u origin release-linux
           #git push --force -u origin HEAD:release-linux
 #  push-to-staging-branch:
