@@ -34,32 +34,40 @@ jobs:
           LEVEL: ${{ inputs.logLevel }}
           TAGS: ${{ inputs.tags }}
           ENVIRONMENT: ${{ inputs.environment }}
-  release-a-version:
+  create-exe:
     needs: [log-the-inputs]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - shell: bash
-        name: Configure agent
-        env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
-          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          VERSION: ${{ inputs.version }}
-          DESCRIPTION: ${{ inputs.description }}
+        name: Create exe and add exe to PATH
         run: |
-          # This draft uses documentation from: https://docs.github.com/en/rest/releases/releases#create-a-release
-          # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
-          # GitHub CLI api
-          # https://cli.github.com/manual/gh_api
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/AgileCloudInstitute/AgileCloudManager/releases \
-            -f tag_name='$VERSION' \
-           -f target_commitish='master' \
-           -f name='$VERSION' \
-           -f body='$DESCRIPTION' \
-           -F draft=false \
-           -F prerelease=false \
-           -F generate_release_notes=false 
-
+          echo "About to pwd"
+          pwd
+          echo "About to list directory contents of initial dir"
+          ls -al
+          pip install -U pyinstaller
+          cd app
+          rm __init__.py
+          pyinstaller acm.py
+          tar -cvf acm_build.tar dist/acm
+          echo "About to list directory contents of app"
+          ls -al
+#  push-to-staging-branch:
+#    needs: [create-exe]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - shell: bash
+#        name: Push changes to staging branch
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin $repoWithToken
+#          git branch -M staging
+#          git add --all
+#          git push --force -u origin staging
