@@ -45,7 +45,7 @@ jobs:
           git init
           git remote add -t release-linux -f origin $repoWithToken
           git checkout release-linux
-          #git clone --branch release-linux --single-branch $repoWithToken
+          rm -rf
           echo "About to list contents of directory"
           ls -al
           echo "About to create release"
@@ -53,14 +53,14 @@ jobs:
           # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
-          #gh api \
-          #  --method POST \
-          #  -H "Accept: application/vnd.github+json" \
-          #  /repos/AgileCloudInstitute/AgileCloudManager/releases \
-          #  -f tag_name='$VERSION' \
-          # -f target_commitish='master' \
-          # -f name='$VERSION' \
-          # -f body='$DESCRIPTION' \
-          # -F draft=false \
-          # -F prerelease=false \
-          # -F generate_release_notes=false 
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/AgileCloudInstitute/AgileCloudManager/releases \
+            -f tag_name='$VERSION' \
+            -f target_commitish='master' \
+            -f name='$VERSION' \
+            -f body='$DESCRIPTION' \
+            -F draft=false \
+            -F prerelease=false \
+            -F generate_release_notes=false 
