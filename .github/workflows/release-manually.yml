@@ -53,9 +53,13 @@ jobs:
           nfiles=${#files[@]}
           echo "-- dollarnfiles"
           echo $nfiles
-          echo "-- justnfiles"
-          echo nfiles
+          #echo "-- justnfiles"
+          #echo nfiles
           #for f in $nfiles; do
+          echo "files0 is "
+          echo ${files[0]}
+          echo "files1 is "
+          echo ${files[1]}
           for ((i = 0; i < $nfiles; i += 1)); do
             # Do something with ${files[$i]}
             echo "a"
