@@ -51,9 +51,15 @@ jobs:
           releaseFile="empty"
           files=(/home/runner/work/AgileCloudManager/AgileCloudManager/*)
           nfiles=${#files[@]}
-          for f in nfiles; do
+          echo "-- dollarnfiles"
+          echo $nfiles
+          echo "-- justnfiles"
+          echo nfiles
+          #for f in $nfiles; do
+          for ((i = 0; i < $nfiles; i += 1)); do
+            # Do something with ${files[$i]}
             echo "a"
-            echo "$f"
+            echo "${files[$i]"
             if [[ "$f" == "acm_linux_"* ]] && [[ "$f" == *".tar" ]]; then
               echo "b"
               echo "$f"
