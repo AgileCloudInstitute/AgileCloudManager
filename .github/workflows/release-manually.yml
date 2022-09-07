@@ -48,19 +48,35 @@ jobs:
           rm -rf
           echo "About to list contents of directory"
           ls -al
+          releaseFile="empty"
+          for f in $(pwd); do
+            if [[ f == "acm_linux_"* ]] and [[ f == *".tar" ]]; then
+              releaseFile=f
+            fi
+          done
+          echo "About to print name of file"
+          echo releaseFile
+          prefix="acm_linux_"
+          suffix=".tar"
+          vers=${releaseFile#"$prefix"}
+          vers=${vers%"$suffix"}
+          echo "About to print version 1"
+          echo "${vers}"
+          echo "About to print version 2"
+          echo $vers
           echo "About to create release"
           # This draft uses documentation from: https://docs.github.com/en/rest/releases/releases#create-a-release
           # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/AgileCloudInstitute/AgileCloudManager/releases \
-            -f tag_name='$VERSION' \
-            -f target_commitish='master' \
-            -f name='$VERSION' \
-            -f body='$DESCRIPTION' \
-            -F draft=false \
-            -F prerelease=false \
-            -F generate_release_notes=false 
+          #gh api \
+          #  --method POST \
+          #  -H "Accept: application/vnd.github+json" \
+          #  /repos/AgileCloudInstitute/AgileCloudManager/releases \
+          #  -f tag_name='$VERSION' \
+          #  -f target_commitish='master' \
+          #  -f name='$VERSION' \
+          #  -f body='$DESCRIPTION' \
+          #  -F draft=false \
+          #  -F prerelease=false \
+          #  -F generate_release_notes=false 
