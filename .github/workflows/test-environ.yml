@@ -1,4 +1,4 @@
-name: release-manually
+name: test-environ
 on:
   workflow_dispatch:
     inputs:
