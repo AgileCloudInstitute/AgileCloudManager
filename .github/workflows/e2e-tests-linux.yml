@@ -43,6 +43,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
@@ -59,6 +61,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
@@ -71,6 +75,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
@@ -82,6 +88,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
@@ -126,6 +134,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
@@ -142,6 +152,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
@@ -154,6 +166,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
@@ -166,6 +180,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
@@ -210,6 +226,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
@@ -226,6 +244,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
@@ -238,6 +258,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
@@ -249,6 +271,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
@@ -293,6 +317,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
@@ -309,6 +335,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm serviceType on systemName=tfbackend serviceType=tfBackend
@@ -320,6 +348,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm serviceType off systemName=tfbackend serviceType=tfBackend
@@ -331,6 +361,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
@@ -342,6 +374,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
@@ -353,6 +387,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm services on systemName=tfbackend
@@ -364,6 +400,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm foundation on systemName=admin
@@ -375,6 +413,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm services on systemName=admin
@@ -386,6 +426,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm foundation on systemName=agents
@@ -397,6 +439,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm services on systemName=agents
@@ -408,6 +452,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm services off systemName=agents
@@ -419,6 +465,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm foundation off systemName=agents
@@ -430,6 +478,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm services off systemName=admin
@@ -441,6 +491,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm foundation off systemName=admin
@@ -452,6 +504,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           acm services off systemName=tfbackend
@@ -462,6 +516,8 @@ jobs:
         run: |
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print ACM_SECRET"
+          echo "$ACM_SECRET"
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
