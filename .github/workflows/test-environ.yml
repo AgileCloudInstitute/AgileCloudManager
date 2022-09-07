@@ -2,19 +2,10 @@ name: test-environ
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      version:
+        description: 'Version'
         required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
+        type: string
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -22,12 +13,9 @@ jobs:
       - shell: bash
         name: Print inputs to log
         run: |
-          #This entire job is a filler example from: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
+          echo "Log level: $VERSION"
         env:
-          LEVEL: ${{ inputs.logLevel }}
-          TAGS: ${{ inputs.tags }}
+          VERSION: ${{ inputs.version }}
   create-exe:
     needs: [log-the-inputs]
     runs-on: ubuntu-latest
@@ -35,6 +23,8 @@ jobs:
       - uses: actions/checkout@v3
       - shell: bash
         name: Create exe and add exe to PATH
+        env:
+          VERSION: ${{ inputs.version }}
         run: |
           echo "About to pwd"
           pwd
@@ -44,7 +34,7 @@ jobs:
           cd app
           rm __init__.py
           pyinstaller acm.py
-          tar -cvf acm_build.tar dist/acm
+          tar -cvf acm_build$VERSION.tar dist/acm
           echo "About to list directory contents of app"
           ls -al
 #  push-to-staging-branch:
