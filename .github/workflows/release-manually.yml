@@ -50,7 +50,7 @@ jobs:
           ls -al
           releaseFile="empty"
           for f in $(pwd); do
-            if [[ f == "acm_linux_"* ]] and [[ f == *".tar" ]]; then
+            if [[ f == "acm_linux_"* ]] && [[ f == *".tar" ]]; then
               releaseFile=f
             fi
           done
