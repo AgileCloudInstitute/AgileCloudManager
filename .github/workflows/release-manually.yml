@@ -32,9 +32,8 @@ jobs:
     needs: [log-the-inputs]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - shell: bash
-        name: Configure agent
+        name: Release
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
@@ -43,7 +42,10 @@ jobs:
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git clone --branch release-linux --single-branch $repoWithToken
+          git init
+          git remote add -t release-linux -f origin $repoWithToken
+          git checkout release-linux
+          #git clone --branch release-linux --single-branch $repoWithToken
           echo "About to list contents of directory"
           ls -al
           echo "About to create release"
