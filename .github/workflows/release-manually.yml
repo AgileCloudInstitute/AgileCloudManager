@@ -49,7 +49,7 @@ jobs:
           echo "About to list contents of directory"
           ls -al
           releaseFile="empty"
-          for f in $(pwd); do
+          for f in /home/runner/work/AgileCloudManager/AgileCloudManager; do
             echo "a"
             echo "$f"
             if [[ "$f" == "acm_linux_"* ]] && [[ "$f" == *".tar" ]]; then
