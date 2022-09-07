@@ -6,6 +6,10 @@ on:
         description: 'Version'
         required: true
         type: string
+      description:
+        description: 'Description'
+        required: true
+        type: string
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -25,6 +29,8 @@ jobs:
         name: Create exe and add exe to PATH
         env:
           VERSION: ${{ inputs.version }}
+          DESCRIPTION: ${{ inputs.description }}
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           echo "About to pwd"
           pwd
@@ -34,9 +40,20 @@ jobs:
           cd app
           rm __init__.py
           pyinstaller acm.py
-          tar -cvf acm_build$VERSION.tar dist/acm
+          tar -cvf acm_linux_v$VERSION.tar dist/acm
           echo "About to list directory contents of app"
           ls -al
+          mkdir /home/runner/release
+          mv acm_linux_v$VERSION.tar /home/runner/release
+          cd /home/runner/release
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin $repoWithToken
+          git branch -M release-linux
+          git add --all
+          git push --force -u origin release-linux
 #  push-to-staging-branch:
 #    needs: [create-exe]
 #    runs-on: ubuntu-latest
