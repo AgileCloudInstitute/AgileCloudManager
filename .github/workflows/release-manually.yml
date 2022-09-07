@@ -15,10 +15,6 @@ on:
         description: 'Test scenario tags'
         required: false
         type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -29,11 +25,9 @@ jobs:
           #This entire job is a filler example from: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
           echo "Log level: $LEVEL"
           echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
         env:
           LEVEL: ${{ inputs.logLevel }}
           TAGS: ${{ inputs.tags }}
-          ENVIRONMENT: ${{ inputs.environment }}
   release-a-version:
     needs: [log-the-inputs]
     runs-on: ubuntu-latest
@@ -57,14 +51,14 @@ jobs:
           # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/AgileCloudInstitute/AgileCloudManager/releases \
-            -f tag_name='$VERSION' \
-           -f target_commitish='master' \
-           -f name='$VERSION' \
-           -f body='$DESCRIPTION' \
-           -F draft=false \
-           -F prerelease=false \
-           -F generate_release_notes=false 
+          #gh api \
+          #  --method POST \
+          #  -H "Accept: application/vnd.github+json" \
+          #  /repos/AgileCloudInstitute/AgileCloudManager/releases \
+          #  -f tag_name='$VERSION' \
+          # -f target_commitish='master' \
+          # -f name='$VERSION' \
+          # -f body='$DESCRIPTION' \
+          # -F draft=false \
+          # -F prerelease=false \
+          # -F generate_release_notes=false 
