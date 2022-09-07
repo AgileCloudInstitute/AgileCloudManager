@@ -1,0 +1,73 @@
+name: release-manually
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+jobs:
+  log-the-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        name: Print inputs to log
+        run: |
+          #This entire job is a filler example from: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+          echo "Log level: $LEVEL"
+          echo "Tags: $TAGS"
+          echo "Environment: $ENVIRONMENT"
+        env:
+          LEVEL: ${{ inputs.logLevel }}
+          TAGS: ${{ inputs.tags }}
+          ENVIRONMENT: ${{ inputs.environment }}
+  create-exe:
+    needs: [log-the-inputs]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - shell: bash
+        name: Create exe and add exe to PATH
+        run: |
+          echo "About to pwd"
+          pwd
+          echo "About to list directory contents of initial dir"
+          ls -al
+          pip install -U pyinstaller
+          cd app
+          rm __init__.py
+          pyinstaller acm.py
+          tar -cvf acm_build.tar dist/acm
+          echo "About to list directory contents of app"
+          ls -al
+#  push-to-staging-branch:
+#    needs: [create-exe]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - shell: bash
+#        name: Push changes to staging branch
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin $repoWithToken
+#          git branch -M staging
+#          git add --all
+#          git push --force -u origin staging
