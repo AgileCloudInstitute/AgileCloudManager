@@ -50,10 +50,11 @@ jobs:
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          git remote set-url origin $repoWithToken
+          git remote add origin $repoWithToken
           git branch -M release-linux
           git add --all
           git push --force -u origin release-linux
+
 #  push-to-staging-branch:
 #    needs: [create-exe]
 #    runs-on: ubuntu-latest
