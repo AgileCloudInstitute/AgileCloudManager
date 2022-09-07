@@ -50,6 +50,9 @@ jobs:
           ls -al
           releaseFile="empty"
           files=(/home/runner/work/AgileCloudManager/AgileCloudManager/*)
+          files=(find . -type f)
+          echo "About to print file names"
+          for i in ${files[@]}; do echo $i; done
           nfiles=${#files[@]}
           echo "-- dollarnfiles"
           echo $nfiles
