@@ -79,7 +79,7 @@ jobs:
       - name: Put secrets in file
         shell: bash
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+         ACM_SECRET: ${{ secrets.ACM_REPO }}
          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: | 
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
