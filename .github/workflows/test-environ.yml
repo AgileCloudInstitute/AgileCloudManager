@@ -1,4 +1,4 @@
-name: release-manually
+name: test-environ
 on:
   workflow_dispatch:
     inputs:
@@ -15,10 +15,6 @@ on:
         description: 'Test scenario tags'
         required: false
         type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -29,11 +25,9 @@ jobs:
           #This entire job is a filler example from: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
           echo "Log level: $LEVEL"
           echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
         env:
           LEVEL: ${{ inputs.logLevel }}
           TAGS: ${{ inputs.tags }}
-          ENVIRONMENT: ${{ inputs.environment }}
   create-exe:
     needs: [log-the-inputs]
     runs-on: ubuntu-latest
