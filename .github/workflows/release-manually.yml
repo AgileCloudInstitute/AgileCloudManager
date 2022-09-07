@@ -50,7 +50,11 @@ jobs:
           ls -al
           releaseFile="empty"
           for f in $(pwd); do
+            echo "a"
+            echo f
             if [[ f == "acm_linux_"* ]] && [[ f == *".tar" ]]; then
+              echo "b"
+              echo f
               releaseFile=f
             fi
           done
