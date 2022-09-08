@@ -55,27 +55,41 @@ jobs:
           echo "About to print contents of files array"
           echo "${FILES[@]}"
           echo "About to print file names"
-          for i in ${FILES[@]}; do echo $i; done
-          nfiles=${#FILES[@]}
-          echo "-- dollarnfiles"
-          echo $nfiles
+          for i in ${FILES[@]}; do 
+            echo "a"
+            echo $i; 
+            if [[ "$i" == "./acm_linux_"* ]]; then
+              echo "jonesy"
+            fi
+            if [[ "$i" == *".tar" ]]; then
+              echo "cola"
+            fi
+            if [[ "$i" == "./acm_linux_"* ]] && [[ "$i" == *".tar" ]]; then
+              echo "b"
+              echo "$i"
+              releaseFile="$i"
+            fi
+          done
+          #nfiles=${#FILES[@]}
+          #echo "-- dollarnfiles"
+          #echo $nfiles
           #echo "-- justnfiles"
           #echo nfiles
           #for f in $nfiles; do
-          echo "files0 is "
-          echo ${FILES[0]}
-          echo "files1 is "
-          echo ${FILES[1]}
-          for ((i = 0; i < $nfiles; i += 1)); do
-            # Do something with ${FILES[$i]}
-            echo "a"
-            echo "${FILES[$i]"
-            if [[ "$f" == "acm_linux_"* ]] && [[ "$f" == *".tar" ]]; then
-              echo "b"
-              echo "$f"
-              releaseFile="$f"
-            fi
-          done
+          #echo "files0 is "
+          #echo ${FILES[0]}
+          #echo "files1 is "
+          #echo ${FILES[1]}
+          #for ((i = 0; i < $nfiles; i += 1)); do
+          #  # Do something with ${FILES[$i]}
+          #  echo "a"
+          #  echo "${FILES[$i]"
+          #  if [[ "$f" == "acm_linux_"* ]] && [[ "$f" == *".tar" ]]; then
+          #    echo "b"
+          #    echo "$f"
+          #    releaseFile="$f"
+          #  fi
+          #done
           echo "About to print name of file"
           echo releaseFile
           prefix="acm_linux_"
