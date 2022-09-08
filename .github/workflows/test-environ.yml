@@ -365,6 +365,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+
       - shell: bash
         name: Create exe and add exe to PATH
         env:
@@ -385,20 +388,28 @@ jobs:
           cd /home/runner/release
           echo "About to list directory contents of /home/runner/release"
           ls -al
-          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git config --global init.defaultBranch release-linux
-          echo "About to 1"
+          #echo "About to 1"
+          #git init
+          #echo "About to 2"
+          #git remote add origin $repoWithToken
+          #echo "About to 3"
+          #git add --all
+          #echo "About to 4"
+          #git commit -m 'release contents'
+          #echo "About to 5"
+          #git push --force -u origin release-linux
+          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          #git config --global user.name "AgileCloudInstitute"
           git init
-          echo "About to 2"
-          git remote add origin $repoWithToken
-          echo "About to 3"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git branch -M staging
           git add --all
-          echo "About to 4"
-          git commit -m 'release contents'
-          echo "About to 5"
-          git push --force -u origin release-linux
+          git push --force -u origin staging
+
   push-to-staging-branch:
     needs: [create-linux-exe-and-push-to-linux-release-branch]
     runs-on: ubuntu-latest
