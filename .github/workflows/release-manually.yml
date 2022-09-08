@@ -43,6 +43,7 @@ jobs:
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
           DESCRIPTION: ${{ inputs.description }}
           GIT_PAT: ${{ secrets.HUSH }}
+          GH_TOKEN: ${{ secrets.HUSH }}
         run: |
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git init
