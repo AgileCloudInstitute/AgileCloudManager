@@ -15,6 +15,10 @@ on:
         description: 'Test scenario tags'
         required: false
         type: boolean
+      description:
+        description: 'Description of release'
+        required: true
+        type: string
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -37,7 +41,6 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          VERSION: ${{ inputs.version }}
           DESCRIPTION: ${{ inputs.description }}
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
@@ -46,25 +49,25 @@ jobs:
           git remote add -t release-linux -f origin $repoWithToken
           git checkout release-linux
           rm -rf
-          echo "About to list contents of directory"
-          ls -al
+          #echo "About to list contents of directory"
+          #ls -al
           releaseFile="empty"
           readarray -t FILES < <(find .)
-          echo "About to print contents of files array"
-          echo "${FILES[@]}"
-          echo "About to print file names"
+          #echo "About to print contents of files array"
+          #echo "${FILES[@]}"
+          #echo "About to print file names"
           for i in ${FILES[@]}; do 
-            echo "a"
-            echo $i; 
-            if [[ "$i" == "./acm_linux_"* ]]; then
-              echo "jonesy"
-            fi
-            if [[ "$i" == *".tar" ]]; then
-              echo "cola"
-            fi
+            #echo "a"
+            #echo $i; 
+            #if [[ "$i" == "./acm_linux_"* ]]; then
+            #  echo "jonesy"
+            #fi
+            #if [[ "$i" == *".tar" ]]; then
+            #  echo "cola"
+            #fi
             if [[ "$i" == "./acm_linux_"* ]] && [[ "$i" == *".tar" ]]; then
-              echo "b"
-              echo "$i"
+              #echo "b"
+              #echo "$i"
               releaseFile="$i"
             fi
           done
@@ -83,14 +86,14 @@ jobs:
           # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
-          #gh api \
-          #  --method POST \
-          #  -H "Accept: application/vnd.github+json" \
-          #  /repos/AgileCloudInstitute/AgileCloudManager/releases \
-          #  -f tag_name='$VERSION' \
-          #  -f target_commitish='master' \
-          #  -f name='$VERSION' \
-          #  -f body='$DESCRIPTION' \
-          #  -F draft=false \
-          #  -F prerelease=false \
-          #  -F generate_release_notes=false 
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/AgileCloudInstitute/AgileCloudManager/releases \
+            -f tag_name='$vers' \
+            -f target_commitish='master' \
+            -f name='$vers' \
+            -f body='$DESCRIPTION' \
+            -F draft=false \
+            -F prerelease=false \
+            -F generate_release_notes=false 
