@@ -2,63 +2,40 @@ name: release-manually
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      version:
+        description: 'Version'
         required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
+        type: string
+      description:
+        description: 'Description of release'
         required: true
+        type: string
 jobs:
-  log-the-inputs:
-    runs-on: ubuntu-latest
-    steps:
-      - shell: bash
-        name: Print inputs to log
-        run: |
-          #This entire job is a filler example from: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
-        env:
-          LEVEL: ${{ inputs.logLevel }}
-          TAGS: ${{ inputs.tags }}
-          ENVIRONMENT: ${{ inputs.environment }}
   release-a-version:
-    needs: [log-the-inputs]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - shell: bash
-        name: Configure agent
+        name: Release
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
-          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          VERSION: ${{ inputs.version }}
           DESCRIPTION: ${{ inputs.description }}
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ secrets.HUSH }}
         run: |
-          # This draft uses documentation from: https://docs.github.com/en/rest/releases/releases#create-a-release
-          # Might need to remove single-quotes '' around VERSION and DESCRIPTION below.
-          # GitHub CLI api
-          # https://cli.github.com/manual/gh_api
+          vers="_linux_"$VERSION
+          echo "About to print version"
+          echo $vers
+          nameOfRelease="agile_cloud_manager"$vers
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          echo "About to create release"
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             /repos/AgileCloudInstitute/AgileCloudManager/releases \
-            -f tag_name='$VERSION' \
-           -f target_commitish='master' \
-           -f name='$VERSION' \
-           -f body='$DESCRIPTION' \
-           -F draft=false \
-           -F prerelease=false \
-           -F generate_release_notes=false 
+            -f tag_name=$vers \
+            -f target_commitish='release-linux' \
+            -f name=$nameOfRelease \
+            -f body="$DESCRIPTION" \
+            -F draft=false \
+            -F prerelease=false \
+            -F generate_release_notes=false 

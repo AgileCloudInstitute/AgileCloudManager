@@ -1,4 +1,4 @@
-name: dev-environ-tests-linux
+name: release-linux
 on:
   push:
     branches:
