@@ -51,7 +51,7 @@ jobs:
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           #git branch -M release-linux
           git add --all
-          git push --force -u HEAD:origin release-linux
+          git push --force -u origin HEAD:release-linux
 #  push-to-staging-branch:
 #    needs: [create-linux-exe-and-push-to-linux-release-branch]
 #    runs-on: ubuntu-latest
