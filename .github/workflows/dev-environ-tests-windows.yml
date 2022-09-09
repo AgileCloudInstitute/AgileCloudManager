@@ -37,8 +37,12 @@ jobs:
           print('About to: echo "$ACM_SECRET" > C:\\Users\\runneradmin\\acmconfig\\keys.yaml')
           #output = subprocess.getoutput('echo "$ACM_SECRET" > C:\\Users\\runneradmin\\acmconfig\\keys.yaml')
           #print(output)
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as outfile: # Your file
-            yaml.dump("$ACM_SECRET", outfile, default_flow_style=False)
+          #with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as outfile: # Your file
+          #  yaml.dump("$ACM_SECRET", outfile, default_flow_style=False)
+          ACM_SECRET=os.getenv("ACM_SECRET")
+          output =subprocess.getoutput('echo "{}" > C:\\Users\\runneradmin\\acmconfig\\keys.yaml').format(ACM_SECRET)
+          print(output)
+          #
           pathlib.Path("C:\\Users\\runneradmin\\acm\\logs\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("acmAdmin\\binaries").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\").mkdir(parents=True, exist_ok=True)
@@ -49,6 +53,10 @@ jobs:
           #print(output)
           with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as outfile: # Your file
             yaml.dump("$ACM_SECOND", outfile, default_flow_style=False)
+          ACM_SECOND=os.getenv("ACM_SECOND")
+          output =subprocess.getoutput('echo "{}" > C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml').format(ACM_SECOND)
+          print(output)
+          #
           print('About to: git --version')
           output = subprocess.getoutput('git --version')
           print(output)
