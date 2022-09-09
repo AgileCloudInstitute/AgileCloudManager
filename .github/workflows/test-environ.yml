@@ -30,7 +30,7 @@ jobs:
           cd /home/runner/release
           echo "About to list directory contents of /home/runner/release"
           ls -al
-          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           #git config --global init.defaultBranch release-linux
@@ -48,7 +48,8 @@ jobs:
           #git config --global user.name "AgileCloudInstitute"
           git init
           #git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          #git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git remote add origin $repoWithToken
           #git branch -M release-linux
           git add --all
           git commit -am 'pushed from test-environ'
