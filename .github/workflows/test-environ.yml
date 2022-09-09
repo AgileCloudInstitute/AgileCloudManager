@@ -1,0 +1,93 @@
+name: test-environ
+on:
+  push:
+    branches:
+      - test
+jobs:
+  create-linux-exe-and-push-to-linux-release-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Create exe and add exe to PATH
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
+        run: |
+          echo "About to pwd"
+          pwd
+          echo "About to list directory contents of initial dir"
+          ls -al
+          pip install -U pyinstaller
+          cd app
+          rm __init__.py
+          pyinstaller acm.py
+          echo "About to list directory contents of app"
+          ls -al
+          mkdir /home/runner/release
+          cp -R dist/acm/. /home/runner/release/
+          cd /home/runner/release
+          echo "About to list directory contents of /home/runner/release"
+          ls -al
+          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          #git config --global init.defaultBranch release-linux
+          #echo "About to 1"
+          #git init
+          #echo "About to 2"
+          #git remote add origin $repoWithToken
+          #echo "About to 3"
+          #git add --all
+          #echo "About to 4"
+          #git commit -m 'release contents'
+          #echo "About to 5"
+          #git push --force -u origin release-linux
+          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          #git config --global user.name "AgileCloudInstitute"
+          git init
+          #git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          #git branch -M release-linux
+          git add --all
+          git push --force -u origin release-linux
+#  push-to-staging-branch:
+#    needs: [create-linux-exe-and-push-to-linux-release-branch]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          token: ${{ secrets.HUSH }}
+#      - shell: bash
+#        name: Push changes to staging branch
+#        run: |
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+#          git branch -M staging
+#          git add --all
+#          git push --force -u origin staging
+#######################################################################################
+########################################################################################
+#######################################################################################
+#######################################################################################
+#  push-to-staging-branch:
+#    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - shell: bash
+#        name: Push changes to staging branch
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin $repoWithToken
+#          git branch -M staging
+#          git add --all
+#          git push --force -u origin staging
