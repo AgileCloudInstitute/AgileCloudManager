@@ -33,24 +33,8 @@ jobs:
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
-          #git config --global init.defaultBranch release-linux
-          #echo "About to 1"
-          #git init
-          #echo "About to 2"
-          #git remote add origin $repoWithToken
-          #echo "About to 3"
-          #git add --all
-          #echo "About to 4"
-          #git commit -m 'release contents'
-          #echo "About to 5"
-          #git push --force -u origin release-linux
-          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          #git config --global user.name "AgileCloudInstitute"
           git init
-          #git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          #git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git remote add origin $repoWithToken
-          #git branch -M release-linux
           git add --all
           git commit -am 'pushed from test-environ'
           git push --force -u origin HEAD:release-linux
