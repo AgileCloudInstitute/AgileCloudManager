@@ -14,7 +14,7 @@ jobs:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: |
-          import base64, subprocess, sys, os
+          import base64, subprocess, sys, os, pathlib
           pathlib.Path("C:\\Users\\runneradmin\\acmconfig\\").mkdir(parents=True, exist_ok=True)
           def powershell(cmd, input=None):
             cmd64 = base64.encodebytes(cmd.encode('utf-16-le')).decode('ascii').strip()
