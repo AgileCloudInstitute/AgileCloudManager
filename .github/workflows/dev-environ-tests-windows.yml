@@ -39,6 +39,11 @@ jobs:
           print(output)
           output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path .\mykeys.yaml"])
           print(output)
+
+          print('About to: dir C:\\Users\\runneradmin\\')
+          output = subprocess.getoutput('dir C:\\Users\\runneradmin\\')
+          print(output)
+
           #..................
           #import subprocess
           #import sys
