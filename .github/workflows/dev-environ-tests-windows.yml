@@ -15,6 +15,7 @@ jobs:
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
         run: |
           import base64, subprocess, sys, os
+          pathlib.Path("C:\\Users\\runneradmin\\acmconfig\\").mkdir(parents=True, exist_ok=True)
           def powershell(cmd, input=None):
             cmd64 = base64.encodebytes(cmd.encode('utf-16-le')).decode('ascii').strip()
             stdin = None if input is None else subprocess.PIPE
@@ -30,18 +31,18 @@ jobs:
           command = r"""$secrets = @'
           {}
           '@
-          $secrets | Out-File -FilePath .\mykeys.yaml""".format(secrets)
+          $secrets | Out-File -FilePath C:\\Users\\runneradmin\\acmconfig\\keys.yaml""".format(secrets)
         
           print('About to echo secrets to file.')
           
           print(powershell(command))
           output = subprocess.run(["powershell.exe", "-Command", ], capture_output=True, shell=True)
           print(output)
-          output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path .\mykeys.yaml"])
+          output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path C:\\Users\\runneradmin\\acmconfig\\keys.yaml"])
           print(output)
 
-          print('About to: dir C:\\Users\\runneradmin\\')
-          output = subprocess.getoutput('dir C:\\Users\\runneradmin\\')
+          print('About to: dir C:\\Users\\runneradmin\\acmconfig\\keys.yaml')
+          output = subprocess.getoutput('dir C:\\Users\\runneradmin\\acmconfig\\keys.yaml')
           print(output)
 
           #..................
