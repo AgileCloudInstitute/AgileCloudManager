@@ -25,7 +25,7 @@ jobs:
             output = output.decode(sys.stdout.encoding).replace('\r\n', '\n')
             return output
 
-          secrets = os.environ["MY_SECRETS"]
+          secrets = os.environ["ACM_SECRET"]
           
           command = r"""$secrets = @'
           {}
