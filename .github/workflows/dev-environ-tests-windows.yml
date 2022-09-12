@@ -10,9 +10,8 @@ jobs:
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
-
       - shell: python
-        name: Configure agent
+        name: Save secrets to file
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
@@ -97,300 +96,235 @@ jobs:
             os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
           except OSError:
             pass
+  unit-tests-windows-cloudformation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_cf
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_cf"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
+  unit-tests-windows-terraform-packer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_terraform_and_packer_one
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_one"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_terraform_and_packer_two
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_two"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
+  unit-tests-windows-arm-template:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_arm
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_arm"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
 
-#  unit-tests-linux-cloudformation:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        name: Configure agent
-#        env:
-#          ACM_SECRET: ${{ secrets.ACM_REPO }}
-#          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-#        run: |
-#          az extension add --name resource-graph
-#          echo "Current working directory is: "
-#          pwd
-#          mkdir /home/runner/keys
-#          mkdir /home/runner/keys/starter
-#          mkdir /home/runner/acmconfig/
-#          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-#          sudo mkdir /var/log/acm
-#          sudo chown -R runner:runner /var/log/acm
-#          sudo mkdir /opt/acm
-#          sudo chown -R runner:runner /opt/acm
-#          sudo mkdir /usr/acm
-#          sudo mkdir /usr/acm/keys
-#          sudo mkdir /usr/acm/keys/adminAccounts
-#          sudo chown -R runner:runner /usr/acm
-#          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
-#          sudo chown -R runner:runner /usr/acm
-#          echo 'new------------------'
-#          git --version
-#          sudo apt install -y dos2unix
-#          ## Install Terraform
-#          cd /home/runner
-#          mkdir terraform-download
-#          cd terraform-download
-#          wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
-#          unzip terraform_0.12.24_linux_amd64.zip
-#          #Move the terraform binary into a folder that is listed as part of the PATH variable.  
-#          mv terraform /usr/local/bin/
-#          echo 'and---------------------------------'
-#          cd /home/runner
-#          sudo apt -y install ansible
-#          aws --version
-#          pip3 install requests
-#          pip3 install pyyaml
-#          pip3 install IPy
-#          python3 --version
-#          python --version
-#          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
-#          sudo chown -R runner:runner /opt/pipx_bin/ansible
-#          echo 'then--------------------------------'
-#          sudo apt update && sudo apt upgrade
-#          sudo apt clean
-#      - shell: bash
-#        name: Run setup on
-#        run: |
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
-#      - shell: bash
-#        name: Run test_controller_cf
-#        run: |
-#          echo "................about to pwd"
-#          pwd
-#          echo "................about to list contents"
-#          ls -al
-#          echo "................about to cd /home/runner/work/AgileCloudManager/ "
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo ".................about to run unit test"
-#          python -m unittest AgileCloudManager.unitTests.test_controller_cf
-#      - shell: bash
-#        name: Delete Secrets
-#        run: |
-#          rm /home/runner/acmconfig/keys.yaml
-#  unit-tests-linux-terraform-packer:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        name: Configure agent
-#        env:
-#          ACM_SECRET: ${{ secrets.ACM_REPO }}
-#          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-#        run: |
-#          az extension add --name resource-graph
-#          echo "Current working directory is: "
-#          pwd
-#          mkdir /home/runner/keys
-#          mkdir /home/runner/keys/starter
-#          mkdir /home/runner/acmconfig/
-#          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-#          sudo mkdir /var/log/acm
-#          sudo chown -R runner:runner /var/log/acm
-#          sudo mkdir /opt/acm
-#          sudo chown -R runner:runner /opt/acm
-#          sudo mkdir /usr/acm
-#          sudo mkdir /usr/acm/keys
-#          sudo mkdir /usr/acm/keys/adminAccounts
-#          sudo chown -R runner:runner /usr/acm
-#          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
-#          sudo chown -R runner:runner /usr/acm
-#          echo 'new------------------'
-#          git --version
-#          sudo apt install -y dos2unix
-#          ## Install Terraform
-#          cd /home/runner
-#          mkdir terraform-download
-#          cd terraform-download
-#          wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
-#          unzip terraform_0.12.24_linux_amd64.zip
-#          #Move the terraform binary into a folder that is listed as part of the PATH variable.  
-#          mv terraform /usr/local/bin/
-#          echo 'and---------------------------------'
-#          cd /home/runner
-#          sudo apt -y install ansible
-#          aws --version
-#          pip3 install requests
-#          pip3 install pyyaml
-#          pip3 install IPy
-#          python3 --version
-#          python --version
-#          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
-#          sudo chown -R runner:runner /opt/pipx_bin/ansible
-#          echo 'then--------------------------------'
-#          sudo apt update && sudo apt upgrade
-#          sudo apt clean
-#      - shell: bash
-#        name: Run setup on
-#        run: |
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
-#      - shell: bash
-#        name: Run test_controller_terraform_and_packer_one
-#        run: |
-#          echo "................about to pwd"
-#          pwd
-#          echo "................about to list contents"
-#          ls -al
-#          echo "................about to cd /home/runner/work/AgileCloudManager/ "
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo ".................about to run unit test"
-#          python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_one
-#      - shell: bash
-#        name: Run test_controller_terraform_and_packer_two
-#        run: |
-#          echo "................about to pwd"
-#          pwd
-#          echo "................about to list contents"
-#          ls -al
-#          echo "................about to cd /home/runner/work/AgileCloudManager/ "
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo ".................about to run unit test"
-#          python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_two
-#      - shell: bash
-#        name: Delete Secrets
-#        run: |
-#          rm /home/runner/acmconfig/keys.yaml
-#  unit-tests-linux-arm-template:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        name: Configure agent
-#        env:
-#          ACM_SECRET: ${{ secrets.ACM_REPO }}
-#          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-#        run: |
-#          az extension add --name resource-graph
-#          echo "Current working directory is: "
-#          pwd
-#          mkdir /home/runner/keys
-#          mkdir /home/runner/keys/starter
-#          mkdir /home/runner/acmconfig/
-#          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-#          sudo mkdir /var/log/acm
-#          sudo chown -R runner:runner /var/log/acm
-#          sudo mkdir /opt/acm
-#          sudo chown -R runner:runner /opt/acm
-#          sudo mkdir /usr/acm
-#          sudo mkdir /usr/acm/keys
-#          sudo mkdir /usr/acm/keys/adminAccounts
-#          sudo chown -R runner:runner /usr/acm
-#          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
-#          sudo chown -R runner:runner /usr/acm
-#          echo 'new------------------'
-#          git --version
-#          sudo apt install -y dos2unix
-#          ## Install Terraform
-#          cd /home/runner
-#          mkdir terraform-download
-#          cd terraform-download
-#          wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
-#          unzip terraform_0.12.24_linux_amd64.zip
-#          #Move the terraform binary into a folder that is listed as part of the PATH variable.  
-#          mv terraform /usr/local/bin/
-#          echo 'and---------------------------------'
-#          cd /home/runner
-#          sudo apt -y install ansible
-#          aws --version
-#          pip3 install requests
-#          pip3 install pyyaml
-#          pip3 install IPy
-#          python3 --version
-#          python --version
-#          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
-#          sudo chown -R runner:runner /opt/pipx_bin/ansible
-#          echo 'then--------------------------------'
-#          sudo apt update && sudo apt upgrade
-#          sudo apt clean
-#      - shell: bash
-#        name: Run setup on
-#        run: |
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
-#      - shell: bash
-#        name: Run test_controller_arm
-#        run: |
-#          echo "................about to pwd"
-#          pwd
-#          echo "................about to list contents"
-#          ls -al
-#          echo "................about to cd /home/runner/work/AgileCloudManager/ "
-#          cd /home/runner/work/AgileCloudManager/
-#          echo "Current working directory is: "
-#          pwd
-#          echo 'Contents are: --------------------------------------------------'
-#          ls -al
-#          echo ".................about to run unit test"
-#          python -m unittest AgileCloudManager.unitTests.test_controller_arm
-#      - shell: bash
-#        name: Delete Secrets
-#        run: |
-#          rm /home/runner/acmconfig/keys.yaml
-#  create-exe-and-upload-artifact:
-#    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        name: Create exe and add exe to PATH
-#        run: |
-#          pip install -U pyinstaller
-#          cd app
-#          rm __init__.py
-#          pyinstaller acm.py
-#          tar -cvf acm_build.tar dist/acm
-#          echo "...................About to pwd"
-#          pwd
-#          echo "...................About to ls -al "
-#          ls -al
-#      - name: Upload Artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: acm-artifact
-#          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
-#          retention-days: 1
+  create-exe-and-upload-artifact:
+    needs: [unit-tests-windows-misc, unit-tests-windows-cloudformation, unit-tests-windows-terraform-packer, unit-tests-windows-arm-template]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - shell: python
+        name: Create exe and add exe to PATH
+        run: |
+          import os
+          #pip install -U pyinstaller
+          os.chdir('app')
+          os.remove("__init__.py")
+          print("About to: pyinstaller acm.py")
+          output = subprocess.getoutput("pyinstaller acm.py")
+          print(output)
+          print("About to: tar -cvf acm_build.tar dist/acm")
+          output = subprocess.getoutput("tar -cvf acm_build.tar dist/acm")
+          print(output)          
+          print("About to: dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: acm-artifact
+          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
+          retention-days: 1
 #  e2e-tests-linux-arm:
 #    needs: [create-exe-and-upload-artifact]
 #    runs-on: ubuntu-latest
