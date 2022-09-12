@@ -297,7 +297,6 @@ jobs:
             os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
           except OSError:
             pass
-
   create-exe-and-upload-artifact:
     needs: [unit-tests-windows-misc, unit-tests-windows-cloudformation, unit-tests-windows-terraform-packer, unit-tests-windows-arm-template]
     runs-on: ubuntu-latest
@@ -317,18 +316,16 @@ jobs:
           print("About to: tar -cvf acm_build.tar dist/acm")
           output = subprocess.getoutput("tar -cvf acm_build.tar dist/acm")
           print(output)          
-          print("About to: dir")
-          output = subprocess.getoutput("dir")
-          print(output)
-          print("About to: dir dist/acm")
-          output = subprocess.getoutput("dirdist/acm")
+          print("About to: dir 'D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\'")
+          output = subprocess.getoutput("dir D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\")
           print(output)
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: acm-artifact
-          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
+          path: D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\acm_build.tar
           retention-days: 1
+#          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
 #  e2e-tests-linux-arm:
 #    needs: [create-exe-and-upload-artifact]
 #    runs-on: ubuntu-latest
