@@ -218,7 +218,7 @@ jobs:
           print('Contents are: --------------------------------------------------')
           output = subprocess.getoutput('dir')
           print(output)
-          print(echo ".................about to run unit test")
+          print(".................about to run unit test")
           mycmd = "python -m unittest AgileCloudManager.unitTests.test_command_builder"
           p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
           while(True):
