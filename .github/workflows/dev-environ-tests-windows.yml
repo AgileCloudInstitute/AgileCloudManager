@@ -219,15 +219,15 @@ jobs:
           output = subprocess.getoutput('dir')
           print(output)
           print(".................about to run unit test")
-          #mycmd = "python -m unittest AgileCloudManager.unitTests.test_command_builder"
-          #p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-          #while(True):
-          #  # returns None while subprocess is running
-          #  retcode = p.poll() 
-          #  line = p.stdout.readline()
-          #  print(line)
-          #  if retcode is not None:
-          #    break 
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_command_builder"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
 
 #      - shell: bash
 #        name: Run test_workflow_and_changes
