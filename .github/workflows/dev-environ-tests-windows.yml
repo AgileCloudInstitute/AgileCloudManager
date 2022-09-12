@@ -30,7 +30,7 @@ jobs:
           pathlib.Path("C:\\Users\\runneradmin\\acmconfig\\").mkdir(parents=True, exist_ok=True)
 
           pathlib.Path('C:\\Users\\runneradmin\\acmconfig\\').mkdir(parents=True, exist_ok=True)
-          with open('C:\\Users\\runneradmin\\acmconfig\\mykeys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
 
           #secrets = os.environ["ACM_SECRET"]
@@ -54,7 +54,7 @@ jobs:
           pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\").mkdir(parents=True, exist_ok=True)
 
           pathlib.Path('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\').mkdir(parents=True, exist_ok=True)
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\mykeys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECOND'])
 
           #secrets = os.environ["ACM_SECOND"]
