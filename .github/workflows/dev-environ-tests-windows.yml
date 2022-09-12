@@ -16,53 +16,61 @@ jobs:
         run: |
           import base64, subprocess, sys, os, pathlib
 
-          def powershell(cmd, input=None):
-            cmd64 = base64.encodebytes(cmd.encode('utf-16-le')).decode('ascii').strip()
-            stdin = None if input is None else subprocess.PIPE
-            process = subprocess.Popen(["powershell.exe", "-NonInteractive", "-EncodedCommand", cmd64], stdin=stdin, stdout=subprocess.PIPE)
-            if input is not None:
-                input = input.encode(sys.stdout.encoding)
-            output, stderr = process.communicate(input)
-            output = output.decode(sys.stdout.encoding).replace('\r\n', '\n')
-            return output
+          #def powershell(cmd, input=None):
+          #  cmd64 = base64.encodebytes(cmd.encode('utf-16-le')).decode('ascii').strip()
+          #  stdin = None if input is None else subprocess.PIPE
+          #  process = subprocess.Popen(["powershell.exe", "-NonInteractive", "-EncodedCommand", cmd64], stdin=stdin, stdout=subprocess.PIPE)
+          #  if input is not None:
+          #      input = input.encode(sys.stdout.encoding)
+          #  output, stderr = process.communicate(input)
+          #  output = output.decode(sys.stdout.encoding).replace('\r\n', '\n')
+          #  return output
 
           #Import first secrets file
           pathlib.Path("C:\\Users\\runneradmin\\acmconfig\\").mkdir(parents=True, exist_ok=True)
 
-          secrets = os.environ["ACM_SECRET"]
+          pathlib.Path('C:\\Users\\runneradmin\\acmconfig\\').mkdir(parents=True, exist_ok=True)
+          with open('C:\\Users\\runneradmin\\acmconfig\\mykeys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+
+          #secrets = os.environ["ACM_SECRET"]
           
-          command = r"""$secrets = @'
-          {}
-          '@
-          $secrets | Out-File -FilePath C:\\Users\\runneradmin\\acmconfig\\keys.yaml""".format(secrets)
+          #command = r"""$secrets = @'
+          #{}
+          #'@
+          #$secrets | Out-File -FilePath C:\\Users\\runneradmin\\acmconfig\\keys.yaml""".format(secrets)
         
-          print('About to echo first secrets to file.')
+          #print('About to echo first secrets to file.')
           
-          print(powershell(command))
-          output = subprocess.run(["powershell.exe", "-Command", ], capture_output=True, shell=True)
-          print(output)
-          output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path C:\\Users\\runneradmin\\acmconfig\\keys.yaml"])
-          print(output)
+          #print(powershell(command))
+          #output = subprocess.run(["powershell.exe", "-Command", ], capture_output=True, shell=True)
+          #print(output)
+          #output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path C:\\Users\\runneradmin\\acmconfig\\keys.yaml"])
+          #print(output)
 
           #Import second secrets file
           pathlib.Path("C:\\Users\\runneradmin\\acm\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\").mkdir(parents=True, exist_ok=True)
 
-          secrets = os.environ["ACM_SECOND"]
+          pathlib.Path('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\').mkdir(parents=True, exist_ok=True)
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\mykeys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+
+          #secrets = os.environ["ACM_SECOND"]
           
-          command = r"""$secrets = @'
-          {}
-          '@
-          $secrets | Out-File -FilePath C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml""".format(secrets)
+          #command = r"""$secrets = @'
+          #{}
+          #'@
+          #$secrets | Out-File -FilePath C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml""".format(secrets)
         
-          print('About to echo second secrets to file.')
+          #print('About to echo second secrets to file.')
           
-          print(powershell(command))
-          output = subprocess.run(["powershell.exe", "-Command", ], capture_output=True, shell=True)
-          print(output)
-          output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml"])
-          print(output)
+          #print(powershell(command))
+          #output = subprocess.run(["powershell.exe", "-Command", ], capture_output=True, shell=True)
+          #print(output)
+          #output = subprocess.getoutput(["powershell.exe", "-Command", "Get-Content -Path C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml"])
+          #print(output)
 
           #..................
           #import subprocess
