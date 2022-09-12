@@ -306,7 +306,7 @@ jobs:
       - shell: python
         name: Create exe and add exe to PATH
         run: |
-          import os
+          import os, subprocess
           #pip install -U pyinstaller
           os.chdir('app')
           os.remove("__init__.py")
@@ -318,6 +318,9 @@ jobs:
           print(output)          
           print("About to: dir")
           output = subprocess.getoutput("dir")
+          print(output)
+          print("About to: dir dist/acm")
+          output = subprocess.getoutput("dirdist/acm")
           print(output)
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
