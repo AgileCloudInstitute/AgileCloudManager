@@ -1,0 +1,10 @@
+name: 'Configure Windows Agent'
+description: 'Prepares Windows-latest agents to be able to run acm commands.'
+runs:
+  using: "composite"
+  steps:
+    - shell: python
+      name: Configure agent
+      run: |
+
+
