@@ -306,7 +306,8 @@ jobs:
       - shell: python
         name: Create exe and add exe to PATH
         run: |
-          import os, subprocess
+          import os, subprocess, sys
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
           #pip install -U pyinstaller
           os.chdir('app')
           os.remove("__init__.py")
