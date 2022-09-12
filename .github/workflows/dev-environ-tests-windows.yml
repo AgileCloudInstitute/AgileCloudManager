@@ -202,21 +202,33 @@ jobs:
             print(line)
             if retcode is not None:
               break 
-      - shell: bash
+      - shell: python
         name: Run test_command_builder
         run: |
-          echo "................about to pwd"
-          pwd
-          echo "................about to list contents"
-          ls -al
-          echo "................about to cd /home/runner/work/AgileCloudManager/ "
-          cd /home/runner/work/AgileCloudManager/
-          echo "Current working directory is: "
-          pwd
-          echo 'Contents are: --------------------------------------------------'
-          ls -al
-          echo ".................about to run unit test"
-          python -m unittest AgileCloudManager.unitTests.test_command_builder
+          import os, subprocess
+          print("................about to pwd")
+          print(os.path.dirname(os.path.abspath(__file__)))
+          print("................about to list contents")
+          output = subprocess.getoutput('dir')
+          print(output)
+          print("................about to cd /home/runner/work/AgileCloudManager/ ")
+          os.chdir('/home/runner/work/AgileCloudManager/')
+          print("Current working directory is: ")
+          print(os.path.dirname(os.path.abspath(__file__)))
+          print('Contents are: --------------------------------------------------')
+          output = subprocess.getoutput('dir')
+          print(output)
+          print(echo ".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_command_builder"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+
 #      - shell: bash
 #        name: Run test_workflow_and_changes
 #        run: |
