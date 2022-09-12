@@ -96,8 +96,8 @@ jobs:
           #output = subprocess.getoutput('echo "$ACM_SECRET" > C:\\Users\\runneradmin\\acmconfig\\keys.yaml')
           #print(output)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\logs\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("acmAdmin\\binaries").mkdir(parents=True, exist_ok=True)
-
+          pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\").mkdir(parents=True, exist_ok=True)
+          pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\").mkdir(parents=True, exist_ok=True)
           #pathlib.Path("C:\\Users\\runneradmin\\acm\\").mkdir(parents=True, exist_ok=True)
           #pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\").mkdir(parents=True, exist_ok=True)
           #pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\").mkdir(parents=True, exist_ok=True)
@@ -127,10 +127,8 @@ jobs:
           #import zipfile
           import shutil
           print("x8")
-          shutil.unpack_archive("terraform_0.12.24_linux_amd64.zip", "D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
+          shutil.unpack_archive("terraform_0.12.24_linux_amd64.zip", "D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\")
           print("x9")
-          #with zipfile.ZipFile(res,"r") as zip_ref:
-          #  zip_ref.extractall("D:\\a\\AgileCloudManager\\AgileCloudManager\\acmAdmin\\binaries\\")
           #Install ansible
           os.chdir('C:\\Users\\runneradmin')
           print("x10")
