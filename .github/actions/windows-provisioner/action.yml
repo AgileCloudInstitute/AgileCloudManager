@@ -7,28 +7,22 @@ runs:
       name: Configure agent
       run: |
           import base64, subprocess, sys, os, pathlib
-
           ##Import first secrets file
           pathlib.Path("C:\\Users\\runneradmin\\acmconfig\\").mkdir(parents=True, exist_ok=True)
-
           pathlib.Path('C:\\Users\\runneradmin\\acmconfig\\').mkdir(parents=True, exist_ok=True)
           #with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
           #  key_file.write(os.environ['ACM_SECRET'])
-
           ##Import second secrets file
           pathlib.Path("C:\\Users\\runneradmin\\acm\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\").mkdir(parents=True, exist_ok=True)
-
           pathlib.Path('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\').mkdir(parents=True, exist_ok=True)
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
           #  key_file.write(os.environ['ACM_SECOND'])
-
           subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
           subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
           subprocess.check_call([sys.executable, "-m", "pip", "install", "IPy"])
           subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-
           print('Python version is: ', str(sys.version_info[0]),'.',str(sys.version_info[1]))
           print("About to: az --version")
           output = subprocess.getoutput("az --version")
@@ -42,7 +36,6 @@ runs:
           pathlib.Path("C:\\Users\\runneradmin\\acm\\logs\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\").mkdir(parents=True, exist_ok=True)
-
           print('About to: git --version')
           output = subprocess.getoutput('git --version')
           print(output)
