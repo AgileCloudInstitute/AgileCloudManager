@@ -1,0 +1,462 @@
+name: dev-environ-tests
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  unit-tests-linux-misc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - shell: bash
+        name: Run setup on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+      - shell: bash
+        name: Run test_command_builder
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_command_builder
+      - shell: bash
+        name: Run test_workflow_and_changes
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_workflow_and_changes
+      - shell: bash
+        name: Run test_controller_custom.py
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_controller_custom
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+  unit-tests-linux-cloudformation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - shell: bash
+        name: Run setup on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+      - shell: bash
+        name: Run test_controller_cf
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_controller_cf
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+  unit-tests-linux-terraform-packer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+         ACM_SECRET: ${{ secrets.ACM_REPO }}
+         ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - shell: bash
+        name: Run setup on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+      - shell: bash
+        name: Run test_controller_terraform_and_packer_one
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_one
+      - shell: bash
+        name: Run test_controller_terraform_and_packer_two
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_two
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+  unit-tests-linux-arm-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - shell: bash
+        name: Run setup on
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python AgileCloudManager/app/acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+      - shell: bash
+        name: Run test_controller_arm
+        run: |
+          cd /home/runner/work/AgileCloudManager/
+          python -m unittest AgileCloudManager.unitTests.test_controller_arm
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+  unit-tests-windows-misc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_command_builder
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_command_builder"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_workflow_and_changes
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_workflow_and_changes"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_custom
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_custom"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
+  unit-tests-windows-cloudformation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_cf
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_cf"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
+  unit-tests-windows-terraform-packer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_terraform_and_packer_one
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_one"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_terraform_and_packer_two
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_terraform_and_packer_two"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
+  unit-tests-windows-arm-template:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess
+          import os
+          os.chdir('D:\\a\\AgileCloudManager\\')
+          print('About to: acm setup on')
+          mycmd = "python AgileCloudManager\\app\\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run test_controller_arm
+        run: |
+          import os, subprocess
+          os.chdir("..")
+          print(".................about to run unit test")
+          mycmd = "python -m unittest AgileCloudManager.unitTests.test_controller_arm"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          try:
+            os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          except OSError:
+            pass
+          try:
+            os.remove("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml")
+          except OSError:
+            pass
+  push-to-test-branch:
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template, unit-tests-windows-misc, unit-tests-windows-cloudformation, unit-tests-windows-terraform-packer, unit-tests-windows-arm-template]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Push changes to test branch
+        run: |
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git branch -M test
+          git add --all
+          git push --force -u origin test
+
+#  push-to-test-branch:
+#    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - shell: bash
+#        name: Push changes to test branch
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin $repoWithToken
+#          git branch -M test
+#          git add --all
+#          git push --force -u origin test

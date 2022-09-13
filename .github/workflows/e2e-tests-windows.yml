@@ -1,0 +1,678 @@
+name: e2e-tests-windows
+on:
+  push:
+    branches:
+      - test
+jobs:
+  create-win-exe-upload-artifact:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - shell: python
+        name: Create exe and add exe to PATH
+        run: |
+          import os, subprocess, sys
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
+          #pip install -U pyinstaller
+          os.chdir('app')
+          os.remove("__init__.py")
+          print("About to: pyinstaller acm.py")
+          output = subprocess.getoutput("pyinstaller acm.py")
+          print(output)
+          print("About to: tar -cvf acm_build_windows.tar dist/acm")
+          output = subprocess.getoutput("tar -cvf acm_build_windows.tar dist/acm")
+          print(output)
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: acm-artifact-windows
+          path: D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\acm_build_windows.tar
+          retention-days: 1
+  e2e-tests-windows-arm:
+    needs: [create-win-exe-upload-artifact]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: acm-artifact-windows
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - name: Prepare artifact to be added to path
+        shell: python
+        run: |
+          import pathlib, os, sys
+          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
+          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
+          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
+          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
+          print(output)
+          os.remove("acm_build_windows.tar")
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess, os, sys
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print('About to: acm setup on')
+          mycmd = "acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Run platform on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm platform on"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run platform off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm platform off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - name: Setup Off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run setup off")
+          mycmd = "acm setup off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
+  e2e-tests-windows-cloudformation:
+    needs: [create-win-exe-upload-artifact]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: acm-artifact-windows
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - name: Prepare artifact to be added to path
+        shell: python
+        run: |
+          import pathlib, os, sys
+          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
+          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
+          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
+          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
+          print(output)
+          os.remove("acm_build_windows.tar")
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess, os, sys
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print('About to: acm setup on')
+          mycmd = "acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Run platform on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm platform on"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run platform off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm platform off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - name: Setup Off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run setup off")
+          mycmd = "acm setup off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
+  e2e-tests-windows-custom:
+    needs: [create-win-exe-upload-artifact]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: acm-artifact-windows
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - name: Prepare artifact to be added to path
+        shell: python
+        run: |
+          import pathlib, os, sys
+          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
+          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
+          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
+          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
+          print(output)
+          os.remove("acm_build_windows.tar")
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess, os, sys
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print('About to: acm setup on')
+          mycmd = "acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-custom.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Run platform on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm platform on"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run platform off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm platform off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - name: Setup Off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run setup off")
+          mycmd = "acm setup off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
+  e2e-tests-windows-terraform-packer:
+    needs: [create-win-exe-upload-artifact]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: acm-artifact-windows
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - name: Prepare artifact to be added to path
+        shell: python
+        run: |
+          import pathlib, os, sys
+          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
+          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
+          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
+          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
+          print(output)
+          os.remove("acm_build_windows.tar")
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+      - shell: python
+        name: Run setup on
+        run: |
+          import subprocess, os, sys
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print('About to: acm setup on')
+          mycmd = "acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Run tfbackend serviceType on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm serviceType on systemName=tfbackend serviceType=tfBackend"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run tfbackend serviceType off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm serviceType off systemName=tfbackend serviceType=tfBackend"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run tfbackend serviceInstance on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run tfbackend serviceInstance off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run tfbackend services on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm services on systemName=tfbackend"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run admin foundation on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm foundation on systemName=admin"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run admin services on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm services on systemName=admin"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run agents foundation on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm foundation on systemName=agents"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run agents services on
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm services on systemName=agents"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run agents services off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm services off systemName=agents"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run agents foundation off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm foundation off systemName=agents"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run admin services off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm services off systemName=admin"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run admin foundation off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm foundation off systemName=admin"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - shell: python
+        name: Run tfbackend services off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run e2e test")
+          mycmd = "acm services off systemName=tfbackend"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+      - name: Setup Off
+        run: |
+          import sys, os, subprocess
+          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          print(".................about to run setup off")
+          mycmd = "acm setup off"
+          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          while(True):
+            # returns None while subprocess is running
+            retcode = p.poll() 
+            line = p.stdout.readline()
+            print(line)
+            if retcode is not None:
+              break 
+          print("About to dir")
+          output = subprocess.getoutput("dir")
+          print(output)
+      - shell: python
+        name: Delete Secrets
+        run: |
+          import os
+          os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
+          os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
+
+
+#  push-to-test-branch:
+#    needs: [e2e-tests-windows-arm, e2e-tests-windows-cloudformation, e2e-tests-windows-custom, e2e-tests-windows-terraform-packer ]
+#    runs-on: windows-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - shell: python
+#        name: Push changes to test branch
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin $repoWithToken
+#          git branch -M test
+#          git add --all
+#          git push --force -u origin test
