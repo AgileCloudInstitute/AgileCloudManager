@@ -317,7 +317,7 @@ jobs:
           output = subprocess.getoutput("tar -cvf acm_build.tar dist/acm")
           print(output)          
           print("About to: dir 'D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\'")
-          output = subprocess.getoutput("dir D:\\\a\\\AgileCloudManager\\\AgileCloudManager\\\app\\")
+          output = subprocess.getoutput("dir D:\\\\a\\\AgileCloudManager\\\AgileCloudManager\\\\app\\")
           print(output)
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
