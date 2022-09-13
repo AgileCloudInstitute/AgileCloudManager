@@ -299,7 +299,7 @@ jobs:
             pass
   create-exe-and-upload-artifact:
     needs: [unit-tests-windows-misc, unit-tests-windows-cloudformation, unit-tests-windows-terraform-packer, unit-tests-windows-arm-template]
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - shell: python
