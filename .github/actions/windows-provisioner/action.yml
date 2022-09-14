@@ -11,7 +11,6 @@ runs:
           mkdir C:\\Users\\runneradmin\\acm\\
           mkdir C:\\Users\\runneradmin\\acm\\keys\\
           mkdir C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
-          mkdir C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
           py -m pip install requests
           py -m pip install PyYaml
           py -m pip install IPy
