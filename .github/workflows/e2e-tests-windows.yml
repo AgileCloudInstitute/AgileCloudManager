@@ -2,14 +2,14 @@ name: e2e-tests-windows
 on:
   push:
     branches:
-      - test
+      - dev
 jobs:
   create-win-exe-upload-artifact:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - shell: python
-        name: Create exe and add exe to PATH
+        name: Create exe and create tar
         run: |
           import os, subprocess, sys
           subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
@@ -39,6 +39,17 @@ jobs:
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent 
         uses: ./.github/actions/windows-provisioner
+      - name: Add acm dir to path
+        run: |
+          echo "About to start"
+          $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\"  
+          echo "About to set item property"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
+          echo "About to show permanent PATH"
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to show temporary PATH"
+          echo $env:Path
       - shell: python
         name: Save secrets to file
         env:
@@ -148,6 +159,17 @@ jobs:
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
+      - name: Add acm dir to path
+        run: |
+          echo "About to start"
+          $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\"  
+          echo "About to set item property"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
+          echo "About to show permanent PATH"
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to show temporary PATH"
+          echo $env:Path
       - shell: python
         name: Save secrets to file
         env:
@@ -257,6 +279,17 @@ jobs:
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
+      - name: Add acm dir to path
+        run: |
+          echo "About to start"
+          $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\"  
+          echo "About to set item property"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
+          echo "About to show permanent PATH"
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to show temporary PATH"
+          echo $env:Path
       - shell: python
         name: Save secrets to file
         env:
@@ -366,6 +399,17 @@ jobs:
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
+      - name: Add acm dir to path
+        run: |
+          echo "About to start"
+          $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\"  
+          echo "About to set item property"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
+          echo "About to show permanent PATH"
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to show temporary PATH"
+          echo $env:Path
       - shell: python
         name: Save secrets to file
         env:
