@@ -35,6 +35,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent 
         uses: ./.github/actions/windows-provisioner
@@ -55,8 +56,6 @@ jobs:
         shell: python
         run: |
           import pathlib, os, sys
-          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
-          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -145,6 +144,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
@@ -165,8 +165,6 @@ jobs:
         shell: python
         run: |
           import pathlib, os, sys
-          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
-          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -255,6 +253,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
@@ -275,8 +274,6 @@ jobs:
         shell: python
         run: |
           import pathlib, os, sys
-          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
-          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -365,6 +362,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
@@ -385,8 +383,6 @@ jobs:
         shell: python
         run: |
           import pathlib, os, sys
-          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
-          os.replace("acm_build_windows.tar", "C:\\Users\\runneradmin\\acmhome\\acm_build_windows.tar")
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)

@@ -34,6 +34,7 @@ runs:
           pathlib.Path("C:\\Users\\runneradmin\\keys\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\keys\\starter\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("C:\\Users\\runneradmin\\acm\\logs\\").mkdir(parents=True, exist_ok=True)
+          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\").mkdir(parents=True, exist_ok=True)
           pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\").mkdir(parents=True, exist_ok=True)
           print('About to: git --version')
