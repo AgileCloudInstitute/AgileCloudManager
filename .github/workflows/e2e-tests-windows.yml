@@ -78,17 +78,17 @@ jobs:
         run: |
           echo "About to start"
           $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
-          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\"  
+          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\dist\\acm\\"  
           echo "About to set item property"
           Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
           echo "About to show permanent PATH"
           Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
           echo "About to add to temporary PATH"
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\dist\\acm\\"
           echo "About to show temporary PATH"
           echo $env:Path
-          echo "About to dir C:\\Users\\runneradmin\\acmhome\\ "
-          dir C:\\Users\\runneradmin\\acmhome\\
+          echo "About to dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\"
+          dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
           mkdir C:\\Users\\runneradmin\\testdir\\
           cd C:\\Users\\runneradmin\\testdir\\
           echo 'About to: acm setup on'
