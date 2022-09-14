@@ -6,7 +6,6 @@ runs:
     - name: Configure agent
       shell: pwsh
       run: |
-          #import base64, subprocess, sys, os, pathlib
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmconfig\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\
@@ -36,6 +35,16 @@ runs:
           #Install ansible
           cd C:\\Users\\runneradmin
           py -m pip install ansible
+          $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+          $new  =  "$old;C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\"  
+          echo "About to set item property"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
+          echo "About to show permanent PATH"
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to add to temporary PATH"
+          $env:Path += ";C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\"
+          echo "About to show temporary PATH"
+          echo $env:Path
           echo 'About to: ansible --version'
           ansible --version
           echo 'About to: where ansible'
