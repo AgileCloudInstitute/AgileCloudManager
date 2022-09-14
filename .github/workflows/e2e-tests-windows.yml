@@ -87,6 +87,8 @@ jobs:
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           echo "About to show temporary PATH"
           echo $env:Path
+          echo "About to dir C:\\Users\\runneradmin\\acmhome\\ "
+          dir C:\\Users\\runneradmin\\acmhome\\
           mkdir C:\\Users\\runneradmin\\testdir\\
           cd C:\\Users\\runneradmin\\testdir\\
           echo 'About to: acm setup on'
