@@ -8,20 +8,18 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - shell: python
+      - shell: pwsh
         name: Create exe and create tar
         run: |
-          import os, subprocess, sys
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-          #pip install -U pyinstaller
-          os.chdir('app')
-          os.remove("__init__.py")
-          print("About to: pyinstaller acm.py")
-          output = subprocess.getoutput("pyinstaller acm.py")
-          print(output)
-          print("About to: tar -cvf acm_build_windows.tar dist/acm")
-          output = subprocess.getoutput("tar -cvf acm_build_windows.tar dist/acm")
-          print(output)
+          python -m pip install --upgrade pip pyinstaller
+          cd app
+          del /f "__init__.py"
+          echo "About to dir"
+          dir
+          echo "About to: pyinstaller acm.py"
+          pyinstaller acm.py
+          echo "About to: tar -cvf acm_build_windows.tar dist/acm"
+          tar -cvf acm_build_windows.tar dist/acm
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -91,10 +89,10 @@ jobs:
           dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
           mkdir C:\\Users\\runneradmin\\testdir\\
           cd C:\\Users\\runneradmin\\testdir\\
-          echo "About to pip install PyYAML"
+          #echo "About to pip install PyYAML"
           #pip install PyYAML
           #py -m pip install PyYaml
-          python -m pip install --upgrade pip PyYaml
+          #python -m pip install --upgrade pip PyYaml
           echo 'About to: acm setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
           echo "About to dir"
