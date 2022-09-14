@@ -91,6 +91,8 @@ jobs:
           dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
           mkdir C:\\Users\\runneradmin\\testdir\\
           cd C:\\Users\\runneradmin\\testdir\\
+          echo "About to pip install PyYAML"
+          pip install PyYAML
           echo 'About to: acm setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
           echo "About to dir"
