@@ -55,7 +55,7 @@ jobs:
       - name: Prepare artifact to be added to path
         shell: python
         run: |
-          import pathlib, os, sys
+          import pathlib, os, sys, subprocess
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -164,7 +164,7 @@ jobs:
       - name: Prepare artifact to be added to path
         shell: python
         run: |
-          import pathlib, os, sys
+          import pathlib, os, sys, subprocess
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -273,7 +273,7 @@ jobs:
       - name: Prepare artifact to be added to path
         shell: python
         run: |
-          import pathlib, os, sys
+          import pathlib, os, sys, subprocess
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -382,7 +382,7 @@ jobs:
       - name: Prepare artifact to be added to path
         shell: python
         run: |
-          import pathlib, os, sys
+          import pathlib, os, sys, subprocess
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
