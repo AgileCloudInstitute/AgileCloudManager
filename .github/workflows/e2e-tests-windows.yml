@@ -48,6 +48,8 @@ jobs:
           Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
           echo "About to show permanent PATH"
           Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to add to temporary PATH"
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           echo "About to show temporary PATH"
           echo $env:Path
       - shell: python
@@ -72,26 +74,41 @@ jobs:
           print(output)
           os.remove("acm_build_windows.tar")
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
-      - shell: python
-        name: Run setup on
+      - name: Run setup on
         run: |
-          import subprocess, os, sys, pathlib
-          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
-          pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
-          os.chdir('C:\\Users\\runneradmin\\testdir\\')
-          print('About to: acm setup on')
-          mycmd = "acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git"
-          p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-          while(True):
-            # returns None while subprocess is running
-            retcode = p.poll() 
-            line = p.stdout.readline()
-            print(line)
-            if retcode is not None:
-              break 
-          print("About to dir")
-          output = subprocess.getoutput("dir")
-          print(output)
+          echo "About to start"
+          $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+          $new  =  "$old;C:\\Users\\runneradmin\\acmhome\\"  
+          echo "About to set item property"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
+          echo "About to show permanent PATH"
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to add to temporary PATH"
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          echo "About to show temporary PATH"
+          echo $env:Path
+          cd C:\\Users\\runneradmin\\testdir\\
+          echo 'About to: acm setup on'
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+          echo "About to dir"
+          dir
+          #import subprocess, os, sys, pathlib
+          #sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
+          #pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
+          #os.chdir('C:\\Users\\runneradmin\\testdir\\')
+          #print('About to: acm setup on')
+          #mycmd = "acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git"
+          #p = subprocess.Popen(mycmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+          #while(True):
+          #  # returns None while subprocess is running
+          #  retcode = p.poll() 
+          #  line = p.stdout.readline()
+          #  print(line)
+          #  if retcode is not None:
+          #    break 
+          #print("About to dir")
+          #output = subprocess.getoutput("dir")
+          #print(output)
       - shell: python
         name: Run platform on
         run: |
@@ -168,6 +185,8 @@ jobs:
           Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
           echo "About to show permanent PATH"
           Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to add to temporary PATH"
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           echo "About to show temporary PATH"
           echo $env:Path
       - shell: python
@@ -288,6 +307,8 @@ jobs:
           Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
           echo "About to show permanent PATH"
           Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to add to temporary PATH"
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           echo "About to show temporary PATH"
           echo $env:Path
       - shell: python
@@ -408,6 +429,8 @@ jobs:
           Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
           echo "About to show permanent PATH"
           Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
+          echo "About to add to temporary PATH"
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           echo "About to show temporary PATH"
           echo $env:Path
       - shell: python
