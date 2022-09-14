@@ -3,65 +3,44 @@ description: 'Prepares Windows-latest agents to be able to run acm commands.'
 runs:
   using: "composite"
   steps:
-    - shell: python
-      name: Configure agent
+    - name: Configure agent
       run: |
-          import base64, subprocess, sys, os, pathlib
-          ##Import first secrets file
-          pathlib.Path("C:\\Users\\runneradmin\\acmconfig\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path('C:\\Users\\runneradmin\\acmconfig\\').mkdir(parents=True, exist_ok=True)
-          #with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECRET'])
-          ##Import second secrets file
-          pathlib.Path("C:\\Users\\runneradmin\\acm\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\').mkdir(parents=True, exist_ok=True)
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "IPy"])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-          print('Python version is: ', str(sys.version_info[0]),'.',str(sys.version_info[1]))
-          print("About to: az --version")
-          output = subprocess.getoutput("az --version")
-          print(output)
-          print('About to: "az extension add --name resource-graph"')
-          output = subprocess.getoutput("az extension add --name resource-graph")
-          print(output)
-          #import pathlib
-          pathlib.Path("C:\\Users\\runneradmin\\keys\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("C:\\Users\\runneradmin\\keys\\starter\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("C:\\Users\\runneradmin\\acm\\logs\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("C:\\Users\\runneradmin\\acmhome\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\").mkdir(parents=True, exist_ok=True)
-          pathlib.Path("D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\").mkdir(parents=True, exist_ok=True)
-          print('About to: git --version')
-          output = subprocess.getoutput('git --version')
-          print(output)
+          #import base64, subprocess, sys, os, pathlib
+          mkdir C:\\Users\\runneradmin\\acmconfig\\
+          mkdir C:\\Users\\runneradmin\\acm\\
+          mkdir C:\\Users\\runneradmin\\acm\\keys\\
+          mkdir C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
+          mkdir C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
+          py -m pip install requests
+          py -m pip install PyYaml
+          py -m pip install IPy
+          py -m pip install pyinstaller
+          echo "About to: az --version"
+          az --version
+          echo 'About to: "az extension add --name resource-graph"'
+          az extension add --name resource-graph          
+          mkdir C:\\Users\\runneradmin\\keys\\
+          mkdir C:\\Users\\runneradmin\\keys\\starter\\
+          mkdir C:\\Users\\runneradmin\\acm\\logs\\
+          mkdir C:\\Users\\runneradmin\\acmhome\\
+          mkdir D:\\a\\AgileCloudManager\\acmAdmin\\
+          mkdir D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\
+          echo 'About to: git --version'
+          git --version
           ## Install Terraform
-          os.chdir('C:\\Users\\runneradmin\\')
-          pathlib.Path("C:\\Users\\runneradmin\\terraform-download\\").mkdir(parents=True, exist_ok=True)
-          os.chdir('C:\\Users\\runneradmin\\terraform-download\\')
-          import requests
-          res = requests.get('https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip')
-          res.raise_for_status() # ensure we notice bad responses
-          with open("terraform_0.12.24_linux_amd64.zip", "wb") as f:
-            f.write(res.content)
-          import shutil
-          shutil.unpack_archive("terraform_0.12.24_linux_amd64.zip", "D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\")
+          cd C:\\Users\\runneradmin\\
+          mkdir C:\\Users\\runneradmin\\terraform-download\\
+          cd C:\\Users\\runneradmin\\terraform-download\\
+          curl -L https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip -o terraform_0.12.24_linux_amd64.zip -H 'Accept: application/octet-stream'
+          Expand-Archive -Path 'terraform_0.12.24_linux_amd64.zip' -DestinationPath 'D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\'
           #Install ansible
-          os.chdir('C:\\Users\\runneradmin')
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "ansible"])
-          print('About to: ansible --version')
-          output = subprocess.getoutput('ansible --version')
-          print(output)
-          print('About to: where ansible')
-          output = subprocess.getoutput('where ansible')
-          print(output)
-          print('About to: aws --version')
-          output = subprocess.getoutput('aws --version')
-          print(output)
+          cd C:\\Users\\runneradmin
+          py -m pip install ansible
+          echo 'About to: ansible --version'
+          ansible --version
+          echo 'About to: where ansible'
+          where ansible
+          echo 'About to: aws --version'
+          aws --version
           #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
           #sudo chown -R runner:runner /opt/pipx_bin/ansible
