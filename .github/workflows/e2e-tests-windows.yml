@@ -13,8 +13,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip pyinstaller
           cd app
+          echo "About to first dir"
+          dir
           del /f "__init__.py"
-          echo "About to dir"
+          echo "About to second dir"
           dir
           echo "About to: pyinstaller acm.py"
           pyinstaller acm.py
