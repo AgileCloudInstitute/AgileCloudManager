@@ -87,6 +87,7 @@ jobs:
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           echo "About to show temporary PATH"
           echo $env:Path
+          mkdir C:\\Users\\runneradmin\\testdir\\
           cd C:\\Users\\runneradmin\\testdir\\
           echo 'About to: acm setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
