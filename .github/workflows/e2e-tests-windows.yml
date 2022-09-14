@@ -15,7 +15,7 @@ jobs:
           cd app
           echo "About to first dir"
           dir
-          del /f "__init__.py"
+          del /f __init__.py
           echo "About to second dir"
           dir
           echo "About to: pyinstaller acm.py"
