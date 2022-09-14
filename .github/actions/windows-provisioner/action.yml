@@ -4,7 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: Configure agent
-      shell: windows
+      shell: pwsh
       run: |
           #import base64, subprocess, sys, os, pathlib
           mkdir C:\\Users\\runneradmin\\acmconfig\\
