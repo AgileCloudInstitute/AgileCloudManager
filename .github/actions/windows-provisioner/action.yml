@@ -7,10 +7,10 @@ runs:
       shell: pwsh
       run: |
           #import base64, subprocess, sys, os, pathlib
-          if not exist C:\\Users\\runneradmin\\acmconfig\\ mkdir C:\\Users\\runneradmin\\acmconfig\\
-          if not exist C:\\Users\\runneradmin\\acm\\ mkdir C:\\Users\\runneradmin\\acm\\
-          if not exist C:\\Users\\runneradmin\\acm\\keys\\ mkdir C:\\Users\\runneradmin\\acm\\keys\\
-          if not exist C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\ mkdir C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmconfig\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
           py -m pip install requests
           py -m pip install PyYaml
           py -m pip install IPy
@@ -19,17 +19,17 @@ runs:
           az --version
           echo 'About to: "az extension add --name resource-graph"'
           az extension add --name resource-graph          
-          if not exist C:\\Users\\runneradmin\\keys\\ mkdir C:\\Users\\runneradmin\\keys\\
-          if not exist C:\\Users\\runneradmin\\keys\\starter\\ mkdir C:\\Users\\runneradmin\\keys\\starter\\
-          if not exist C:\\Users\\runneradmin\\acm\\logs\\ mkdir C:\\Users\\runneradmin\\acm\\logs\\
-          if not exist C:\\Users\\runneradmin\\acmhome\\ mkdir C:\\Users\\runneradmin\\acmhome\\
-          if not exist D:\\a\\AgileCloudManager\\acmAdmin\\ mkdir D:\\a\\AgileCloudManager\\acmAdmin\\
-          if not exist D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\ mkdir D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\keys\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\keys\\starter\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\logs\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\
+          New-Item -ItemType Directory -Force -Path D:\\a\\AgileCloudManager\\acmAdmin\\
+          New-Item -ItemType Directory -Force -Path D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\
           echo 'About to: git --version'
           git --version
           ## Install Terraform
           cd C:\\Users\\runneradmin\\
-          if not exist C:\\Users\\runneradmin\\terraform-download\\ mkdir C:\\Users\\runneradmin\\terraform-download\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\terraform-download\\
           cd C:\\Users\\runneradmin\\terraform-download\\
           curl -L https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip -o terraform_0.12.24_linux_amd64.zip -H 'Accept: application/octet-stream'
           Expand-Archive -Path 'terraform_0.12.24_linux_amd64.zip' -DestinationPath 'D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\'
