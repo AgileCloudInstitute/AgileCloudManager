@@ -35,6 +35,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+      - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent 
         uses: ./.github/actions/windows-provisioner
       - shell: python
@@ -144,6 +145,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+      - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
       - shell: python
@@ -253,6 +255,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+      - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
       - shell: python
@@ -362,6 +365,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact-windows
+      - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
       - shell: python
