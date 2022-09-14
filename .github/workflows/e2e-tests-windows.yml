@@ -64,7 +64,7 @@ jobs:
       - shell: python
         name: Run setup on
         run: |
-          import subprocess, os, sys
+          import subprocess, os, sys, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
@@ -84,7 +84,7 @@ jobs:
       - shell: python
         name: Run platform on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -100,7 +100,7 @@ jobs:
       - shell: python
         name: Run platform off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -115,7 +115,7 @@ jobs:
               break 
       - name: Setup Off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run setup off")
@@ -173,7 +173,7 @@ jobs:
       - shell: python
         name: Run setup on
         run: |
-          import subprocess, os, sys
+          import subprocess, os, sys, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
@@ -193,7 +193,7 @@ jobs:
       - shell: python
         name: Run platform on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -209,7 +209,7 @@ jobs:
       - shell: python
         name: Run platform off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -224,7 +224,7 @@ jobs:
               break 
       - name: Setup Off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run setup off")
@@ -282,7 +282,7 @@ jobs:
       - shell: python
         name: Run setup on
         run: |
-          import subprocess, os, sys
+          import subprocess, os, sys, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
@@ -302,7 +302,7 @@ jobs:
       - shell: python
         name: Run platform on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -318,7 +318,7 @@ jobs:
       - shell: python
         name: Run platform off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -333,7 +333,7 @@ jobs:
               break 
       - name: Setup Off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run setup off")
@@ -382,7 +382,7 @@ jobs:
       - name: Prepare artifact to be added to path
         shell: python
         run: |
-          import pathlib, os, sys, subprocess
+          import pathlib, os, sys, subprocess, pathlib
           os.chdir('C:\\Users\\runneradmin\\acmhome\\')
           output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
           print(output)
@@ -391,7 +391,7 @@ jobs:
       - shell: python
         name: Run setup on
         run: |
-          import subprocess, os, sys
+          import subprocess, os, sys, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           pathlib.Path("C:\\Users\\runneradmin\\testdir\\").mkdir(parents=True, exist_ok=True)
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
@@ -411,7 +411,7 @@ jobs:
       - shell: python
         name: Run tfbackend serviceType on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -427,7 +427,7 @@ jobs:
       - shell: python
         name: Run tfbackend serviceType off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -443,7 +443,7 @@ jobs:
       - shell: python
         name: Run tfbackend serviceInstance on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -459,7 +459,7 @@ jobs:
       - shell: python
         name: Run tfbackend serviceInstance off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -475,7 +475,7 @@ jobs:
       - shell: python
         name: Run tfbackend services on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -491,7 +491,7 @@ jobs:
       - shell: python
         name: Run admin foundation on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -507,7 +507,7 @@ jobs:
       - shell: python
         name: Run admin services on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -523,7 +523,7 @@ jobs:
       - shell: python
         name: Run agents foundation on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -539,7 +539,7 @@ jobs:
       - shell: python
         name: Run agents services on
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -555,7 +555,7 @@ jobs:
       - shell: python
         name: Run agents services off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -571,7 +571,7 @@ jobs:
       - shell: python
         name: Run agents foundation off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -587,7 +587,7 @@ jobs:
       - shell: python
         name: Run admin services off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -603,7 +603,7 @@ jobs:
       - shell: python
         name: Run admin foundation off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -619,7 +619,7 @@ jobs:
       - shell: python
         name: Run tfbackend services off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run e2e test")
@@ -634,7 +634,7 @@ jobs:
               break 
       - name: Setup Off
         run: |
-          import sys, os, subprocess
+          import sys, os, subprocess, pathlib
           sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
           os.chdir('C:\\Users\\runneradmin\\testdir\\')
           print(".................about to run setup off")
