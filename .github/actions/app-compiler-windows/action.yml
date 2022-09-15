@@ -7,6 +7,8 @@ runs:
       shell: pwsh
       run: |
         echo "About to start"
+        cd app
+        del __init__.py
         python -m pip install --upgrade pip PyYaml
         python -m pip install --upgrade pip pyinstaller
         echo "About to: pyinstaller acm.py"
