@@ -4,41 +4,14 @@ on:
     branches:
       - dev
 jobs:
-  create-win-exe-upload-artifact:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - shell: pwsh
-        name: Create exe and create tar
-        run: |
-          python -m pip install --upgrade pip pyinstaller
-          cd app
-          echo "About to first dir"
-          dir
-          del __init__.py
-          echo "About to second dir"
-          dir
-          echo "About to: pyinstaller acm.py"
-          pyinstaller acm.py
-          echo "About to: tar -cvf acm_build_windows.tar dist/acm"
-          tar -cvf acm_build_windows.tar dist/acm
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: acm-artifact-windows
-          path: D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\acm_build_windows.tar
-          retention-days: 1
   e2e-tests-windows-arm:
-    needs: [create-win-exe-upload-artifact]
     runs-on: windows-latest
     steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: acm-artifact-windows
-          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent 
         uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
       - name: Add acm dir to path
         run: |
           echo "About to start"
@@ -173,16 +146,13 @@ jobs:
           os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
           os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
   e2e-tests-windows-cloudformation:
-    needs: [create-win-exe-upload-artifact]
     runs-on: windows-latest
     steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: acm-artifact-windows
-          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
       - name: Add acm dir to path
         run: |
           echo "About to start"
@@ -298,13 +268,11 @@ jobs:
     needs: [create-win-exe-upload-artifact]
     runs-on: windows-latest
     steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: acm-artifact-windows
-          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
       - name: Add acm dir to path
         run: |
           echo "About to start"
@@ -417,16 +385,13 @@ jobs:
           os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
           os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
   e2e-tests-windows-terraform-packer:
-    needs: [create-win-exe-upload-artifact]
     runs-on: windows-latest
     steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: acm-artifact-windows
-          path: C:\\Users\\runneradmin\\acmhome\\
       - uses: actions/checkout@v3
       - id: ConfigureWindowsAgent
         uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
       - name: Add acm dir to path
         run: |
           echo "About to start"
