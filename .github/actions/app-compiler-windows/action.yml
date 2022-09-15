@@ -6,21 +6,39 @@ runs:
     - name: Compile App
       shell: pwsh
       run: |
+        python -m pip install --upgrade pip PyYaml
+        python -m pip install --upgrade pip pyinstaller
+        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\
+        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
         echo "About to start"
         cd app
         del __init__.py
-        python -m pip install --upgrade pip PyYaml
-        python -m pip install --upgrade pip pyinstaller
         echo "About to: pyinstaller acm.py"
         pyinstaller acm.py
-        echo "About to dir"
-        dir
-        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\
-        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
+        #echo "About to dir"
+        #dir
         move dist\\acm\\ C:\\Users\\runneradmin\\acmhome\\
         echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
         cd C:\\Users\\runneradmin\\acmhome\\
         dir 
+        #cd C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
+        #echo "About to dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\"
+        #dir
+    - name: One Show contents
+      shell: pwsh
+      run: |
+        echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
+        cd C:\\Users\\runneradmin\\acmhome\\
+        dir
+    - name: Two Show contents
+      shell: pwsh
+      run: |
+        cd C:\\Users\\runneradmin\\acmhome\\dist\\
+        echo "About to dir C:\\Users\\runneradmin\\acmhome\\dist\\"
+        dir
+    - name: Three Show contents
+      shell: pwsh
+      run: |
         cd C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
         echo "About to dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\"
         dir
