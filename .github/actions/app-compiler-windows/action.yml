@@ -19,4 +19,8 @@ runs:
         New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
         move dist\\acm\\ C:\\Users\\runneradmin\\acmhome\\
         echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
-        dir C:\\Users\\runneradmin\\acmhome\\
+        cd C:\\Users\\runneradmin\\acmhome\\
+        dir 
+        cd C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
+        echo "About to dir C:\\Users\\runneradmin\\acmhome\\dist\\acm\\"
+        dir
