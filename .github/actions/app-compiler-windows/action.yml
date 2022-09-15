@@ -9,9 +9,9 @@ runs:
         echo "About to start"
         python -m pip install --upgrade pip PyYaml
         python -m pip install --upgrade pip pyinstaller
-        echo "About to: pyinstaller myapp.py"
-        pyinstaller myapp.py
-        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\myapphome\\
-        move dist\\myapp\\ C:\\Users\\runneradmin\\myapphome\\
-        echo "About to dir C:\\Users\\runneradmin\\myapphome\\"
-        dir C:\\Users\\runneradmin\\myapphome\\
+        echo "About to: pyinstaller acm.py"
+        pyinstaller acm.py
+        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\
+        move dist\\acm\\ C:\\Users\\runneradmin\\acmhome\\
+        echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
+        dir C:\\Users\\runneradmin\\acmhome\\
