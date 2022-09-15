@@ -38,15 +38,6 @@ jobs:
           #Import second secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECOND'])
-      - name: Prepare artifact to be added to path
-        shell: python
-        run: |
-          import pathlib, os, sys, subprocess
-          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
-          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
-          print(output)
-          os.remove("acm_build_windows.tar")
-          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
       - name: Run setup on
         run: |
           echo "About to start"
@@ -179,15 +170,6 @@ jobs:
           #Import second secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECOND'])
-      - name: Prepare artifact to be added to path
-        shell: python
-        run: |
-          import pathlib, os, sys, subprocess
-          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
-          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
-          print(output)
-          os.remove("acm_build_windows.tar")
-          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
       - shell: python
         name: Run setup on
         run: |
@@ -298,15 +280,6 @@ jobs:
           #Import second secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECOND'])
-      - name: Prepare artifact to be added to path
-        shell: python
-        run: |
-          import pathlib, os, sys, subprocess
-          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
-          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
-          print(output)
-          os.remove("acm_build_windows.tar")
-          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
       - shell: python
         name: Run setup on
         run: |
@@ -417,15 +390,6 @@ jobs:
           #Import second secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECOND'])
-      - name: Prepare artifact to be added to path
-        shell: python
-        run: |
-          import pathlib, os, sys, subprocess, pathlib
-          os.chdir('C:\\Users\\runneradmin\\acmhome\\')
-          output = subprocess.getoutput("tar -xvf acm_build_windows.tar")
-          print(output)
-          os.remove("acm_build_windows.tar")
-          sys.path.append( pathlib.Path("C:\\Users\\runneradmin\\acmhome\\") )
       - shell: python
         name: Run setup on
         run: |
