@@ -11,7 +11,10 @@ runs:
         python -m pip install --upgrade pip pyinstaller
         echo "About to: pyinstaller acm.py"
         pyinstaller acm.py
+        echo "About to dir"
+        dir
         New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\
+        New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\dist\\acm\\
         move dist\\acm\\ C:\\Users\\runneradmin\\acmhome\\
         echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
         dir C:\\Users\\runneradmin\\acmhome\\
