@@ -265,7 +265,6 @@ jobs:
           os.remove("C:\\Users\\runneradmin\\acmconfig\\keys.yaml")
           os.remove('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml')
   e2e-tests-windows-custom:
-    needs: [create-win-exe-upload-artifact]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
