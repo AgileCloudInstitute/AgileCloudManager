@@ -6,7 +6,7 @@ runs:
     - name: Configure agent
       shell: pwsh
       run: |
-          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\testdir\\
+          New-Item -ItemType Directory -Force -Path C:\\stgng\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmconfig\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\
