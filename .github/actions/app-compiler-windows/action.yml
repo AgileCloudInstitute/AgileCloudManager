@@ -17,7 +17,7 @@ runs:
         pyinstaller acm.py
         #echo "About to dir"
         #dir
-        move dist\\acm\\ C:\\Users\\runneradmin\\acmhome\\
+        Move-Item -Path "dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmhome\\"
         echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
         cd C:\\Users\\runneradmin\\acmhome\\
         dir 
