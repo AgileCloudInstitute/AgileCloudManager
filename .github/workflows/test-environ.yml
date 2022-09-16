@@ -361,6 +361,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   e2e-tests-windows-arm:
+    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -414,6 +415,7 @@ jobs:
           del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
           del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
   e2e-tests-windows-cloudformation:
+    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -467,6 +469,7 @@ jobs:
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
   e2e-tests-windows-custom:
+    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -520,6 +523,7 @@ jobs:
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
   e2e-tests-windows-terraform-packer:
+    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -703,11 +707,11 @@ jobs:
           echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir 
-          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          git remote add origin $repoWithToken
+          git remote add origin %repoWithToken%
           git add --all
           git commit -am 'pushed from test-environ'
           git push --force -u origin HEAD:release-windows
