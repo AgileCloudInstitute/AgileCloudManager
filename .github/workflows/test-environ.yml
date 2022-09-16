@@ -691,9 +691,7 @@ jobs:
         with:
           token: ${{ secrets.HUSH }}
       - shell: pwsh
-        name: Create exe and add exe to PATH
-        env:
-          GIT_PAT: ${{ secrets.HUSH }}
+        name: Create exe
         run: |
           python -m pip install --upgrade pip PyYaml
           python -m pip install --upgrade pip pyinstaller
@@ -705,6 +703,11 @@ jobs:
           pyinstaller acm.py
           Move-Item -Path "dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
           echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+      - shell: cmd
+        name: Push to release-windows branch
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
+        run: |
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir 
           set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
