@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - shell: bash
-        name: Create exe and add exe to PATH
+        name: Create linux exe and add exe to PATH
         run: |
           pip install -U pyinstaller
           cd app
