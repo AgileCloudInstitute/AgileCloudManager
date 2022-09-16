@@ -1,0 +1,41 @@
+name: release-manually
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        type: string
+      description:
+        description: 'Description of release'
+        required: true
+        type: string
+jobs:
+  release-a-version:
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        name: Release
+        env:
+          DESCRIPTION: ${{ inputs.description }}
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ secrets.HUSH }}
+        run: |
+          vers="_linux_"$VERSION
+          echo "About to print version"
+          echo $vers
+          nameOfRelease="agile_cloud_manager"$vers
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          echo "About to create release"
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/AgileCloudInstitute/AgileCloudManager/releases \
+            -f tag_name=$vers \
+            -f target_commitish='release-linux' \
+            -f name=$nameOfRelease \
+            -f body="$DESCRIPTION" \
+            -F draft=false \
+            -F prerelease=false \
+            -F generate_release_notes=false 
