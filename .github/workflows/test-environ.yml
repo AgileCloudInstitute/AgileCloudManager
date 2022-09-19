@@ -46,8 +46,6 @@ jobs:
           token: ${{ secrets.HUSH }}
       - shell: pwsh
         name: Create exe
-        env:
-          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           python -m pip install --upgrade pip PyYaml
           python -m pip install --upgrade pip pyinstaller
@@ -58,17 +56,21 @@ jobs:
           echo "About to: pyinstaller acm.py"
           pyinstaller acm.py
           Move-Item -Path "dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
+      - shell: cmd
+        name: Push to release-windows branch
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
+        run: |
           echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir 
-          $repoWithToken='https://$GIT_PAT@github.com/AgileCloudInstitute/AgileCloudManager.git'
-          $mes = "pushed from test-environ"
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          git remote add origin $repoWithToken
+          git remote add origin %repoWithToken%
           git add --all
-          git commit -am $mes
+          git commit -am "pushed from test-environ"
           git push --force -u origin HEAD:release-windows
   push-to-staging-branch:
     runs-on: ubuntu-latest
