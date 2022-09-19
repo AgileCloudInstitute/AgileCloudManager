@@ -60,12 +60,13 @@ jobs:
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir 
           $repoWithToken='https://$GIT_PAT@github.com/AgileCloudInstitute/AgileCloudManager.git
+          $mes = "pushed from test-environ"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
           git remote add origin $repoWithToken
           git add --all
-          git commit -am 'pushed from test-environ'
+          git commit -am $mes
           git push --force -u origin HEAD:release-windows
   push-to-staging-branch:
     runs-on: ubuntu-latest
