@@ -57,7 +57,7 @@ jobs:
           pyinstaller acm.py
           echo "About to dir"
           dir
-          Move-Item -Path "dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
+          Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
       - shell: cmd
         name: Push to release-windows branch
         env:
