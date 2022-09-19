@@ -64,6 +64,10 @@ jobs:
           echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir
+          Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -File -Recurse | Remove-Item -Force
+          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
+          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\
+          dir
       - shell: cmd
         name: Push to release-windows branch
         env:
