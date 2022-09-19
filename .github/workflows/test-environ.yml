@@ -55,6 +55,8 @@ jobs:
           del __init__.py
           echo "About to: pyinstaller acm.py"
           pyinstaller acm.py
+          echo "About to dir"
+          dir
           Move-Item -Path "dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
       - shell: cmd
         name: Push to release-windows branch
