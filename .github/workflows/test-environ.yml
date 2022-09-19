@@ -57,6 +57,9 @@ jobs:
           pyinstaller acm.py
           echo "About to dir"
           dir
+          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\"
+          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\
+          dir
           Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
       - shell: cmd
         name: Push to release-windows branch
@@ -66,7 +69,7 @@ jobs:
           echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir 
-          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
