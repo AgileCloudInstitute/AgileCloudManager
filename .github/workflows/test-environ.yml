@@ -64,11 +64,11 @@ jobs:
           echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir
-          #Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -Recurse | Remove-Item -Force
           Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -recurse | foreach ($_) {remove-item $_.fullname -recurse}
           echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
           cd D:\\a\\AgileCloudManager\\AgileCloudManager\\
           dir
+          Move-Item -Path "C:\\Users\\runneradmin\\acmwinrel\\*" -Destination "D:\\a\\AgileCloudManager\\AgileCloudManager\\"
       - shell: cmd
         name: Push to release-windows branch
         env:
