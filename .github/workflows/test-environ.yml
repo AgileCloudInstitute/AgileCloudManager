@@ -46,6 +46,8 @@ jobs:
           token: ${{ secrets.HUSH }}
       - shell: pwsh
         name: Create exe
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           python -m pip install --upgrade pip PyYaml
           python -m pip install --upgrade pip pyinstaller
