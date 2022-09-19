@@ -61,6 +61,9 @@ jobs:
           cd D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\
           dir
           Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
+          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+          cd C:\\Users\\runneradmin\\acmwinrel\\
+          dir
       - shell: cmd
         name: Push to release-windows branch
         env:
