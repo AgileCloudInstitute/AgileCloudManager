@@ -132,6 +132,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
   unit-tests-windows-misc:
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -224,6 +225,7 @@ jobs:
           except OSError:
             pass
   unit-tests-windows-cloudformation:
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -286,6 +288,7 @@ jobs:
           except OSError:
             pass
   unit-tests-windows-terraform-packer:
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -363,6 +366,7 @@ jobs:
           except OSError:
             pass
   unit-tests-windows-arm-template:
+    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
