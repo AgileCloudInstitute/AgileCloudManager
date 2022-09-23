@@ -22,10 +22,6 @@ class command_formatter:
       input = input.replace('\\','\\\\')
  
     elif platform.system() == "Linux":
-      if '\\' in input:
-        print('*** trap 1')
-      if '\\\\' in input:
-        print('*** trap 2')
       input = input.replace('\\','/')
       input = input.replace('//','/')
       input = input.replace('///','/')

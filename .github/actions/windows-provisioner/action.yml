@@ -37,13 +37,14 @@ runs:
           cd C:\\Users\\runneradmin
           python -m pip install --upgrade pip ansible
           $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
-          $new  =  "$old;C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\"  
+          $new  =  "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;$old"  
           echo "About to set item property"
           Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $new
           echo "About to show permanent PATH"
           Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path
           echo "About to add to temporary PATH"
-          $env:Path += ";C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\"
+          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
+          python -m pip install --upgrade pip requests
           echo "About to show temporary PATH"
           echo $env:Path
           echo 'About to: ansible --version'

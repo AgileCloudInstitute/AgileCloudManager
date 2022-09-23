@@ -27,24 +27,17 @@ class changes_comparer:
       logString = "ERROR: Invalid number of dicts in changeReports."
       if self.writeLogBoolean:
         lw.writeMetaLog("acm", logString)
-  #    quit('water test!')
     elif numChangeDicts == 1:
       logString = "Found the first changeDict.  Skipping for now."
       if self.writeLogBoolean:
         lw.writeMetaLog("acm", logString)
-  #    quit('aloha!')
     else:
-  #    quit('koko!')
       self.overallChecker(changeReports)
     systemsToChangeList = []
     numSystemsToChange = 0
     logString = "    SYSTEMS:  Each system in the platform will be summarized one at a time as follows:  "
     if self.writeLogBoolean:
       lw.writeMetaLog("acm", logString)
-    print('self.writeLogBoolean is: ', self.writeLogBoolean)
-    print('len(changeReports) is: ', len(changeReports))
-#    if len(changeReports) > 2:
-#      quit('---567890poiuyt')
     for changeDict in reversed(changeReports):
       if changeDictReverseCounter < 2:
         lineDict = self.getLineDict(changeDict)
@@ -103,11 +96,6 @@ class changes_comparer:
     logString = "    command is: " + command
     if self.writeLogBoolean:
       lw.writeMetaLog("acm", logString)
-#    print("stepsLast is: ", stepsLast)
-#    print("stepsSecondToLast is: ", stepsSecondToLast)
-#    print("overallStatusLast is: ", overallStatusLast)
-#    print("overallStatusSecondToLast is: ", overallStatusSecondToLast)
-  #  quit('jonesy gogo')
     if stepsLast == stepsSecondToLast:
       if overallStatusLast != overallStatusSecondToLast:
         logString = "    overallStatus changed from " + overallStatusSecondToLast + " to " + overallStatusLast
@@ -337,7 +325,6 @@ class changes_comparer:
           secondToLastDict = secondServiceType
       typeDict = {"type":typeName, "lastDict":lastDict, "secondToLastDict":secondToLastDict}
       typesList.append(typeDict)
-#    print('typesList is: ', typesList)
     for type in typesList:
       changeKey = "platform/system:"+systemInstanceName+"/serviceTypes/"+type['type'] #tfBackend
       logString = "                    " + type['type'] + " summary is as follows: "

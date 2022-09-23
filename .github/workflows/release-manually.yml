@@ -74,10 +74,21 @@ jobs:
           $vers="windows-"+$env:VERSION
           $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
           echo "About to download release"
-          gh release download $vers --archive zip --repo $repoWithToken
-          $zipName="AgileCloudManager-"+$vers+".zip"
+          #gh release download $vers --archive zip --repo $repoWithToken
+          #$zipName="AgileCloudManager-"+$vers+".zip"
           mkdir staging
-          Expand-Archive $zipName -DestinationPath "staging"
+          gh release download $vers --archive tar.gz --repo $repoWithToken
+          #$zipName="AgileCloudManager-"+$vers+".tar.gz"
+          #tar -xvzf .\whatever.tar.gz
+          #............
+          $folderName="AgileCloudManager-"+$vers
+          $tarName=$folderName+".tar.gz"
+          tar -xvf $tarName -C staging
+          #          $folderNameSlash=$folderName"/*"
+          #          rm $tarName
+          #          cp -r $folderNameSlash /home/runner/acmhome/
+          #............
+          #Expand-Archive $zipName -DestinationPath "staging"
           Get-ChildItem -Path "staging" -Recurse | Copy-Item -Destination "C:\\Users\\runneradmin\\acmhome\\"
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
@@ -97,6 +108,9 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
+          echo "About to install pyinstaller and get version for debugging only."
+          python -m pip install --upgrade pip pyinstaller
+          pyinstaller --version
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\hostedtoolcache\windows\Python\3.9.13
           pip install requests

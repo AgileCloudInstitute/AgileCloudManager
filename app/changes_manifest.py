@@ -17,7 +17,6 @@ class changes_manifest:
 
   #@private
   def changePreview(self, ct, level, command):
-  #  if level == 'platform':  ## Just the one single line below was indented.  nothing more.
     self.createStartOfPlatformRun()
     for changeKey in ct.changeTaxonomy:
       if changeKey =="systemsToChange":
@@ -27,14 +26,12 @@ class changes_manifest:
         elif command == 'off':
           for system in reversed(ct.changeTaxonomy[changeKey]):
             self.createManifestForASystem(level,system,command)
-  #  if level == 'platform':  ## Just the one single line below was indented.  nothing more.
     self.createEndOfPlatformRun()
     self.emitChangesToLogs()
 
   #@private
   def createManifestForASystem(self,level,system,command):
     systemString = "platform/system:"+system["name"]
-  #  if (level == 'platform') or (level == 'services'):  ##Just the one next line was indented.  nothing more.
     self.createStartOfASystem(systemString)
     #WORK ITEM:  The following two command=on/off blocks can be shrunk by putting the foundation and 
     #services code into their own functions instead of repeating the same redundant code in 
@@ -60,7 +57,6 @@ class changes_manifest:
                     self.createEndOfAnInstanceOfAServiceType(serviceInstanceString)
                   self.createEndOfAServiceType(serviceTypeSingleString)
             self.createEndOfAServicesSection(serviceTypesString)
-  #    if (level == 'platform') or (level == 'services'): ##Just the one next line was indented.  nothing more.  
       self.createEndOfASystem(systemString)
     if command == "off":
       for systemKey in system:
@@ -96,16 +92,11 @@ class changes_manifest:
 
   #@public
   def initializeChangesManagementDataStructures(self, ct, cc, level, command):
-    import config_cliprocessor
-    print("00 config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath') is: ", config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath'))
-
     ct.assembleChangeTaxonomy(level, command)
     logString = " At beginning, changeTaxonomy is: " + str(ct.changeTaxonomy)
     outputLine = "[ acm ] " + logString
     ct.storeChangeTaxonomy(cc, level, outputLine)
     self.changePreview(ct, level, command)
-#    print("self.changesManifest is: ", self.changesManifest)
-#    quit('kkk---bbb')
 
   #@private
   def createStartOfPlatformRun(self):
@@ -135,9 +126,6 @@ class changes_manifest:
     outputLine = "[ acm ] " + " After update, changeTaxonomy is: " + str(ct.changeTaxonomy)
     ct.storeChangeTaxonomy(cc, level, outputLine)
     match = False
-    print('changes_comparer cc.changesList is: ', cc.changesList)
-    print('len(ct.changeReports) is: ', len(ct.changeReports))
-#    quit('zzz---xxx---yyy---ooo')
     for change in self.changesManifest:
       if int(change['changeIndex']) == (len(ct.changeReports)-1):
         for changeItems in cc.changesList:
@@ -333,9 +321,6 @@ class changes_manifest:
   #@public
   def updateStartOfAServicesSection(self, ct, cc, level, systemInstanceName):
     lw = log_writer()
-    testLine =  "xxx   BEFORE update, changeTaxonomy is: " + str(ct.changeTaxonomy)
-    print(testLine)
-
     #1 update changeTaxonomy
     ct.updateStartOfAServicesSection(systemInstanceName)
     #2 get list of changes in new changeTaxonomy
@@ -366,12 +351,6 @@ class changes_manifest:
                       if changeElement["Status"].replace('To ','') == "In Process":
                         changeElement["changeCompleted"] = True
                         match2 = True
-#    print('self.changesManifest is: ', self.changesManifest)
-#    print('cc.changesList is: ', cc.changesList)
-#    print('level is: ', level)
-#    print('match1 is: ', match1)
-#    print('match2 is: ', match2)
-#    quit('hhh---vvv')
     self.validateChangeManifest((len(ct.changeReports)-1))
     self.emitChangesToLogs()
     if (match1 == False) or (match2 == False):
@@ -420,9 +399,6 @@ class changes_manifest:
     ct.updateStartOfAServiceType(systemInstanceName, typeName)
     #2 get list of changes in new changeTaxonomy
     outputLine = "[ acm ] " + " After update, changeTaxonomy is: " + str(ct.changeTaxonomy)
-    print('---x ', outputLine)
-#    if typeName == 'releaseDefinitions':
-#      quit('cxz')
     ct.storeChangeTaxonomy(cc, level, outputLine)
     #3 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
     match1 = False
@@ -451,12 +427,6 @@ class changes_manifest:
                         if changeElement["Status"].replace('To ','') == "In Process":
                           changeElement["changeCompleted"] = True
                           match2 = True
-#    if typeName == 'releaseDefinitions':
-#      print('ct.changeReports is: ', ct.changeReports)
-#      print('cc.changesList is: ', cc.changesList)
-#      print('match1 is: ', match1)
-#      print('match2 is: ', match2)
-#      quit('888===777===666')
     self.validateChangeManifest((len(ct.changeReports)-1))
     self.emitChangesToLogs()
     if (match1 == False) or (match2 == False):
@@ -669,32 +639,19 @@ class changes_manifest:
     match = False
     #2 update change in changesManifest
     for changesBlock in self.changesManifest:
-#      print('1')
       if changesBlock["changeIndex"] == chgIdx:
-#        print('2')
         if changesBlock["changeType"] == "End of a services section":
-#          print('3')
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
-#            print('4')
             for changeItems in cc.changesList:
-#              print('5')
               if changeItems['key'] == "platform/system:"+systemInstanceName+"/services": 
-#                print('6')
                 for changeItem in changeItems['changes']:
-#                  print('7')
                   if "all services summary status changed from In Process to Completed" in changeItem:
-#                    print('8')
                     for changeElement in changesBlock['changes']:
-#                      print('9')
                       affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
                       if changeElement['affectedUnit'] == affUnitName:
-#                        print('10')
                         if changeElement["Status"].replace('To ','') == "Completed":
-#                          print('11')
                           changeElement["changeCompleted"] = True
                           match = True
-#    print('692  ...  match is: ', match)
-#    quit('--3-4-5-6-7-8-9')
     self.validateChangeManifest((len(ct.changeReports)-1))
     self.emitChangesToLogs()
     if match == False:

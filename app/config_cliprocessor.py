@@ -46,10 +46,6 @@ def processInputArgs(inputArgs):
     global inputVars
     cmdfrmtr = command_formatter()
     sourceKeys = str(Path.home())+cmdfrmtr.getSlashForOS()+'acmconfig'
-    print('str(Path.home()) is: ', str(Path.home()))
-    print('cmdfrmtr.getSlashForOS() is: ', cmdfrmtr.getSlashForOS())
-    print('sourceKeys is: ', sourceKeys)
-#    quit('jtyre!')
     userCallingDir = str(os.path.abspath("."))+'\\'
     userCallingDir = cmdfrmtr.formatPathForOS(userCallingDir)
     path = Path(userCallingDir)
@@ -76,7 +72,6 @@ def processInputArgs(inputArgs):
     dirOfReleaseDefYaml = userCallingDir + "\\azure-building-blocks\\release-definitions\\yaml-definition-files\\"
     dirOfReleaseDefYaml = cmdfrmtr.formatPathForOS(dirOfReleaseDefYaml)
     yamlInfraConfigFileAndPath = ''
-  #  pathToApplicationRoot = ''
     keySource = 'keyFile'
     pub = 'invalid'
     sec = 'invalid' 
@@ -87,7 +82,6 @@ def processInputArgs(inputArgs):
     tfBackendFileAndPath = cmdfrmtr.formatPathForOS(tfBackendFileAndPath)
     #Get logsPath
     if platform.system() == 'Windows':
-#      verboseLogFilePath = acmAdmin + cmdfrmtr.getSlashForOS() + 'logs'
       verboseLogFilePath = acmUserHome + cmdfrmtr.getSlashForOS() + 'logs'
       verboseLogFilePath = cmdfrmtr.formatPathForOS(verboseLogFilePath)
     elif platform.system() == 'Linux':
@@ -103,12 +97,6 @@ def processInputArgs(inputArgs):
     dependenciesPath = cmdfrmtr.formatPathForOS(dependenciesPath)
     relativePathToInstances = "\\calls-to-modules\\instances\\"
     relativePathToInstances = cmdfrmtr.formatPathForOS(relativePathToInstances)
-
-    print("len(inputArgs) is: ", len(inputArgs))
-    print('inputArgs is: ', inputArgs)
-    print('inputArgs[0] is: ', inputArgs[0])
-    print('inputArgs[1] is: ', inputArgs[1])
-#    quit('--bb--@!')
     if ('unittest' in inputArgs[0]):
       domain = 'unittest'
     elif ('unittest' not in inputArgs[0]):
@@ -116,8 +104,6 @@ def processInputArgs(inputArgs):
       if len(inputArgs) > 1:
         domain = inputArgs[1]
         command = inputArgs[2]
-        print("domain is: ... ", domain)
-        print("command is: ... ", command)
         if (domain != 'platform') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'configure') and (domain != 'serviceType') and (domain != 'serviceInstance'):
           logString = "Error: You must specify a valid value for the first parameter.  Either platform, foundation, services, serviceType, serviceInstance, setup, or configure now, but other valid values may be added in future releases.  "
           print(logString)
@@ -125,7 +111,6 @@ def processInputArgs(inputArgs):
       #Second, set any values conditionally based on flags entered by the user in the command line.  Add functionality here in future releases.
       if len(inputArgs) > 2:      #loop through the cli input, validate it, and return the set properties.
         for i in inputArgs[3:]:       # i is an item from inputArgs.
-          print("i is: ", i)
           if i.count("=") == 1:
             iParts = i.split("=")
             key = iParts[0]
@@ -161,10 +146,6 @@ def processInputArgs(inputArgs):
       #Third, get any values ready for export as needed.
       if keySource == "keyFile":
         yamlInfraConfigFileAndPath = acmConfig +cmdfrmtr.getSlashForOS()+ 'acm.yaml'
-    #    pathToApplicationRoot = app_parent_path + '\\terraform-aws-building-blocks\\'
-    #    pathToApplicationRoot = cmdfrmtr.formatPathForOS(pathToApplicationRoot)
-    print('yy verboseLogFilePath is: ', verboseLogFilePath)
-#    quit('==777==666')
     #Fourth, assemble the input variables into a dict
     inputVars =  {
       'yamlInfraConfigFileAndPath': yamlInfraConfigFileAndPath,

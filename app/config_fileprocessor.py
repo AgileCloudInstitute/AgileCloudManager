@@ -8,17 +8,11 @@ import re
 
 class config_fileprocessor:
 
-#  tfOutputDict = {}
-#  foundationApply = True
-#  ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-#  terraformResult = ''
-
   def __init__(self):  
     pass
 
   #@public
   def getPlatformConfig(self, yamlFileAndPath):
-    print('qq yamlFileAndPath is: ', yamlFileAndPath)
     with open(yamlFileAndPath) as f:  
       topLevel_dict = yaml.safe_load(f)
     return topLevel_dict
@@ -59,9 +53,6 @@ class config_fileprocessor:
         quit('ERROR: Invalid input for keysDir.')
     cmdfrmtr = command_formatter()
     propVal = cmdfrmtr.formatPathForOS(propVal)
-#    print("bbb propVal is: ", propVal)
-#    print("qqwweerrttyy config_cliprocessor.inputVars.get('dirOfOutput') is: ", config_cliprocessor.inputVars.get('dirOfOutput'))
-#    quit('jjkkll')
     return propVal
 
   #@public

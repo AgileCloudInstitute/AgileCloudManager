@@ -39,12 +39,6 @@ class command_builder:
       varsFragment = self.getTerraformParamsFile(varLines)
     elif tool == "packer":
       varsFragment = self.getPackerParamsFile(varLines)
-    print('serviceType is: ', serviceType)
-    print('tool is: ', tool)
-    print('callingClass is: ', callingClass)
-
-    print('xzs varsFragment is: ', varsFragment)
-#    quit('poiuytrewq')
     return varsFragment
 
   #@public
@@ -181,11 +175,7 @@ class command_builder:
     cfmtr = command_formatter()
     lw = log_writer()
     secretVarLines = []
-#    print('backendVarCoordinates is: ', backendVarCoordinates)
-#    quit('---b!')
     for backendVar in backendVarCoordinates:
-#      if backendVar == 'key':
-#        print('1 backendVar is: ', backendVar)
       if backendVarCoordinates.get(backendVar).startswith("$keys"):
         secretVarLine = self.getSecretVarFromKeys(tool, keyDir, backendVar, backendVarCoordinates.get(backendVar))
         if 'empty' not in secretVarLine:
@@ -196,10 +186,6 @@ class command_builder:
           secretVarLine = self.getSecretVarFromUserConfig(tool, backendVar, backendVarCoordinates.get(backendVar))
           if 'empty' not in secretVarLine:
             secretVarLines.append(secretVarLine.replace(" ", ""))
-#          if backendVar == 'key':
-#            print('2 backendVar is: ', backendVar)
-#            print('secretVarLine is: ', secretVarLine)
-#    print('a secretVarLines is: ', secretVarLines)
     if len(secretVarLines)>0:
       tfBackendFileAndPath = config_cliprocessor.inputVars.get("tfBackendFileAndPath")
       if tool == 'terraform':
@@ -216,9 +202,6 @@ class command_builder:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     varSnip = cfmtr.formatPathForOS(varSnip)
-#    print('varSnip is: ', varSnip)
-#    print('b secretVarLines is: ', secretVarLines)
-#    quit('a---!')
     return varSnip
 
   #@private
@@ -381,7 +364,6 @@ class command_builder:
                   if "sharedVariables" in systemConfig.get("serviceTypes").get(serviceType).keys():
                     if "mappedVariables" in systemConfig.get("serviceTypes").get(serviceType).get("sharedVariables"):
                       sharedVarsDict = systemConfig.get("serviceTypes").get(serviceType).get("sharedVariables").get("mappedVariables")
-                      print("sharedVarsDict is: ", sharedVarsDict)
                   instanceVarsDict = instance.get("mappedVariables")
                   mappedVariables = { **sharedVarsDict, **instanceVarsDict }
             else:
@@ -416,7 +398,6 @@ class command_builder:
     for varName in mappedVariables:
       #THIRD, get the value for each variable
       value = self.getValueForOneMappedVariable(mappedVariables, varName, tool, keyDir, systemConfig, instance, varLines, outputDict)
-      print('ddd value is: ', value)
       #FOURTH, Now add the value you just calculated into the result of this function
       if tool == "arm":
         varLine = self.getArmVarLine(varName, value)
@@ -436,9 +417,6 @@ class command_builder:
       else:
         logString = "ERROR: Invalid controller name: "+tool
         quit(logString)
-      print('ddd mappedVariables is: ', str(mappedVariables))
-      print('ddd varLines is: ', str(varLines))
-    print('end varLines is: ', str(varLines))
     #SIXTH, return the variables
     if (tool == "arm") or (tool == "cloudformation") or (tool == "customController") or (tool == "terraform") or (tool == "packer"):
       return varLines
@@ -493,7 +471,6 @@ class command_builder:
 
   #@private
   def getVarFromOutput(self, tool, tfOutputVarName):
-    print('nn tfOutputVarName is: ', tfOutputVarName)
     if len(tfOutputVarName) == 0:
       logString = "ERROR: There were no foundation output variables.  Has your foundation already been deleted?  Or is your foundation configuration failing to produce output variables?"
       quit(logString)
@@ -565,21 +542,12 @@ class command_builder:
     cr = command_runner()
     if mappedVariables.get(varName).startswith('$env.'):
       envVarName = mappedVariables.get(varName).replace('$env.', '')
-      print('varName is: ', varName)
-      print('envVarName is: ', envVarName)
-      print('os.environ is: ', str(os.environ))
-      print("ACM_VAR_ONE:", os.environ.get('ACM_VAR_ONE', '<unset>'))
-      print("ACM_VAR_TWO:", os.environ.get('ACM_VAR_TWO', '<unset>'))
       if envVarName in os.environ:
         value = os.environ.get(envVarName)
       else:
         logString = 'ERROR: '+envVarName+' is not among your environment variables. '
         quit(logString)
     elif mappedVariables.get(varName).startswith("$keys"):
-      print('zzz tool is: ', tool)
-      print('zzz varName is: ', varName)
-      print('zzz keyDir is: ', keyDir)
-      print('zzz mappedVariables.get(varName) is: ', mappedVariables.get(varName))
       #This is handled in a separate block below in this function
       if tool == "arm":
         #For ARM templates, vars get placed in a params file to obscure them from logs.  
@@ -607,9 +575,6 @@ class command_builder:
           logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
           quit(logString)
     elif mappedVariables.get(varName).startswith("$this"):
-#      print('mappedVariables is: ', mappedVariables)
-      print('mappedVariables.get(varName) is: ', mappedVariables.get(varName))
-      print('varName is: ', varName)
       if (not mappedVariables.get(varName).startswith('$this.instance')) and (not mappedVariables.get(varName).startswith('$this.tags')) and (not mappedVariables.get(varName).startswith('$this.foundation')):
         logString = "ERROR: Illegal syntax for "+varName+":  "+mappedVariables.get(varName)
         quit(logString)
@@ -621,12 +586,10 @@ class command_builder:
       else:
         logString = 'ERROR: $this statement had an illegal number of dots ( . ).  Only either one or 2 dots are allowed in each $this statement.  '
         quit(logString)
-      print('varToCheck is: ', varToCheck)
       if mappedVariables.get(varName).startswith("$this.foundationMapped"):
         value = systemConfig.get('foundation').get('mappedVariables').get(varToCheck)
       if (str(mappedVariables.get(varName)).startswith('$this.foundation')) and (not mappedVariables.get(varName).startswith("$this.foundationMapped")):
         value = systemConfig.get('foundation').get(varToCheck)
-        print('... uuu value is: ', value)
       elif mappedVariables.get(varName).startswith("$this.instance"):
         value = instance.get(varToCheck)
       elif mappedVariables.get(varName).startswith("$this.tags"):
@@ -712,8 +675,6 @@ class command_builder:
             dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
           rootString = instance.get('instanceName')
           value = (rootString+dt).replace(' ','').lower()
-#          print('eee value is: ', value)
-#          quit('---...---987')
         else:
           logString = "ERROR: imageTemplateName function call must have exactly one dot in format: $customFunction.imageTemplateName"
           quit(logString)
@@ -721,10 +682,8 @@ class command_builder:
         if tool == "arm":
           imageNameRoot = funcCoordParts[2]
           resourceGroupName = systemConfig.get('foundation').get("resourceGroupName")
-#25Aug          getImagesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.Compute/images '
           getImagesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
           imgsJSON = cr.getShellJsonResponse(getImagesCmd) 
-#          print("imgsJSON", str(imgsJSON))
           imageNamesList = []
           imgsJSON = yaml.safe_load(imgsJSON)  
           for image in imgsJSON['data']:
@@ -736,8 +695,6 @@ class command_builder:
           else:
             logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
             quit(logString)
-#          print("value is: ", value)
-#          quit("25Aug cb")
         elif tool == "cloudformation":
           from controller_cf import controller_cf
           iccf = controller_cf()
@@ -755,5 +712,4 @@ class command_builder:
     else: 
       #Handle plaintext variables that do not require coordinate searching
       value = mappedVariables.get(varName)
-    print('end value is: ', value)
     return value

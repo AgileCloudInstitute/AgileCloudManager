@@ -3,7 +3,6 @@
 
 import sys
 import io
-#from turtle import st
 
 from config_fileprocessor import config_fileprocessor
 from command_formatter import command_formatter
@@ -16,7 +15,6 @@ class changes_taxonomy:
     self.changeTaxonomy = {}
     self.changeReports = []
     self.changeCounter = 0
-#    pass
  
   changeTaxonomy = {}
   changeReports = []
@@ -28,7 +26,6 @@ class changes_taxonomy:
     lw = log_writer()
     import config_cliprocessor
     yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    print("ww config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath') is: ", config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath'))
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
     if level == 'platform':
       self.createTopLevelOfChangeTaxonomy(command, platformConfig)
@@ -83,7 +80,7 @@ class changes_taxonomy:
               systemDict["images"]["instances"][imageInstanceName] = self.createImageInstanceDict()
         self.changeTaxonomy["systemsToChange"].append(systemDict)
       else:
-        logString = 'ERROR: There is no foundation specified in your systemConfig.yaml file, but you are running a foundation cli command.'
+        logString = 'ERROR: There is no foundation specified in your yaml config file, but you are running a foundation cli command.'
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     elif level == 'services':
@@ -118,7 +115,6 @@ class changes_taxonomy:
         serviceDict["instances"] = serviceInstances
         systemDict["services"]["serviceTypes"].append(serviceDict)
       self.changeTaxonomy["systemsToChange"].append(systemDict)
-#-->x
     elif level == 'servicetype':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
@@ -126,9 +122,7 @@ class changes_taxonomy:
       svcType = config_cliprocessor.inputVars.get('serviceType')
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):
-        print('sType is: ', sType)
         if sType == svcType:
-#          quit('cvxza!')
           serviceTypes.append(sType)
       systemDict = { }
       systemDict["name"] = systemInstanceName
@@ -155,8 +149,6 @@ class changes_taxonomy:
         serviceDict["instances"] = serviceInstances
         systemDict["services"]["serviceTypes"].append(serviceDict)
       self.changeTaxonomy["systemsToChange"].append(systemDict)
-#-->x
-#--y
     elif level == 'serviceinstance':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
@@ -165,9 +157,7 @@ class changes_taxonomy:
       svcInstance = config_cliprocessor.inputVars.get('serviceInstance')
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):
-        print('sType is: ', sType)
         if sType == svcType:
-#          quit('cvxza!')
           serviceTypes.append(sType)
       systemDict = { }
       systemDict["name"] = systemInstanceName
@@ -185,9 +175,7 @@ class changes_taxonomy:
       for serviceType in serviceTypes:
         serviceInstanceNames = []
         for sTypeInstance in systemConfig.get('serviceTypes').get(serviceType).get('instances'):
-#          print("sTypeInstance.get('instanceName') is: ", sTypeInstance.get('instanceName'))
           if sTypeInstance.get('instanceName') == svcInstance:
-#            quit('mxdrty')
             serviceInstanceNames.append(sTypeInstance.get('instanceName'))
         serviceDict = self.createServiceTypeSummaryDict(len(serviceInstanceNames), serviceType)
         serviceInstances = {}
@@ -197,7 +185,6 @@ class changes_taxonomy:
         serviceDict["instances"] = serviceInstances
         systemDict["services"]["serviceTypes"].append(serviceDict)
       self.changeTaxonomy["systemsToChange"].append(systemDict)
-#--y
 
   #@public
   def storeChangeTaxonomy(self, cc, level, outputLine):
@@ -229,9 +216,6 @@ class changes_taxonomy:
       except UnicodeEncodeError as e:
         print(counterOutputLine.encode('utf-8'))
         print("The preceding line is returned here as a byte array because it threw a UnicodeEncodeError which was handled by encoding its as utf-8, which returns a byte array.  ")
-#      print('xxx test self.changeReports is: ', str(self.changeReports))
-#      print('self.changeCounter is: ', self.changeCounter)
-#      quit('---xxx---')
       redundant = cc.runComparer(level, self.changeReports, False) 
       if not redundant:
         redundant = cc.runComparer(level, self.changeReports, True)  
@@ -362,18 +346,13 @@ class changes_taxonomy:
 
   #@public
   def updateStartOfAServiceType(self, systemInstanceName, typeName):
-#    print('systemInstanceName is: ', systemInstanceName)
-#    print('typeName is: ', typeName)
-#    print('len(self.changeTaxonomy["systemsToChange"]) is: ', len(self.changeTaxonomy["systemsToChange"]))
     for systemBeingChanged in self.changeTaxonomy["systemsToChange"]:
       if systemBeingChanged["name"] == systemInstanceName:
-#        print('len(systemBeingChanged["services"]["serviceTypes"]) is: ', len(systemBeingChanged["services"]["serviceTypes"]))
         if len(systemBeingChanged["services"]["serviceTypes"]) == 0:
           systemBeingChanged["services"]["status"] = "Completed"
         else: 
           for serviceType in systemBeingChanged["services"]["serviceTypes"]:
             if serviceType["type"] == typeName:
-#              print('match typeName: ', typeName)
               serviceType["status"] = "In Process"
               #1 serviceTypes (all types) step +1
               currStepAllServices = systemBeingChanged["services"]["currentStep"]
@@ -384,20 +363,13 @@ class changes_taxonomy:
               for serviceType in systemBeingChanged["services"]["serviceTypes"]:
                 if serviceType["type"] == typeName:
                   serviceType["status"] = "In Process"
-#    quit('--- whatup? ---')
 
   #@public
   def updateStartOfAnInstanceOfAServiceType(self, systemInstanceName, typeName, instanceName):
-#    print('systemInstanceName is: ', systemInstanceName)
-#    print('typeName is: ', typeName)
-#    print('instanceName is: ', instanceName)
     for systemBeingChanged in self.changeTaxonomy["systemsToChange"]:
       if systemBeingChanged["name"] == systemInstanceName:
           for serviceType in systemBeingChanged["services"]["serviceTypes"]:
             if serviceType["type"] == typeName:
-#                print('serviceType["instances"] is: ', serviceType["instances"])
-#                quit('lll---nnn---mmm')
-
                 #1 serviceType (singular type) Step +1
                 #2 instance of serviceType status change AND step +1
                 currStepServiceType = serviceType["currentStep"]

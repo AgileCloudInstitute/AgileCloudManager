@@ -49,8 +49,7 @@ class command_runner:
     lw.writeLogVerbose("acm", logString)
 
     if process.returncode == 0:
-#...
-#      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
+      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
       if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(str(data).replace(" ","")) == 3):
         if counter < 11:
           counter +=1 
@@ -71,7 +70,6 @@ class command_runner:
           lw.writeLogVerbose("acm", logString)
           sys.exit(1)
       else:
-#...
         logString = str(data)
         lw.writeLogVerbose("shell", logString)
         decodedData = data #.decode('utf-8')
@@ -305,8 +303,6 @@ class command_runner:
       headers['Authorization'] = b'Basic ' + base64.b64encode(personal_access_token.encode('utf-8'))
       api_version = "6.0-preview.4"
       url = ("https://dev.azure.com/%s/_apis/serviceendpoint/endpoints?api-version=%s" % (azdo_organization_name, api_version))
-      logString = "1 test  "
-      lw.writeLogVerbose("acm", logString)
     except Exception as e:
       logString = "ERROR: Attempting to create the azure devops service endpoint triggered the following exception:  "
       lw.writeLogVerbose("acm", logString)
