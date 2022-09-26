@@ -555,6 +555,10 @@ class workflow_setup:
   #@public
   def runSetup(self):
 
+    import site; 
+    print("site.getsitepackages() is: ")
+    print(site.getsitepackages())
+
     # app1.py
     import certifi
     print("certifi.where() is: ")
