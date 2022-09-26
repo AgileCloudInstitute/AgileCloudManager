@@ -555,17 +555,16 @@ class workflow_setup:
   #@public
   def runSetup(self):
 
-    #import site 
-    #print("site.getsitepackages() is: ")
-    #print(site.getsitepackages())
-
-    import sysconfig
-    print("sysconfig.get_paths()[purelib] is: ")
-    print(sysconfig.get_paths()["purelib"])
+    #import sysconfig
+    #print("sysconfig.get_paths()[purelib] is: ")
+    #print(sysconfig.get_paths()["purelib"])
 
     from distutils.sysconfig import get_python_lib
     print("get_python_lib() is: ")
     print(get_python_lib())
+
+    print("os.listdir(get_python_lib()) is: ")
+    os.listdir(get_python_lib())
 
     # app1.py
     import certifi
