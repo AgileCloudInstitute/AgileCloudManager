@@ -5,7 +5,6 @@ on:
       - dev
 jobs:
   push-to-test-branch:
-    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template, unit-tests-windows-misc, unit-tests-windows-cloudformation, unit-tests-windows-terraform-packer, unit-tests-windows-arm-template]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,4 +20,3 @@ jobs:
           git branch -M test
           git add --all
           git push --force -u origin test
-
