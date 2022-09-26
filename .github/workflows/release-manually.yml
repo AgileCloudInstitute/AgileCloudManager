@@ -108,6 +108,14 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
+          echo "About to pwd"
+          $pwd
+          $certPath=$pwd+"\certifi"
+          $certPathAndFile=$certPath+"\cacert.pem"
+          echo "About to create directory for certifi"
+          New-Item -ItemType Directory -Force -Path $certPath
+
+          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           echo "About to install pyinstaller and get version for debugging only."
           python -m pip install --upgrade pip pyinstaller
           pyinstaller --version
@@ -192,6 +200,7 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
+          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
@@ -263,6 +272,7 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
+          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
@@ -334,6 +344,7 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
+          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests

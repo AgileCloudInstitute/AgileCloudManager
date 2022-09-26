@@ -554,6 +554,17 @@ class workflow_setup:
  
   #@public
   def runSetup(self):
+
+    # app1.py
+    import certifi
+    print("certifi.where() is: ")
+    print(certifi.where())
+    # app2.py
+    import requests
+    print("requests.utils.DEFAULT_CA_BUNDLE_PATH is: ")
+    print(requests.utils.DEFAULT_CA_BUNDLE_PATH)
+    sys.exit(1)
+
     import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
@@ -567,7 +578,7 @@ class workflow_setup:
     sourceRepo = config_cliprocessor.inputVars.get('sourceRepo')
     sourceRepo = self.assembleSourceRepo(gitPass, sourceRepo)
     cloneCommand = self.assembleCloneCommand(sourceRepo)
-    crnr.runShellCommand(cloneCommand)
+    crnr.runShellCommand(cloneCommand) 
     sourceRepoDestinationDir = sourceRepo.split('/')[-1].replace('.git','')
     sourceRepoDestinationDir = config_cliprocessor.inputVars.get('userCallingDir') + sourceRepoDestinationDir
     sourceRepoDestinationDir = cfmtr.formatPathForOS(sourceRepoDestinationDir)
