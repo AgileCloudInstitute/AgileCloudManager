@@ -555,55 +555,41 @@ class workflow_setup:
   #@public
   def runSetup(self):
 
-    #import sysconfig
-    #print("sysconfig.get_paths()[purelib] is: ")
-    #print(sysconfig.get_paths()["purelib"])
+    ## app1.py
+    #import certifi
+    #print("certifi.where() is: ")
+    #print(certifi.where())
+    ## app2.py
+    #import requests
+    #print("requests.utils.DEFAULT_CA_BUNDLE_PATH is: ")
+    #print(requests.utils.DEFAULT_CA_BUNDLE_PATH)
 
-    # app1.py
-    import certifi
-    print("certifi.where() is: ")
-    print(certifi.where())
-    # app2.py
-    import requests
-    print("requests.utils.DEFAULT_CA_BUNDLE_PATH is: ")
-    print(requests.utils.DEFAULT_CA_BUNDLE_PATH)
+    #from distutils.sysconfig import get_python_lib
+    #print("get_python_lib() is: ")
+    #print(get_python_lib())
 
-    from distutils.sysconfig import get_python_lib
-    print("get_python_lib() is: ")
-    print(get_python_lib())
+    #print("About to iterate: C:\\Users\\")
+    #from pathlib import Path
+    #for path in Path('C:\\Users\\').iterdir():
+    #  print(path)
 
-    #print('About to os.listdir("C:\\Users\\")')
-    #os.listdir("C:\\Users\\")
+    #print("About to iterate: C:\\Users\\runneradmin\\")
+    #from pathlib import Path
+    #for path in Path('C:\\Users\\runneradmin\\').iterdir():
+    #  print(path)
 
-    #print('About to os.listdir("C:\\Users\\runneradmin\\")')
-    #os.listdir("C:\\Users\\runneradmin\\")
+    #print("About to iterate: C:\\Users\\runneradmin\\acmhome\\")
+    #from pathlib import Path
+    #for path in Path('C:\\Users\\runneradmin\\acmhome\\').iterdir():
+    #  print(path)
 
-    #print('About to os.listdir("C:\\Users\\runneradmin\\acmhome\\")')
-    #os.listdir("C:\\Users\\runneradmin\\acmhome\\")
+    #print("About to iterate: C:\\Users\\runneradmin\\acmhome\\certifi\\")
+    #from pathlib import Path
+    #for path in Path('C:\\Users\\runneradmin\\acmhome\\certifi\\').iterdir():
+    #  print(path)
 
-    print("About to iterate: C:\\Users\\")
-    from pathlib import Path
-    for path in Path('C:\\Users\\').iterdir():
-      print(path)
-
-    print("About to iterate: C:\\Users\\runneradmin\\")
-    from pathlib import Path
-    for path in Path('C:\\Users\\runneradmin\\').iterdir():
-      print(path)
-
-    print("About to iterate: C:\\Users\\runneradmin\\acmhome\\")
-    from pathlib import Path
-    for path in Path('C:\\Users\\runneradmin\\acmhome\\').iterdir():
-      print(path)
-
-    print("About to iterate: C:\\Users\\runneradmin\\acmhome\\certifi\\")
-    from pathlib import Path
-    for path in Path('C:\\Users\\runneradmin\\acmhome\\certifi\\').iterdir():
-      print(path)
-
-
-    print("About to     sys.exit(1)")
-    sys.exit(1)
+    #print("About to     sys.exit(1)")
+    #sys.exit(1)
 
     import config_cliprocessor
     crnr = command_runner()
