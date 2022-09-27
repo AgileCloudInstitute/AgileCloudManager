@@ -596,16 +596,11 @@ class workflow_setup:
     for path in Path('C:\\Users\\runneradmin\\acmhome\\').iterdir():
       print(path)
 
-    print("About to iterate: C:\Users\runneradmin\acmhome\certifi")
+    print("About to iterate: C:\\Users\\runneradmin\\acmhome\\certifi\\")
     from pathlib import Path
-    for path in Path('C:\Users\runneradmin\acmhome\certifi').iterdir():
+    for path in Path('C:\\Users\\runneradmin\\acmhome\\certifi\\').iterdir():
       print(path)
 
-
-
-
-    #print("os.listdir(get_python_lib()) is: ")
-    #os.listdir(get_python_lib())
 
     print("About to     sys.exit(1)")
     sys.exit(1)
