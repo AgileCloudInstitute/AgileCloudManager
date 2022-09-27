@@ -68,7 +68,7 @@ jobs:
           cd C:\\Users\\runneradmin\\acmwinrel\\
           dir
           #Move cacert.pem into certifi subdirectory to prevent downstream errors
-          move-item -path "cacert.pem" -dest "certifi"
+          #move-item -path "cacert.pem" -dest "certifi"
           #Delete source code from repo directory
           Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -recurse | foreach ($_) {remove-item $_.fullname -recurse}
           echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
