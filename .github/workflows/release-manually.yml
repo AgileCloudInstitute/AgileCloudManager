@@ -71,51 +71,21 @@ jobs:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
-          echo "About to PSVersionTable"
-          $PSVersionTable
           $vers="windows-"+$env:VERSION
           $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
-          echo "About to download release"
-          #gh release download $vers --archive zip --repo $repoWithToken
-          #$zipName="AgileCloudManager-"+$vers+".zip"
-          #
+          echo "About to download and extract release"
           mkdir staging
           gh release download $vers --archive tar.gz --repo $repoWithToken
-          #$zipName="AgileCloudManager-"+$vers+".tar.gz"
-          #tar -xvzf .\whatever.tar.gz
-          #............
           $folderName="AgileCloudManager-"+$vers
           $tarName=$folderName+".tar.gz"
           tar -xvf $tarName -C staging
-          echo "About to dir staging"
-          dir staging
           $stagingFolderName="staging\\"+$folderName
-          echo "About to dir stagingFolderName"
-          dir $stagingFolderName
           $certifiFolderName=$stagingFolderName+"\\certifi"
-          echo "About to dir certifiFolderName"
-          dir $certifiFolderName
-          #
-          #          $folderNameSlash=$folderName"/*"
-          #          rm $tarName
-          #          cp -r $folderNameSlash /home/runner/acmhome/
-          #............
-          #THIS NEXT COMMEND SEEMS TO BE THE LINE THAT REMOVES THE CERT FILES
-          #Expand-Archive $zipName -DestinationPath "staging"
-          #Get-ChildItem -Path "staging" -Recurse | Copy-Item -Destination "C:\\Users\\runneradmin\\acmhome\\"
-          #Get-ChildItem -Path "staging" -Recurse | Copy-Item -Path "staging\*" -Destination "C:\\Users\\runneradmin\\acmhome" -Recurse
-          #
           $sourceFolderName="staging\\"+$folderName+"\\*"
           Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
-          #Get-ChildItem "staging" | Copy-Item -Destination {
-          #    Join-Path "C:\\Users\\runneradmin\\acmhome" -ChildPath $_.Name
-          #} -Recurse
-          #
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
           dir 
-          echo "About to dir C:\\Users\\runneradmin\\acmhome\\certifi "
-          dir C:\\Users\\runneradmin\\acmhome\\certifi
       - shell: python
         name: Save secrets to file
         env:
@@ -131,37 +101,9 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
-          #echo "About to Get-Location"
-          #Get-Location
-          #$certPath=(Get-Location).tostring()+"\certifi"
-          #$certPathAndFile=$certPath+"\cacert.pem"
-          #echo "About to create directory for certifi"
-          #New-Item -ItemType Directory -Force -Path $certPath
-          #echo "About to dir C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\ "
-          #dir C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\
-          #echo "About to dir C:\\hostedtoolcache\\windows\\Python\\3.10.7\\ "
-          #dir C:\\hostedtoolcache\\windows\\Python\\3.10.7\\
-          ##echo "About to exit 1"
-          ##exit 1
-          #New-Item $certPathAndFile -ItemType File -Value "The first sentence in our file."
-          #Add-Content $certPathAndFile "The second sentence in our file."
           $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
-          #echo "About to install pyinstaller and get version for debugging only."
-          #python -m pip install --upgrade pip pyinstaller
-          #pyinstaller --version
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          #cd C:\hostedtoolcache\windows\Python\3.9.13
-          #pip install requests
           cd C:\\stgng\\
-          #echo "About to where python"
-          #Get-Command python
-          #echo "About to check pip version"
-          #pip -V
-          #echo "About to pip list first"
-          #pip list
-          #python -m pip install --upgrade pip requests
-          #echo "About to pip list second"
-          #pip list
           echo 'About to: acm setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
           echo "About to dir"
@@ -211,7 +153,10 @@ jobs:
           $zipName="AgileCloudManager-"+$vers+".zip"
           mkdir staging
           Expand-Archive $zipName -DestinationPath "staging"
-          Get-ChildItem -Path "staging" -Recurse | Copy-Item -Destination "C:\\Users\\runneradmin\\acmhome\\"
+          $folderName="AgileCloudManager-"+$vers
+          $stagingFolderName="staging\\"+$folderName
+          $sourceFolderName="staging\\"+$folderName+"\\*"
+          Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
           dir 
@@ -283,7 +228,10 @@ jobs:
           $zipName="AgileCloudManager-"+$vers+".zip"
           mkdir staging
           Expand-Archive $zipName -DestinationPath "staging"
-          Get-ChildItem -Path "staging" -Recurse | Copy-Item -Destination "C:\\Users\\runneradmin\\acmhome\\"
+          $folderName="AgileCloudManager-"+$vers
+          $stagingFolderName="staging\\"+$folderName
+          $sourceFolderName="staging\\"+$folderName+"\\*"
+          Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
           dir 
@@ -355,10 +303,13 @@ jobs:
           $zipName="AgileCloudManager-"+$vers+".zip"
           mkdir staging
           Expand-Archive $zipName -DestinationPath "staging"
-          Get-ChildItem -Path "staging" -Recurse | Copy-Item -Destination "C:\\Users\\runneradmin\\acmhome\\"
+          $folderName="AgileCloudManager-"+$vers
+          $stagingFolderName="staging\\"+$folderName
+          $sourceFolderName="staging\\"+$folderName+"\\*"
+          Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
-          dir
+          dir 
       - shell: python
         name: Save secrets to file
         env:
