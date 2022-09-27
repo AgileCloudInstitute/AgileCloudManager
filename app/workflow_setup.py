@@ -572,11 +572,29 @@ class workflow_setup:
     print("get_python_lib() is: ")
     print(get_python_lib())
 
+    print('About to os.listdir("C:\\Users\\")')
+    os.listdir("C:\\Users\\")
+
     print('About to os.listdir("C:\\Users\\runneradmin\\")')
     os.listdir("C:\\Users\\runneradmin\\")
 
     print('About to os.listdir("C:\\Users\\runneradmin\\acmhome\\")')
     os.listdir("C:\\Users\\runneradmin\\acmhome\\")
+
+    print("About to iterate: C:\\Users\\")
+    from pathlib import Path
+    for path in Path('C:\\Users\\').iterdir():
+      print(path)
+
+    print("About to iterate: C:\\Users\\runneradmin\\")
+    from pathlib import Path
+    for path in Path('C:\\Users\\runneradmin\\').iterdir():
+      print(path)
+
+    print("About to iterate: C:\\Users\\runneradmin\\acmhome\\")
+    from pathlib import Path
+    for path in Path('C:\\Users\\runneradmin\\acmhome\\').iterdir():
+      print(path)
 
     #print("os.listdir(get_python_lib()) is: ")
     #os.listdir(get_python_lib())
