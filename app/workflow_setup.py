@@ -572,11 +572,14 @@ class workflow_setup:
     print("get_python_lib() is: ")
     print(get_python_lib())
 
+    print('About to os.listdir("C:\\Users\\runneradmin\\")')
+    os.listdir("C:\\Users\\runneradmin\\")
+
     print('About to os.listdir("C:\\Users\\runneradmin\\acmhome\\")')
     os.listdir("C:\\Users\\runneradmin\\acmhome\\")
 
-    print("os.listdir(get_python_lib()) is: ")
-    os.listdir(get_python_lib())
+    #print("os.listdir(get_python_lib()) is: ")
+    #os.listdir(get_python_lib())
 
     print("About to     sys.exit(1)")
     sys.exit(1)
