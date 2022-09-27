@@ -559,13 +559,6 @@ class workflow_setup:
     #print("sysconfig.get_paths()[purelib] is: ")
     #print(sysconfig.get_paths()["purelib"])
 
-    from distutils.sysconfig import get_python_lib
-    print("get_python_lib() is: ")
-    print(get_python_lib())
-
-    print("os.listdir(get_python_lib()) is: ")
-    os.listdir(get_python_lib())
-
     # app1.py
     import certifi
     print("certifi.where() is: ")
@@ -574,6 +567,18 @@ class workflow_setup:
     import requests
     print("requests.utils.DEFAULT_CA_BUNDLE_PATH is: ")
     print(requests.utils.DEFAULT_CA_BUNDLE_PATH)
+
+    from distutils.sysconfig import get_python_lib
+    print("get_python_lib() is: ")
+    print(get_python_lib())
+
+    print('About to os.listdir("C:\\Users\\runneradmin\\acmhome\\")')
+    os.listdir("C:\\Users\\runneradmin\\acmhome\\")
+
+    print("os.listdir(get_python_lib()) is: ")
+    os.listdir(get_python_lib())
+
+    print("About to     sys.exit(1)")
     sys.exit(1)
 
     import config_cliprocessor
