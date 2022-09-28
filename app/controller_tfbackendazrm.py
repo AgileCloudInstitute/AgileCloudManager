@@ -31,7 +31,6 @@ class controller_tfbackendazrm:
     if backendType == 'azurerm': 
       serviceType = paramsDict["serviceType"]
       onlyFoundationOutput = False
-#      quit('BREAK TEST') 
       ca = controller_arm()
       ca.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, onlyFoundationOutput)
       cka.writeTheVarsFile(systemConfig, instance, "tfBackend", None, None)
@@ -49,17 +48,20 @@ class controller_tfbackendazrm:
       #### #The following command gets the client logged in and able to operate on azure repositories.
       cr = command_runner()
       myCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
+      logString = "myCmd is: "+"az login --service-principal -u *** -p *** --tenant ***"
+      lw.writeLogVerbose("shell", logString)
       cr.getShellJsonResponse(myCmd)
       logString = "Finished running login command."
       lw.writeLogVerbose("acm", logString)
       #set subscription
       setSubscriptionCmd = 'az account set --subscription ' + subscriptionId
+      logString = "setSubscriptionCmd is: az account set --subscription ***"
+      lw.writeLogVerbose("shell", logString)
       cr.getShellJsonResponse(setSubscriptionCmd)
       logString = "Finished running setSubscription command."
       lw.writeLogVerbose("acm", logString)
-      getAccountKeyCommand = "az storage account keys list --resource-group " + resourceGroupName + " --account-name " + storageAccountName + " --query [0].value -o tsv "
-      print('bbbnnn keysFile is: ', keysFile)
-      logString = "getAccountKeyCommand is: "+ getAccountKeyCommand
+      getAccountKeyCommand = "az storage account keys list --resource-group " + resourceGroupName + " --account-name " + storageAccountName + " --query [0].value -o tsv " 
+      logString = "getAccountKeyCommand is: az storage account keys list --resource-group *** --account-name *** --query [0].value -o tsv " 
       lw.writeLogVerbose("acm", logString)
       accountKey = cr.getAccountKey(getAccountKeyCommand)  
       #Then create the 6 storage containers within the storage account to correspond with the sections in infrastructureConfig 
@@ -69,8 +71,3 @@ class controller_tfbackendazrm:
         f.write("storage_account_name:"+storageAccountName+"\n")
         f.write("container_name:"+storageContainerName+"\n")
         f.write("tfBackendStorageAccessKey:"+accountKey+"\n")
-      print('keysFile is: ', keysFile)
-      print('storage_account_name is: ', storageAccountName)
-      print('accountKey is: ', accountKey)
-      print('container_name is: ', storageContainerName)
-#      quit("---vvv---zzz===aaa")

@@ -143,24 +143,22 @@ class workflow_setup:
     lw = log_writer()
     logString = "Checking to see if required dependencies are installed..."
     lw.writeLogVerbose("acm", logString)
-    configPath = config_cliprocessor.inputVars.get('acmConfigPath') #os.path.abspath(".") #config_cliprocessor.inputVars.get('dirOfYamlFile') 
+    configPath = config_cliprocessor.inputVars.get('acmConfigPath')
     yaml_setup_config_file_and_path = configPath +cfmtr.getSlashForOS() + "setupConfig.yaml"  
     yaml_setup_config_file_and_path = cfmtr.formatPathForOS(yaml_setup_config_file_and_path)
     dependencies_binaries_path = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
     dependencies_binaries_path = cfmtr.formatPathForOS(dependencies_binaries_path)
-    print('::: dependencies_binaries_path is: ', dependencies_binaries_path)
     #Terraform
     tfVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'terraform')
     if tfVers.count('.') == 1:
       tfVers = 'v' + tfVers + '.'
     else:
-      logString = 'ERROR: The value you entered for terraform version in infrastructureConfig.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
+      logString = 'ERROR: The value you entered for terraform version in acm.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     tfCheck = None
     tfDependencyCheckCommand = dependencies_binaries_path + "terraform --version"
     tfResult = crnr.checkIfInstalled(tfDependencyCheckCommand, tfVers)
-    print('+++   tfResult is: ', tfResult)
     if 'Dependency is installed' in tfResult:
       tfCheck = True
     if 'NOT installed' in tfResult:
@@ -170,7 +168,7 @@ class workflow_setup:
     #packer
     pkrVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'packer')
     if pkrVers.count('.') != 1:
-      logString = 'ERROR: The value you entered for packer version in infrastructureConfig.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
+      logString = 'ERROR: The value you entered for packer version in acm.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     if pkrVers.count('.') == 1:
@@ -209,7 +207,7 @@ class workflow_setup:
     #git check
     gitVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'git')
     if gitVers.count('.') != 0:
-      logString = 'ERROR: The value you entered for git version in infrastructureConfig.yaml is not valid.  Only the first block is accepted, as in \"x\" '
+      logString = 'ERROR: The value you entered for git version in acm.yaml is not valid.  Only the first block is accepted, as in \"x\" '
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     if gitVers.count('.') == 0:
@@ -364,7 +362,6 @@ class workflow_setup:
     cfmtr = command_formatter()
     lw = log_writer()
     config_path = config_cliprocessor.inputVars.get('acmConfigPath')
-    print('config_path is: ', config_path)
     if platform.system() == 'Linux':
       gitRemoveCmd = 'rm -rf .git'
     if platform.system() == 'Windows':
@@ -449,7 +446,7 @@ class workflow_setup:
                     if myListItem.get('name') == grandChild:
                       propertyValue = myListItem.get('version')
                 else:
-                  quit("ERROR: Invalid dependency configuration in infrastructureConfig.yaml.  Halting program so you can diagnose the source of the problem.  ")
+                  quit("ERROR: Invalid dependency configuration in acm.yaml.  Halting program so you can diagnose the source of the problem.  ")
         else:  
           logString = "The value given for for typeParent is NOT supported.  Please check your configuration file and the documentation."
           lw.writeLogVerbose("acm", logString)
@@ -500,10 +497,8 @@ class workflow_setup:
     gitPassCount = 0
     gitPass = None
     if sourceKeys != None:
-      print('ccc sourceKeys is: ', str(sourceKeys))
       with open(sourceKeys) as file:
         for item in file:
-          print('ccc item is: ', str(item))
           itemParts = item.split(':')
           if itemParts[0].replace(' ','') == 'gitPass':
             gitPass = itemParts[1].replace(' ','')
@@ -554,43 +549,6 @@ class workflow_setup:
  
   #@public
   def runSetup(self):
-
-    ## app1.py
-    #import certifi
-    #print("certifi.where() is: ")
-    #print(certifi.where())
-    ## app2.py
-    #import requests
-    #print("requests.utils.DEFAULT_CA_BUNDLE_PATH is: ")
-    #print(requests.utils.DEFAULT_CA_BUNDLE_PATH)
-
-    #from distutils.sysconfig import get_python_lib
-    #print("get_python_lib() is: ")
-    #print(get_python_lib())
-
-    #print("About to iterate: C:\\Users\\")
-    #from pathlib import Path
-    #for path in Path('C:\\Users\\').iterdir():
-    #  print(path)
-
-    #print("About to iterate: C:\\Users\\runneradmin\\")
-    #from pathlib import Path
-    #for path in Path('C:\\Users\\runneradmin\\').iterdir():
-    #  print(path)
-
-    #print("About to iterate: C:\\Users\\runneradmin\\acmhome\\")
-    #from pathlib import Path
-    #for path in Path('C:\\Users\\runneradmin\\acmhome\\').iterdir():
-    #  print(path)
-
-    #print("About to iterate: C:\\Users\\runneradmin\\acmhome\\certifi\\")
-    #from pathlib import Path
-    #for path in Path('C:\\Users\\runneradmin\\acmhome\\certifi\\').iterdir():
-    #  print(path)
-
-    #print("About to     sys.exit(1)")
-    #sys.exit(1)
-
     import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()

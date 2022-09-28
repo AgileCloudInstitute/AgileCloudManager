@@ -41,7 +41,6 @@ class controller_cf:
       stackName = instance.get("stackName")
     cb = command_builder()
     cf = command_formatter()
-#    deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'cloudformation', outputDict)
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, instance.get('mappedVariables'), 'cloudformation', self, outputDict)
     cfTemplateFileAndPath = userCallingDir+templateName
     cfTemplateFileAndPath = cf.formatPathForOS(cfTemplateFileAndPath)
@@ -56,7 +55,7 @@ class controller_cf:
     cr = command_runner()
     if self.checkIfStackExists(checkExistCmd):
       createChangeSetCommand = 'aws cloudformation create-change-set --change-set-name my-change --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)+' --output text --query Id '
-      logString = 'createChangeSetCommand is: '+ createChangeSetCommand
+      logString = 'createChangeSetCommand is: aws cloudformation create-change-set --change-set-name my-change --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' *** --output text --query Id '
       lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(createChangeSetCommand)
       logString = 'Initial response from stack command is: '+str(jsonStatus)
@@ -88,7 +87,7 @@ class controller_cf:
         cfDeployCommand = 'aws cloudformation update-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
         logString = 'Response from check existance of stack command is: True'
         lw.writeLogVerbose("acm", logString)
-        logString = "cfDeployCommand is: "+cfDeployCommand
+        logString = "cfDeployCommand is: "+'aws cloudformation update-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' ***'
         lw.writeLogVerbose("acm", logString)
         jsonStatus = cr.getShellJsonResponse(cfDeployCommand)
         logString = 'Initial response from stack command is: ', str(jsonStatus)
@@ -106,7 +105,7 @@ class controller_cf:
       cfDeployCommand = 'aws cloudformation create-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
       logString = 'Response from check existance of stack command is: False'
       lw.writeLogVerbose("acm", logString)
-      logString = 'cfDeployCommand is: '+ cfDeployCommand
+      logString = 'cfDeployCommand is: aws cloudformation create-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' ***'
       lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(cfDeployCommand)
       logString = 'Initial response from stack command is: '+ str(jsonStatus)
@@ -145,8 +144,6 @@ class controller_cf:
       lw.writeLogVerbose("acm", logString)
     else:
       ## STEP 2: Assemble and run deployment command
-      print('app_parent_path is: ', app_parent_path)
-      print('templateName is: ', templateName)
       cfTemplateFileAndPath = app_parent_path+templateName
       cfTemplateFileAndPath = cf.formatPathForOS(cfTemplateFileAndPath)
       cfDeployCommand = 'aws cloudformation delete-stack --stack-name '+stackName
@@ -254,8 +251,6 @@ class controller_cf:
     lw.writeLogVerbose("acm", logString)
     logString = "process.returncode is: " + str(process.returncode)
     lw.writeLogVerbose("acm", logString)
-    logString = "cmd is: " + cmd
-    lw.writeLogVerbose("acm", logString)
     if process.returncode == 0:
       logString = str(data)
       lw.writeLogVerbose("shell", logString)
@@ -332,14 +327,12 @@ class controller_cf:
     region = systemConfig.get("foundation").get("region")
     stackName = image.get("stackName")
     self.configureSecrets(keyDir,region)
-#    quit('aaa---111---sauce!')
     getImgIdCmd = 'aws cloudformation --region '+region+' describe-stacks --stack-name '+stackName
     logString = 'getImgIdCmd is: '+ getImgIdCmd
     lw.writeLogVerbose("acm", logString)
     jsonStatus = cr.getShellJsonResponse(getImgIdCmd)
     logString = 'getImgIdCmd response is: '+ str(jsonStatus)
     lw.writeLogVerbose("acm", logString)
-#    quit('mmm---vvv---xxx')
     stacks = yaml.safe_load(jsonStatus)['Stacks']
     stackCounter = 0
     for stack in stacks:
@@ -429,7 +422,6 @@ class controller_cf:
   def getVarFromCloudFormationOutput(self, keyDir, outputVarName, stackName, region):
     cr = command_runner()
     self.configureSecrets(keyDir,region)
-    print('... keyDir is: ', keyDir)
     getOutputsCommand = 'aws cloudformation describe-stacks --stack-name '+stackName + ' --region ' + region
     jsonStatus = cr.getShellJsonResponse(getOutputsCommand)
     jsonStatus = yaml.safe_load(jsonStatus)
@@ -439,9 +431,6 @@ class controller_cf:
         if outputVarName == output['OutputKey']:
           self.destroySecrets()
           return output['OutputValue'].replace(' ','')
-        print('output is: ', str(output))
-#    print('outputVarname is: ', outputVarName)
-#    quit('--nnn---zzz')
     self.destroySecrets()
     return 'empty' 
 

@@ -54,7 +54,7 @@ class controller_release:
       #### #The following command gets the client logged in and able to operate on azure repositories.
       myCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
       crnr.runShellCommand(myCmd)
-  #    #NOTE: ESTABLISH RULES FOR A SCHEMA INCLUDING RELATIONSHIP BETWEEN PROJECTS, code, AND RELEASE DEFINITIONS, AND THEN FILTER INSTANCE NAMES TO ONLY RETURN INSTANCES THAT MATCH SCHEMA RULES.  
+      #NOTE: ESTABLISH RULES FOR A SCHEMA INCLUDING RELATIONSHIP BETWEEN PROJECTS, code, AND RELEASE DEFINITIONS, AND THEN FILTER INSTANCE NAMES TO ONLY RETURN INSTANCES THAT MATCH SCHEMA RULES.  
       logString = "done with -- " + typeName + " -----------------------------------------------------------------------------"
       lw.writeLogVerbose("acm", logString)
       orgServiceURL = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'azdoOrgServiceURL')

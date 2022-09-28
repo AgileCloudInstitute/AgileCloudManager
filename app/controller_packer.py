@@ -26,7 +26,7 @@ class controller_packer:
     cloud = systemConfig.get("cloud")
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
     if len(cloud) < 2:
-      logString = "ERROR: cloud name not valid.  Add better validation checking to the code. "
+      logString = "ERROR: cloud name not valid: "+str(cloud)
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     #1. First assemble the variables
@@ -82,7 +82,7 @@ class controller_packer:
     logString = "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
     lw.writeLogVerbose("acm", logString)
     lw.writeLogVerbose("acm", logString)
-    logString = "commandToRun is: " + commandToRun
+    logString = "commandToRun is: " + binariesPath + "packer build *** " + template_config_file_name
     lw.writeLogVerbose("acm", logString)
     logString = "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
     lw.writeLogVerbose("acm", logString)
@@ -91,7 +91,6 @@ class controller_packer:
     lw.writeLogVerbose("acm", logString)
     logString = "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
     lw.writeLogVerbose("acm", logString)
-#    quit('DEBUG packer command during test.')
     self.runPackerCommand(commandToRun, imageRepoDir)
     if self.success_packer == "false":
       logString = "commandRunner.success_packer is false"

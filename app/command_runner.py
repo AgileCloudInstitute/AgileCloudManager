@@ -31,12 +31,8 @@ class command_runner:
     lw.writeLogVerbose("acm", logString)
     logString = "process.returncode is: " + str(process.returncode)
     lw.writeLogVerbose("acm", logString)
-    logString = "cmd is: " + cmd
-    lw.writeLogVerbose("acm", logString)
-    logString = "inside command_runner"
-    lw.writeLogVerbose("acm", logString)
 
-    #These next 6 lines added 24 August to handle azure latency problem with empty results and exit code 0
+    #These next 6 lines added to help diagnose and handle azure latency problem with empty results and exit code 0
     logString = "type(data) is: "+str(type(data))
     lw.writeLogVerbose("acm", logString)
     logString = "type(list(data)) is: "+str(type(list(data)))
@@ -132,8 +128,6 @@ class command_runner:
     lw.writeLogVerbose('shell', logString)
     if os.path.isfile(fullyQualifiedPathToScript):
       commandToRun = command.replace('$location',fullyQualifiedPathToScript)
-      logString = "commandToRun is: "+commandToRun
-      lw.writeLogVerbose('shell', logString)
       self.runShellCommand(commandToRun)
     else: 
       logString = "ERROR: "+fullyQualifiedPathToScript+" is not a valid path. "

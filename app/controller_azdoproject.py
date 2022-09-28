@@ -39,10 +39,7 @@ class controller_azdoproject:
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
     projName = instance.get("instanceName")
     repoName = instance.get("repoName")
-#    ctf.terraformCrudOperation(operation, systemInstanceName, keyDir, systemConfig, instance, typeParent, None, None, projName)
     ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, serviceType, None, projName)
-#        terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
-
     if ctf.terraformResult == "Applied": 
       logString = "Project creation operation succeeded.  Now inside Python conditional block to do only after the on operation has succeeded. "
       lw.writeLogVerbose("acm", logString)
@@ -196,7 +193,7 @@ class controller_azdoproject:
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     if (len(gitPass) < 2) or (not gitPass):
-      logString = "ERROR: Invalid value for gitPass is as follows: "+gitPass
+      logString = "ERROR: Invalid value for git password or PAT stored in gitPass variable. "
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     if (len(str(pid)) < 2) or (not str(pid)):
@@ -268,8 +265,12 @@ class controller_azdoproject:
       lw.writeLogVerbose("acm", logString)
       if len(endPtId) > 2:  
         myCmd = "az repos import create --git-source-url " + gitSourceUrl + " --repository " + repoName + " --git-service-endpoint-id  " + endPtId + " --organization " + organization + " --project " + instanceName + " --requires-authorization "
+        logString = "myCmd is: az repos import create --git-source-url " + gitSourceUrl + " --repository " + repoName + " --git-service-endpoint-id  *** --organization *** --project *** --requires-authorization "
+        lw.writeLogVerbose("shell", logString)
       else:
         myCmd = "az repos import create --git-source-url " + gitSourceUrl + " --repository " + repoName + " --organization " + organization + " --project " + instanceName
+        logString = "myCmd is: az repos import create --git-source-url " + gitSourceUrl + " --repository " + repoName + " --organization *** --project ***"
+        lw.writeLogVerbose("shell", logString)
       try:
         myResponse = cmd_rnr.getShellJsonResponse(myCmd)
         jsonOutput = json.loads(myResponse)

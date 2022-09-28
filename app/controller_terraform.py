@@ -44,15 +44,6 @@ class controller_terraform:
         if thisInstance.get("instanceName") == typeInstanceName:
           templateName = thisInstance.get("templateName")
           instanceName = thisInstance.get("instanceName")
-#    if typeName == 'releaseDefinitions':
-    print('--------------------------------------------------')
-    print('typeName is: ', typeName)
-    print('typeInstanceName is: ', typeInstanceName)
-    print('systemConfig is: ', str(systemConfig))
-#      print("instanceName is: ", instanceName)
-#      print("thisInstance is: ", str(thisInstance))
-#      print("templateName is: ", templateName)
-#      quit('===^%^===')
     dynamicVarsPath = config_cliprocessor.inputVars.get('dynamicVarsPath')
     oldTfStateName = self.getBackedUpStateFileName(dynamicVarsPath, foundationInstanceName, templateName, instanceName)
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
@@ -111,8 +102,6 @@ class controller_terraform:
         if (typeName == 'admin'): 
           myAzAdminController = controller_azureadmin()
           myAzAdminController.cleanUp(operation, systemConfig, instance, typeName, instanceName, destinationCallInstance, self)
-#                              cleanUp(operation, systemConfig, instance, typeName, instanceName, destinationCallInstance, myTfCtrlr):
-
         self.cleanupAfterOperation(destinationCallInstance, destinationCallParent, foundationInstanceName, templateName, instanceName, key_source)
       else:   
         logString = "-------------------------------------------------------------------------------------------------------------------------------"
@@ -166,7 +155,7 @@ class controller_terraform:
       if len(destinationCallInstance) >135:
         logString = "destinationCallInstance path is too long at: " + destinationCallInstance
         myLogWriter.writeLogVerbose("acm", logString)
-        logString = "ERROR: The path of the directory into which you are placing the call to the terraform module is greater than 135 characters and is thus too long.  Halting program with this meaningful message so that you can avoid receiving an unhelpful message from the program vendor.  Please shorten the length of the path and re-run.  You can either move your app higher up in the directory structure, or you can change your config by shortening the template names and instance names that are fed into this path definition. "
+        logString = "ERROR: The path of the directory into which you are placing the call to the terraform module is greater than 135 characters and is thus too long.  Halting program with this meaningful message so that you can avoid receiving an unhelpful message from the program vendor.  Please shorten the length of the path and re-run.  You can either move your app higher up in the directory structure such as C:\\x\\yourApp , or you can change your config by shortening the template names and instance names that are fed into this path definition. "
         myLogWriter.writeLogVerbose("acm", logString)
         sys.exit(1)
     p = Path(destinationCallInstance)
@@ -203,7 +192,7 @@ class controller_terraform:
         destStateFile = destinationCallInstance + "terraform.tfstate"
         shutil.copyfile(oldTfStateName, destStateFile)
       else:
-        logString = "oldTfStateName files does NOT exist. "
+        logString = "oldTfStateName file does NOT exist. "
         myLogWriter.writeLogVerbose("acm", logString)
 
   #@private
@@ -274,14 +263,9 @@ class controller_terraform:
               if thisInstance.get("instanceName") == instanceName:
                 instanceVarsDict = thisInstance.get("backendVariables")
         backendVarCoordinates = { **sharedVarsDict, **instanceVarsDict }
-#      print("backendVarCoordinates is: ")
-#      print(backendVarCoordinates)
-#      quit("---'''---")
       from command_builder import command_builder
       cb = command_builder()
       backendVars = cb.getBackendVarsFragment(backendVarCoordinates, tool, keyDir)
-      print('backendVars is: ', backendVars)
- 
       initCommand= binariesPath + "terraform init -backend=true " + backendVars
     else:
       initCommand = binariesPath + 'terraform init '
@@ -471,7 +455,6 @@ class controller_terraform:
       myLogWriter.writeLogVerbose("acm", logString)
       sys.exit(1)
     if "Error:" in decodedline:
-      quit(decodedline)
       logString = decodedline+".  Halting program so you can check your configuration and identify the root of the problem. "
       myLogWriter.writeLogVerbose("acm", logString)
       sys.exit(1) 

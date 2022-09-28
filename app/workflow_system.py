@@ -39,15 +39,14 @@ class workflow_system:
     foundationInstanceName = systemConfig.get("foundation").get("instanceName")
     foundationTool = systemConfig.get("foundation").get("controller")
     operation = 'on'
-    print('test is: ', test)
-    print('typeOfTest is: ', typeOfTest )
-#    quit('ss ---  yuio')
     if (test==True) and (typeOfTest=="workflow"):
       # Skip the else block in this case because we are just testing the workflow.
       pass
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
+        logString = "preprocessor command is: "+preprocessor
+        lw.writeLogVerbose("acm", logString)
         cr.runPreOrPostProcessor(preprocessor, 'on')
       else:
         logString = 'NO preprocessor present.'
@@ -63,10 +62,7 @@ class workflow_system:
           logString = "WARNING: This network foundation does not have any image builds associated with it.  If you intend not to build images in this network, then everything is fine.  But if you do want to build images with this network, then check your configuration and re-run this command.  "
           lw.writeLogVerbose("acm", logString)
       elif foundationTool =='terraform':
-#        ctf.terraformCrudOperation(operation, systemInstanceName, keyDir, systemConfig, None, 'none', None, None, None) 
         ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None) 
-#            terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
-
         if ctf.terraformResult == "Applied": 
           if "images" in systemConfig.get("foundation").keys():
             cimg.buildImages(systemConfig, keyDir)
@@ -96,6 +92,8 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
+        logString = "postprocessor command is: "+postprocessor
+        lw.writeLogVerbose("acm", logString)
         cr.runPreOrPostProcessor(postprocessor, 'on')
       else:
         logString = 'NO postprocessor present.'
@@ -120,6 +118,8 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
+        logString = "preprocessor command is: "+preprocessor
+        lw.writeLogVerbose("acm", logString)
         cr.runPreOrPostProcessor(preprocessor, 'off')
       else:
         logString = 'NO preprocessor present.'
@@ -138,7 +138,6 @@ class workflow_system:
       elif foundationTool == 'cloudformation':
         ccf.destroyStack(systemConfig, systemConfig.get("foundation"), keyDir, 'networkFoundation')
       elif foundationTool == 'terraform':
-#        ctf.terraformCrudOperation(operation, systemInstanceName, keyDir, systemConfig, None, 'none', None, None, None)
         ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None)
         if ctf.terraformResult == "Destroyed": 
           logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
@@ -152,7 +151,6 @@ class workflow_system:
         controllerCommand = systemConfig.get("foundation").get("controllerCommand")
         mappedVariables = systemConfig.get("foundation").get("mappedVariables")
         serviceType = None
-#        instance = None
         instance = systemConfig.get("foundation")
         ccust = controller_custom()
         ccust.runCustomController('off', systemConfig, controllerPath, controllerCommand, mappedVariables, serviceType, instance)
@@ -162,6 +160,8 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
+        logString = "postprocessor command is: "+postprocessor
+        lw.writeLogVerbose("acm", logString)
         cr.runPreOrPostProcessor(postprocessor, 'off')
       else:
         logString = 'NO postprocessor present.'
@@ -214,7 +214,7 @@ class workflow_system:
     typeName = 'networkFoundation'
     if "foundation" not in systemConfig.keys():#len(foundationInstanceName) == 0:
       #Note: Leaving the following unhandled WARNING because some cases may involve a SaaS that does not have a network foundation.  
-      logString = "WARNING: There is no foundation instanceName in your infrastructureConfig.yaml file.  If this is intended, everything is fine.  But if this is a mistake, then downstream errors may occur. "
+      logString = "WARNING: There is no foundation instanceName in your acm.yaml file.  If this is intended, everything is fine.  But if this is a mistake, then downstream errors may occur. "
       lw.writeLogVerbose("acm", logString)
     #add code to confirm that output operation succeeded.
     #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
@@ -231,7 +231,6 @@ class workflow_system:
   #@public
   def skipServices(self, level, systemInstanceName, yamlInfraConfig = 'default'):
     import config_cliprocessor
-
     lw = log_writer()
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")

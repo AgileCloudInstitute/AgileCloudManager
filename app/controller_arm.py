@@ -31,10 +31,6 @@ class controller_arm:
     keyDir = cfp.getKeyDir(systemConfig)
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
     yaml_keys_file_and_path = cf.getKeyFileAndPath(keyDir)
-    print("keyDir is: ", keyDir)
-    print("userCallingDir is: ", userCallingDir)
-    print("eee yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
-#    quit('<---c--->')
     if caller == 'networkFoundation':
       typeParent = caller
       serviceType = 'networkFoundation'
@@ -62,6 +58,8 @@ class controller_arm:
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
     ## STEP 3: Create Resource Group
     resourceGroupCmd = 'az group create --name ' + resourceGroupName + ' --location ' + resourceGroupRegion
+    logString = 'resourceGroupCmd is: az group create --name *** --location ' + resourceGroupRegion
+    lw.writeLogVerbose("az-cli", logString)
     self.getShellJsonResponse(resourceGroupCmd)
     logString = "Finished running create resource group command. "
     lw.writeLogVerbose("az-cli", logString)
@@ -110,16 +108,14 @@ class controller_arm:
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
     tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
-#start test move from above step 3 below
     ## STEP 2: Login to az cli and set subscription
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
-#end test move from above step 3 below
     resourceGroupCheckCmd = 'az group exists -n '+resourceGroupName
-    logString = "resourceGroupCheckCmd is: "+resourceGroupCheckCmd
+    logString = "resourceGroupCheckCmd is: az group exists -n *** "
     lw.writeLogVerbose("az-cli", logString)
     jsonStatus = self.getShellJsonResponse(resourceGroupCheckCmd)
     if ("false" in str(jsonStatus)) and (len(str(jsonStatus))==6):
-      logString = "Resource Group named "+resourceGroupName+" does not exist.  Therefore, we are skipping this destroy ARM template command based on the assumption that any in-scope resources were destroyed when the resource group was destroyed. Please make sure that the in-scope resources do not exist.  And please examine your workflow to understand how you reached this message. "
+      logString = "Resource Group named *** does not exist.  Therefore, we are skipping this destroy ARM template command based on the assumption that any in-scope resources were destroyed when the resource group was destroyed. Please make sure that the in-scope resources do not exist.  And please examine your workflow to understand how you reached this message. "
       lw.writeLogVerbose("az-cli", logString)
       return
     else:
@@ -128,7 +124,7 @@ class controller_arm:
       templatePathAndFile = cf.formatPathForOS(templatePathAndFile)
       ## STEP 4: delete deployment
       destroyCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+' --mode complete'
-      logString = 'destroyCmd is: '+ destroyCmd
+      logString = 'destroyCmd is: '+ 'az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose '+' --mode complete'
       lw.writeLogVerbose("az-cli", logString)
       jsonStatus = self.getShellJsonResponse(destroyCmd)
       jsonStatus = json.loads(jsonStatus)
@@ -143,7 +139,7 @@ class controller_arm:
         lw.writeLogVerbose("az-cli", logString)
       #STEP 5: Now destroy the resource group
       destroyRgCpmmand = 'az group delete -y --name '+resourceGroupName
-      logString = 'destroyRgCpmmand is: '+ destroyRgCpmmand
+      logString = 'destroyRgCpmmand is: az group delete -y --name ***'
       lw.writeLogVerbose("az-cli", logString)
       jsonStatus = self.getShellJsonResponse(destroyRgCpmmand)
 
@@ -151,7 +147,6 @@ class controller_arm:
   def configureAzureToDeployImages(self, templatePathAndFile):
     with open(templatePathAndFile, 'r') as f:
         data = json.load(f)
-#    data = json.load(open(templatePathAndFile, 'r'))
     resources = data['resources']
     for resource in resources:  
       if resource['type'] == 'Microsoft.VirtualMachineImages/imageTemplates':
@@ -185,12 +180,15 @@ class controller_arm:
 
   #@private
   def createImageTemplateAndDeployImage(self, systemConfig, serviceType, instance, templatePathAndFile, deploymentName, subscriptionId, clientId):
+    lw = log_writer()
     import config_cliprocessor
     resourceGroupName = instance.get('resourceGroupName')
     # create user assigned identity for image builder to access the storage account where the script is located
     dateTimeCode = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
     identityName = 'imgbuilder_'+dateTimeCode
     idCreateCommand = 'az identity create -g ' +resourceGroupName+ ' -n ' +identityName
+    logString = 'idCreateCommand is: az identity create -g *** -n ***'
+    lw.writeLogVerbose("az-cli", logString)
     jsonResponse = self.getShellJsonResponse(idCreateCommand)
     jsonResponse = json.loads(jsonResponse)
     msiFullId = jsonResponse['id']
@@ -208,12 +206,17 @@ class controller_arm:
     with open('ad-role.json', 'w', encoding='utf-8') as f:
       json.dump(rolesDict, f, ensure_ascii=False, indent=4)
     roleDefCreateCommand = 'az role definition create --subscription '+subscriptionId+' --role-definition @ad-role.json'
+    logString = 'roleDefCreateCommand is: az role definition create --subscription *** --role-definition @ad-role.json'
+    lw.writeLogVerbose("az-cli", logString)
     jsonResponse = self.getShellJsonResponse(roleDefCreateCommand)
     #Grant the role definition to the managed service identity
-#    imageRoleAssignmentCommand = 'az role assignment create --assignee '+msiFullId+' --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName
     imageRoleAssignmentCommand = 'az role assignment create --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName+' --assignee-object-id '+servicePrincipalId+' --assignee-principal-type ServicePrincipal'
+    logString = 'imageRoleAssignmentCommand is: az role assignment create --role *** --scope /subscriptions/***/resourceGroups/*** --assignee-object-id *** --assignee-principal-type ServicePrincipal'
+    lw.writeLogVerbose("az-cli", logString)
     jsonResponse = self.getShellJsonResponse(imageRoleAssignmentCommand)
     imageRoleAssignmentCommand = 'az role assignment create --role '+imageRoleDefinitionName+' --scope /subscriptions/'+subscriptionId+'/resourceGroups/'+resourceGroupName+' --assignee-object-id '+clientId+' --assignee-principal-type ServicePrincipal'
+    logString = 'imageRoleAssignmentCommand is: az role assignment create --role *** --scope /subscriptions/***/resourceGroups/*** --assignee-object-id *** --assignee-principal-type ServicePrincipal'
+    lw.writeLogVerbose("az-cli", logString)
     jsonResponse = self.getShellJsonResponse(imageRoleAssignmentCommand)
     outputDict = {}
     outputDict['identityName'] = identityName
@@ -223,28 +226,20 @@ class controller_arm:
     outputDict['dateTimeCode'] = dateTimeCode
     self.assembleAndRunArmDeploymentCommand(systemConfig, serviceType, instance, templatePathAndFile, resourceGroupName, deploymentName, outputDict, False)
     imageTemplateNameRoot = instance.get('instanceName')
-#25Aug_old    getImageTemplatesCmd = 'az resource list --resource-group '+resourceGroupName+' --resource-type Microsoft.VirtualMachineImages/imageTemplates '
-#25Aug_1st    getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' | project name, resourceGroup | sort by name asc\""
     getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
-
-    print("getImageTemplatesCmd is: ", getImageTemplatesCmd)
+    logString = "getImageTemplatesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
+    lw.writeLogVerbose("az-cli", logString)
     imgTemplatesJSON = self.getShellJsonResponse(getImageTemplatesCmd)
-    print('str(imgTemplatesJSON) is: ', imgTemplatesJSON) 
     imageTemplateNamesList = []
     imgTemplatesJSON = yaml.safe_load(imgTemplatesJSON)  
     for imageTemplate in imgTemplatesJSON['data']:
-      print('-------------------------------------------------------')
-      print("imageTemplate is: ", imageTemplate)
-      print('imageTemplateNameRoot is: ', imageTemplateNameRoot)
       if imageTemplateNameRoot in imageTemplate['name']:
         imageTemplateNamesList.append(imageTemplate.get("name"))
     sortedImageTemplateList = list(sorted(imageTemplateNamesList))
-#    print('sortedImageTemplateList is: ', str(sortedImageTemplateList))    
-#    quit('chimp!')
     newestTemplateName = sortedImageTemplateList[-1]
     #Build the image from the template you just created.  
     buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
-    logString = "buildImageCommand is: "+buildImageCommand
+    logString = "buildImageCommand is: "+'az resource invoke-action --resource-group *** --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
     lw = log_writer()
     lw.writeLogVerbose("acm", logString)
     jsonResponse = self.getShellJsonResponse(buildImageCommand)
@@ -264,7 +259,7 @@ class controller_arm:
       theState = jsonStatus['properties']['state']
       logString = 'Attempt number ' + str(counter) + ' got response: ' + theState + ' from running command: '+theCmd
       lw.writeLogVerbose('acm', logString)
-      registerProviderVmiCmd = 'az provider register -n Microsoft.VirtualMachineImages' # --name VirtualMachineTemplatePreview'
+      registerProviderVmiCmd = 'az provider register -n Microsoft.VirtualMachineImages'
       self.getShellJsonResponse(registerProviderVmiCmd)
       if theState != 'Registered':
         counter +=1
@@ -272,20 +267,20 @@ class controller_arm:
         self.getRegistered(theCmd, counter)
     return theState
 
-  #@private
-  def getUnRegistered(self, theCmd, counter=0):
-    lw = log_writer()
-    theState = 'NA'
-    if (theState != 'Unregistered') and (counter <20):
-      jsonStatus = json.loads(self.getShellJsonResponse(theCmd))
-      theState = jsonStatus['properties']['state']
-      logString = 'Attempt number ' + str(counter) + ' got response: ' + theState + ' from running command: '+theCmd
-      lw.writeLogVerbose('acm', logString)
-      if theState != 'Unregistered':
-        counter +=1
-        time.sleep(10)
-        self.getUnRegistered(theCmd, counter)
-    return theState
+  ##@private
+  #def getUnRegistered(self, theCmd, counter=0):
+  #  lw = log_writer()
+  #  theState = 'NA'
+  #  if (theState != 'Unregistered') and (counter <20):
+  #    jsonStatus = json.loads(self.getShellJsonResponse(theCmd))
+  #    theState = jsonStatus['properties']['state']
+  #    logString = 'Attempt number ' + str(counter) + ' got response: ' + theState + ' from running command: '+theCmd
+  #    lw.writeLogVerbose('acm', logString)
+  #    if theState != 'Unregistered':
+  #      counter +=1
+  #      time.sleep(10)
+  #      self.getUnRegistered(theCmd, counter)
+  #  return theState
 
   #@private
   def checkRegistrationState(self, checkCmd):
@@ -315,15 +310,11 @@ class controller_arm:
     from command_builder import command_builder
     cb = command_builder() 
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict)
-    print("--- deployVarsFragment is: ", deployVarsFragment)
     deployCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+deployVarsFragment
-    logString = '--- deployCmd is: '+ deployCmd
+    logString = '--- deployCmd is: az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose ***'
     lw.writeLogVerbose("az-cli", logString)
-#    if 'devenvimages' in deployCmd:
-#      quit("::---x---:::")
     ## STEP 6: Run Deployment command and check results
     jsonStatus = self.getShellJsonResponse(deployCmd)
-    print('jsonStatus is: ', jsonStatus)
     jsonStatus = json.loads(jsonStatus)
     state = jsonStatus['properties']['provisioningState']
     logString = 'provisioningState is: '+ state
@@ -336,9 +327,6 @@ class controller_arm:
         for thisOutput in outputs:
           print('thisOutput is: ', str(thisOutput))
           print('outputs[thisOutput]["value"] is: ', str(outputs[thisOutput]['value']))
-
-#    if onlyFoundationOutput:
-#      quit('giraffe!')
     if state == 'Succeeded':
       logString = "Finished running deployment command in assembleAndRunDeploymentCommand()."
       lw.writeLogVerbose("az-cli", logString)
@@ -351,12 +339,16 @@ class controller_arm:
     lw = log_writer()
     #### #The following command gets the client logged in and able to operate on azure repositories.
     loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
+    logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
+    lw.writeLogVerbose('az-cli', logString)
     self.getShellJsonResponse(loginCmd)
     logString = "Finished running login command."
     lw.writeLogVerbose("az-cli", logString)
     setSubscriptionCommand = 'az account set --subscription '+subscriptionId
+    logString = 'setSubscriptionCommand is: az account set --subscription ***'
+    lw.writeLogVerbose("az-cli", logString)
     self.getShellJsonResponse(setSubscriptionCommand)
-    logString = 'Finished setting subscription to '+str(subscriptionId)
+    logString = 'Finished setting subscription to ***'
     lw.writeLogVerbose("az-cli", logString)
 
   #@private
@@ -371,23 +363,15 @@ class controller_arm:
     lw.writeLogVerbose("acm", logString)
     logString = "process.returncode is: " + str(process.returncode)
     lw.writeLogVerbose("acm", logString)
-    logString = "cmd is: " + cmd
-    lw.writeLogVerbose("acm", logString)
-    logString = "inside controller_arm"
-    lw.writeLogVerbose("acm", logString)
-
-    #These next 6 lines added 24 August to handle azure latency problem with empty results and exit code 0
+    #These next 6 lines added to help diagnose azure latency problem with empty results and exit code 0
     logString = "type(data) is: "+str(type(data))
     lw.writeLogVerbose("acm", logString)
     logString = "type(list(data)) is: "+str(type(list(data)))
     lw.writeLogVerbose("acm", logString)
     logString = "len(list(data)) is: "+ str(len(list(data)))
     lw.writeLogVerbose("acm", logString)
-
     if process.returncode == 0:
-
-#...
-      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
+      #These next 20 lines added to help diagnose and handle azure latency problem with empty results and exit code 0
       if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(str(data).replace(" ","")) == 3):
         if counter < 11:
           counter +=1 
@@ -408,7 +392,6 @@ class controller_arm:
           lw.writeLogVerbose("acm", logString)
           sys.exit(1)
       else:
-#...
         logString = str(data)
         lw.writeLogVerbose("shell", logString)
         decodedData = data #.decode('utf-8')
@@ -427,7 +410,7 @@ class controller_arm:
       else:  
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
           logString = "WARNING: "+"(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found."
-          lw.writeLogVerbose('shell')
+          lw.writeLogVerbose('shell', logString)
           logString = "Continuing because this error message is often benign.  If you encounter downstream problems resulting from this, please report your use case so that we can examine the cause. "
           lw.writeLogVerbose('acm', logString)
           return decodedData

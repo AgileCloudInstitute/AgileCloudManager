@@ -30,7 +30,7 @@ Populate the secrets for Azure in ``, and for AWS in ``.
   
 # STEP FOUR: Run the ACM Creation Workflow commands  
   
-Make sure that the Azure version is installed as `infrastructureConfig.yaml`.  
+Make sure that the Azure version is installed as `acm.yaml`.  
   
 Type the following commands to get the demo up and running:  
   

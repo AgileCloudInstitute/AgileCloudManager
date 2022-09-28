@@ -540,6 +540,7 @@ class command_builder:
   #@private
   def getValueForOneMappedVariable(self, mappedVariables, varName, tool, keyDir, systemConfig, instance, varLines, outputDict):
     cr = command_runner()
+    lw = log_writer()
     if mappedVariables.get(varName).startswith('$env.'):
       envVarName = mappedVariables.get(varName).replace('$env.', '')
       if envVarName in os.environ:
@@ -683,6 +684,8 @@ class command_builder:
           imageNameRoot = funcCoordParts[2]
           resourceGroupName = systemConfig.get('foundation').get("resourceGroupName")
           getImagesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
+          logString = "getImagesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
+          lw.writeLogVerbose("shell", logString)
           imgsJSON = cr.getShellJsonResponse(getImagesCmd) 
           imageNamesList = []
           imgsJSON = yaml.safe_load(imgsJSON)  
