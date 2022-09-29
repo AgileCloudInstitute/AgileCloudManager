@@ -112,7 +112,7 @@ class command_runner:
         break
 
   #@public
-  def runPreOrPostProcessor(self, processorSpecs, operation):
+  def runPreOrPostProcessor(self, preOrPost, processorSpecs, operation):
     import config_cliprocessor
     cf = command_formatter()
     lw = log_writer()
@@ -128,6 +128,15 @@ class command_runner:
     lw.writeLogVerbose('shell', logString)
     if os.path.isfile(fullyQualifiedPathToScript):
       commandToRun = command.replace('$location',fullyQualifiedPathToScript)
+      if preOrPost == "pre":
+        logString = "preprocessor command is: "+commandToRun
+      elif preOrPost == "post":
+        logString = "postprocessor command is: "+commandToRun
+      else:
+        logString = str(preOrPost)+" is not a valid value for preOrPost.  Halting program so this can be fixed where the error originates. "
+        lw.writeLogVerbose('shell', logString)
+        sys.exit(1)
+      lw.writeLogVerbose('shell', logString)
       self.runShellCommand(commandToRun)
     else: 
       logString = "ERROR: "+fullyQualifiedPathToScript+" is not a valid path. "

@@ -62,9 +62,7 @@ class workflow_service_type:
     else:
       if "preprocessor" in instance.keys():
         preprocessor = instance.get("preprocessor") 
-        logString = "preprocessor command is: "+preprocessor
-        lw.writeLogVerbose("acm", logString)
-        crnr.runPreOrPostProcessor(preprocessor, 'on') 
+        crnr.runPreOrPostProcessor("pre", preprocessor, 'on') 
       else:
         pass
       instanceTool = instance.get("controller")
@@ -95,9 +93,7 @@ class workflow_service_type:
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, 'systems', serviceType, None, instName)
       postprocessor = instance.get("postprocessor")
       if postprocessor:
-        logString = "postprocessor command is: "+postprocessor
-        lw.writeLogVerbose("acm", logString)
-        crnr.runPreOrPostProcessor(postprocessor, 'on')
+        crnr.runPreOrPostProcessor("post", postprocessor, 'on')
       else:
         pass
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, serviceType, instName)
@@ -160,9 +156,7 @@ class workflow_service_type:
     else:
       if "preprocessor" in instance.keys():
         preprocessor = instance.get("preprocessor")
-        logString = 'preprocessor is: '+ str(preprocessor)
-        lw.writeLogVerbose("acm", logString)
-        crnr.runPreOrPostProcessor(preprocessor, 'off')
+        crnr.runPreOrPostProcessor("pre", preprocessor, 'off')
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -196,9 +190,7 @@ class workflow_service_type:
           sys.exit(1)
       if "postprocessor" in instance.keys():
         postprocessor = instance.get("postprocessor")
-        logString = 'postprocessor is: '+ str(postprocessor)
-        lw.writeLogVerbose("acm", logString)
-        crnr.runPreOrPostProcessor(postprocessor, 'off')
+        crnr.runPreOrPostProcessor("post", postprocessor, 'off')
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)

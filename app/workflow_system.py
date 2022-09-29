@@ -45,9 +45,7 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
-        logString = "preprocessor command is: "+preprocessor
-        lw.writeLogVerbose("acm", logString)
-        cr.runPreOrPostProcessor(preprocessor, 'on')
+        cr.runPreOrPostProcessor("pre", preprocessor, 'on')
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -92,9 +90,7 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
-        logString = "postprocessor command is: "+postprocessor
-        lw.writeLogVerbose("acm", logString)
-        cr.runPreOrPostProcessor(postprocessor, 'on')
+        cr.runPreOrPostProcessor("post", postprocessor, 'on')
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -118,9 +114,7 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
-        logString = "preprocessor command is: "+preprocessor
-        lw.writeLogVerbose("acm", logString)
-        cr.runPreOrPostProcessor(preprocessor, 'off')
+        cr.runPreOrPostProcessor("pre", preprocessor, 'off')
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -160,9 +154,7 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
-        logString = "postprocessor command is: "+postprocessor
-        lw.writeLogVerbose("acm", logString)
-        cr.runPreOrPostProcessor(postprocessor, 'off')
+        cr.runPreOrPostProcessor("post", postprocessor, 'off')
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
