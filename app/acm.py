@@ -28,7 +28,7 @@ def runInfraCommands():
     if cliproc.command == 'on':
       ws.runSetup()
     elif cliproc.command == 'off':
-      ws.undoSetup()
+      ws.undoSetup() 
 
   #Validating config after setup is completed because setup creates the config location
   if (cliproc.domain == 'platform') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):

@@ -211,7 +211,7 @@ class workflow_service_type:
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
     for systemName in platformConfig:
       if systemName == systemToModify:
-        systemConfig = platformConfig.get(systemName)
+        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       quit(logString)
@@ -243,7 +243,7 @@ class workflow_service_type:
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
     for systemName in platformConfig:
       if systemName == systemToModify:
-        systemConfig = platformConfig.get(systemName)
+        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       quit(logString)

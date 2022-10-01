@@ -33,9 +33,10 @@ class workflow_platform:
     cm_on.updateStartOfPlatformRun(ct_on, cc_on, 'platform', "In Process")
     for systemInstanceName in platformConfig:
       cm_on.updateStartOfASystem(ct_on, cc_on, 'platform', systemInstanceName, "In Process")
-      if cfp.systemHasFoundation(platformConfig.get(systemInstanceName)):
+      sysCfg = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      if cfp.systemHasFoundation(sysCfg):
         cm_on.updateStartOfAFoundation(ct_on, cc_on, 'platform', systemInstanceName, "In Process")
-        wfsys.onFoundation(systemInstanceName, platformConfig.get(systemInstanceName))
+        wfsys.onFoundation(systemInstanceName, sysCfg)
         cm_on.updateEndOfAFoundation(ct_on, cc_on, 'platform', systemInstanceName)
       else:
         logString = "WARNING: There is NOT any foundation block defined for the system named " + systemInstanceName + " in your acm.yaml file.  The program is continuing in case you are launching something that does not need a Foundation.  If your configuration requires a foundation, then a downstream error will occur unless you add a foundation block. "
@@ -43,7 +44,7 @@ class workflow_platform:
       logString = "------------------ DONE WITH onFoundation() -------------------"
       lw.writeLogVerbose("acm", logString)
       cm_on.updateStartOfAServicesSection(ct_on, cc_on, 'platform', systemInstanceName)
-      wfsys.onServices(cm_on, ct_on, cc_on, 'platform', systemInstanceName, platformConfig.get(systemInstanceName))
+      wfsys.onServices(cm_on, ct_on, cc_on, 'platform', systemInstanceName, sysCfg)
       cm_on.updateEndOfAServicesSection(ct_on, cc_on, 'platform', systemInstanceName)
       cm_on.updateEndOfASystem(ct_on, cc_on, 'platform', systemInstanceName)
       logString = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
@@ -77,9 +78,10 @@ class workflow_platform:
     lw.writeLogVerbose("acm", logString)
     cm_off.updateStartOfPlatformRun(ct_off, cc_off, 'platform', "In Process")
     for systemInstanceName in reversed(systemInstanceNames):
-      useTheForce = platformConfig.get(systemInstanceName).get("forceDelete")
+      sysCfg = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      useTheForce = sysCfg.get("forceDelete")
       cm_off.updateStartOfASystem(ct_off, cc_off, 'platform', systemInstanceName, "In Process")
-      hasFoundation = cfp.systemHasFoundation(platformConfig.get(systemInstanceName))
+      hasFoundation = cfp.systemHasFoundation(sysCfg)
       if (useTheForce == True) and (hasFoundation):
         quit("DEBUG has foundation in workflow_platform.py")
         cm_off.updateStartOfSkipServicesSection()
@@ -90,7 +92,7 @@ class workflow_platform:
         cm_off.updateEndOfSkipServicesSection()
       else:
         cm_off.updateStartOfAServicesSection(ct_off, cc_off, 'platform', systemInstanceName)
-        wfsys.offServices(cm_off, ct_off, cc_off, 'platform', systemInstanceName, platformConfig.get(systemInstanceName))
+        wfsys.offServices(cm_off, ct_off, cc_off, 'platform', systemInstanceName, sysCfg)
         cm_off.updateEndOfAServicesSection(ct_off, cc_off, 'platform', systemInstanceName)
         logString = "------------------ DONE WITH offServices() -------------------"
         lw.writeLogVerbose("acm", logString)
@@ -99,7 +101,7 @@ class workflow_platform:
         if (test==True) and (typeOfTest=="workflow"):
           pass
         else:
-          wfsys.offFoundation(systemInstanceName, platformConfig.get(systemInstanceName))
+          wfsys.offFoundation(systemInstanceName, sysCfg)
         cm_off.updateEndOfAFoundation(ct_off, cc_off, 'platform', systemInstanceName)
       else:
         logString = "WARNING: There is NOT any foundation block in system named " + systemInstanceName + " .  The program is continuing in case you are launching a SaaS that does not need a Foundation.  If your configuration requires a foundation, then a downstream error will occur unless you add a foundation block. "
@@ -121,3 +123,4 @@ class workflow_platform:
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
     cm_off.updateEndOfPlatformRun(ct_off, cc_off, 'platform')
+ 
