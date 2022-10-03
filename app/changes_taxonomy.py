@@ -119,7 +119,7 @@ class changes_taxonomy:
     elif level == 'servicetype':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = cfp.getSystemConfig(platformConfig, systemInstance)
+      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
       svcType = config_cliprocessor.inputVars.get('serviceType')
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):

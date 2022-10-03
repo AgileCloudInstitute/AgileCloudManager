@@ -76,6 +76,62 @@ jobs:
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform off
+      - shell: bash
+        name: Run foundation on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm foundation on systemName=agents
+      - shell: bash
+        name: Run services on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm services on systemName=agents
+      - shell: bash
+        name: Run services off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm services off systemName=agents
+      - shell: bash
+        name: Run serviceType on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceType on systemName=agents serviceType=subnetsWithScaleSet
+      - shell: bash
+        name: Run serviceType off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceType off systemName=agents serviceType=subnetsWithScaleSet
+      - shell: bash
+        name: Run serviceInstance on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceInstance on systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - shell: bash
+        name: Run serviceInstance off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceInstance off systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - shell: bash
+        name: Run foundation off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm foundation off systemName=agents
       - name: Setup Off
         run: |
           PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
@@ -393,6 +449,54 @@ jobs:
           cd C:\\stgng\\
           echo ".................about to run e2e test"
           acm platform off
+      - name: Run foundation on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm foundation on systemName=agents
+      - name: Run services on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm services on systemName=agents
+      - name: Run services off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm services off systemName=agents
+      - name: Run serviceType on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceType on systemName=agents serviceType=subnetsWithScaleSet
+      - name: Run serviceType off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceType off systemName=agents serviceType=subnetsWithScaleSet
+      - name: Run serviceInstance on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceInstance on systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - name: Run serviceInstance off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceInstance off systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - name: Run foundation off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm foundation off systemName=agents
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
