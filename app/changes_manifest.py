@@ -325,7 +325,7 @@ class changes_manifest:
     ct.updateStartOfAServicesSection(systemInstanceName)
     #2 get list of changes in new changeTaxonomy
     outputLine = "[ acm ] " + " After update, changeTaxonomy is: " + str(ct.changeTaxonomy)
-    ct.storeChangeTaxonomy(cc, level, outputLine)
+    ct.storeChangeTaxonomy(cc, level, outputLine) 
     #3 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
     match1 = False
     match2 = False
@@ -344,9 +344,11 @@ class changes_manifest:
                         match1 = True
             if changeItems['key'] == change['key']+"/services":
               for changeItem in changeItems['changes']:
+                print('+++ changeItem is: ', changeItem)
                 if "all services summary status changed from NOT Started to In Process" in changeItem:
                   for changeElement in change['changes']:
                     affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
+                    print("+++  affUnitName is: ", affUnitName)
                     if changeElement["affectedUnit"] == affUnitName:
                       if changeElement["Status"].replace('To ','') == "In Process":
                         changeElement["changeCompleted"] = True
