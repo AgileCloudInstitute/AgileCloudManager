@@ -23,6 +23,7 @@ def runInfraCommands():
  
   if cliproc.domain != 'unittest' :
     lw.replaceLogFile()
+    print("back inside acm.py, after just having replaced log file.")
 
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':
@@ -32,6 +33,7 @@ def runInfraCommands():
 
   #Validating config after setup is completed because setup creates the config location
   if (cliproc.domain == 'platform') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):
+    print("inside acm.py, about to call cv.processAcmConfig()")
     cv.processAcmConfig()
 
   if cliproc.domain == 'platform':
