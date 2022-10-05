@@ -20,7 +20,7 @@ def runInfraCommands():
   lw = log_writer()
   cv = config_validator()
   ws = workflow_setup()
-
+ 
   if cliproc.domain != 'unittest' :
     lw.replaceLogFile()
 
@@ -54,6 +54,7 @@ def runInfraCommands():
 
   elif cliproc.domain == 'serviceType':
     if cliproc.command == 'on':
+      print("in acm.py, about to wfst.callOnServiceDirectly()")
       wfst.callOnServiceDirectly('servicetype')
     elif cliproc.command == 'off':
       wfst.callOffServiceDirectly('servicetype')

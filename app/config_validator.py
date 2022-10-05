@@ -12,6 +12,7 @@ class config_validator:
  
   #@public
   def processAcmConfig(self):
+    print("a1")
     import config_cliprocessor
     cfp = config_fileprocessor()
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
@@ -22,14 +23,18 @@ class config_validator:
         if (not row[1].startswith(" ")) and(not row[1].startswith("#")) and (len(row[1].replace(" ","").replace("\n","")) > 0):
           typeName = row[1].replace(" ","").replace("\n","")
           typesList.append(typeName)
+    print("a2")
     if len(typesList) != len(set(typesList)):
       logString = "ERROR: Your configuration uses the same name to define multiple systems.  You must give each of your system instances a unique name within each platform configuration.  Halting program so you can fix your configuration. "
       print(logString)
       sys.exit(1)
+    print("a3")
     #Second, load acm.yaml into a dict and iterate the systems:
     with open(infraConfigFileAndPath, 'r') as f:
       acmConfig = yaml.safe_load(f)
+    print("a4")
     #Third, validate each system
+    print("acmConfig is ", str(acmConfig))
     for system in acmConfig:
       sysCfg = cfp.getSystemConfig(acmConfig, system)
       print("***  sysCfg is: ", str(sysCfg))
@@ -41,6 +46,7 @@ class config_validator:
         logString = "ERROR: Invalid format for system named "+ str(system)+". The contents of a system must be valid yaml and not just a string. "
         print(logString)
         sys.exit(1)
+    print("a5")
 
   #@private
   def validateSystem(self, system):
