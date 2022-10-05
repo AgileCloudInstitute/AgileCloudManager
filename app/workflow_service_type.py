@@ -209,25 +209,20 @@ class workflow_service_type:
     systemConfig = None
     yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    #print("systemToModify is: ", systemToModify)
     for systemName in platformConfig:
-      #print('systemName is', systemName)
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
-        #print("systemConfig is: ", systemConfig)
-#    quit("--00--")
     if systemConfig == None: 
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     cm_son.initializeChangesManagementDataStructures(ct_son, cc_son, level, "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_son.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
     cm_son.updateStartOfPlatformRun(ct_son, cc_son, level, "In Process")
     cm_son.updateStartOfASystem(ct_son, cc_son, level, systemToModify, "In Process")
     cm_son.updateStartOfAServicesSection(ct_son, cc_son, level, systemToModify)
-    #quit("--11--")
     typesToCreate = systemConfig.get("serviceTypes")
-    #print('typesToCreate is: ', str(typesToCreate))
     for typeOfService in typesToCreate.keys():
       if typeOfService == serviceType:
         self.onServiceType(cm_son, ct_son, cc_son, level, systemToModify, systemConfig, serviceType, typesToCreate)
@@ -252,7 +247,8 @@ class workflow_service_type:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     cm_stoff.initializeChangesManagementDataStructures(ct_stoff, cc_stoff, level, "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_stoff.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)

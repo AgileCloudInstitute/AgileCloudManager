@@ -181,7 +181,8 @@ class command_builder:
         if 'empty' not in secretVarLine:
           secretVarLines.append(secretVarLine.replace(" ", ""))
       elif backendVarCoordinates.get(backendVar).startswith("$"):
-        quit("DEBUG getBackendVars() in command_builder.py")
+        print("DEBUG getBackendVars() in command_builder.py")
+        sys.exit(1)
       else:
           secretVarLine = self.getSecretVarFromUserConfig(tool, backendVar, backendVarCoordinates.get(backendVar))
           if 'empty' not in secretVarLine:
@@ -225,7 +226,8 @@ class command_builder:
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
-        quit("ERROR: Only one . after $keys is allowed in configuration.  ")
+        print("ERROR: Only one . after $keys is allowed in configuration.  ")
+        sys.exit(1)
     keypairs_dict = {}
     with open(yamlKeysFileAndPath) as f:
       for line in f:
@@ -277,7 +279,8 @@ class command_builder:
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
-        quit("ERROR: Only one . after $keys is allowed in configuration.  ")
+        print("ERROR: Only one . after $keys is allowed in configuration.  ")
+        sys.exit(1)
     keypairs_dict = {}
     with open(yamlKeysFileAndPath) as f:
       for line in f:
@@ -319,7 +322,8 @@ class command_builder:
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
-        quit("ERROR: Only one . after $keys is allowed in configuration.  ")
+        print("ERROR: Only one . after $keys is allowed in configuration.  ")
+        sys.exit(1)
     keypairs_dict = {}
     with open(yamlKeysFileAndPath) as f:
       for line in f:
@@ -416,7 +420,8 @@ class command_builder:
         varLines.append(pkVarLine)
       else:
         logString = "ERROR: Invalid controller name: "+tool
-        quit(logString)
+        print(logString)
+        sys.exit(1)
     #SIXTH, return the variables
     if (tool == "arm") or (tool == "cloudformation") or (tool == "customController") or (tool == "terraform") or (tool == "packer"):
       return varLines
@@ -435,7 +440,8 @@ class command_builder:
         ct.terraformCrudOperation('output', keyDir, systemConfig, None, 'none', 'networkFoundation', None, None)
         foundationOutputVariables = ct.tfOutputDict
       else:
-        quit("Other output tools handled elsewhere in code, so this should never be triggered.")
+        print("Other output tools handled elsewhere in code, so this should never be triggered.")
+        sys.exit(1)
     elif tool == 'customController':
       cc = controller_custom()
       controllerPathFoundation = instance.get('controller').replace('$customController.','')
@@ -460,20 +466,23 @@ class command_builder:
       valRoot = funcCoordParts[2] + '.' + funcCoordParts[3]
     else:
       logString = "ERROR: Only 2 or 3 dots . may be included in a call to the addPath function.  If a third dot is present, it must be to attack a file type as in someScript.py "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     filename = config_cliprocessor.inputVars.get('userCallingDir')+cfmtr.getSlashForOS()+valRoot
     filename = cfmtr.formatPathForOS(filename)
     if os.path.exists(filename):
       return filename
     else:
       logString = "ERROR: Invalid filename passed into addPath function. "+str(filename)
-      quit(logString)
+      print(logString)
+      sys.exit(1)
 
   #@private
   def getVarFromOutput(self, tool, tfOutputVarName):
     if len(tfOutputVarName) == 0:
       logString = "ERROR: There were no foundation output variables.  Has your foundation already been deleted?  Or is your foundation configuration failing to produce output variables?"
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     if (tool=='terraform') or (tool=='packer'):
       for key in self.outputVariables:
         if key == tfOutputVarName:
@@ -499,7 +508,8 @@ class command_builder:
               secretVarLine = secretVarLine.replace(" ", "")
             secretVarLines.append(secretVarLine)
         else:
-          quit("ERROR: Invalid number of . in mappedVariable")
+          print("ERROR: Invalid number of . in mappedVariable")
+          sys.exit(1)
     tfvarsFileAndPath = config_cliprocessor.inputVars.get("tfvarsFileAndPath")
     if len(secretVarLines)>0:
       if tool == 'terraform':
@@ -547,7 +557,8 @@ class command_builder:
         value = os.environ.get(envVarName)
       else:
         logString = 'ERROR: '+envVarName+' is not among your environment variables. '
-        quit(logString)
+        print(logString)
+        sys.exit(1)
     elif mappedVariables.get(varName).startswith("$keys"):
       #This is handled in a separate block below in this function
       if tool == "arm":
@@ -558,7 +569,8 @@ class command_builder:
           value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
         else:
           logString = "ERROR: For ARM templates, exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
-          quit(logString)
+          print(logString)
+          sys.exit(1)
       elif tool == "cloudformation":
         value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
       elif tool == "customController":
@@ -568,17 +580,20 @@ class command_builder:
           value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
         else:
           logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
-          quit(logString)
+          print(logString)
+          sys.exit(1)
       elif tool == "packer":
         if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
           value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
         else:
           logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
-          quit(logString)
+          print(logString)
+          sys.exit(1)
     elif mappedVariables.get(varName).startswith("$this"):
       if (not mappedVariables.get(varName).startswith('$this.instance')) and (not mappedVariables.get(varName).startswith('$this.tags')) and (not mappedVariables.get(varName).startswith('$this.foundation')):
         logString = "ERROR: Illegal syntax for "+varName+":  "+mappedVariables.get(varName)
-        quit(logString)
+        print(logString)
+        sys.exit(1)
       if mappedVariables.get(varName).count(".") == 1:
         varToCheck = varName
       elif mappedVariables.get(varName).count(".") == 2:
@@ -586,7 +601,8 @@ class command_builder:
         varToCheck = thisParts[2]
       else:
         logString = 'ERROR: $this statement had an illegal number of dots ( . ).  Only either one or 2 dots are allowed in each $this statement.  '
-        quit(logString)
+        print(logString)
+        sys.exit(1)
       if mappedVariables.get(varName).startswith("$this.foundationMapped"):
         value = systemConfig.get('foundation').get('mappedVariables').get(varToCheck)
       if (str(mappedVariables.get(varName)).startswith('$this.foundation')) and (not mappedVariables.get(varName).startswith("$this.foundationMapped")):
@@ -606,14 +622,16 @@ class command_builder:
             varToCheck = funcCoordParts[2]
           else:
             logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
-            quit(logString)
+            print(logString)
+            sys.exit(1)
           if varToCheck in self.outputVariables.keys():
             for thisOutput in self.outputVariables:
               if varToCheck == thisOutput:
                 value = str(self.outputVariables[thisOutput]['value'])
           else:
             logString = "ERROR: "+varToCheck+" was not in your foundation output: "+str(self.outputVariables.keys())
-            quit(logString)
+            print(logString)
+            sys.exit(1)
         elif tool == "cloudformation":
           if len(funcCoordParts) == 2:
             varToCheck = varName
@@ -621,7 +639,8 @@ class command_builder:
             varToCheck = funcCoordParts[2]
           else:
             logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
-            quit(logString)
+            print(logString)
+            sys.exit(1)
           from controller_cf import controller_cf
           ccf4output = controller_cf()
           from config_fileprocessor import config_fileprocessor
@@ -643,7 +662,8 @@ class command_builder:
             tfOutputVarName = mappedVariables.get(varName).split(".")[2]
           else:
             logString = "ERROR: Incorrect number of dots in $customFunction.foundationOutput coordinates.  When using $customFunction.foundationOutput as a source for variable values, your config must use either one dot or two dots.  The line with problems is: "+mappedVariables.get(varName)
-            quit(logString)
+            print(logString)
+            sys.exit(1)
           value = self.getVarFromOutput(tool, tfOutputVarName)
       elif funcName == "addPath":
         value = self.addPathFunction(funcCoordParts)
@@ -667,7 +687,8 @@ class command_builder:
           value = (rootString+dt).replace(' ','').lower()
         else:
           logString = "ERROR: addDateTime function call must have exactly two dots in format: $customFunction.addDateTime.rootstring"
-          quit(logString)
+          print(logString)
+          sys.exit(1)
       elif funcName == "imageTemplateName":
         if len(funcCoordParts) == 2:
           if "dateTimeCode" in outputDict.keys():
@@ -678,7 +699,8 @@ class command_builder:
           value = (rootString+dt).replace(' ','').lower()
         else:
           logString = "ERROR: imageTemplateName function call must have exactly one dot in format: $customFunction.imageTemplateName"
-          quit(logString)
+          print(logString)
+          sys.exit(1)
       elif funcName == "mostRecentImage":
         if tool == "arm":
           imageNameRoot = funcCoordParts[2]
@@ -697,7 +719,8 @@ class command_builder:
             value = sortedImageList[-1]
           else:
             logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
-            quit(logString)
+            print(logString)
+            sys.exit(1)
         elif tool == "cloudformation":
           from controller_cf import controller_cf
           iccf = controller_cf()
@@ -705,10 +728,12 @@ class command_builder:
           outputDict['ImageNameRoot'] = imageNameRoot
           value = iccf.getMostRecentImage(systemConfig, keyDir, outputDict)
         elif tool == 'terraform':
-          quit("WARNING: Please use terraform's internal syntax for filtering most recent images.  Program is halting here to allow you to change your terraform code and re-run so that this error can be avoided. ")
+          print("WARNING: Please use terraform's internal syntax for filtering most recent images.  Program is halting here to allow you to change your terraform code and re-run so that this error can be avoided. ")
+          sys.exit(1)
         else:
           logString = "The $customFunction.mostRecentImage is currently supported for the terraform, arm and cloudformation controllers. "
-          quit(logString)
+          print(logString)
+          sys.exit(1)
       elif funcName == "addOrganization":
         valRoot = funcCoordParts[2]
         value = (valRoot+systemConfig.get("organization")).lower()

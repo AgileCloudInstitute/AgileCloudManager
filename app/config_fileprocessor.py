@@ -6,6 +6,7 @@ import config_cliprocessor
 
 import yaml
 import re
+import sys
 
 class config_fileprocessor:
 
@@ -69,10 +70,12 @@ class config_fileprocessor:
           propVal = outputDir +'/'+ propParts[1] 
         else:
           print('The invalid input for keysDir is: ', propVal)
-          quit('ERROR: Invalid input for keysDir.')
+          print('ERROR: Invalid input for keysDir.')
+          sys.exit(1)
       else:
         print('The invalid input for keysDir is: ', propVal)
-        quit('ERROR: Invalid input for keysDir.')
+        print('ERROR: Invalid input for keysDir.')
+        sys.exit(1)
     cmdfrmtr = command_formatter()
     propVal = cmdfrmtr.formatPathForOS(propVal)
     return propVal

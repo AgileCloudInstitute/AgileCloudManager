@@ -8,6 +8,8 @@ from changes_manifest import changes_manifest
 from changes_taxonomy import changes_taxonomy
 from changes_comparer import changes_comparer
 
+import sys
+
 class workflow_platform:
   
   def __init__(self):  
@@ -83,7 +85,8 @@ class workflow_platform:
       cm_off.updateStartOfASystem(ct_off, cc_off, 'platform', systemInstanceName, "In Process")
       hasFoundation = cfp.systemHasFoundation(sysCfg)
       if (useTheForce == True) and (hasFoundation):
-        quit("DEBUG has foundation in workflow_platform.py")
+        print("DEBUG has foundation in workflow_platform.py")
+        sys.exit(1)
         cm_off.updateStartOfSkipServicesSection()
         cm_off.updateStartOfAServicesSection('platform', systemInstanceName)
         print("test and typeOfTest are: ", test, " ", typeOfTest)

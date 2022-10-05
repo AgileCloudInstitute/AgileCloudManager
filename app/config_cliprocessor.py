@@ -141,7 +141,8 @@ def processInputArgs(inputArgs):
       if (domain == "foundation") or (domain == "services"):
         if systemName == '':
           logString = "ERROR: You must specify systemName when running foundation and services commands."
-          quit(logString)
+          print(logString)
+          sys.exit(1)
       keysDir = cmdfrmtr.formatPathForOS(keysDir)
       #Third, get any values ready for export as needed.
       if keySource == "keyFile":

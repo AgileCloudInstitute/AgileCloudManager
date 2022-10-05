@@ -110,7 +110,8 @@ class controller_packer:
       relativeTemplateRepo = image.get('templateName').split('/')[0]
     else:
       logString = "ERROR: templateName for an image repository must have either one or two / partitions.  "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
     templateRepoDir = userCallingDir + '\\' + relativeTemplateRepo
     templateRepoDir = cf.formatPathForOS(templateRepoDir)

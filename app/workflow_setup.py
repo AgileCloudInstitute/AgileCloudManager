@@ -426,7 +426,8 @@ class workflow_setup:
     if match == True:
       return version
     else: 
-      quit("ERROR: The dependency is not listed in the config file.  Halting program so you can look for the root cause of the problem before proceeding. ")
+      print("ERROR: The dependency is not listed in the config file.  Halting program so you can look for the root cause of the problem before proceeding. ")
+      sys.exit(1)
 
   #@private
   def getDependencyVersionSecondLevel(self, yamlConfigFileAndPath, typeParent, instanceName, propertyName, grandChild):
@@ -446,7 +447,8 @@ class workflow_setup:
                     if myListItem.get('name') == grandChild:
                       propertyValue = myListItem.get('version')
                 else:
-                  quit("ERROR: Invalid dependency configuration in acm.yaml.  Halting program so you can diagnose the source of the problem.  ")
+                  print("ERROR: Invalid dependency configuration in acm.yaml.  Halting program so you can diagnose the source of the problem.  ")
+                  sys.exit(1)
         else:  
           logString = "The value given for for typeParent is NOT supported.  Please check your configuration file and the documentation."
           lw.writeLogVerbose("acm", logString)

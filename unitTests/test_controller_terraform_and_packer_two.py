@@ -155,13 +155,14 @@ class TestControllerPacker(unittest.TestCase):
           propVal = outputDir + propParts[1] 
         else:
           print('The invalid input for keysDir is: ', propVal)
-          quit('ERROR: Invalid input for keysDir.')
+          print('ERROR: Invalid input for keysDir.')
+          sys.exit(1)
       else:
         print('The invalid input for keysDir is: ', propVal)
-        quit('ERROR: Invalid input for keysDir.')
+        print('ERROR: Invalid input for keysDir.')
+        sys.exit(1)
     propVal = self.formatPathForOS(propVal)
     print('xxx ...  propVal is: ', propVal)
-#    quit('cc==dd==ff')
     return propVal
 
 
@@ -181,10 +182,10 @@ class TestControllerPacker(unittest.TestCase):
         if part.startswith('-var-file='):
           varFilePart = part
     print('varFilePart is: ', varFilePart)
-    #quit('[---c---]')
     if varFilePart == 'empty':
       logString = "ERROR: varsFragment did not include a properly formed --varFile:// flag. "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     if tool == 'arm':
       acmKeysFile = varFilePart.replace('--parameters','').replace(' ', '')
     elif tool == 'terraform':
@@ -209,7 +210,8 @@ class TestControllerPacker(unittest.TestCase):
     numMatchesFound = 0
     matchedList = []
     if len(varsObject) != len(correctExpectedResponse):
-      quit('ERROR: vars file has the wrong number of lines.  ')
+      print('ERROR: vars file has the wrong number of lines.  ')
+      sys.exit(1)
     for item in varsObject:
       if tool == 'arm':
           for d in correctExpectedResponse:
@@ -242,7 +244,8 @@ class TestControllerPacker(unittest.TestCase):
               rightItemParts = itemParts[1].replace(' ','')+'='+itemParts[2].replace(' ','')
             else:
               logString = "ERROR: Wrong number of = signs in one of the variable lines. Only one or two = sign per line allowed. "
-              quit(logString)
+              print(logString)
+              sys.exit(1)
             if (len(dParts)==2):
               leftDParts = dParts[0].replace(' ','')
               rightDParts = dParts[1].replace(' ','')
@@ -251,7 +254,8 @@ class TestControllerPacker(unittest.TestCase):
               rightDParts = dParts[1].replace(' ','')+'='+dParts[2].replace(' ','')
             else:
               logString = "ERROR: Wrong number of = signs in one of the variable lines. Only one or two = sign per line allowed. "
-              quit(logString)
+              print(logString)
+              sys.exit(1)
             # Next, compare the values for each matching key.
             if leftDParts == leftItemParts:
               rightDParts = rightDParts.replace('"','')
@@ -305,7 +309,7 @@ class TestControllerPacker(unittest.TestCase):
                 print(rightDParts, ' ', rightItemParts)
                 print('os.path.exists(rightDParts) is: ', os.path.exists(rightDParts))
                 print('os.path.exists(rightItemParts) is: ', os.path.exists(rightItemParts))
-                quit('---eee---')
+                sys.exit(1)
       elif tool == 'packer':
         print('type(item) is: ', type(item))
         print('str(item) is: ', str(item))
@@ -325,7 +329,7 @@ class TestControllerPacker(unittest.TestCase):
                 else:
                   print('NO MATCH! str(Path(rightDParts)) is: ', str(Path(rightDParts)))
                   print('NO MATCH! str(Path(rightItemParts)) is: ', str(Path(rightItemParts)))
-                  quit('ggg---hhh---iii')
+                  sys.exit(1)
               #For datetime variables, we are simply cheching that they are all numeric and they are the same length, because datetime stamps will vary minute by minute.
               elif (leftDParts == "now") or (leftDParts == "currentDateTimeAlphaNumeric"):
                 if (len(rightDParts) == len(rightItemParts)) and (rightDParts.isdigit()) and (rightItemParts.isdigit()):
@@ -374,12 +378,10 @@ class TestControllerPacker(unittest.TestCase):
                 print(rightDParts, ' ', rightItemParts)
                 print('os.path.exists(rightDParts) is: ', os.path.exists(rightDParts))
                 print('os.path.exists(rightItemParts) is: ', os.path.exists(rightItemParts))
-                quit('---eee---')
+                sys.exit(1)
 
     print("... numMatchesFound is: ", numMatchesFound)
     print("... numMatchesNeeded is: ", numMatchesNeeded)
-#    print("matchedList is: ", matchedList)
-#    quit('www---ooo---kkk!')
     if numMatchesFound == numMatchesNeeded:
       returnVal = True
     return returnVal
@@ -630,7 +632,6 @@ class TestControllerPacker(unittest.TestCase):
     typeGrandChild = None
     typeInstanceName = None
 
-#    quit(keyDir)
     # Eigth, destroy real foundation and real image that were used in this test
     ct = controller_terraform()
     ct.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)
@@ -676,8 +677,6 @@ class TestControllerPacker(unittest.TestCase):
     tfbknd = controller_tfbackendazrm()
     tfbknd.createTfBackend(systemConfig, instance, armParamsDict)
 
-#    quit('1...')
-
     # Third, set the values that will be passed into the call to terraformCrudOperation that will create the foundation.
     instanceName = systemConfig.get('serviceTypes').get(serviceType).get('instances')[0].get('instanceName')
     secretType = 'secret_'+instanceName
@@ -694,7 +693,7 @@ class TestControllerPacker(unittest.TestCase):
 
     print("... config_cliprocessor.inputVars['dirOfOutput'] is: ", AgileCloudManager.app.config_cliprocessor.inputVars['dirOfOutput'])
     print('...xxx   keyDir is: ', keyDir)
-#    quit('sdfghjkl')
+
     # Fourth, create real foundation and real image to make sure that foundationOutput and mostRecentImage functions work properly
     ct = controller_terraform()
     ct.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName)

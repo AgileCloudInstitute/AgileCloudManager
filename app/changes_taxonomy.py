@@ -122,9 +122,6 @@ class changes_taxonomy:
       systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
       svcType = config_cliprocessor.inputVars.get('serviceType')
       serviceTypes = []
-      #print("*** systemConfig is: ", str(systemConfig))
-      #print("*** svcType is: ", svcType)
-      #quit("---333---")
       for sType in systemConfig.get('serviceTypes'):
         if sType == svcType:
           serviceTypes.append(sType)
@@ -348,8 +345,6 @@ class changes_taxonomy:
         systemBeingChanged["currentStep"] = currStepOverall
         if len(systemBeingChanged["services"]["serviceTypes"]) == 0:
           systemBeingChanged["services"]["status"] = "Completed"
-        #print('systemBeingChanged["services"]["serviceTypes"] is: ', systemBeingChanged["services"]["serviceTypes"])
-        #quit("--hh--")
 
   #@public
   def updateStartOfAServiceType(self, systemInstanceName, typeName):

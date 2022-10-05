@@ -20,8 +20,6 @@ class TestCommandBuilder(unittest.TestCase):
 #    acmDir = str(pathlib.Path(__file__).parent.resolve().parent.resolve())+'/agile-cloud-manager'
     acmDir = str(pathlib.Path(__file__).parent.resolve().parent.resolve())+'/app'
     acmDir = self.formatPathForOS(acmDir)
-#    print('acmDir is: ', acmDir)
-#    quit('77777')
     sys.path.insert(0, acmDir)
 
   def setAcmVariables(self, config_cliprocessor, inputType='sanitized'):
@@ -103,7 +101,8 @@ class TestCommandBuilder(unittest.TestCase):
           varFilePart = part
     if varFilePart == 'empty':
       logString = "ERROR: varsFragment did not include a properly formed --varFile:// flag. "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     if tool == 'customController':
       acmKeysFile = varFilePart.replace('--varsfile://','').replace(' ', '')
     elif tool == 'arm':
@@ -193,7 +192,8 @@ class TestCommandBuilder(unittest.TestCase):
               rightItemParts = itemParts[1].replace(' ','')+'='+itemParts[2].replace(' ','')
             else:
               logString = "ERROR: Wrong number of = signs in one of the variable lines. Only one or two = sign per line allowed. "
-              quit(logString)
+              print(logString)
+              sys.exit(1)
             if (len(dParts)==2):
               leftDParts = dParts[0].replace(' ','')
               rightDParts = dParts[1].replace(' ','')
@@ -202,7 +202,8 @@ class TestCommandBuilder(unittest.TestCase):
               rightDParts = dParts[1].replace(' ','')+'='+dParts[2].replace(' ','')
             else:
               logString = "ERROR: Wrong number of = signs in one of the variable lines. Only one or two = sign per line allowed. "
-              quit(logString)
+              print(logString)
+              sys.exit(1)
             # Next, compare the values for each matching key.
             if leftDParts == leftItemParts:
               rightDParts = rightDParts.replace('"','')
@@ -241,7 +242,7 @@ class TestCommandBuilder(unittest.TestCase):
               else:
                 print('... Failed to match: ', leftDParts, ' ', leftItemParts)
                 print(rightDParts, ' ', rightItemParts)
-                quit('---eee---')
+                sys.exit(1)
     print("numMatchesFound is: ", numMatchesFound)
     print("numMatchesNeeded is: ", numMatchesNeeded)
     if numMatchesFound == numMatchesNeeded:

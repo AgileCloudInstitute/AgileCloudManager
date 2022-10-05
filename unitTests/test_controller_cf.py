@@ -137,10 +137,12 @@ class TestControllerCf(unittest.TestCase):
           propVal = outputDir + propParts[1] 
         else:
           print('The invalid input for keysDir is: ', propVal)
-          quit('ERROR: Invalid input for keysDir.')
+          print('ERROR: Invalid input for keysDir.')
+          sys.exit(1)
       else:
         print('The invalid input for keysDir is: ', propVal)
-        quit('ERROR: Invalid input for keysDir.')
+        print('ERROR: Invalid input for keysDir.')
+        sys.exit(1)
     propVal = self.formatPathForOS(propVal)
     return propVal
 
@@ -159,7 +161,8 @@ class TestControllerCf(unittest.TestCase):
     print('varFilePart is: ', varFilePart)
     if varFilePart == 'empty':
       logString = "ERROR: varsFragment did not include a properly formed --varFile:// flag. "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     if tool == 'cloudformation':
       acmKeysFile = varFilePart.replace('file://','').replace(' ', '')
     returnVal = False
@@ -169,13 +172,12 @@ class TestControllerCf(unittest.TestCase):
     if tool == 'cloudformation':
       varsObject = returnedData
     print('varsObject is: ', str(varsObject))
-#    if serviceType == 'subnetsWithScaleSet':
-#      quit('a1')
     numMatchesNeeded = len(correctExpectedResponse)
     numMatchesFound = 0
     matchedList = []
     if len(varsObject) != len(correctExpectedResponse):
-      quit('ERROR: vars file has the wrong number of lines.  ')
+      print('ERROR: vars file has the wrong number of lines.  ')
+      sys.exit(1)
     for item in varsObject:
       if tool == 'cloudformation':
         for d in correctExpectedResponse:
@@ -189,9 +191,6 @@ class TestControllerCf(unittest.TestCase):
           print('xxx rightItemParts is: ', str(rightItemParts))
           print('xxx leftDParts is: ', str(leftDParts))
           print('xxx rightDParts is: ', str(rightDParts))
-#          if (leftItemParts != "addOrgTest") and (leftItemParts != "currentDateTimeAlphaNumeric") and (leftItemParts != "makePath") and (leftItemParts != "secondVar") and (leftItemParts != "firstOutputVar") and (leftItemParts != "alternate") and (leftItemParts != "vpcCIDR") and (leftItemParts != "environ") and (leftItemParts != "networkName") and (leftItemParts != "feline") and (leftItemParts != "rabid") and (leftItemParts != "lab") and (leftItemParts != "canary") and (leftItemParts != "KeyNm") and (leftItemParts != "region") and (leftItemParts != "CidrBlock") and (leftItemParts != "AvailabilityZone") and (leftItemParts != "InstanceType") and (leftItemParts != "SSHLocation") and (leftItemParts != "KeyName") and (leftItemParts != "RouteTableId") and (leftItemParts != "VpcId"):
-#          if (leftDParts == "newImageName") and (leftItemParts == "newImageName"):
-#            quit('---  fff---aaa---rrr---aaa---ddd---aaa---yyy')
           # Next, compare the values for each matching key.
           if leftDParts == leftItemParts:
             numMatchesFound, matchedList = self.compareValuesForEachMatchingKey(numMatchesFound, matchedList, leftDParts, rightDParts, leftItemParts, rightItemParts, item)
@@ -211,7 +210,6 @@ class TestControllerCf(unittest.TestCase):
       print(".... leftDParts is: ", leftDParts)
       print(".... leftItemParts is: ", leftItemParts)
       print(".... rightDParts is: ", rightDParts)
-#      quit('fff---aaa---rrr---aaa---ddd---aaa---yyy')
     #For path variables, we workaround formatting issues by simply checking to see if each is a valid path.
     if os.path.exists(rightDParts) and os.path.exists(rightItemParts):
       from pathlib import Path
@@ -282,7 +280,7 @@ class TestControllerCf(unittest.TestCase):
       print(rightDParts, ' ', rightItemParts)
       print('os.path.exists(rightDParts) is: ', os.path.exists(rightDParts))
       print('os.path.exists(rightItemParts) is: ', os.path.exists(rightItemParts))
-      quit('---eee---')
+      sys.exit(1)
     return numMatchesFound, matchedList
 
   def formatPathForOS(self, input):
@@ -532,7 +530,6 @@ class TestControllerCf(unittest.TestCase):
     cbld = command_builder()
     returnValImg = self.checkVarsReturnedAgainstExpected(cbld, systemConfig, None, image, image.get('mappedVariables'), tool, outputDict, correctExpectedResponse_CfImage)
     print('returnValImg is: ', returnValImg)
-#    quit('---   ccc---   mmm')
     # Fifth, create an empty image.  Later, remember to add more granular testing of each input variable
     ci = controller_image()
     ci.buildImages(systemConfig, keyDir)

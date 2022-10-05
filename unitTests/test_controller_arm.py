@@ -105,10 +105,10 @@ class TestControllerArm(unittest.TestCase):
         if '--parameters' not in part:
           varFilePart = part
     print('varFilePart is: ', varFilePart)
-#    quit('hhhhhhhhhhh@!')
     if varFilePart == 'empty':
       logString = "ERROR: varsFragment did not include a properly formed --varFile:// flag. "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     if tool == 'customController':
       acmKeysFile = varFilePart.replace('--varsfile://','').replace(' ', '')
     elif tool == 'arm':
@@ -178,7 +178,6 @@ class TestControllerArm(unittest.TestCase):
     print("numMatchesFound is: ", numMatchesFound)
     print("numMatchesNeeded is: ", numMatchesNeeded)
     print('matchedList is: ', str(matchedList))
-#    quit('fffqqqrrr')
 
     if numMatchesFound == numMatchesNeeded:
       returnVal = True

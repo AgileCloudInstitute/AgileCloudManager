@@ -260,7 +260,8 @@ class workflow_system:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     cm_fon.initializeChangesManagementDataStructures(ct_fon, cc_fon, 'foundation', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_fon.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
@@ -288,7 +289,8 @@ class workflow_system:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     cm_foff.initializeChangesManagementDataStructures(ct_foff, cc_foff, 'foundation', "off")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_foff.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
@@ -316,7 +318,8 @@ class workflow_system:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     cm_son.initializeChangesManagementDataStructures(ct_son, cc_son, 'services', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_son.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
@@ -344,7 +347,8 @@ class workflow_system:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
-      quit(logString)
+      print(logString)
+      sys.exit(1)
     cm_soff.initializeChangesManagementDataStructures(ct_soff, cc_soff, 'services', "off")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_soff.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)

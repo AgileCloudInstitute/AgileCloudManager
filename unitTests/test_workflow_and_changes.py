@@ -47,7 +47,6 @@ class test_workflow_platform(unittest.TestCase):
     self.logVerbose = self.formatPathForOS(logVerbose)
     print("xx myCliProc.inputVars['verboseLogFilePath'] is: ", myCliProc.inputVars['verboseLogFilePath'])
     print('xx self.logVerbose is: ', self.logVerbose)
-#    quit('++--55--44++')
 #    if os.path.isfile(self.logVerbose):
 #      count1 = 0
 #      with open(self.logVerbose) as f1:
@@ -60,8 +59,6 @@ class test_workflow_platform(unittest.TestCase):
 #        count2 = sum(1 for _ in f2)
 #      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx count2 is: ', count2)
 #      print('self.logVerbose is: ', self.logVerbose)
-#      if count1 != count2:
-#        quit('---000999888777666555444333222111---')
 
   def getAcmKeysDir(self):
     # This is the staging ground where tests will put key files produced during test operations.
@@ -106,15 +103,14 @@ class test_workflow_platform(unittest.TestCase):
     import ast
     returnBool = False
     numStartTriggers = 0
-#    print('ggg self.logVerbose is: ', self.logVerbose)
-#    quit('poiuytrewq')
     with open(self.logVerbose, "r") as f0:
       for line in f0:
         if "...     overallStatus changed from In Process to Completed" in line:
           numStartTriggers += 1
     print('... numStartTriggers is: ', str(numStartTriggers))
     if numStartTriggers != 1:
-      quit("ERROR: log file is corrupted.  There can be only one startTrigger line containing the following: '...     overallStatus changed from In Process to Completed' .  Check log_writer.replaceLogFile() to make sure log files are being refreshed properly. ")
+      print("ERROR: log file is corrupted.  There can be only one startTrigger line containing the following: '...     overallStatus changed from In Process to Completed' .  Check log_writer.replaceLogFile() to make sure log files are being refreshed properly. ")
+      sys.exit(1)
     startTrigger = False
     changeReportLines = []
     with open(self.logVerbose, "r") as f1:

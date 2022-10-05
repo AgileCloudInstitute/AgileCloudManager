@@ -303,7 +303,8 @@ class controller_cf:
         f.write(regionLine)
     else:
       logString = "ERROR: "+sourceKeysFile+" is not a valid path. "
-      quit(logString)
+      print(logString)
+      sys.exit(1)
 
   #@private
   def destroySecrets(self):
