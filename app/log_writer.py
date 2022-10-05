@@ -103,6 +103,7 @@ class log_writer:
       os.makedirs(verboseLogFilePath)
     self.writeMetaLog("acm", timeString)
     print('end of replaceLogFile()')
+    print('extra line at end of replaceLogFile()')
 
   #@public
   def writeLogVerbose(self, tool, line):  
