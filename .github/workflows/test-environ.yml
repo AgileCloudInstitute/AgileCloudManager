@@ -55,6 +55,10 @@ jobs:
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmwinrel\\
           echo "About to start"
           cd app
+          echo "About to dir"
+          dir
+          echo "About to gc .\acm.py"
+          gc .\acm.py
           del __init__.py
           echo "About to: pyinstaller acm.py"
           pyinstaller acm.py
