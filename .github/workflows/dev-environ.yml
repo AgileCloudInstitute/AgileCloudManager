@@ -38,7 +38,9 @@ jobs:
           git init
           #git remote add origin $repoWithToken
           echo "GITHUB_REPOSITORY variable is: "${GITHUB_REPOSITORY}
+          echo "full origin value is: "https://github.com/${GITHUB_REPOSITORY}.git
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git branch -M test-exe-linux
           git add --all
           git commit -am 'pushed from dev-environ'
           git push --force -u origin HEAD:test-exe-linux
