@@ -22,7 +22,8 @@ jobs:
           cd ..
           echo "About to list contents before deleting"
           ls -al
-          find -mindepth 1 -delete
+          #find -mindepth 1 -delete
+          find -mindepth 1 -not -path "*/.git" -type f -delete
           echo "About to list contents of directory after deleting"
           ls -al
           echo "About to copy back in"
