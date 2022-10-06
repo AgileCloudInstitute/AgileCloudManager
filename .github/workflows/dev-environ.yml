@@ -18,39 +18,24 @@ jobs:
           rm __init__.py
           pyinstaller acm.py
           mkdir /home/runner/release
+          # Copy compiled app elsewhere
           cp -R dist/acm/. /home/runner/release/
           cd ..
-          echo "About to list contents before deleting"
-          ls -al
-          #find -mindepth 1 -delete
-          #find -mindepth 1 -not -path "*/.git" -type f -or -type d -delete
+          # Delete everything except .git folder
           find -mindepth 1 \( -name .git -prune \) -o -type f -exec rm -rf {} +
           find -mindepth 1 \( -name .git -prune \) -o -type d -exec rm -rf {} +
-          #find -type f -or -type d
           rm -rf .github
-          echo "About to list contents of directory after deleting"
-          ls -al
-          echo "About to copy back in"
+          # copy compiled app back in
           cp -R /home/runner/release/. .
-          echo "About to list contents after copying back in"
-          ls -al
-          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          #
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          #git remote add origin $repoWithToken
-          echo "GITHUB_REPOSITORY variable is: "${GITHUB_REPOSITORY}
-          echo "full origin value is: "https://github.com/${GITHUB_REPOSITORY}.git
-          echo "results of git remote -v are: "
-          git remote -v
-          #git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          #git remote rm origin
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git branch -M test-exe-linux
           git add --all
           git commit -am 'pushed from dev-environ'
-          git push --force -u origin HEAD:test-exe-linux
+          #git push --force -u origin HEAD:test-exe-linux
+          git push --force -u origin test-exe-linux
 #          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
 #          git config --global user.name "AgileCloudInstitute"
 #          git init
