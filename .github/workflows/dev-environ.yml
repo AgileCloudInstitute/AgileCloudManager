@@ -28,9 +28,17 @@ jobs:
           ###
           mkdir /home/runner/release
           cp -R dist/acm/. /home/runner/release/
-          cd /home/runner/release
-          echo "About to list directory contents of /home/runner/release"
+          find -mindepth 1 -delete
+          echo "About to list contents of directory after deleting"
           ls -al
+          echo "About to copy back in"
+          cp -R /home/runner/release/ .
+          echo "About to list contents after copying back in"
+          ls -al
+
+          #cd /home/runner/release
+          #echo "About to list directory contents of /home/runner/release"
+          #ls -al
           #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           #
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
@@ -41,7 +49,7 @@ jobs:
           echo "full origin value is: "https://github.com/${GITHUB_REPOSITORY}.git
           echo "results of git remote -v are: "
           git remote -v
-          #git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git remote rm origin
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git branch -M test-exe-linux
