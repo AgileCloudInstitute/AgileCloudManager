@@ -32,7 +32,7 @@ jobs:
           echo "About to list contents of directory after deleting"
           ls -al
           echo "About to copy back in"
-          cp -R /home/runner/release/ .
+          cp -R /home/runner/release/. .
           echo "About to list contents after copying back in"
           ls -al
 
