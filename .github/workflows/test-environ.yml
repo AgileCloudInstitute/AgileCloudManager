@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - test
-jobs:
+jobs: 
   create-exe-linux-and-upload-artifact:
     runs-on: ubuntu-latest
     steps:
