@@ -2,6 +2,7 @@
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
 from command_formatter import command_formatter
+import config_cliprocessor
 
 import yaml
 import re
@@ -18,10 +19,32 @@ class config_fileprocessor:
     return topLevel_dict
 
   #@public
+  def getSystemConfig(self, platformConfig, systemName):
+    cfmtr = command_formatter()
+    #print('platformConfig is: ', platformConfig)
+    for item in platformConfig:
+      #print("item is: ", item)
+      if item == systemName:
+        print("platformConfig.get(item) is: ", str(platformConfig.get(item)))
+        print("type(platformConfig.get(item)) is: ", str(type(platformConfig.get(item))))
+        if type(platformConfig.get(item)) == dict:
+          return platformConfig.get(item)
+        elif type(platformConfig.get(item)) == str:
+          if (platformConfig.get(item).split(".")[1] == "yaml") or (platformConfig.get(item).split(".")[1] == "yml"):
+            systemConfigFile = config_cliprocessor.inputVars.get('acmConfigPath')+cfmtr.getSlashForOS()+"systems"+cfmtr.getSlashForOS()+platformConfig.get(item)
+            print("systemConfigFile is: ", systemConfigFile) 
+            with open(systemConfigFile) as f:  
+              topLevel_dict = yaml.safe_load(f)
+            print("topLevel_dict is: ", str(topLevel_dict))
+            print("...")
+            return topLevel_dict.get(systemName)
+
+  #@public
   def getSystemNames(self, platformConfig):
     instanceNames = []
     for item in platformConfig:
-      if type(platformConfig.get(item)) == dict:
+#      if type(platformConfig.get(item)) == dict:
+      if (type(platformConfig.get(item)) == dict) or (type(platformConfig.get(item)) == str):
         if type(item) == str:
           instanceNames.append(item)
     return instanceNames

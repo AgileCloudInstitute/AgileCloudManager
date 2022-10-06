@@ -30,17 +30,18 @@ class changes_taxonomy:
     if level == 'platform':
       self.createTopLevelOfChangeTaxonomy(command, platformConfig)
       for systemInstance in platformConfig:
-        serviceTypes = platformConfig.get(systemInstance).get("serviceTypes")
+        systemConfig = cfp.getSystemConfig(platformConfig, systemInstance)
+        serviceTypes = systemConfig.get("serviceTypes")
         systemDict = { }
         systemDict["name"] = systemInstance
         systemDict["status"] = "NOT Started"
         systemDict["currentStep"] = 0
-        if cfp.systemHasFoundation(platformConfig.get(systemInstance)):
-          foundationInstanceName = platformConfig.get(systemInstance).get("foundation").get("instanceName")
+        if cfp.systemHasFoundation(systemConfig):
+          foundationInstanceName = systemConfig.get("foundation").get("instanceName")
           systemDict["steps"] = len(serviceTypes)+1 #numStepsEntireSystem ADDS foundation
           systemDict["foundation"] = self.createFoundationDict(foundationInstanceName)
-          if "images" in platformConfig.get(systemInstance).get("foundation").keys():
-            images = platformConfig.get(systemInstance).get("foundation").get("images")
+          if "images" in systemConfig.get("foundation").keys():
+            images = systemConfig.get("foundation").get("images")
             if len(images) > 0:
               systemDict["images"] = self.createImagesSummary(len(images))
               for image in images:
@@ -67,12 +68,13 @@ class changes_taxonomy:
       systemDict["name"] = systemInstanceName
       systemDict["status"] = "NOT Started"
       systemDict["currentStep"] = 0
-      systemConfig = platformConfig.get(systemInstanceName)
+      #systemConfig = platformConfig.get(systemInstanceName)
+      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
       if 'foundation' in systemConfig.keys():
         systemDict["steps"] = 1 #foundation is only one step
         systemDict["foundation"] = self.createFoundationDict(systemConfig.get('foundation').get('instanceName'))
         if 'images' in systemConfig.get('foundation').keys():
-          images = platformConfig.get(systemInstanceName).get("foundation").get("images")
+          images = systemConfig.get("foundation").get("images")
           if len(images) > 0:
             systemDict["images"] = self.createImagesSummary(len(images))
             for image in images:
@@ -86,7 +88,8 @@ class changes_taxonomy:
     elif level == 'services':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = platformConfig.get(systemInstanceName)
+      #systemConfig = platformConfig.get(systemInstanceName)
+      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):
         serviceTypes.append(sType)
@@ -118,7 +121,8 @@ class changes_taxonomy:
     elif level == 'servicetype':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = platformConfig.get(systemInstanceName)
+      #systemConfig = platformConfig.get(systemInstanceName)
+      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
       svcType = config_cliprocessor.inputVars.get('serviceType')
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):
@@ -152,7 +156,8 @@ class changes_taxonomy:
     elif level == 'serviceinstance':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = platformConfig.get(systemInstanceName)
+      #systemConfig = platformConfig.get(systemInstanceName)
+      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
       svcType = config_cliprocessor.inputVars.get('serviceType')
       svcInstance = config_cliprocessor.inputVars.get('serviceInstance')
       serviceTypes = []

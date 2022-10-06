@@ -50,6 +50,7 @@ class controller_arm:
         foundationDeploymentName = systemConfig.get("foundation").get("deploymentName")
         outputDict['resourceGroupName'] = foundationResourceGroupName
         outputDict['deploymentName'] = foundationDeploymentName
+    print("yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
     subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')

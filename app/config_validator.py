@@ -1,6 +1,8 @@
 ## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
+from config_fileprocessor import config_fileprocessor
+
 import yaml
 
 class config_validator:
@@ -11,6 +13,7 @@ class config_validator:
   #@public
   def processAcmConfig(self):
     import config_cliprocessor
+    cfp = config_fileprocessor()
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     #First, validate that every system has a unique name in acm.yaml
     typesList = []
@@ -27,15 +30,21 @@ class config_validator:
       acmConfig = yaml.safe_load(f)
     #Third, validate each system
     for system in acmConfig:
+      sysCfg = cfp.getSystemConfig(acmConfig, system)
+      print("***  sysCfg is: ", str(sysCfg))
+      print("***  system is: ", system)
       #System config must be a dictionary
-      if (isinstance(acmConfig.get(system), dict)) and (isinstance(system, str)):
-        self.validateSystem(acmConfig.get(system))
+      #if (isinstance(acmConfig.get(system), dict)) and (isinstance(system, str)):
+      if (isinstance(sysCfg, dict)) and (isinstance(system, str)):
+#        self.validateSystem(acmConfig.get(system))
+        self.validateSystem(sysCfg)
       else:
         logString = "ERROR: Invalid format for system named "+ str(system)+". The contents of a system must be valid yaml and not just a string. "
         quit(logString)
 
   #@private
   def validateSystem(self, system):
+    print("system is: ", str(system))
     validSystemKeysList = ['keysDir', 'forceDelete', 'cloud', 'organization', 'tags', 'foundation', 'serviceTypes']
     #Confirm that each top level key within system is unique
     if len(system) != len(set(system)):
