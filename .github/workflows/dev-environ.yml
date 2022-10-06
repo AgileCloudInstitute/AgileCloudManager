@@ -12,8 +12,6 @@ jobs:
           token: ${{ secrets.HUSH }}
       - shell: bash
         name: Create linux exe and add exe to PATH
-        env:
-          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           pip install -U pyinstaller
           cd app
@@ -34,13 +32,22 @@ jobs:
           echo "About to list directory contents of /home/runner/release"
           ls -al
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
-          git init
-          git remote add origin $repoWithToken
+          #
+          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          #git config --global user.name "AgileCloudInstitute"
+          $git init
+          #git remote add origin $repoWithToken
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git add --all
-          git commit -am 'pushed from test-environ'
+          git commit -am 'pushed from dev-environ'
           git push --force -u origin HEAD:test-exe-linux
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+##          git branch -M test
+#          git add --all
+##          git push --force -u origin test
 #      - shell: bash
 #        name: Create exe and add exe to PATH
 #        env:
