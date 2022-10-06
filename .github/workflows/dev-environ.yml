@@ -17,33 +17,17 @@ jobs:
           cd app
           rm __init__.py
           pyinstaller acm.py
-          #
-          #tar -cvf acm_build.tar dist/acm
-          #cd dist/acm
-          #echo "About to ls -al dist/acm"
-          #ls -al
-          #mkdir ~/acmStaging
-          #echo "About to ls -al ~/acmStaging"
-          #ls -al ~/acmStaging
-          ###
           mkdir /home/runner/release
           cp -R dist/acm/. /home/runner/release/
           echo "About to list contents before deleting"
           ls -al
           find -mindepth 1 -delete
-          #find . -name .git -prune -o -type f -exec rm -f {} +
-          #find -mindepth 1 -not -path "*/.git*" -type f -delete
-          #find -maxdepth 1 -type d -not -name .git -not -name "." -exec rm -ir {} \;
           echo "About to list contents of directory after deleting"
           ls -al
           echo "About to copy back in"
           cp -R /home/runner/release/. .
           echo "About to list contents after copying back in"
           ls -al
-
-          #cd /home/runner/release
-          #echo "About to list directory contents of /home/runner/release"
-          #ls -al
           #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           #
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
@@ -55,7 +39,7 @@ jobs:
           echo "results of git remote -v are: "
           git remote -v
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git remote rm origin
+          #git remote rm origin
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git branch -M test-exe-linux
           git add --all
