@@ -31,11 +31,11 @@ jobs:
           cd /home/runner/release
           echo "About to list directory contents of /home/runner/release"
           ls -al
-          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           #
-          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          #git config --global user.name "AgileCloudInstitute"
-          $git init
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
           #git remote add origin $repoWithToken
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git add --all
