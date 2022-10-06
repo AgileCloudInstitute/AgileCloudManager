@@ -37,6 +37,7 @@ jobs:
           git config --global user.name "AgileCloudInstitute"
           git init
           #git remote add origin $repoWithToken
+          echo "GITHUB_REPOSITORY variable is: "${GITHUB_REPOSITORY}
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git add --all
           git commit -am 'pushed from dev-environ'
