@@ -28,7 +28,8 @@ jobs:
           ###
           mkdir /home/runner/release
           cp -R dist/acm/. /home/runner/release/
-          find -mindepth 1 -delete
+          #find -mindepth 1 -delete
+          find a -name .git -prune -o -type f -exec rm -f {} +
           echo "About to list contents of directory after deleting"
           ls -al
           echo "About to copy back in"
