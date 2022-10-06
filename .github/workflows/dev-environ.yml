@@ -8,20 +8,67 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
       - shell: bash
         name: Create linux exe and add exe to PATH
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           pip install -U pyinstaller
           cd app
           rm __init__.py
           pyinstaller acm.py
-          tar -cvf acm_build.tar dist/acm
-          cd dist/acm
-          echo "About to ls -al dist/acm"
+          #
+          #tar -cvf acm_build.tar dist/acm
+          #cd dist/acm
+          #echo "About to ls -al dist/acm"
+          #ls -al
+          #mkdir ~/acmStaging
+          #echo "About to ls -al ~/acmStaging"
+          #ls -al ~/acmStaging
+          #
+          mkdir /home/runner/release
+          cp -R dist/acm/. /home/runner/release/
+          cd /home/runner/release
+          echo "About to list directory contents of /home/runner/release"
           ls -al
-          mkdir ~/acmStaging
-          echo "About to ls -al ~/acmStaging"
-          ls -al ~/acmStaging
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote add origin $repoWithToken
+          git add --all
+          git commit -am 'pushed from test-environ'
+          git push --force -u origin HEAD:test-exe-linux
+#      - shell: bash
+#        name: Create exe and add exe to PATH
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          echo "About to pwd"
+#          pwd
+#          echo "About to list directory contents of initial dir"
+#          ls -al
+#          #pip install -U pyinstaller
+#          #cd app
+#          #rm __init__.py
+#          #pyinstaller acm.py
+#          #echo "About to list directory contents of app"
+#          #ls -al
+#          mkdir /home/runner/release
+#          cp -R dist/acm/. /home/runner/release/
+#          cd /home/runner/release
+#          echo "About to list directory contents of /home/runner/release"
+#          ls -al
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote add origin $repoWithToken
+#          git add --all
+#          git commit -am 'pushed from test-environ'
+#          git push --force -u origin HEAD:release-linux
 #.........................................................
 #  unit-tests-linux-misc:
 #    runs-on: ubuntu-latest
