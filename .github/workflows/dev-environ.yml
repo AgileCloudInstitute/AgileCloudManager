@@ -28,9 +28,11 @@ jobs:
           ###
           mkdir /home/runner/release
           cp -R dist/acm/. /home/runner/release/
-          #find -mindepth 1 -delete
+          echo "About to list contents before deleting"
+          ls -al
+          find -mindepth 1 -delete
           #find . -name .git -prune -o -type f -exec rm -f {} +
-          find -mindepth 1 -not -path "*/.git*" -type f -delete
+          #find -mindepth 1 -not -path "*/.git*" -type f -delete
           #find -maxdepth 1 -type d -not -name .git -not -name "." -exec rm -ir {} \;
           echo "About to list contents of directory after deleting"
           ls -al
