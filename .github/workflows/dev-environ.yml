@@ -33,7 +33,8 @@ jobs:
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git branch -M test-exe-linux
           git add --all
-          #git commit -am 'pushed from dev-environ'
+          #Commenting out this next line DOES trigger the workflow, but also sends the wrong files, making it useless.
+          git commit -am 'pushed from dev-environ'
           git push --force -u origin test-exe-linux
 #          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
 #          git config --global user.name "AgileCloudInstitute"
