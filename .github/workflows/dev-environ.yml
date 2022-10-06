@@ -33,12 +33,12 @@ jobs:
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          #git remote add origin $repoWithToken
+          git remote add origin $repoWithToken
           echo "GITHUB_REPOSITORY variable is: "${GITHUB_REPOSITORY}
           echo "full origin value is: "https://github.com/${GITHUB_REPOSITORY}.git
           echo "results of git remote -v are: "
           git remote -v
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          #git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           #git remote rm origin
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git branch -M test-exe-linux
