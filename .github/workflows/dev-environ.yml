@@ -19,6 +19,7 @@ jobs:
           pyinstaller acm.py
           mkdir /home/runner/release
           cp -R dist/acm/. /home/runner/release/
+          cd ..
           echo "About to list contents before deleting"
           ls -al
           find -mindepth 1 -delete
