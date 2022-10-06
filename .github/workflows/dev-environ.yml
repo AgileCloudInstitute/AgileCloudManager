@@ -23,7 +23,8 @@ jobs:
           echo "About to list contents before deleting"
           ls -al
           #find -mindepth 1 -delete
-          find -mindepth 1 -not -path "*/.git" -type f -or -type d -delete
+          #find -mindepth 1 -not -path "*/.git" -type f -or -type d -delete
+          find -mindepth 1 \( -name .git -prune \) -o -type f -or -type d -exec rm -rf {} +
           #find -type f -or -type d
           rm -rf .github
           echo "About to list contents of directory after deleting"
