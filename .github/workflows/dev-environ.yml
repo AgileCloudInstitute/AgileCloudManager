@@ -46,6 +46,8 @@ jobs:
         uses: ./.github/actions/app-compiler-windows
       - name: Show contents
         shell: pwsh
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
