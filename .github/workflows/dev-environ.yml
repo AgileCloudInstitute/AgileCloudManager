@@ -70,7 +70,7 @@ jobs:
         env:
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
-          #echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
+          echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
           dir -Force
           set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
