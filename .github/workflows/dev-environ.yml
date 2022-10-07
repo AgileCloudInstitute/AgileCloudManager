@@ -50,6 +50,15 @@ jobs:
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
           dir -Force
+          $repoWithToken="https://"+$env:GIT_PAT+"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote add origin $repoWithToken
+          git add --all
+          git commit -am "pushed from dev-environ"
+          git push --force -u origin HEAD:test-exe-windows
+          #
           #Get-ChildItem -Recurse | Select -ExpandProperty FullName | Where {$_ -notlike '*\.git*'} | Remove-Item -force
           #echo "About to dir current directory again after removing everything but .git"
           #dir -Force
@@ -64,15 +73,15 @@ jobs:
         run: |
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
-          dir -Force
-          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
-          git init
-          git remote add origin %repoWithToken%
-          git add --all
-          git commit -am "pushed from dev-environ"
-          git push --force -u origin HEAD:test-exe-windows
+          dir
+          #set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          #git config --global user.name "AgileCloudInstitute"
+          #git init
+          #git remote add origin %repoWithToken%
+          #git add --all
+          #git commit -am "pushed from dev-environ"
+          #git push --force -u origin HEAD:test-exe-windows
 
 #.........................................................
 #  unit-tests-linux-misc:
