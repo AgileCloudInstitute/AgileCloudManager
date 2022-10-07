@@ -63,131 +63,30 @@ jobs:
           git add --all
           git commit -am "pushed from dev-environ"
           git push --force -u origin HEAD:test-exe-windows
-          #
-          #Get-ChildItem -Recurse | Select -ExpandProperty FullName | Where {$_ -notlike '*\.git*'} | Remove-Item -force
-          #echo "About to dir current directory again after removing everything but .git"
-          #dir -Force
-          #$curDir = Get-Location
-          #Copy-Item -Path "C:\\Users\\runneradmin\\acmhome\\*" -Destination $curDir -Recurse
-          #echo "About to dir current directory after copying executables in"
-          #dir -Force -Directory
-      - shell: python
-        name: Save secrets to file
-        env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
-          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+  push-to-test-branch:
+    needs: [create-exe-linux-and-push-to-test-exe-linux-branch,create-exe-windows-and-push-to-test-exe-windows-branch]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Push changes to test branch
         run: |
-          import base64, subprocess, sys, os, pathlib
-          #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
-            key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-            key_file.write(os.environ['ACM_SECOND'])
-      - name: Run setup on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
-          echo "About to dir"
-          dir
-      - name: Run tfbackend serviceType on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm serviceType on systemName=tfbackend serviceType=tfBackend
-      - name: Run tfbackend serviceType off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm serviceType off systemName=tfbackend serviceType=tfBackend
-      - name: Run tfbackend serviceInstance on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
-      - name: Run tfbackend serviceInstance off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
-      - name: Run tfbackend services on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm services on systemName=tfbackend
-      - name: Run admin foundation on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm foundation on systemName=admin
-      - name: Run admin services on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm services on systemName=admin
-      - name: Run agents foundation on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm foundation on systemName=agents
-      - name: Run agents services on
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm services on systemName=agents
-      - name: Run agents services off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm services off systemName=agents
-      - name: Run agents foundation off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm foundation off systemName=agents
-      - name: Run admin services off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm services off systemName=admin
-      - name: Run admin foundation off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm foundation off systemName=admin
-      - name: Run tfbackend services off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run e2e test"
-          acm services off systemName=tfbackend
-      - name: Setup Off
-        run: |
-          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
-          cd C:\\stgng\\
-          echo ".................about to run setup off"
-          acm setup off
-          echo "About to dir"
-          dir
-      - name: Delete Secrets
-        run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
-          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git branch -M test
+          git add --all
+          git push --force -u origin test
+          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          #git config --global user.name "AgileCloudInstitute"
+          #git init
+          #git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          #git branch -M test
+          #git add --all
+          #git push --force -u origin test
 
 
 #.........................................................

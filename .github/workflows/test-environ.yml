@@ -4,27 +4,96 @@ on:
     branches:
       - test
 jobs: 
-  e2e-tests-linux-arm:
+  push-linux-exe-to-linux-release-branch:
     runs-on: ubuntu-latest
     steps:
-      - name: Get binary
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Push to next branch
         env:
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
-          mkdir /home/runner/acmhome
-          sudo chown runner:runner /home/runner/acmhome
-          mkdir /home/runner/acmstaging
-          cd /home/runner/acmstaging
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git clone --branch test-exe-linux $repoWithToken
-          cd /home/runner/acmstaging/AgileCloudManager
-          echo "About to ls al /home/runner/acmstaging/AgileCloudManager"
-          ls -al
-          #mv acm_build.tar /home/runner/acmhome
-          #cd /home/runner/acmhome
-          #tar -xvf acm_build.tar
-          #rm acm_build.tar
-          #PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote add origin $repoWithToken
+          #git add --all
+          #git commit -am 'pushed from test-environ'
+          #git push --force -u origin HEAD:release-linux
+          git checkout test-exe-linux
+          git push origin release-linux
+  push-windows-exe-to-windows-release-branch:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: cmd
+        name: Push to release-windows branch
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
+        run: |
+          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+          cd C:\\Users\\runneradmin\\acmwinrel\\
+          dir 
+          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote add origin %repoWithToken%
+          #git add --all
+          #git commit -am "pushed from test-environ"
+          #git push --force -u origin HEAD:release-windows
+          git checkout test-exe-windows
+          git push origin release-windows
+  push-to-staging-branch:
+    needs: [push-linux-exe-to-linux-release-branch,push-windows-exe-to-windows-release-branch]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Push changes to staging branch
+        run: |
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git branch -M staging
+          git add --all
+          git push --force -u origin staging
+
+
+
+
+
+
+#------------------ BELOW IS THE REAL CODE TO UNCOMMENT AND REINTEGRATE INTO WORKFLOW AFTER WE FIX THE RELEASE BUG
+#  e2e-tests-linux-arm:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Get binary
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          mkdir /home/runner/acmhome
+#          sudo chown runner:runner /home/runner/acmhome
+#          mkdir /home/runner/acmstaging
+#          cd /home/runner/acmstaging
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git clone --branch test-exe-linux $repoWithToken
+#          cd /home/runner/acmstaging/AgileCloudManager
+#          echo "About to ls al /home/runner/acmstaging/AgileCloudManager"
+#          ls -al
+#          #mv acm_build.tar /home/runner/acmhome
+#          #cd /home/runner/acmhome
+#          #tar -xvf acm_build.tar
+#          #rm acm_build.tar
+#          #PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
 #      - uses: actions/checkout@v3
 #      - id: ConfigureUbuntuAgent
 #        uses: ./.github/actions/ubuntu-provisioner
@@ -626,6 +695,11 @@ jobs:
 #        run: |
 #          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
 #          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+
+
+
+
 #  create-linux-exe-and-push-to-linux-release-branch:
 #    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
 #    runs-on: ubuntu-latest
