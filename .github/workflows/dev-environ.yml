@@ -47,7 +47,8 @@ jobs:
       - name: Show contents
         shell: pwsh
         run: |
-          echo "About to dir current directory"
+          echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\Users\\runneradmin\\acmhome\\
           dir -Force
           #Get-ChildItem -Recurse | Select -ExpandProperty FullName | Where {$_ -notlike '*\.git*'} | Remove-Item -force
           #echo "About to dir current directory again after removing everything but .git"
@@ -56,15 +57,6 @@ jobs:
           #Copy-Item -Path "C:\\Users\\runneradmin\\acmhome\\*" -Destination $curDir -Recurse
           #echo "About to dir current directory after copying executables in"
           #dir -Force -Directory
-          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          #git config --global user.name "AgileCloudInstitute"
-          #git init
-          #git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          #git branch -M test-exe-linux
-          #git add --all
-          ##Commenting out this next line DOES trigger the workflow, but also sends the wrong files, making it useless.
-          #git commit -am 'pushed from dev-environ'
-          #git push --force -u origin test-exe-linux
       - shell: cmd
         name: Push to test-exe-windows branch
         env:
