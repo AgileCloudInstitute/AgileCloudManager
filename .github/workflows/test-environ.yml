@@ -18,11 +18,12 @@ jobs:
           #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
-          git init
+          #git init
           #git remote add origin $repoWithToken
           #git add --all
           #git commit -am 'pushed from test-environ'
           #git push --force -u origin HEAD:release-linux
+          git fetch
           git checkout test-exe-linux
           git push origin release-linux
   push-windows-exe-to-windows-release-branch:
@@ -42,11 +43,12 @@ jobs:
           rem set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
-          git init
+          rem git init
           rem git remote add origin %repoWithToken%
           rem git add --all
           rem git commit -am "pushed from test-environ"
           rem git push --force -u origin HEAD:release-windows
+          git fetch
           git checkout test-exe-windows
           git push origin release-windows
   push-to-staging-branch:
