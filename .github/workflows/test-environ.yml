@@ -25,7 +25,7 @@ jobs:
           #git push --force -u origin HEAD:release-linux
           git fetch
           git checkout test-exe-linux
-          git push origin release-linux
+          git push --force -u origin HEAD:release-linux
   push-windows-exe-to-windows-release-branch:
     runs-on: windows-latest
     steps:
@@ -50,7 +50,7 @@ jobs:
           rem git push --force -u origin HEAD:release-windows
           git fetch
           git checkout test-exe-windows
-          git push origin release-windows
+          git push --force -u origin HEAD:release-windows
   push-to-staging-branch:
     needs: [push-linux-exe-to-linux-release-branch,push-windows-exe-to-windows-release-branch]
     runs-on: ubuntu-latest
