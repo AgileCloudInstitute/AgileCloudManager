@@ -55,6 +55,9 @@ jobs:
           git config --global user.name "AgileCloudInstitute"
           git init
           git remote add origin $repoWithToken
+          echo "About to git remote -v"
+          git remote -v
+          echo "About to git add --all"
           git add --all
           git commit -am "pushed from dev-environ"
           git push --force -u origin HEAD:test-exe-windows
