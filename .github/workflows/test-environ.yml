@@ -15,11 +15,11 @@ jobs:
         env:
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
-          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          #repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          git remote add origin $repoWithToken
+          #git remote add origin $repoWithToken
           #git add --all
           #git commit -am 'pushed from test-environ'
           #git push --force -u origin HEAD:release-linux
@@ -36,17 +36,17 @@ jobs:
         env:
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
-          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
-          cd C:\\Users\\runneradmin\\acmwinrel\\
-          dir 
-          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          rem echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+          rem cd C:\\Users\\runneradmin\\acmwinrel\\
+          rem dir 
+          rem set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
           git init
-          git remote add origin %repoWithToken%
-          #git add --all
-          #git commit -am "pushed from test-environ"
-          #git push --force -u origin HEAD:release-windows
+          rem git remote add origin %repoWithToken%
+          rem git add --all
+          rem git commit -am "pushed from test-environ"
+          rem git push --force -u origin HEAD:release-windows
           git checkout test-exe-windows
           git push origin release-windows
   push-to-staging-branch:
