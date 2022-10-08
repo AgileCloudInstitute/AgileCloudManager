@@ -13,7 +13,7 @@ jobs:
       - shell: bash
         name: Create exe and add exe to PATH
         env:
-          GIT_PAT: ${{ secrets.HUSH }}
+          GIT_PAT: ${{ secrets.HUSH }}  
         run: |
           echo "About to pwd"
           pwd
