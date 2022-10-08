@@ -165,19 +165,19 @@ class workflow_service_type:
       if typeName == 'projects':
         ctrlrazproj = controller_azdoproject()
         ctrlrazproj.offProject(typeName, systemConfig, instance)
-#Start section to comment out to get working again
       else:
         if instanceTool == 'arm':
           carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
-#7OctTest        elif instanceTool == 'terraform':
-#7OctTest          ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
-#7OctTest          if ctf.terraformResult == "Destroyed": 
-#7OctTest            logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
-#7OctTest            lw.writeLogVerbose("acm", logString)
-#7OctTest          else:
-#7OctTest            logString = "Error: off operation failed.  "
-#7OctTest            lw.writeLogVerbose("acm", logString)
-#7OctTest            sys.exit(1)
+#Start section to comment out to get working again
+        elif instanceTool == 'terraform':
+          ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
+          if ctf.terraformResult == "Destroyed": 
+            logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
+            lw.writeLogVerbose("acm", logString)
+          else:
+            logString = "Error: off operation failed.  "
+            lw.writeLogVerbose("acm", logString)
+            sys.exit(1)
 #7OctTest        elif instanceTool == 'cloudformation':
 #7OctTest          ccf.destroyStack(systemConfig, instance, keyDir, 'serviceInstance')
 #7OctTest        elif instanceTool.startswith('$customController.'):
