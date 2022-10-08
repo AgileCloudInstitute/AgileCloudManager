@@ -98,25 +98,25 @@ class workflow_service_type:
         pass
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, serviceType, instName)
 
-#7OctTest  #@public
-#7OctTest  def offServiceTypeGeneral(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent):
-#7OctTest    import config_cliprocessor
-#7OctTest    lw = log_writer()
-#7OctTest    if level == 'serviceinstance':
-#7OctTest      instanceName = config_cliprocessor.inputVars.get('serviceInstance')
-#7OctTest    cm.updateStartOfAServiceType(ct, cc, level, systemInstanceName, typeName)
-#7OctTest    for typeOfService in systemConfig.get("serviceTypes"):
-#7OctTest      if typeOfService == typeName:
-#7OctTest        instances = systemConfig.get("serviceTypes").get(typeOfService).get("instances")
-#7OctTest        for instance in instances:
-#7OctTest          if level == 'serviceinstance':
-#7OctTest            if instance.get('instanceName') == instanceName:
-#7OctTest              self.offServiceTypeGeneralInstance(cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance)
-#7OctTest          else:
-#7OctTest            self.offServiceTypeGeneralInstance(cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance)
-#7OctTest    cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, typeName)
-#7OctTest    logString = "done with -- " + typeName + " -----------------------------------------------------------------------------"
-#7OctTest    lw.writeLogVerbose("acm", logString)
+  #@public
+  def offServiceTypeGeneral(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent):
+    import config_cliprocessor
+    lw = log_writer()
+    if level == 'serviceinstance':
+      instanceName = config_cliprocessor.inputVars.get('serviceInstance')
+    cm.updateStartOfAServiceType(ct, cc, level, systemInstanceName, typeName)
+    for typeOfService in systemConfig.get("serviceTypes"):
+      if typeOfService == typeName:
+        instances = systemConfig.get("serviceTypes").get(typeOfService).get("instances")
+        for instance in instances:
+          if level == 'serviceinstance':
+            if instance.get('instanceName') == instanceName:
+              self.offServiceTypeGeneralInstance(cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance)
+          else:
+            self.offServiceTypeGeneralInstance(cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance)
+    cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, typeName)
+    logString = "done with -- " + typeName + " -----------------------------------------------------------------------------"
+    lw.writeLogVerbose("acm", logString)
 
 #  def offServiceTypeRelease(self, cm, ct, cc, level, systemInstanceName, systemConfig):
 #          cm.updateStartOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
@@ -136,21 +136,21 @@ class workflow_service_type:
 #            cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions', instName)
 #          cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
 
-#7OctTest  def offServiceTypeGeneralInstance(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance):
-#7OctTest    import config_cliprocessor
-#7OctTest    test = config_cliprocessor.inputVars.get("test")
-#7OctTest    typeOfTest = config_cliprocessor.inputVars.get("testType")
-#7OctTest    cfp = config_fileprocessor()
-#7OctTest    ccust = controller_custom()
-#7OctTest    ccf = controller_cf()
-#7OctTest    ctf = controller_terraform()
-#7OctTest    carm = controller_arm()
-#7OctTest    lw = log_writer()
-#7OctTest    crnr = command_runner()
-#7OctTest    keyDir = cfp.getKeyDir(systemConfig)
-#7OctTest    operation = "off"
-#7OctTest    instName = instance.get("instanceName")
-#7OctTest    cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
+  def offServiceTypeGeneralInstance(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance):
+    import config_cliprocessor
+    test = config_cliprocessor.inputVars.get("test")
+    typeOfTest = config_cliprocessor.inputVars.get("testType")
+    cfp = config_fileprocessor()
+    ccust = controller_custom()
+    ccf = controller_cf()
+    ctf = controller_terraform()
+    carm = controller_arm()
+    lw = log_writer()
+    crnr = command_runner()
+    keyDir = cfp.getKeyDir(systemConfig)
+    operation = "off"
+    instName = instance.get("instanceName")
+    cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
 #7OctTest    if (test==True) and (typeOfTest=="workflow"):
 #7OctTest      pass
 #7OctTest    else:
@@ -195,7 +195,7 @@ class workflow_service_type:
 #7OctTest        logString = 'NO postprocessor present.'
 #7OctTest        lw.writeLogVerbose("acm", logString)
 #7OctTest        pass
-#7OctTest    cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
+    cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
 
   def callOnServiceDirectly(self, level):
     import config_cliprocessor
@@ -276,9 +276,9 @@ class workflow_service_type:
     #add code to confirm that output operation succeeded.
     #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
     typeParent = 'systems'
-#7OctTest    for typeName in typesToDestroy:
-#7OctTest      if typeName == svcTyp:
-#7OctTest        self.offServiceTypeGeneral(cm_stoff, ct_stoff, cc_stoff, level, systemToModify, systemConfig, typeName, typeParent)
+    for typeName in typesToDestroy:
+      if typeName == svcTyp:
+        self.offServiceTypeGeneral(cm_stoff, ct_stoff, cc_stoff, level, systemToModify, systemConfig, typeName, typeParent)
     cm_stoff.updateEndOfAServicesSection(ct_stoff, cc_stoff, level, systemToModify)
     cm_stoff.updateEndOfASystem(ct_stoff, cc_stoff, level, systemToModify)
     cm_stoff.updateEndOfPlatformRun(ct_stoff, cc_stoff, level)
