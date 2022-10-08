@@ -118,23 +118,23 @@ class workflow_service_type:
     logString = "done with -- " + typeName + " -----------------------------------------------------------------------------"
     lw.writeLogVerbose("acm", logString)
 
-#  def offServiceTypeRelease(self, cm, ct, cc, level, systemInstanceName, systemConfig):
-#          cm.updateStartOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
-#          instanceNames = []
-#          for item in systemConfig:
-#            if item == "serviceTypes":
-#             for sType in systemConfig.get(item):
-#                if sType == "releaseDefinitions":
-#                  for rdInstance in systemConfig.get(item).get(sType).get("instances"):
-#                    instanceNames.append(rdInstance.get("instanceName"))
-#          for instName in instanceNames:
-#            ##NOTE: THE REASON WE ARE NOT CREATING A SEPARATE FUNCTION TO DESTROY THESE INSTANCES IS THAT THIS CODE IS 
-#            # ONLY CALLED WHEN USETHEFORCE HAS BEEN SET FOR RELEASEDEF TYPE.  USETHEFORCE WILL DELETE THE 
-#            # ENCLOSING PROJECT WHICH IN TURN WILL DESTROY THE RELEASEDEFS CONTAINED IN THE PROJECT.  AND 
-#            # ALSO, WE HAVE A RULE TO NOT DESTROY RELEASEDEF TYPES UNLESS USETHEFORCE IS SPECIFIED.
-#            cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions', instName)
-#            cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions', instName)
-#          cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
+  def offServiceTypeRelease(self, cm, ct, cc, level, systemInstanceName, systemConfig):
+          cm.updateStartOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
+          instanceNames = []
+          for item in systemConfig:
+            if item == "serviceTypes":
+             for sType in systemConfig.get(item):
+                if sType == "releaseDefinitions":
+                  for rdInstance in systemConfig.get(item).get(sType).get("instances"):
+                    instanceNames.append(rdInstance.get("instanceName"))
+          for instName in instanceNames:
+            ##NOTE: THE REASON WE ARE NOT CREATING A SEPARATE FUNCTION TO DESTROY THESE INSTANCES IS THAT THIS CODE IS 
+            # ONLY CALLED WHEN USETHEFORCE HAS BEEN SET FOR RELEASEDEF TYPE.  USETHEFORCE WILL DELETE THE 
+            # ENCLOSING PROJECT WHICH IN TURN WILL DESTROY THE RELEASEDEFS CONTAINED IN THE PROJECT.  AND 
+            # ALSO, WE HAVE A RULE TO NOT DESTROY RELEASEDEF TYPES UNLESS USETHEFORCE IS SPECIFIED.
+            cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions', instName)
+            cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions', instName)
+          cm.updateEndOfAServiceType(ct, cc, level, systemInstanceName, 'releaseDefinitions')
 
   def offServiceTypeGeneralInstance(self, cm, ct, cc, level, systemInstanceName, systemConfig, typeName, typeParent, instance):
     import config_cliprocessor
