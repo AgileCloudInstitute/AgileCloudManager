@@ -151,7 +151,6 @@ class workflow_service_type:
     operation = "off"
     instName = instance.get("instanceName")
     cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
-#Start section to comment out to get working again
     if (test==True) and (typeOfTest=="workflow"):
       pass
     else:
@@ -166,9 +165,10 @@ class workflow_service_type:
       if typeName == 'projects':
         ctrlrazproj = controller_azdoproject()
         ctrlrazproj.offProject(typeName, systemConfig, instance)
-#7OctTest      else:
-#7OctTest        if instanceTool == 'arm':
-#7OctTest          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
+#Start section to comment out to get working again
+      else:
+        if instanceTool == 'arm':
+          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
 #7OctTest        elif instanceTool == 'terraform':
 #7OctTest          ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
 #7OctTest          if ctf.terraformResult == "Destroyed": 
@@ -189,6 +189,7 @@ class workflow_service_type:
 #7OctTest          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
 #7OctTest          lw.writeLogVerbose("acm", logString)
 #7OctTest          sys.exit(1)
+#End section to comment out to get working again
       if "postprocessor" in instance.keys():
         postprocessor = instance.get("postprocessor")
         crnr.runPreOrPostProcessor("post", postprocessor, 'off')
@@ -196,7 +197,6 @@ class workflow_service_type:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
         pass
-#End section to comment out to get working again
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
 
   def callOnServiceDirectly(self, level):
