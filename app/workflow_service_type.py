@@ -177,7 +177,6 @@ class workflow_service_type:
             logString = "Error: off operation failed.  "
             lw.writeLogVerbose("acm", logString)
             sys.exit(1)
-#Start section to comment out to get working again
         elif instanceTool == 'cloudformation':
           ccf.destroyStack(systemConfig, instance, keyDir, 'serviceInstance')
         elif instanceTool.startswith('$customController.'):
@@ -185,10 +184,11 @@ class workflow_service_type:
           controllerCommand = instance.get("controllerCommand")
           mappedVariables = instance.get("mappedVariables")
           ccust.runCustomController(operation, systemConfig, controllerPath, controllerCommand, mappedVariables, typeName, instance)
-#7OctTest        else:
-#7OctTest          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
-#7OctTest          lw.writeLogVerbose("acm", logString)
-#7OctTest          sys.exit(1)
+#Start section to comment out to get working again
+        else:
+          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
 #End section to comment out to get working again
       if "postprocessor" in instance.keys():
         postprocessor = instance.get("postprocessor")
