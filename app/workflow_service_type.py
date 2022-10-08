@@ -215,7 +215,7 @@ class workflow_service_type:
     if systemConfig == None: 
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       print(logString)
-      sys.exit(1)
+      sys.exit(1) 
     cm_son.initializeChangesManagementDataStructures(ct_son, cc_son, level, "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_son.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
