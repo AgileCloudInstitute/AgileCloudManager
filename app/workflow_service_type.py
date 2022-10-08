@@ -168,7 +168,6 @@ class workflow_service_type:
       else:
         if instanceTool == 'arm':
           carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
-#Start section to comment out to get working again
         elif instanceTool == 'terraform':
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
           if ctf.terraformResult == "Destroyed": 
@@ -178,13 +177,14 @@ class workflow_service_type:
             logString = "Error: off operation failed.  "
             lw.writeLogVerbose("acm", logString)
             sys.exit(1)
-#7OctTest        elif instanceTool == 'cloudformation':
-#7OctTest          ccf.destroyStack(systemConfig, instance, keyDir, 'serviceInstance')
-#7OctTest        elif instanceTool.startswith('$customController.'):
-#7OctTest          controllerPath = instanceTool.replace("$customController.","")
-#7OctTest          controllerCommand = instance.get("controllerCommand")
-#7OctTest          mappedVariables = instance.get("mappedVariables")
-#7OctTest          ccust.runCustomController(operation, systemConfig, controllerPath, controllerCommand, mappedVariables, typeName, instance)
+#Start section to comment out to get working again
+        elif instanceTool == 'cloudformation':
+          ccf.destroyStack(systemConfig, instance, keyDir, 'serviceInstance')
+        elif instanceTool.startswith('$customController.'):
+          controllerPath = instanceTool.replace("$customController.","")
+          controllerCommand = instance.get("controllerCommand")
+          mappedVariables = instance.get("mappedVariables")
+          ccust.runCustomController(operation, systemConfig, controllerPath, controllerCommand, mappedVariables, typeName, instance)
 #7OctTest        else:
 #7OctTest          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
 #7OctTest          lw.writeLogVerbose("acm", logString)
