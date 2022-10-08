@@ -151,20 +151,21 @@ class workflow_service_type:
     operation = "off"
     instName = instance.get("instanceName")
     cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
-#7OctTest    if (test==True) and (typeOfTest=="workflow"):
-#7OctTest      pass
-#7OctTest    else:
-#7OctTest      if "preprocessor" in instance.keys():
-#7OctTest        preprocessor = instance.get("preprocessor")
-#7OctTest        crnr.runPreOrPostProcessor("pre", preprocessor, 'off')
-#7OctTest      else:
-#7OctTest        logString = 'NO preprocessor present.'
-#7OctTest        lw.writeLogVerbose("acm", logString)
-#7OctTest        pass
-#7OctTest      instanceTool = instance.get("controller")
-#7OctTest      if typeName == 'projects':
-#7OctTest        ctrlrazproj = controller_azdoproject()
-#7OctTest        ctrlrazproj.offProject(typeName, systemConfig, instance)
+#Start section to comment out to get working again
+    if (test==True) and (typeOfTest=="workflow"):
+      pass
+    else:
+      if "preprocessor" in instance.keys():
+        preprocessor = instance.get("preprocessor")
+        crnr.runPreOrPostProcessor("pre", preprocessor, 'off')
+      else:
+        logString = 'NO preprocessor present.'
+        lw.writeLogVerbose("acm", logString)
+        pass
+      instanceTool = instance.get("controller")
+      if typeName == 'projects':
+        ctrlrazproj = controller_azdoproject()
+        ctrlrazproj.offProject(typeName, systemConfig, instance)
 #7OctTest      else:
 #7OctTest        if instanceTool == 'arm':
 #7OctTest          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
@@ -188,13 +189,14 @@ class workflow_service_type:
 #7OctTest          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
 #7OctTest          lw.writeLogVerbose("acm", logString)
 #7OctTest          sys.exit(1)
-#7OctTest      if "postprocessor" in instance.keys():
-#7OctTest        postprocessor = instance.get("postprocessor")
-#7OctTest        crnr.runPreOrPostProcessor("post", postprocessor, 'off')
-#7OctTest      else:
-#7OctTest        logString = 'NO postprocessor present.'
-#7OctTest        lw.writeLogVerbose("acm", logString)
-#7OctTest        pass
+      if "postprocessor" in instance.keys():
+        postprocessor = instance.get("postprocessor")
+        crnr.runPreOrPostProcessor("post", postprocessor, 'off')
+      else:
+        logString = 'NO postprocessor present.'
+        lw.writeLogVerbose("acm", logString)
+        pass
+#End section to comment out to get working again
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
 
   def callOnServiceDirectly(self, level):
