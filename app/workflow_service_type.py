@@ -168,7 +168,7 @@ class workflow_service_type:
       else:
 #1008 Start section to comment to get working again
         if instanceTool == 'arm':
-#          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
+          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
           pass
 #1008 End section to comment to get working again
         elif instanceTool == 'terraform':
