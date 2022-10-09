@@ -151,52 +151,54 @@ class workflow_service_type:
     operation = "off"
     instName = instance.get("instanceName")
     cm.updateStartOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
+    if (test==True) and (typeOfTest=="workflow"):
+      pass
+    else:
+      if "preprocessor" in instance.keys():
+        preprocessor = instance.get("preprocessor")
+        crnr.runPreOrPostProcessor("pre", preprocessor, 'off')
+      else:
+        logString = 'NO preprocessor present.'
+        lw.writeLogVerbose("acm", logString)
+        pass
+      instanceTool = instance.get("controller")
+      if typeName == 'projects':
+        ctrlrazproj = controller_azdoproject()
+        ctrlrazproj.offProject(typeName, systemConfig, instance)
+      else:
 #1008 Start section to comment to get working again
-#    if (test==True) and (typeOfTest=="workflow"):
-#      pass
-#    else:
-#      if "preprocessor" in instance.keys():
-#        preprocessor = instance.get("preprocessor")
-#        crnr.runPreOrPostProcessor("pre", preprocessor, 'off')
-#      else:
-#        logString = 'NO preprocessor present.'
-#        lw.writeLogVerbose("acm", logString)
-#        pass
-#      instanceTool = instance.get("controller")
-#      if typeName == 'projects':
-#        ctrlrazproj = controller_azdoproject()
-#        ctrlrazproj.offProject(typeName, systemConfig, instance)
-#      else:
 #        if instanceTool == 'arm':
 #          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
+#1008 End section to comment to get working again
 #        elif instanceTool == 'terraform':
-#          ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
-#          if ctf.terraformResult == "Destroyed": 
-#            logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
-#            lw.writeLogVerbose("acm", logString)
-#          else:
-#            logString = "Error: off operation failed.  "
-#            lw.writeLogVerbose("acm", logString)
-#            sys.exit(1)
-#        elif instanceTool == 'cloudformation':
-#          ccf.destroyStack(systemConfig, instance, keyDir, 'serviceInstance')
-#        elif instanceTool.startswith('$customController.'):
-#          controllerPath = instanceTool.replace("$customController.","")
-#          controllerCommand = instance.get("controllerCommand")
-#          mappedVariables = instance.get("mappedVariables")
-#          ccust.runCustomController(operation, systemConfig, controllerPath, controllerCommand, mappedVariables, typeName, instance)
-#        else:
-#          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
-#          lw.writeLogVerbose("acm", logString)
-#          sys.exit(1)
-#      if "postprocessor" in instance.keys():
-#        postprocessor = instance.get("postprocessor")
-#        crnr.runPreOrPostProcessor("post", postprocessor, 'off')
-#      else:
-#        logString = 'NO postprocessor present.'
-#        lw.writeLogVerbose("acm", logString)
-#        pass
-#1008 Start section to comment to get working again
+        if instanceTool == 'terraform':
+          ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
+          if ctf.terraformResult == "Destroyed": 
+            logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
+            lw.writeLogVerbose("acm", logString)
+          else:
+            logString = "Error: off operation failed.  "
+            lw.writeLogVerbose("acm", logString)
+            sys.exit(1)
+        elif instanceTool == 'cloudformation':
+          ccf.destroyStack(systemConfig, instance, keyDir, 'serviceInstance')
+        elif instanceTool.startswith('$customController.'):
+          controllerPath = instanceTool.replace("$customController.","")
+          controllerCommand = instance.get("controllerCommand")
+          mappedVariables = instance.get("mappedVariables")
+          ccust.runCustomController(operation, systemConfig, controllerPath, controllerCommand, mappedVariables, typeName, instance)
+        else:
+          logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+#
+      if "postprocessor" in instance.keys():
+        postprocessor = instance.get("postprocessor")
+        crnr.runPreOrPostProcessor("post", postprocessor, 'off')
+      else:
+        logString = 'NO postprocessor present.'
+        lw.writeLogVerbose("acm", logString)
+        pass
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, typeName, instName)
 
   def callOnServiceDirectly(self, level):
