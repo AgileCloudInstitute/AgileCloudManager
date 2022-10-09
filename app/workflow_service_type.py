@@ -167,11 +167,11 @@ class workflow_service_type:
         ctrlrazproj.offProject(typeName, systemConfig, instance)
       else:
 #1008 Start section to comment to get working again
-#        if instanceTool == 'arm':
+        if instanceTool == 'arm':
 #          carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
+          pass
 #1008 End section to comment to get working again
-#        elif instanceTool == 'terraform':
-        if instanceTool == 'terraform':
+        elif instanceTool == 'terraform':
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
           if ctf.terraformResult == "Destroyed": 
             logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
