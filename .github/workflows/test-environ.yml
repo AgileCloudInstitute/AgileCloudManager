@@ -35,7 +35,7 @@ jobs:
           echo "About to ls -al /home/runner"
           ls -al
           mkdir /home/runner/stg
-          mv /home/runner/release/AgileCloudManager.tar.gz /home/runner/stg
+          mv /home/runner/AgileCloudManager.tar.gz /home/runner/stg
           cd /home/runner/stg
           echo "About to ls -al /home/runner/stg"
           ls -al
@@ -103,6 +103,7 @@ jobs:
           git commit -am "pushed from test-environ"
           git push --force -u origin HEAD:release-windows
   push-to-staging-branch:
+    needs: [create-linux-exe-and-push-to-linux-release-branch, create-windows-exe-and-push-to-windows-release-branch]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
