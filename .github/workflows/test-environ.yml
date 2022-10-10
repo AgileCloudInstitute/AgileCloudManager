@@ -34,6 +34,11 @@ jobs:
           tar -czf AgileCloudManager.tar.gz release
           echo "About to ls -al /home/runner"
           ls -al
+          mkdir /home/runner/stg
+          mv /home/runner/release/AgileCloudManager.tar.gz /home/runner/stg
+          cd /home/runner/stg
+          echo "About to ls -al /home/runner/stg"
+          ls -al
           echo "About to push to release-linux branch"
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
