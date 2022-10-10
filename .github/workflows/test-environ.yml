@@ -29,7 +29,12 @@ jobs:
           cp -R dist/acm/. /home/runner/release/
           cd /home/runner/release
           echo "About to list directory contents of /home/runner/release"
+          ls -al 
+          cd /home/runner
+          tar -czf AgileCloudManager.tar.gz release
+          echo "About to ls -al /home/runner"
           ls -al
+          echo "About to push to release-linux branch"
           repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
           git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
           git config --global user.name "AgileCloudInstitute"
