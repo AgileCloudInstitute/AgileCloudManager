@@ -86,6 +86,15 @@ jobs:
           echo "About to list contents of /home/runner/acmhome after untar"
           ls -al
           PATH=$PATH:/home/runner/acmhome;export PATH
+
+          git clone https://github.com/zrax/pycdc
+          cd pycdc
+          cmake .
+          make
+          make checks
+          python pycdc C:\Users\Bobby\example.pyc
+
+
       - name: Put secrets in file
         shell: bash
         env:
