@@ -1,5 +1,9 @@
 name: 'Artifact Retrieval and Preparation Linux Agent'
 description: 'Prepares Ubuntu-latest agents to be able to run acm commands.'
+inputs:
+  repo_url:
+    description: Custom input parameter
+    required: true
 runs:
   using: "composite"
   steps:
