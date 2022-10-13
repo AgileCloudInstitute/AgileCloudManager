@@ -27,9 +27,6 @@ jobs:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: acm-artifact
       - uses: actions/checkout@v3
       - id: ExpandUbuntuArtifact
         uses: ./.github/actions/ubuntu-artifact-expander

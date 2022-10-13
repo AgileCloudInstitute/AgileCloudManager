@@ -3,6 +3,9 @@ description: 'Prepares Ubuntu-latest agents to be able to run acm commands.'
 runs:
   using: "composite"
   steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: acm-artifact
     - shell: bash
       name: Extract artifact and make ready to add to PATH
       run: |
