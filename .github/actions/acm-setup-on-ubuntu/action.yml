@@ -12,7 +12,7 @@ runs:
       env:
         repo_url: ${{ inputs.repo_url }}
       run: |
-        PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+        PATH=$PATH:/home/runner/acmhome/;export PATH
         sudo mkdir /home/runner/testdir
         sudo chown runner:runner /home/runner/testdir
         cd /home/runner/testdir
