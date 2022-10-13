@@ -1,4 +1,4 @@
-name: 'Configure Linux Agent'
+name: 'Artifact Retrieval and Preparation Linux Agent'
 description: 'Prepares Ubuntu-latest agents to be able to run acm commands.'
 runs:
   using: "composite"

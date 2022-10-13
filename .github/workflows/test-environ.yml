@@ -30,6 +30,35 @@ jobs:
       - uses: actions/checkout@v3
       - id: ExpandUbuntuArtifact
         uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
+          cat /home/runner/acmconfig/keys.yaml
+      - uses: actions/checkout@v3
+      - id: AcmSetupOnUbuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+#      - name: Setup On
+#        shell: bash
+#        run: |
+#          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
+#          sudo mkdir /home/runner/testdir
+#          sudo chown runner:runner /home/runner/testdir
+#          cd /home/runner/testdir
+#          echo 'About to setup on'
+#          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+#          echo "........................About to ls -al "
+#          ls -al 
 
 #...............
 
