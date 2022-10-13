@@ -30,19 +30,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: acm-artifact
-      - name: Extract artifact and make ready to add to PATH
-        run: |
-          mkdir -p /home/runner/acmhome
-          sudo chown runner:runner /home/runner/acmhome
-          echo "About to untar"
-          tar -xvf acm_build.tar
-          rm acm_build.tar
-          echo "About to ls -al dist/acm"
-          ls -al dist/acm
-          cp -r dist/acm/* /home/runner/acmhome
-          echo "About to ls -al /home/runner/acmhome"
-          ls -al /home/runner/acmhome
-          PATH=$PATH:/home/runner/acmhome/;export PATH
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
 
 #...............
 

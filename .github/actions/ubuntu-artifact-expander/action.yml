@@ -1,0 +1,19 @@
+name: 'Configure Linux Agent'
+description: 'Prepares Ubuntu-latest agents to be able to run acm commands.'
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      name: Extract artifact and make ready to add to PATH
+      run: |
+        mkdir -p /home/runner/acmhome
+        sudo chown runner:runner /home/runner/acmhome
+        echo "About to untar"
+        tar -xvf acm_build.tar
+        rm acm_build.tar
+        echo "About to ls -al dist/acm"
+        ls -al dist/acm
+        cp -r dist/acm/* /home/runner/acmhome
+        echo "About to ls -al /home/runner/acmhome"
+        ls -al /home/runner/acmhome
+        PATH=$PATH:/home/runner/acmhome/;export PATH
