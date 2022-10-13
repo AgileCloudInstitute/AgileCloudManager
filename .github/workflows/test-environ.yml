@@ -4,121 +4,154 @@ on:
     branches:
       - test
 jobs:
-  create-linux-exe-and-push-to-linux-release-branch:
+  create-exe-linux-and-upload-artifact:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.HUSH }}
       - shell: bash
-        name: Create exe and add exe to PATH
-        env:
-          GIT_PAT: ${{ secrets.HUSH }}  
+        name: Create linux exe and add exe to PATH
         run: |
-          echo "About to pwd"
-          pwd
-          echo "About to list directory contents of initial dir"
-          ls -al
           pip install -U pyinstaller
           cd app
           rm __init__.py
           pyinstaller acm.py
-          echo "About to list directory contents of app"
-          ls -al
-          mkdir /home/runner/release
-          cp -R dist/acm/. /home/runner/release/
-          cd /home/runner/release
-          echo "About to list directory contents of /home/runner/release"
-          ls -al 
-          #cd /home/runner
-          #tar -czf AgileCloudManager.tar.gz release
-          #echo "About to ls -al /home/runner"
-          #ls -al
-          #mkdir /home/runner/stg
-          #mv /home/runner/AgileCloudManager.tar.gz /home/runner/stg
-          #cd /home/runner/stg
-          #echo "About to ls -al /home/runner/stg"
-          #ls -al
-          echo "About to push to release-linux branch"
-          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
-          git init
-          git remote add origin $repoWithToken
-          git add --all
-          git commit -am 'pushed from test-environ'
-          git push --force -u origin HEAD:release-linux
-  create-windows-exe-and-push-to-windows-release-branch:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
+          tar -cvf acm_build.tar dist/acm
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
         with:
-          token: ${{ secrets.HUSH }}
-      - shell: pwsh
-        name: Create exe
-        run: |
-          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
-          python -m pip install --upgrade pip requests
-          python -m pip install --upgrade pip PyYaml
-          python -m pip install --upgrade pip pyinstaller
-          pyinstaller --version
-          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmwinrel\\
-          echo "About to start"
-          cd app
-          echo "About to dir"
-          dir
-          echo "About to gc .\acm.py"
-          gc .\acm.py
-          del __init__.py
-          echo "About to: pyinstaller acm.py"
-          pyinstaller acm.py
-          echo "About to dir"
-          dir
-          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\"
-          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\
-          dir
-          Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
-          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
-          cd C:\\Users\\runneradmin\\acmwinrel\\
-          dir
-          Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -recurse | foreach ($_) {remove-item $_.fullname -recurse}
-          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
-          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\
-          dir
-          Move-Item -Path "C:\\Users\\runneradmin\\acmwinrel\\*" -Destination "D:\\a\\AgileCloudManager\\AgileCloudManager\\"
-      - shell: cmd
-        name: Push to release-windows branch
-        env:
-          GIT_PAT: ${{ secrets.HUSH }}
-        run: |
-          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
-          cd C:\\Users\\runneradmin\\acmwinrel\\
-          dir 
-          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
-          git init
-          git remote add origin %repoWithToken%
-          git add --all
-          git commit -am "pushed from test-environ"
-          git push --force -u origin HEAD:release-windows
-  push-to-staging-branch:
-    needs: [create-linux-exe-and-push-to-linux-release-branch, create-windows-exe-and-push-to-windows-release-branch]
+          name: acm-artifact
+          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
+          retention-days: 1
+
+  e2e-tests-linux-arm:
+    needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
-          token: ${{ secrets.HUSH }}
-      - shell: bash
-        name: Push changes to staging branch
+          name: acm-artifact
+      - name: Extract artifact and make ready to add to PATH
         run: |
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
-          git init
-          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git branch -M staging
-          git add --all
-          git push --force -u origin staging
+          mkdir -p /home/runner/acmhome
+          sudo chown runner:runner /home/runner/acmhome
+          echo "About to untar"
+          tar -xvf acm_build.tar
+          rm acm_build.tar
+          echo "About to ls -al dist/acm"
+          ls -al dist/acm
+          cp -r dist/acm/* /home/runner/acmhome
+          echo "About to ls -al /home/runner/acmhome"
+          ls -al /home/runner/acmhome
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+
+#...............
+
+#  create-linux-exe-and-push-to-linux-release-branch:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          token: ${{ secrets.HUSH }}
+#      - shell: bash
+#        name: Create exe and add exe to PATH
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}  
+#        run: |
+#          echo "About to pwd"
+#          pwd
+#          echo "About to list directory contents of initial dir"
+#          ls -al
+#          pip install -U pyinstaller
+#          cd app
+#          rm __init__.py
+#          pyinstaller acm.py
+#          echo "About to list directory contents of app"
+#          ls -al
+#          mkdir /home/runner/release
+#          cp -R dist/acm/. /home/runner/release/
+#          cd /home/runner/release
+#          echo "About to list directory contents of /home/runner/release"
+#          ls -al 
+#          echo "About to push to release-linux branch"
+#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote add origin $repoWithToken
+#          git add --all
+#          git commit -am 'pushed from test-environ'
+#          git push --force -u origin HEAD:release-linux
+#  create-windows-exe-and-push-to-windows-release-branch:
+#    runs-on: windows-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          token: ${{ secrets.HUSH }}
+#      - shell: pwsh
+#        name: Create exe
+#        run: |
+#          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
+#          python -m pip install --upgrade pip requests
+#          python -m pip install --upgrade pip PyYaml
+#          python -m pip install --upgrade pip pyinstaller
+#          pyinstaller --version
+#          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmwinrel\\
+#          echo "About to start"
+#          cd app
+#          echo "About to dir"
+#          dir
+#          echo "About to gc .\acm.py"
+#          gc .\acm.py
+#          del __init__.py
+#          echo "About to: pyinstaller acm.py"
+#          pyinstaller acm.py
+#          echo "About to dir"
+#          dir
+#          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\"
+#          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\
+#          dir
+#          Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
+#          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+#          cd C:\\Users\\runneradmin\\acmwinrel\\
+#          dir
+#          Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -recurse | foreach ($_) {remove-item $_.fullname -recurse}
+#          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
+#          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\
+#          dir
+#          Move-Item -Path "C:\\Users\\runneradmin\\acmwinrel\\*" -Destination "D:\\a\\AgileCloudManager\\AgileCloudManager\\"
+#      - shell: cmd
+#        name: Push to release-windows branch
+#        env:
+#          GIT_PAT: ${{ secrets.HUSH }}
+#        run: |
+#          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+#          cd C:\\Users\\runneradmin\\acmwinrel\\
+#          dir 
+#          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote add origin %repoWithToken%
+#          git add --all
+#          git commit -am "pushed from test-environ"
+#          git push --force -u origin HEAD:release-windows
+#  push-to-staging-branch:
+#    needs: [create-linux-exe-and-push-to-linux-release-branch, create-windows-exe-and-push-to-windows-release-branch]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          token: ${{ secrets.HUSH }}
+#      - shell: bash
+#        name: Push changes to staging branch
+#        run: |
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          git init
+#          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+#          git branch -M staging
+#          git add --all
+#          git push --force -u origin staging
 
 ########################################################################################
 ####  START OF TEMP HOLDING SECTION

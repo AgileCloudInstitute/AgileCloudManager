@@ -14,12 +14,19 @@ jobs:
   release-linux-prerelease-version:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
       - shell: bash
-        name: Pre-Release
+        name: Retrieve exe and push it to storage
         env:
           DESCRIPTION: ${{ inputs.description }}
           VERSION: ${{ inputs.version }}
-          GH_TOKEN: ${{ secrets.HUSH }}
+          GIT_PAT: ${{ secrets.HUSH }}  
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}  
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+          RELEASE_BUCKET_REGION: ${{ secrets.RELEASE_BUCKET_REGION }}  
         run: |
           vers="linux-"$VERSION
           echo "About to print version"
@@ -27,36 +34,135 @@ jobs:
           nameOfRelease="AgileCloudManager-"$vers
           echo "About to print name of release"
           echo $nameOfRelease 
-          echo "About to create release"
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/AgileCloudInstitute/AgileCloudManager/releases \
-            -f tag_name=$vers \
-            -f target_commitish='release-linux' \
-            -f name=$nameOfRelease \
-            -f body="$DESCRIPTION" \
-            -F draft=false \
-            -F prerelease=true \
-            -F generate_release_notes=false 
+          echo "About to create release" 
+          #Configure aws
+          mkdir -p ~/.aws/
+          cat > ~/.aws/credentials<< EOF
+          [default]
+          aws_access_key_id=${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
+          EOF
+          cat > ~/.aws/config<< EOF
+          [default]
+          region=us-west-2
+          output=json
+          EOF
+          #Retrieve the executable that most recently passed all the e2e tests in the test environ
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch origin
+          git checkout -b release-linux origin/release-linux
+          #
+          echo "About to pwd"
+          pwd
+          echo "About to list directory contents of initial dir after retrieving executable"
+          ls -al
+          #...................................
+          #nameOfRelease="ImportantName"
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          nameOfTar="../"$nameOfRelease".tar.gz"
+          nameOfTarNoDots=$nameOfRelease".tar.gz"
+          echo "About to print nameOfTar"
+          echo $nameOfTar
+          tar -czvf $nameOfTar *
+          echo "About to ls -al after creating tar"
+          ls -al
+          echo "About to ls -al one dir up .. after creating tar"
+          cd ..
+          ls -al
+
+          #...................................
+          mkdir /home/runner/stg
+          mv $nameOfTarNoDots /home/runner/stg
+
+          cd /home/runner/stg
+          echo "About to ls -al /home/runner/stg after moving the tar to it"
+          ls -al
+          echo "About to push the tar to remote storage using aws s3 cp"
+          s3Argument="s3://"$RELEASE_BUCKET_NAME"/"
+          aws s3 cp /home/runner/stg/$nameOfTarNoDots $s3Argument 
+          echo "About to add tag to the tar using aws s3api put-object-tagging"
+          aws s3api put-object-tagging --bucket $RELEASE_BUCKET_NAME --key $nameOfTarNoDots --tagging "TagSet={Key=public,Value=yes}"
+
   release-windows-prerelease-version:
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
       - shell: pwsh
         name: Release
         env:
           DESCRIPTION: ${{ inputs.description }}
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
+          RELEASE_BUCKET_REGION: ${{ secrets.RELEASE_BUCKET_REGION }}
+          GIT_PAT: ${{ secrets.HUSH }}
         run: |
-          $vers="windows-"+$env:VERSION
+          $vers="windows-"+${env:VERSION}
           echo "About to print version"
           echo $vers
           $nameOfRelease="AgileCloudManager-"+$vers
           echo "About to print name of release"
           echo $nameOfRelease 
           echo "About to create release"
-          gh api --method POST -H "Accept: application/vnd.github+json" /repos/AgileCloudInstitute/AgileCloudManager/releases -f tag_name=$vers -f target_commitish='release-windows' -f name=$nameOfRelease -f body="$env:DESCRIPTION" -F draft=false -F prerelease=true -F generate_release_notes=false 
+          #Configure aws
+          New-Item -ItemType File -Path ~\\.aws\\credentials -Force
+          $credentialsContent = @"
+          [default]
+          aws_access_key_id=${env:AWS_ACCESS_KEY_ID}
+          aws_secret_access_key=${env:AWS_SECRET_ACCESS_KEY}
+          "@
+          Set-Content -Path ~\\.aws\\credentials -Value $credentialsContent
+          $configContent = @"
+          [default]
+          region=us-west-2
+          output=json
+          "@
+          Set-Content -Path ~\\.aws\\config -Value $configContent
+          #Retrieve the executable that most recently passed all the e2e tests in the test environ
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin "https://github.com/${env:GITHUB_REPOSITORY}.git"
+          git fetch origin
+          git checkout -b release-windows origin/release-windows
+          #
+          echo "About to get-location"
+          get-location
+          echo "About to list directory contents of initial dir after retrieving executable"
+          dir
+          #
+          New-Item -ItemType Directory -Path C:\Users\runner\release -Force
+          $currDir = (Convert-Path -Path (Get-Location))
+          echo "About to print currDir"
+          echo $currDir
+          $currDirContents = $currDir+"\*"
+          echo "About to print currDirContents"
+          echo $currDirContents
+
+          Copy-Item -Path $currDirContents -Recurse -Destination C:\Users\runner\release -Verbose
+          echo "About to list directory contents of C:\Users\runner\release after copying exe into it"
+          dir C:\Users\runner\release
+          $nameOfZip=$nameOfRelease+".zip"
+          echo "About to print nameOfZip"
+          echo $nameOfZip
+          Compress-Archive -Path C:\Users\runner\release\* -DestinationPath $nameOfZip
+          echo "About to dir current directory after creating zip"
+          dir
+          New-Item -ItemType Directory -Path C:\Users\runner\stg -Force
+          echo "About to push the tar to remote storage using aws s3 cp"
+          $s3Argument="s3://"+${env:RELEASE_BUCKET_NAME}+"/"
+          aws s3 cp $nameOfZip $s3Argument 
+          echo "About to add tag to the tar using aws s3api put-object-tagging"
+          aws s3api put-object-tagging --bucket ${env:RELEASE_BUCKET_NAME} --key $nameOfZip --tagging '{\"TagSet\": [{\"Key\":\"public\",\"Value\":\"yes\"}]}'
+
   e2e-tests-linux-arm:
     needs: [release-linux-prerelease-version]
     runs-on: ubuntu-latest
@@ -69,32 +175,37 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
         run: |
+          nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
-          repoWithToken="https://"$GH_TOKEN"@github.com/AgileCloudInstitute/AgileCloudManager"
-          echo "About to download release"
-          gh release download $vers --archive tar.gz --repo $repoWithToken
-          mkdir /home/runner/acmhome
-          sudo chown runner:runner /home/runner/acmhome
-          folderName="AgileCloudManager-"$vers
-          tarName=$folderName".tar.gz"
-          tar -xvf $tarName
-          folderNameSlash=$folderName"/*"
-          rm $tarName
-          cp -r $folderNameSlash /home/runner/acmhome/
-          cd /home/runner/acmhome
-          echo "About to list contents of /home/runner/acmhome after untar"
+          echo "About to print version"
+          echo $vers
+          nameOfRelease="AgileCloudManager-"$vers
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          echo "About to create release"
+          nameOfTar=$nameOfRelease".tar.gz"
+          echo "About to print nameOfTar"
+          echo $nameOfTar
+          #Start of wget version
+          echo "About to ls -al initially"
           ls -al
-          PATH=$PATH:/home/runner/acmhome;export PATH
-
-          git clone https://github.com/zrax/pycdc
-          cd pycdc
-          cmake .
-          make
-          make checks
-          python pycdc C:\Users\Bobby\example.pyc
-
-
+          addressForWget="https://"$RELEASE_BUCKET_NAME"/"$nameOfTar
+          echo "About to wget"
+          wget $addressForWget
+          echo "About to ls -al after wget"
+          ls -al
+          echo "Done with ls -al"
+          
+          mkdir -p /home/runner/acmhome/
+          mv $nameOfTar /home/runner/acmhome/
+          cd /home/runner/acmhome/
+          tar -xvf $nameOfTar
+          rm $nameOfTar
+          echo "About to ls -al /home/runner/acmhome/ after extracting tarball"
+          ls -al
+          PATH=$PATH:/home/runner/acmhome/;export PATH
       - name: Put secrets in file
         shell: bash
         env:
@@ -108,7 +219,7 @@ jobs:
       - name: Setup On
         shell: bash
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
@@ -119,20 +230,76 @@ jobs:
       - shell: bash
         name: Run platform on
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform on
       - shell: bash
         name: Run platform off
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform off
+      - shell: bash
+        name: Run foundation on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm foundation on systemName=agents
+      - shell: bash
+        name: Run services on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm services on systemName=agents
+      - shell: bash
+        name: Run services off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm services off systemName=agents
+      - shell: bash
+        name: Run serviceType on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceType on systemName=agents serviceType=subnetsWithScaleSet
+      - shell: bash
+        name: Run serviceType off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceType off systemName=agents serviceType=subnetsWithScaleSet
+      - shell: bash
+        name: Run serviceInstance on
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceInstance on systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - shell: bash
+        name: Run serviceInstance off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm serviceInstance off systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - shell: bash
+        name: Run foundation off
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          echo ".................about to run e2e test"
+          acm foundation off systemName=agents
       - name: Setup Off
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
           acm setup off
@@ -142,6 +309,7 @@ jobs:
         name: Delete Secrets
         run: |
           rm /home/runner/acmconfig/keys.yaml
+
   e2e-tests-linux-cloudformation:
     needs: [release-linux-prerelease-version]
     runs-on: ubuntu-latest
@@ -154,23 +322,37 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
         run: |
+          nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
-          repoWithToken="https://"$GH_TOKEN"@github.com/AgileCloudInstitute/AgileCloudManager"
-          echo "About to download release"
-          gh release download $vers --archive tar.gz --repo $repoWithToken
-          mkdir /home/runner/acmhome
-          sudo chown runner:runner /home/runner/acmhome
-          folderName="AgileCloudManager-"$vers
-          tarName=$folderName".tar.gz"
-          tar -xvf $tarName
-          folderNameSlash=$folderName"/*"
-          rm $tarName
-          cp -r $folderNameSlash /home/runner/acmhome/
-          cd /home/runner/acmhome
-          echo "About to list contents of /home/runner/acmhome after untar"
+          echo "About to print version"
+          echo $vers
+          nameOfRelease="AgileCloudManager-"$vers
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          echo "About to create release"
+          nameOfTar=$nameOfRelease".tar.gz"
+          echo "About to print nameOfTar"
+          echo $nameOfTar
+          #Start of wget version
+          echo "About to ls -al initially"
           ls -al
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          addressForWget="https://"$RELEASE_BUCKET_NAME"/"$nameOfTar
+          echo "About to wget"
+          wget $addressForWget
+          echo "About to ls -al after wget"
+          ls -al
+          echo "Done with ls -al"
+          
+          mkdir -p /home/runner/acmhome/
+          mv $nameOfTar /home/runner/acmhome/
+          cd /home/runner/acmhome/
+          tar -xvf $nameOfTar
+          rm $nameOfTar
+          echo "About to ls -al /home/runner/acmhome/ after extracting tarball"
+          ls -al
+          PATH=$PATH:/home/runner/acmhome/;export PATH
       - name: Put secrets in file
         shell: bash
         env:
@@ -182,7 +364,7 @@ jobs:
       - name: Setup On
         shell: bash
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
@@ -193,21 +375,21 @@ jobs:
       - shell: bash
         name: Run platform on
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform on
       - shell: bash
         name: Run platform off
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform off
       - name: Setup Off
         shell: bash
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
           acm setup off
@@ -217,6 +399,7 @@ jobs:
         name: Delete Secrets
         run: |
           rm /home/runner/acmconfig/keys.yaml
+
   e2e-tests-linux-custom:
     needs: [release-linux-prerelease-version]
     runs-on: ubuntu-latest
@@ -229,23 +412,37 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
         run: |
+          nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
-          repoWithToken="https://"$GH_TOKEN"@github.com/AgileCloudInstitute/AgileCloudManager"
-          echo "About to download release"
-          gh release download $vers --archive tar.gz --repo $repoWithToken
-          mkdir /home/runner/acmhome
-          sudo chown runner:runner /home/runner/acmhome
-          folderName="AgileCloudManager-"$vers
-          tarName=$folderName".tar.gz"
-          tar -xvf $tarName
-          folderNameSlash=$folderName"/*"
-          rm $tarName
-          cp -r $folderNameSlash /home/runner/acmhome/
-          cd /home/runner/acmhome
-          echo "About to list contents of /home/runner/acmhome after untar"
+          echo "About to print version"
+          echo $vers
+          nameOfRelease="AgileCloudManager-"$vers
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          echo "About to create release"
+          nameOfTar=$nameOfRelease".tar.gz"
+          echo "About to print nameOfTar"
+          echo $nameOfTar
+          #Start of wget version
+          echo "About to ls -al initially"
           ls -al
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          addressForWget="https://"$RELEASE_BUCKET_NAME"/"$nameOfTar
+          echo "About to wget"
+          wget $addressForWget
+          echo "About to ls -al after wget"
+          ls -al
+          echo "Done with ls -al"
+          
+          mkdir -p /home/runner/acmhome/
+          mv $nameOfTar /home/runner/acmhome/
+          cd /home/runner/acmhome/
+          tar -xvf $nameOfTar
+          rm $nameOfTar
+          echo "About to ls -al /home/runner/acmhome/ after extracting tarball"
+          ls -al
+          PATH=$PATH:/home/runner/acmhome/;export PATH
       - name: Put secrets in file
         shell: bash
         env:
@@ -257,7 +454,7 @@ jobs:
       - name: Setup On
         shell: bash
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           sudo mkdir /home/runner/testdir
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
@@ -268,20 +465,20 @@ jobs:
       - shell: bash
         name: Run platform on
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform on
       - shell: bash
         name: Run platform off
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
           acm platform off
       - name: Setup Off
         run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo '........................About to setup off'
           acm setup off
@@ -291,6 +488,7 @@ jobs:
         name: Delete Secrets
         run: |
           rm /home/runner/acmconfig/keys.yaml
+
   e2e-tests-linux-terraform-packer:
     needs: [release-linux-prerelease-version]
     runs-on: ubuntu-latest
@@ -303,23 +501,37 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
         run: |
+          nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
-          repoWithToken="https://"$GH_TOKEN"@github.com/AgileCloudInstitute/AgileCloudManager"
-          echo "About to download release"
-          gh release download $vers --archive tar.gz --repo $repoWithToken
-          mkdir /home/runner/acmhome
-          sudo chown runner:runner /home/runner/acmhome
-          folderName="AgileCloudManager-"$vers
-          tarName=$folderName".tar.gz"
-          tar -xvf $tarName
-          folderNameSlash=$folderName"/*"
-          rm $tarName
-          cp -r $folderNameSlash /home/runner/acmhome/
-          cd /home/runner/acmhome
-          echo "About to list contents of /home/runner/acmhome after untar"
+          echo "About to print version"
+          echo $vers
+          nameOfRelease="AgileCloudManager-"$vers
+          echo "About to print name of release"
+          echo $nameOfRelease 
+          echo "About to create release"
+          nameOfTar=$nameOfRelease".tar.gz"
+          echo "About to print nameOfTar"
+          echo $nameOfTar
+          #Start of wget version
+          echo "About to ls -al initially"
           ls -al
-          PATH=$PATH:/home/runner/acmhome;export PATH
+          addressForWget="https://"$RELEASE_BUCKET_NAME"/"$nameOfTar
+          echo "About to wget"
+          wget $addressForWget
+          echo "About to ls -al after wget"
+          ls -al
+          echo "Done with ls -al"
+          
+          mkdir -p /home/runner/acmhome/
+          mv $nameOfTar /home/runner/acmhome/
+          cd /home/runner/acmhome/
+          tar -xvf $nameOfTar
+          rm $nameOfTar
+          echo "About to ls -al /home/runner/acmhome/ after extracting tarball"
+          ls -al
+          PATH=$PATH:/home/runner/acmhome/;export PATH
       - name: Put secrets in file
         shell: bash
         env:
@@ -340,35 +552,27 @@ jobs:
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
+        name: Run tfbackend serviceInstance on
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          acm serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+      - shell: bash
+        name: Run tfbackend serviceInstance off
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          PATH=$PATH:/home/runner/acmhome/;export PATH
+          cd /home/runner/testdir
+          acm serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
+      - shell: bash
         name: Run tfbackend serviceType on
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           acm serviceType on systemName=tfbackend serviceType=tfBackend
-      - shell: bash
-        name: Run tfbackend serviceType off
-        run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
-          cd /home/runner/testdir
-          acm serviceType off systemName=tfbackend serviceType=tfBackend
-      - shell: bash
-        name: Run tfbackend serviceInstance on
-        run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
-          cd /home/runner/testdir
-          acm serviceInstance on systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
-      - shell: bash
-        name: Run tfbackend serviceInstance off
-        run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
-          cd /home/runner/testdir
-          acm serviceInstance off systemName=tfbackend serviceType=tfBackend serviceInstance=adminAccounts
-      - shell: bash
-        name: Run tfbackend services on
-        run: |
-          PATH=$PATH:/home/runner/acmhome;export PATH
-          cd /home/runner/testdir
-          acm services on systemName=tfbackend
       - shell: bash
         name: Run admin foundation on
         run: |
@@ -418,11 +622,11 @@ jobs:
           cd /home/runner/testdir
           acm foundation off systemName=admin
       - shell: bash
-        name: Run tfbackend services off
+        name: Run tfbackend serviceType off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
-          acm services off systemName=tfbackend
+          acm serviceType off systemName=tfbackend serviceType=tfBackend
       - name: Setup Off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
@@ -435,38 +639,38 @@ jobs:
         name: Delete Secrets
         run: |
           rm /home/runner/acmconfig/keys.yaml
+
   e2e-tests-windows-arm:
-    needs: [release-windows-prerelease-version, e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    needs: [release-windows-prerelease-version, e2e-tests-linux-arm, e2e-tests-linux-cloudformation, e2e-tests-linux-custom, e2e-tests-linux-terraform-packer]
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3 
       - id: ConfigureWindowsAgent 
         uses: ./.github/actions/windows-provisioner
       - shell: pwsh
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
           $vers="windows-"+$env:VERSION
-          $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
-          echo "About to list releases"
-          gh release list --repo $repoWithToken
-          echo "About to download and extract release"
-          mkdir staging
-          gh release download $vers --archive tar.gz --repo $repoWithToken
-          echo "About to dir after download: "
+          $zipName="AgileCloudManager-"+$vers+".zip"
+          echo "About to dir initially"
           dir
-          $folderName="AgileCloudManager-"+$vers
-          $tarName=$folderName+".tar.gz"
-          tar -xvf $tarName -C staging
-          $stagingFolderName="staging\\"+$folderName
-          $sourceFolderName="staging\\"+$folderName+"\\*"
+          $addressForCurl="https://"+$env:RELEASE_BUCKET_NAME+"/"+$zipName
+          echo "About to curl"
+          curl -o $zipName $addressForCurl
+          echo "About to dir after curl"
+          dir
+          echo "Done with dir"
+          mkdir staging
+          Expand-Archive $zipName -DestinationPath "staging"
           echo "About to dir staging"
           dir staging
-          echo "About to dir stagingFolderName "
-          dir $stagingFolderName
+          $folderName="AgileCloudManager-"+$vers
+          $sourceFolderName="staging\\*"
           Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
@@ -486,7 +690,6 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
-          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo 'About to: acm setup on'
@@ -505,6 +708,54 @@ jobs:
           cd C:\\stgng\\
           echo ".................about to run e2e test"
           acm platform off
+      - name: Run foundation on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm foundation on systemName=agents
+      - name: Run services on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm services on systemName=agents
+      - name: Run services off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm services off systemName=agents
+      - name: Run serviceType on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceType on systemName=agents serviceType=subnetsWithScaleSet
+      - name: Run serviceType off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceType off systemName=agents serviceType=subnetsWithScaleSet
+      - name: Run serviceInstance on
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceInstance on systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - name: Run serviceInstance off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm serviceInstance off systemName=agents serviceType=subnetsWithScaleSet serviceInstance=azdoAgents
+      - name: Run foundation off
+        run: |
+          $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+          cd C:\\stgng\\
+          echo ".................about to run e2e test"
+          acm foundation off systemName=agents
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -517,8 +768,9 @@ jobs:
         run: |
           del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
           del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
+
   e2e-tests-windows-cloudformation:
-    needs: [release-windows-prerelease-version, e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    needs: [release-windows-prerelease-version, e2e-tests-linux-arm, e2e-tests-linux-cloudformation, e2e-tests-linux-custom, e2e-tests-linux-terraform-packer]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -528,19 +780,26 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
           $vers="windows-"+$env:VERSION
-          $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
-          echo "About to download release"
-          gh release download $vers --archive zip --repo $repoWithToken
           $zipName="AgileCloudManager-"+$vers+".zip"
+          echo "About to dir initially"
+          dir
+          $addressForCurl="https://"+$env:RELEASE_BUCKET_NAME+"/"+$zipName
+          echo "About to curl"
+          curl -o $zipName $addressForCurl
+          echo "About to dir after curl"
+          dir
+          echo "Done with dir"
           mkdir staging
           Expand-Archive $zipName -DestinationPath "staging"
+          echo "About to dir staging"
+          dir staging
           $folderName="AgileCloudManager-"+$vers
-          $stagingFolderName="staging\\"+$folderName
-          $sourceFolderName="staging\\"+$folderName+"\\*"
+          $sourceFolderName="staging\\*"
           Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
@@ -560,10 +819,8 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
-          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
-          python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
           echo "About to dir"
@@ -592,8 +849,9 @@ jobs:
         run: |
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
   e2e-tests-windows-custom:
-    needs: [release-windows-prerelease-version, e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    needs: [release-windows-prerelease-version, e2e-tests-linux-arm, e2e-tests-linux-cloudformation, e2e-tests-linux-custom, e2e-tests-linux-terraform-packer]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -603,19 +861,26 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
           $vers="windows-"+$env:VERSION
-          $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
-          echo "About to download release"
-          gh release download $vers --archive zip --repo $repoWithToken
           $zipName="AgileCloudManager-"+$vers+".zip"
+          echo "About to dir initially"
+          dir
+          $addressForCurl="https://"+$env:RELEASE_BUCKET_NAME+"/"+$zipName
+          echo "About to curl"
+          curl -o $zipName $addressForCurl
+          echo "About to dir after curl"
+          dir
+          echo "Done with dir"
           mkdir staging
           Expand-Archive $zipName -DestinationPath "staging"
+          echo "About to dir staging"
+          dir staging
           $folderName="AgileCloudManager-"+$vers
-          $stagingFolderName="staging\\"+$folderName
-          $sourceFolderName="staging\\"+$folderName+"\\*"
+          $sourceFolderName="staging\\*"
           Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
@@ -635,10 +900,8 @@ jobs:
             key_file.write(os.environ['ACM_SECOND'])
       - name: Run setup on
         run: |
-          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
-          python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
           acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-custom.git
           echo "About to dir"
@@ -667,8 +930,9 @@ jobs:
         run: |
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
   e2e-tests-windows-terraform-packer:
-    needs: [release-windows-prerelease-version, e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    needs: [release-windows-prerelease-version, e2e-tests-linux-arm, e2e-tests-linux-cloudformation, e2e-tests-linux-custom, e2e-tests-linux-terraform-packer]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -678,19 +942,26 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
+          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
           $vers="windows-"+$env:VERSION
-          $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
-          echo "About to download release"
-          gh release download $vers --archive zip --repo $repoWithToken
           $zipName="AgileCloudManager-"+$vers+".zip"
+          echo "About to dir initially"
+          dir
+          $addressForCurl="https://"+$env:RELEASE_BUCKET_NAME+"/"+$zipName
+          echo "About to curl"
+          curl -o $zipName $addressForCurl
+          echo "About to dir after curl"
+          dir
+          echo "Done with dir"
           mkdir staging
           Expand-Archive $zipName -DestinationPath "staging"
+          echo "About to dir staging"
+          dir staging
           $folderName="AgileCloudManager-"+$vers
-          $stagingFolderName="staging\\"+$folderName
-          $sourceFolderName="staging\\"+$folderName+"\\*"
+          $sourceFolderName="staging\\*"
           Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
           echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\Users\\runneradmin\\acmhome\\
@@ -814,68 +1085,75 @@ jobs:
         run: |
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
-  release-linux-final-version:
-    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm, e2e-tests-windows-arm, e2e-tests-windows-cloudformation, e2e-tests-windows-custom, e2e-tests-windows-terraform-packer]
-    runs-on: ubuntu-latest
-    steps:
-      - shell: bash
-        name: Final Release
-        env:
-          DESCRIPTION: ${{ inputs.description }}
-          VERSION: ${{ inputs.version }}
-          GH_TOKEN: ${{ secrets.HUSH }}
-        run: |
-          vers="linux-"$VERSION
-          repoWithToken="https://"$GH_TOKEN"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-          echo "About to print version"
-          echo $vers
-          nameOfRelease="AgileCloudManager-"$vers
-          echo "About to print name of release"
-          echo $nameOfRelease 
-          echo "About to create release"
-          gh release edit $vers --prerelease=false --repo $repoWithToken
-          #gh release edit linux-1.1.x --prerelease=false --repo $repoWithToken
-  release-windows-final-version:
-    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm, e2e-tests-windows-arm, e2e-tests-windows-cloudformation, e2e-tests-windows-custom, e2e-tests-windows-terraform-packer]
-    runs-on: windows-latest
-    steps:
-      - shell: pwsh
-        name: Final Release
-        env:
-          DESCRIPTION: ${{ inputs.description }}
-          VERSION: ${{ inputs.version }}
-          GH_TOKEN: ${{ secrets.HUSH }}
-        run: |
-          $vers="windows-"+$env:VERSION
-          $repoWithToken = '"https://"+$env:GH_TOKEN+"@github.com/AgileCloudInstitute/AgileCloudManager"'
-          echo "About to print version"
-          echo $vers
-          $nameOfRelease="AgileCloudManager-"+$vers
-          echo "About to print name of release"
-          echo $nameOfRelease 
-          echo "About to create release"
-          gh release edit $vers --prerelease=false --repo $repoWithToken
-          #gh release edit linux-1.1.x --prerelease=false --repo $repoWithToken
-  push-to-master-branch:
-    needs: [release-linux-final-version, release-windows-final-version]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.HUSH }}
-      - shell: bash
-        name: Push changes to master branch
-        run: |
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
-          #git init
-          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          #git branch -M master
-          #git add --all
-          #git push --force -u origin master
-          git fetch --all
-          git checkout staging
-          git checkout master
-          #git merge --allow-unrelated-histories staging
-          #git push --force -u origin master
-          git push --force origin staging:master
+
+######################################################################################
+### End of basic initial tests.  The rest below are to be added only after basic initial tests pass
+#####################################################################################
+
+
+#  push-to-master-branch:
+#    needs: [e2e-tests-linux-terraform-packer-type-instance, e2e-tests-linux-terraform-packer, e2e-tests-windows-terraform-packer]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          token: ${{ secrets.HUSH }}
+#      - shell: bash
+#        name: Push changes to master branch
+#        run: |
+#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+#          git config --global user.name "AgileCloudInstitute"
+#          #git init
+#          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+#          #git branch -M master
+#          #git add --all
+#          #git push --force -u origin master
+#          git fetch --all
+#          git checkout staging
+#          git checkout master
+#          #git merge --allow-unrelated-histories staging
+#          #git push --force -u origin master
+#          git push --force origin staging:master
+
+#############################################################################################
+### Below version was used only for development and can be deleted as soon as the tests pass
+#############################################################################################
+#  e2e-tests-windows-terraform-packer:
+#    needs: [release-windows-prerelease-version]
+#    runs-on: windows-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - id: ConfigureWindowsAgent
+#        uses: ./.github/actions/windows-provisioner
+#      - shell: pwsh
+#        name: Download and extract Release
+#        env:
+#          DESCRIPTION: ${{ inputs.description }}
+#          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+#          VERSION: ${{ inputs.version }}
+#          GH_TOKEN: ${{ secrets.HUSH }}
+#        run: |
+#          $vers="windows-"+$env:VERSION
+#          $zipName="AgileCloudManager-"+$vers+".zip"
+#
+#          echo "About to dir initially"
+#          dir
+#          $addressForCurl="https://"+$env:RELEASE_BUCKET_NAME+"/"+$zipName
+#          echo "About to curl"
+#          curl -o $zipName $addressForCurl
+#          echo "About to dir after curl"
+#          dir
+#          echo "Done with dir"
+#
+#          mkdir staging
+#          Expand-Archive $zipName -DestinationPath "staging"
+#          echo "About to dir staging"
+#          dir staging
+#          $folderName="AgileCloudManager-"+$vers
+#          #$stagingFolderName="staging\\"+$folderName
+#          #$sourceFolderName="staging\\"+$folderName+"\\*"
+#          $sourceFolderName="staging\\*"
+#          Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
+#          echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
+#          cd C:\\Users\\runneradmin\\acmhome\\
+#          dir 
