@@ -78,6 +78,174 @@ jobs:
           del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
           del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
+  e2e-tests-windows-cloudformation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+      - id: Acm_Platform_On_Windows
+        uses: ./.github/actions/acm-platform-on-windows
+      - id: Acm_Platform_Off_Windows
+        uses: ./.github/actions/acm-platform-off-windows
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+  e2e-tests-windows-custom:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-custom.git
+      - id: Acm_Platform_On_Windows
+        uses: ./.github/actions/acm-platform-on-windows
+      - id: Acm_Platform_Off_Windows
+        uses: ./.github/actions/acm-platform-off-windows
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+  e2e-tests-windows-terraform-packer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+      - id: Acm_ServiceType_On_Windows
+        uses: ./.github/actions/acm-service-type-on-windows
+        with:
+          system_name: tfbackend
+          service_type: tfBackend 
+      - id: Acm_ServiceType_Off_Windows
+        uses: ./.github/actions/acm-service-type-off-windows
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+      - id: Acm_ServiceInstance_On_Windows
+        uses: ./.github/actions/acm-service-instance-on-windows
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+          service_instance: adminAccounts
+      - id: Acm_ServiceInstance_Off_Windows
+        uses: ./.github/actions/acm-service-instance-off-windows
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+          service_instance: adminAccounts
+      - id: Acm_Services_On_Windows
+        uses: ./.github/actions/acm-services-on-windows
+        with:
+          system_name: tfbackend
+      - id: Acm_Foundation_On_Windows
+        uses: ./.github/actions/acm-foundation-on-windows
+        with:
+          system_name: admin
+      - id: Acm_Services_On_Windows
+        uses: ./.github/actions/acm-services-on-windows
+        with:
+          system_name: admin
+      - id: Acm_Foundation_On_Windows
+        uses: ./.github/actions/acm-foundation-on-windows
+        with:
+          system_name: agents
+      - id: Acm_Services_On_Windows
+        uses: ./.github/actions/acm-services-on-windows
+        with:
+          system_name: agents
+      - id: Acm_Services_Off_Windows
+        uses: ./.github/actions/acm-services-off-windows
+        with:
+          system_name: agents
+      - id: Acm_Foundation_Off_Windows
+        uses: ./.github/actions/acm-foundation-off-windows
+        with:
+          system_name: agents
+      - id: Acm_Services_Off_Windows
+        uses: ./.github/actions/acm-services-off-windows
+        with:
+          system_name: admin
+      - id: Acm_Foundation_Off_Windows
+        uses: ./.github/actions/acm-foundation-off-windows
+        with:
+          system_name: admin
+      - id: Acm_Services_Off_Windows
+        uses: ./.github/actions/acm-services-off-windows
+        with:
+          system_name: tfbackend
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+
+
 #...................................................
 
 #  create-exe-linux-and-upload-artifact:

@@ -4,6 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: Run platform off
+      shell: pwsh
       run: |
         $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
         cd C:\\stgng\\
