@@ -254,6 +254,7 @@ class workflow_service_type:
     if systemConfig == None:
       print("255 systemToModify is: ", systemToModify)
       print("256 platformConfig is: ", str(platformConfig))
+      print("yamlPlatformConfigFileAndPath is: ", yamlPlatformConfigFileAndPath)
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       print(logString)
       sys.exit(1)

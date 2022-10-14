@@ -25,7 +25,7 @@ class config_fileprocessor:
     print('platformConfig is: ', platformConfig)
     for item in platformConfig:
       print("item is: ", item)
-      if item == systemName:
+      if str(item).replace(" ","") == str(systemName).replace(" ","") :
         print("platformConfig.get(item) is: ", str(platformConfig.get(item)))
         print("type(platformConfig.get(item)) is: ", str(type(platformConfig.get(item))))
         if type(platformConfig.get(item)) == dict:
