@@ -1,0 +1,11 @@
+name: 'acm platform off for Windows Agent'
+description: 'Runs the acm platform off command in Windows-latest agent.'
+runs:
+  using: "composite"
+  steps:
+    - name: Run platform off
+      run: |
+        $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+        cd C:\\stgng\\
+        echo ".................about to run e2e test"
+        acm platform off

@@ -1,0 +1,22 @@
+name: 'acm serviceType off for Windows Agent'
+description: 'Runs the acm serviceType off command using Windows-latest agent.'
+inputs:
+  system_name:
+    description: Custom input parameter
+    required: true
+  service_type:
+    description: Custom input parameter
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Run serviceType off
+      shell: pwsh
+      env:
+        system_name: ${{ inputs.system_name }}
+        service_type: ${{ inputs.service_type }}
+      run: |
+        $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+        cd C:\\stgng\\
+        echo ".................about to run e2e test"
+        acm serviceType off systemName=$env:system_name serviceType=$env:service_type

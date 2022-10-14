@@ -1,0 +1,26 @@
+name: 'acm serviceInstance on for Windows Agent'
+description: 'Runs the acm serviceInstance on command using Windows-latest agent.'
+inputs:
+  system_name:
+    description: Custom input parameter
+    required: true
+  service_type:
+    description: Custom input parameter
+    required: true
+  service_instance:
+    description: Custom input parameter
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Run serviceInstance on
+      shell: pwsh
+      env:
+        system_name: ${{ inputs.system_name }}
+        service_type: ${{ inputs.service_type }}
+        service_instance: ${{ inputs.service_instance }}
+      run: |
+        $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
+        cd C:\\stgng\\
+        echo ".................about to run e2e test"
+        acm serviceInstance on systemName=$env:system_name serviceType=$env:service_type serviceInstance=$env:service_instance
