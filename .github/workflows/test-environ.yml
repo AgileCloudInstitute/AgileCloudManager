@@ -197,43 +197,43 @@ jobs:
           system_name: tfbackend
           service_type: tfBackend
           service_instance: adminAccounts
-      - id: Acm_Services_On_Windows
+      - id: Acm_Services_On_tfbackend_Windows
         uses: ./.github/actions/acm-services-on-windows
         with:
           system_name: tfbackend
-      - id: Acm_Foundation_On_Windows
+      - id: Acm_Foundation_On_Admin_Windows
         uses: ./.github/actions/acm-foundation-on-windows
         with:
           system_name: admin
-      - id: Acm_Services_On_Windows
+      - id: Acm_Services_On_Admin_Windows
         uses: ./.github/actions/acm-services-on-windows
         with:
           system_name: admin
-      - id: Acm_Foundation_On_Windows
+      - id: Acm_Foundation_On_Agents_Windows
         uses: ./.github/actions/acm-foundation-on-windows
         with:
           system_name: agents
-      - id: Acm_Services_On_Windows
+      - id: Acm_Services_On_Agents_Windows
         uses: ./.github/actions/acm-services-on-windows
         with:
           system_name: agents
-      - id: Acm_Services_Off_Windows
+      - id: Acm_Services_Off_Agents_Windows
         uses: ./.github/actions/acm-services-off-windows
         with:
           system_name: agents
-      - id: Acm_Foundation_Off_Windows
+      - id: Acm_Foundation_Off_Agents_Windows
         uses: ./.github/actions/acm-foundation-off-windows
         with:
           system_name: agents
-      - id: Acm_Services_Off_Windows
+      - id: Acm_Services_Off_Admin_Windows
         uses: ./.github/actions/acm-services-off-windows
         with:
           system_name: admin
-      - id: Acm_Foundation_Off_Windows
+      - id: Acm_Foundation_Off_Admin_Windows
         uses: ./.github/actions/acm-foundation-off-windows
         with:
           system_name: admin
-      - id: Acm_Services_Off_Windows
+      - id: Acm_Services_Off_tfbackend_Windows
         uses: ./.github/actions/acm-services-off-windows
         with:
           system_name: tfbackend
