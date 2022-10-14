@@ -22,13 +22,15 @@ class config_fileprocessor:
   #@public
   def getSystemConfig(self, platformConfig, systemName):
     cfmtr = command_formatter()
-    print('platformConfig is: ', platformConfig)
+    print('x platformConfig is: ', platformConfig)
     for item in platformConfig:
-      print("item is: ", item)
+      print("x item is: ", item)
+      print("x systemName is: ", systemName)
       if str(item).replace(" ","") == str(systemName).replace(" ","") :
         print("platformConfig.get(item) is: ", str(platformConfig.get(item)))
         print("type(platformConfig.get(item)) is: ", str(type(platformConfig.get(item))))
         if type(platformConfig.get(item)) == dict:
+          print("x About to return platformConfig.get(item) ", platformConfig.get(item))
           return platformConfig.get(item)
         elif type(platformConfig.get(item)) == str:
           if (platformConfig.get(item).split(".")[1] == "yaml") or (platformConfig.get(item).split(".")[1] == "yml"):

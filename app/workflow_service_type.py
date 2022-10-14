@@ -249,8 +249,11 @@ class workflow_service_type:
     yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
     for systemName in platformConfig:
+      print("systemName is: ", systemName)
+      print("systemToModify is: ", systemToModify)
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        print("y systemConfig is: ", str(systemConfig))
     if systemConfig == None:
       print("255 systemToModify is: ", systemToModify)
       print("256 platformConfig is: ", str(platformConfig))

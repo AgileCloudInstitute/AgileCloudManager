@@ -1,5 +1,5 @@
-name: 'acm serviceType on for Linux Agent'
-description: 'Runs the acm serviceType on command using Ubuntu-latest agent.'
+name: 'acm serviceType off for Linux Agent'
+description: 'Runs the acm serviceType off command using Ubuntu-latest agent.'
 inputs:
   system_name:
     description: Custom input parameter
@@ -12,6 +12,9 @@ runs:
   steps:
     - shell: bash
       name: Run serviceType off
+      env:
+        system_name: ${{ inputs.system_name }}
+        service_type: ${{ inputs.service_type }}
       run: |
         PATH=$PATH:/home/runner/acmhome/;export PATH
         cd /home/runner/testdir
