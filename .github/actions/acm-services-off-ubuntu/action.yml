@@ -1,0 +1,18 @@
+name: 'acm services off for Linux Agent'
+description: 'Runs the acm services off command using Ubuntu-latest agent.'
+inputs:
+  system_name:
+    description: Custom input parameter
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      name: Run services off
+      env:
+        system_name: ${{ inputs.system_name }}
+      run: |
+        PATH=$PATH:/home/runner/acmhome/;export PATH
+        cd /home/runner/testdir
+        echo ".................about to run e2e test"
+        acm services off systemName=$system_name

@@ -1,0 +1,26 @@
+name: 'acm serviceInstance on for Linux Agent'
+description: 'Runs the acm serviceInstance on command using Ubuntu-latest agent.'
+inputs:
+  system_name:
+    description: Custom input parameter
+    required: true
+  service_type:
+    description: Custom input parameter
+    required: true
+  service_instance:
+    description: Custom input parameter
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      name: Run serviceInstance on
+      env:
+        system_name: ${{ inputs.system_name }}
+        service_type: ${{ inputs.service_type }}
+        service_instance: ${{ inputs.service_instance }}
+      run: |
+        PATH=$PATH:/home/runner/acmhome/;export PATH
+        cd /home/runner/testdir
+        echo ".................about to run e2e test"
+        acm serviceInstance on systemName=$system_name serviceType=$service_type serviceInstance=$service_instance

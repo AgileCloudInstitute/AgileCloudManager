@@ -44,21 +44,58 @@ jobs:
           echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
           cat /home/runner/acmconfig/keys.yaml
       - uses: actions/checkout@v3
-      - id: AcmSetupOnUbuntu
+      - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
           repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
-#      - name: Setup On
-#        shell: bash
-#        run: |
-#          PATH=$PATH:/home/runner/acmhome/dist/acm;export PATH
-#          sudo mkdir /home/runner/testdir
-#          sudo chown runner:runner /home/runner/testdir
-#          cd /home/runner/testdir
-#          echo 'About to setup on'
-#          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
-#          echo "........................About to ls -al "
-#          ls -al 
+      - id: Acm_Platform_On_Ubuntu
+        uses: ./.github/actions/acm-platform-on-ubuntu
+      - id: Acm_Platform_Off_Ubuntu
+        uses: ./.github/actions/acm-platform-off-ubuntu
+      - id: Acm_Foundation_On_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_On_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_Off_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_ServiceType_On_Ubuntu
+        uses: ./.github/actions/acm-service-type-on-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceType_Off_Ubuntu
+        uses: ./.github/actions/acm-service-type-off-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceInstance_On_Ubuntu
+        uses: ./.github/actions/acm-service-instance-on-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+          service_instance: azdoAgents
+      - id: Acm_ServiceInstance_Off_Ubuntu
+        uses: ./.github/actions/acm-service-instance-off-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+          service_instance: azdoAgents
+      - id: Acm_Foundation_Off_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
 
 #...............
 
