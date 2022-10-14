@@ -259,6 +259,8 @@ class workflow_system:
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
+      print("262 systemToModify is: ", systemToModify)
+      print("263 platformConfig is: ", str(platformConfig))
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       print(logString)
       sys.exit(1)
@@ -288,6 +290,8 @@ class workflow_system:
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
+      print("293 systemToModify is: ", systemToModify)
+      print("294 platformConfig is: ", str(platformConfig))
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       print(logString)
       sys.exit(1)
@@ -317,6 +321,8 @@ class workflow_system:
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
+      print("324 systemToModify is: ", systemToModify)
+      print("325 platformConfig is: ", str(platformConfig))
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       print(logString)
       sys.exit(1)
@@ -346,6 +352,8 @@ class workflow_system:
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(platformConfig, systemName)
     if systemConfig == None:
+      print("355 systemToModify is: ", systemToModify)
+      print("356 platformConfig is: ", str(platformConfig))
       logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
       print(logString)
       sys.exit(1)
