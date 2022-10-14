@@ -15,6 +15,6 @@ runs:
         $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
         cd C:\\stgng\\
         echo 'About to: acm setup on'
-        acm setup on sourceRepo=$repo_url
+        acm setup on sourceRepo=$env:repo_url
         echo "About to dir"
         dir
