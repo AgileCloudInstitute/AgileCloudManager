@@ -4,7 +4,258 @@ on:
     branches:
       - test
 jobs:
+  create-exe-linux-and-upload-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - shell: bash
+        name: Create linux exe and add exe to PATH
+        run: |
+          pip install -U pyinstaller
+          cd app
+          rm __init__.py
+          pyinstaller acm.py
+          tar -cvf acm_build.tar dist/acm
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: acm-artifact
+          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
+          retention-days: 1
+
+  e2e-tests-linux-arm:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
+          cat /home/runner/acmconfig/keys.yaml
+      - uses: actions/checkout@v3
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+      - id: Acm_Platform_On_Ubuntu
+        uses: ./.github/actions/acm-platform-on-ubuntu
+      - id: Acm_Platform_Off_Ubuntu
+        uses: ./.github/actions/acm-platform-off-ubuntu
+      - id: Acm_Foundation_On_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_On_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_Off_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_ServiceType_On_Ubuntu
+        uses: ./.github/actions/acm-service-type-on-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceType_Off_Ubuntu
+        uses: ./.github/actions/acm-service-type-off-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceInstance_On_Ubuntu
+        uses: ./.github/actions/acm-service-instance-on-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+          service_instance: azdoAgents
+      - id: Acm_ServiceInstance_Off_Ubuntu
+        uses: ./.github/actions/acm-service-instance-off-ubuntu
+        with:
+          system_name: agents
+          service_type: subnetsWithScaleSet
+          service_instance: azdoAgents
+      - id: Acm_Foundation_Off_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-linux-cloudformation:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+      - id: Acm_Platform_On_Ubuntu
+        uses: ./.github/actions/acm-platform-on-ubuntu
+      - id: Acm_Platform_Off_Ubuntu
+        uses: ./.github/actions/acm-platform-off-ubuntu
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-linux-custom:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-custom.git
+      - id: Acm_Platform_On_Ubuntu
+        uses: ./.github/actions/acm-platform-on-ubuntu
+      - id: Acm_Platform_Off_Ubuntu
+        uses: ./.github/actions/acm-platform-off-ubuntu
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-linux-terraform-packer:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+        run: | 
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+      - id: Acm_ServiceType_On_tfbackend_Ubuntu
+        uses: ./.github/actions/acm-service-type-on-ubuntu
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+      - id: Acm_ServiceType_Off_tfbackend_Ubuntu
+        uses: ./.github/actions/acm-service-type-off-ubuntu
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+      - id: Acm_ServiceInstance_On_adminaccounts_Ubuntu
+        uses: ./.github/actions/acm-service-instance-on-ubuntu
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+          service_instance: adminAccounts
+      - id: Acm_ServiceInstance_Off_adminaccounts_Ubuntu
+        uses: ./.github/actions/acm-service-instance-off-ubuntu
+        with:
+          system_name: tfbackend
+          service_type: tfBackend
+          service_instance: adminAccounts
+      - id: Acm_Services_On_tfbackend_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: tfbackend
+      - id: Acm_Foundation_On_admin_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: admin
+      - id: Acm_Services_On_admin_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: admin
+      - id: Acm_Foundation_On_admin_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_On_agents_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_Off_agents_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Foundation_Off_agents_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: agents
+      - id: Acm_Services_Off_agents_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: admin
+      - id: Acm_Foundation_Off_admin_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: admin
+      - id: Acm_Services_Off_tfbackend_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: tfbackend
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
   e2e-tests-windows-arm:
+    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3 
@@ -79,6 +330,7 @@ jobs:
           del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-cloudformation:
+    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -115,6 +367,7 @@ jobs:
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-custom:
+    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -151,6 +404,7 @@ jobs:
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-terraform-packer:
+    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -244,211 +498,116 @@ jobs:
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
+  create-linux-exe-and-push-to-linux-release-branch:
+    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Create exe and add exe to PATH
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}  
+        run: |
+          echo "About to pwd"
+          pwd
+          echo "About to list directory contents of initial dir"
+          ls -al
+          pip install -U pyinstaller
+          cd app
+          rm __init__.py
+          pyinstaller acm.py
+          echo "About to list directory contents of app"
+          ls -al
+          mkdir /home/runner/release
+          cp -R dist/acm/. /home/runner/release/
+          cd /home/runner/release
+          echo "About to list directory contents of /home/runner/release"
+          ls -al 
+          echo "About to push to release-linux branch"
+          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote add origin $repoWithToken
+          git add --all
+          git commit -am 'pushed from test-environ'
+          git push --force -u origin HEAD:release-linux
 
+  create-windows-exe-and-push-to-windows-release-branch:
+    needs: [e2e-tests-windows-terraform-packer, e2e-tests-windows-custom, e2e-tests-windows-cloudformation, e2e-tests-windows-arm]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: pwsh
+        name: Create exe
+        run: |
+          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
+          python -m pip install --upgrade pip requests
+          python -m pip install --upgrade pip PyYaml
+          python -m pip install --upgrade pip pyinstaller
+          pyinstaller --version
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmwinrel\\
+          echo "About to start"
+          cd app
+          echo "About to dir"
+          dir
+          echo "About to gc .\acm.py"
+          gc .\acm.py
+          del __init__.py
+          echo "About to: pyinstaller acm.py"
+          pyinstaller acm.py
+          echo "About to dir"
+          dir
+          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\"
+          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\
+          dir
+          Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
+          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+          cd C:\\Users\\runneradmin\\acmwinrel\\
+          dir
+          Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -recurse | foreach ($_) {remove-item $_.fullname -recurse}
+          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
+          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\
+          dir
+          Move-Item -Path "C:\\Users\\runneradmin\\acmwinrel\\*" -Destination "D:\\a\\AgileCloudManager\\AgileCloudManager\\"
+      - shell: cmd
+        name: Push to release-windows branch
+        env:
+          GIT_PAT: ${{ secrets.HUSH }}
+        run: |
+          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
+          cd C:\\Users\\runneradmin\\acmwinrel\\
+          dir 
+          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote add origin %repoWithToken%
+          git add --all
+          git commit -am "pushed from test-environ"
+          git push --force -u origin HEAD:release-windows
 
-#...................................................
-
-#  create-exe-linux-and-upload-artifact:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - shell: bash
-#        name: Create linux exe and add exe to PATH
-#        run: |
-#          pip install -U pyinstaller
-#          cd app
-#          rm __init__.py
-#          pyinstaller acm.py
-#          tar -cvf acm_build.tar dist/acm
-#      - name: Upload Artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: acm-artifact
-#          path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
-#          retention-days: 1
-#
-#  e2e-tests-linux-arm:
-#    needs: [create-exe-linux-and-upload-artifact]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - id: ExpandUbuntuArtifact
-#        uses: ./.github/actions/ubuntu-artifact-expander
-#      - uses: actions/checkout@v3
-#      - id: ConfigureUbuntuAgent
-#        uses: ./.github/actions/ubuntu-provisioner
-#      - name: Put secrets in file
-#        shell: bash
-#        env:
-#          ACM_SECRET: ${{ secrets.ACM_REPO }}
-#          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-#        run: | 
-#          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-#          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
-#          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
-#          cat /home/runner/acmconfig/keys.yaml
-#      - uses: actions/checkout@v3
-#      - id: Acm_Setup_On_Ubuntu
-#        uses: ./.github/actions/acm-setup-on-ubuntu
-#        with:
-#          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
-#      - id: Acm_Platform_On_Ubuntu
-#        uses: ./.github/actions/acm-platform-on-ubuntu
-#      - id: Acm_Platform_Off_Ubuntu
-#        uses: ./.github/actions/acm-platform-off-ubuntu
-#      - id: Acm_Foundation_On_Ubuntu
-#        uses: ./.github/actions/acm-foundation-on-ubuntu
-#        with:
-#          system_name: agents
-#      - id: Acm_Services_On_Ubuntu
-#        uses: ./.github/actions/acm-services-on-ubuntu
-#        with:
-#          system_name: agents
-#      - id: Acm_Services_Off_Ubuntu
-#        uses: ./.github/actions/acm-services-off-ubuntu
-#        with:
-#          system_name: agents
-#      - id: Acm_ServiceType_On_Ubuntu
-#        uses: ./.github/actions/acm-service-type-on-ubuntu
-#        with:
-#          system_name: agents
-#          service_type: subnetsWithScaleSet
-#      - id: Acm_ServiceType_Off_Ubuntu
-#        uses: ./.github/actions/acm-service-type-off-ubuntu
-#        with:
-#          system_name: agents
-#          service_type: subnetsWithScaleSet
-#      - id: Acm_ServiceInstance_On_Ubuntu
-#        uses: ./.github/actions/acm-service-instance-on-ubuntu
-#        with:
-#          system_name: agents
-#          service_type: subnetsWithScaleSet
-#          service_instance: azdoAgents
-#      - id: Acm_ServiceInstance_Off_Ubuntu
-#        uses: ./.github/actions/acm-service-instance-off-ubuntu
-#        with:
-#          system_name: agents
-#          service_type: subnetsWithScaleSet
-#          service_instance: azdoAgents
-#      - id: Acm_Foundation_Off_Ubuntu
-#        uses: ./.github/actions/acm-foundation-off-ubuntu
-#        with:
-#          system_name: agents
-#      - id: Acm_Setup_Off_Ubuntu
-#        uses: ./.github/actions/acm-setup-off-ubuntu
-#      - shell: bash
-#        name: Delete Secrets
-#        run: |
-#          rm /home/runner/acmconfig/keys.yaml
-
-#...............
-
-#  create-linux-exe-and-push-to-linux-release-branch:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          token: ${{ secrets.HUSH }}
-#      - shell: bash
-#        name: Create exe and add exe to PATH
-#        env:
-#          GIT_PAT: ${{ secrets.HUSH }}  
-#        run: |
-#          echo "About to pwd"
-#          pwd
-#          echo "About to list directory contents of initial dir"
-#          ls -al
-#          pip install -U pyinstaller
-#          cd app
-#          rm __init__.py
-#          pyinstaller acm.py
-#          echo "About to list directory contents of app"
-#          ls -al
-#          mkdir /home/runner/release
-#          cp -R dist/acm/. /home/runner/release/
-#          cd /home/runner/release
-#          echo "About to list directory contents of /home/runner/release"
-#          ls -al 
-#          echo "About to push to release-linux branch"
-#          repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-#          git config --global user.name "AgileCloudInstitute"
-#          git init
-#          git remote add origin $repoWithToken
-#          git add --all
-#          git commit -am 'pushed from test-environ'
-#          git push --force -u origin HEAD:release-linux
-#  create-windows-exe-and-push-to-windows-release-branch:
-#    runs-on: windows-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          token: ${{ secrets.HUSH }}
-#      - shell: pwsh
-#        name: Create exe
-#        run: |
-#          $env:Path = "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;" + $env:Path
-#          python -m pip install --upgrade pip requests
-#          python -m pip install --upgrade pip PyYaml
-#          python -m pip install --upgrade pip pyinstaller
-#          pyinstaller --version
-#          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmwinrel\\
-#          echo "About to start"
-#          cd app
-#          echo "About to dir"
-#          dir
-#          echo "About to gc .\acm.py"
-#          gc .\acm.py
-#          del __init__.py
-#          echo "About to: pyinstaller acm.py"
-#          pyinstaller acm.py
-#          echo "About to dir"
-#          dir
-#          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\"
-#          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\
-#          dir
-#          Move-Item -Path "D:\\a\\AgileCloudManager\\AgileCloudManager\\app\\dist\\acm\\*" -Destination "C:\\Users\\runneradmin\\acmwinrel\\"
-#          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
-#          cd C:\\Users\\runneradmin\\acmwinrel\\
-#          dir
-#          Get-ChildItem D:\a\AgileCloudManager\AgileCloudManager -recurse | foreach ($_) {remove-item $_.fullname -recurse}
-#          echo "About to dir D:\\a\\AgileCloudManager\\AgileCloudManager\\ "
-#          cd D:\\a\\AgileCloudManager\\AgileCloudManager\\
-#          dir
-#          Move-Item -Path "C:\\Users\\runneradmin\\acmwinrel\\*" -Destination "D:\\a\\AgileCloudManager\\AgileCloudManager\\"
-#      - shell: cmd
-#        name: Push to release-windows branch
-#        env:
-#          GIT_PAT: ${{ secrets.HUSH }}
-#        run: |
-#          echo "About to dir C:\\Users\\runneradmin\\acmwinrel\\"
-#          cd C:\\Users\\runneradmin\\acmwinrel\\
-#          dir 
-#          set repoWithToken="https://"$GIT_PAT"@github.com/AgileCloudInstitute/AgileCloudManager.git"
-#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-#          git config --global user.name "AgileCloudInstitute"
-#          git init
-#          git remote add origin %repoWithToken%
-#          git add --all
-#          git commit -am "pushed from test-environ"
-#          git push --force -u origin HEAD:release-windows
-#  push-to-staging-branch:
-#    needs: [create-linux-exe-and-push-to-linux-release-branch, create-windows-exe-and-push-to-windows-release-branch]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          token: ${{ secrets.HUSH }}
-#      - shell: bash
-#        name: Push changes to staging branch
-#        run: |
-#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-#          git config --global user.name "AgileCloudInstitute"
-#          git init
-#          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-#          git branch -M staging
-#          git add --all
-#          git push --force -u origin staging
+  push-to-staging-branch:
+    needs: [create-linux-exe-and-push-to-linux-release-branch, create-windows-exe-and-push-to-windows-release-branch]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Push changes to staging branch
+        run: |
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          git init
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git branch -M staging
+          git add --all
+          git push --force -u origin staging
 
 ########################################################################################
 ####  START OF TEMP HOLDING SECTION
