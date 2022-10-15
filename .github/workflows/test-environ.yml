@@ -219,7 +219,7 @@ jobs:
         uses: ./.github/actions/acm-services-on-ubuntu
         with:
           system_name: admin
-      - id: Acm_Foundation_On_admin_Ubuntu
+      - id: Acm_Foundation_On_agents_Ubuntu
         uses: ./.github/actions/acm-foundation-on-ubuntu
         with:
           system_name: agents
@@ -235,7 +235,7 @@ jobs:
         uses: ./.github/actions/acm-foundation-off-ubuntu
         with:
           system_name: agents
-      - id: Acm_Services_Off_agents_Ubuntu
+      - id: Acm_Services_Off_admin_Ubuntu
         uses: ./.github/actions/acm-services-off-ubuntu
         with:
           system_name: admin
