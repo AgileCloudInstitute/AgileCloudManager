@@ -18,7 +18,7 @@ class controller_arm:
   foundationOutput = {}
 
   def __init__(self):  
-    pass
+    pass 
 
   #@public
   def createDeployment(self, systemConfig, instance, caller, serviceType, onlyFoundationOutput):

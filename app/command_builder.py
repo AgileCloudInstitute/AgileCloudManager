@@ -945,9 +945,9 @@ class command_builder:
       #Later, below, add handling to take variables sourced from keys and put them into ARM templates
       #For now, the $keys for ARM templates are handled by the custom controller which makes cli calls to the Azure API
       if (value.count('.') == 0) or (value.count('.') == 1):
-#        import traceback
-#        traceback.print_stack()
-        print("ok")
+        import traceback
+        traceback.print_stack()
+        print("ok..")
         value = self.getRawSecretFromKeys("conf", keyDir, varName, value)
       else:
         logString = "ERROR: For ARM templates, exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "

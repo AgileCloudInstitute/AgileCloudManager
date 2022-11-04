@@ -39,6 +39,7 @@ class controller_tfbackendazrm:
       onlyFoundationOutput = False
       ca = controller_arm()
       ca.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, onlyFoundationOutput)
+      print("z done createDeployment(")
       cka.writeTheVarsFile(systemConfig, instance, "tfBackend", None, None)
       self.copyTheConfigFile(systemConfig, instance)
 
