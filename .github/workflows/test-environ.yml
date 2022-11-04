@@ -38,7 +38,9 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
         run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
           echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
@@ -112,12 +114,14 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
         run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
-        with:
+        with: 
           repo_url: https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
       - id: Acm_appliance_On_Ubuntu
         uses: ./.github/actions/acm-appliance-on-ubuntu
@@ -145,7 +149,9 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
         run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
@@ -178,7 +184,9 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
         run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu

@@ -10,6 +10,7 @@ runs:
         sudo mkdir /usr/acm
         sudo mkdir /usr/acm/keys
         sudo mkdir /usr/acm/keys/adminAccounts
+        sudo mkdir /usr/acm/keys/starter
         sudo chown -R runner:runner /usr/acm
         sudo chown -R runner:runner /home/runner/acmconfig/
         echo 'new------------------'
