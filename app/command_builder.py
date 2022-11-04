@@ -270,6 +270,7 @@ class command_builder:
     cfmtr = command_formatter()
     lw = log_writer()
     secret = "empty"
+    print("1x")
     if platform.system() == "Windows":
       if keyDir[:-1] != "\\":
         keyDir = keyDir + "\\"
@@ -278,14 +279,20 @@ class command_builder:
         keyDir = keyDir + "/"
     yamlKeysPath = keyDir.replace("\\\\","\\")
     yamlKeysPath = cfmtr.formatPathForOS(yamlKeysPath)
+    print("2x")
     if varType == "key":
+      print("3x")
       yamlKeysFileAndPath = yamlKeysPath + 'keys.yaml'
     elif varType == "conf":
+      print("4x")
       yamlKeysFileAndPath = yamlKeysPath + 'config.yaml'
     if (valueCoordinates == "$keys") or (valueCoordinates == "$config"):
+      print("5x")
       tfInputVarName = sourceField
     else: 
+      print("6x")
       if valueCoordinates.count(".") == 1:
+        print("7x")
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
@@ -299,15 +306,21 @@ class command_builder:
         if ("#" not in line) and (len(line.replace(" ", "")) > 1):
           lineParts = line.split(":",1)
           keypairs_dict[lineParts[0]] = lineParts[1].replace("\n","").strip('\"')
+    print("8x")
     myItems = keypairs_dict.items()
     for key, value in myItems:  
+      print("key is: ", key)
+      print("9x")
       if (value[0] == "\"") and (value[-1] == "\""):
+        print("10x")
         #eliminate any pre-existing double quotes to avoid downstream errors.
         value = value[1:]
         value = value[:-1]
       if key == tfInputVarName:
+        print("11x")
         secret = value.replace(" ","")
     if 'empty' in secret:
+      print("12x")
       if ("foundationMapped" in sourceField) or ("foundationMapped" in valueCoordinates):
         print("2 sourceField is: ", sourceField)
         print("2 valueCoordinates is: ", valueCoordinates)
@@ -947,6 +960,9 @@ class command_builder:
       if (value.count('.') == 0) or (value.count('.') == 1):
         import traceback
         traceback.print_stack()
+        print("keyDir is: ", keyDir)
+        print("varName is: ", varName)
+        print("value is: ", value)
         print("ok..")
         value = self.getRawSecretFromKeys("conf", keyDir, varName, value)
       else:
