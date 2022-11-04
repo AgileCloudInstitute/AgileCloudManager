@@ -1,12 +1,12 @@
-name: 'acm platform on for Windows Agent'
-description: 'Runs the acm platform on command in Windows-latest agent.'
+name: 'acm appliance on for Windows Agent'
+description: 'Runs the acm appliance on command in Windows-latest agent.'
 runs:
   using: "composite"
   steps:
-    - name: Run platform on
+    - name: Run appliance on
       shell: pwsh
       run: |
         $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
         cd C:\\stgng\\
         echo ".................about to run e2e test"
-        acm platform on
+        acm appliance on

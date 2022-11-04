@@ -47,11 +47,11 @@ jobs:
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
-      - id: Acm_Platform_On_Ubuntu
-        uses: ./.github/actions/acm-platform-on-ubuntu
-      - id: Acm_Platform_Off_Ubuntu
-        uses: ./.github/actions/acm-platform-off-ubuntu
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-arm.git
+      - id: Acm_appliance_On_Ubuntu
+        uses: ./.github/actions/acm-appliance-on-ubuntu
+      - id: Acm_appliance_Off_Ubuntu
+        uses: ./.github/actions/acm-appliance-off-ubuntu
       - id: Acm_Foundation_On_Ubuntu
         uses: ./.github/actions/acm-foundation-on-ubuntu
         with:
@@ -118,11 +118,11 @@ jobs:
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
-      - id: Acm_Platform_On_Ubuntu
-        uses: ./.github/actions/acm-platform-on-ubuntu
-      - id: Acm_Platform_Off_Ubuntu
-        uses: ./.github/actions/acm-platform-off-ubuntu
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
+      - id: Acm_appliance_On_Ubuntu
+        uses: ./.github/actions/acm-appliance-on-ubuntu
+      - id: Acm_appliance_Off_Ubuntu
+        uses: ./.github/actions/acm-appliance-off-ubuntu
       - id: Acm_Setup_Off_Ubuntu
         uses: ./.github/actions/acm-setup-off-ubuntu
       - shell: bash
@@ -151,11 +151,11 @@ jobs:
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-custom.git
-      - id: Acm_Platform_On_Ubuntu
-        uses: ./.github/actions/acm-platform-on-ubuntu
-      - id: Acm_Platform_Off_Ubuntu
-        uses: ./.github/actions/acm-platform-off-ubuntu
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-custom.git
+      - id: Acm_appliance_On_Ubuntu
+        uses: ./.github/actions/acm-appliance-on-ubuntu
+      - id: Acm_appliance_Off_Ubuntu
+        uses: ./.github/actions/acm-appliance-off-ubuntu
       - id: Acm_Setup_Off_Ubuntu
         uses: ./.github/actions/acm-setup-off-ubuntu
       - shell: bash
@@ -184,7 +184,7 @@ jobs:
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
       - id: Acm_ServiceType_On_tfbackend_Ubuntu
         uses: ./.github/actions/acm-service-type-on-ubuntu
         with:
@@ -279,11 +279,11 @@ jobs:
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
-      - id: Acm_Platform_On_Windows
-        uses: ./.github/actions/acm-platform-on-windows
-      - id: Acm_Platform_Off_Windows
-        uses: ./.github/actions/acm-platform-off-windows
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-arm.git
+      - id: Acm_appliance_On_Windows
+        uses: ./.github/actions/acm-appliance-on-windows
+      - id: Acm_appliance_Off_Windows
+        uses: ./.github/actions/acm-appliance-off-windows
       - id: Acm_Foundation_On_Windows
         uses: ./.github/actions/acm-foundation-on-windows
         with:
@@ -354,11 +354,11 @@ jobs:
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
-      - id: Acm_Platform_On_Windows
-        uses: ./.github/actions/acm-platform-on-windows
-      - id: Acm_Platform_Off_Windows
-        uses: ./.github/actions/acm-platform-off-windows
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
+      - id: Acm_appliance_On_Windows
+        uses: ./.github/actions/acm-appliance-on-windows
+      - id: Acm_appliance_Off_Windows
+        uses: ./.github/actions/acm-appliance-off-windows
       - id: Acm_Setup_Off_Windows
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
@@ -391,11 +391,11 @@ jobs:
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-custom.git
-      - id: Acm_Platform_On_Windows
-        uses: ./.github/actions/acm-platform-on-windows
-      - id: Acm_Platform_Off_Windows
-        uses: ./.github/actions/acm-platform-off-windows
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-custom.git
+      - id: Acm_appliance_On_Windows
+        uses: ./.github/actions/acm-appliance-on-windows
+      - id: Acm_appliance_Off_Windows
+        uses: ./.github/actions/acm-appliance-off-windows
       - id: Acm_Setup_Off_Windows
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
@@ -428,7 +428,7 @@ jobs:
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
-          repo_url: https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
       - id: Acm_ServiceType_On_Windows
         uses: ./.github/actions/acm-service-type-on-windows
         with:

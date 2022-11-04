@@ -21,6 +21,8 @@ class config_keysassembler:
   #@private
   def getBackendVarsList(self, systemConfig, instance, yaml_keys_file_and_path, keyDir):
     cfm = command_formatter()
+    from command_builder import command_builder
+    cb = command_builder()
     instName = instance.get("instanceName")
     yaml_keys_file_and_path = cfm.getKeyFileAndPath(keyDir)
     backendType = instance.get("type")
@@ -28,22 +30,50 @@ class config_keysassembler:
     if backendType == 'azurerm':  
       #Get the variable values
       resourceGroupName = instance.get("resourceGroupName")
-      self.backendVarsList.append({"key":"resourceGroupName", "value":resourceGroupName, "handled":False})
+      if not (resourceGroupName.startswith("$config")) :
+        #The config.yaml file will be copied in full into the new directory, so here we skip any $config vars to prevent conflicts
+        self.backendVarsList.append({"key":"resourceGroupName", "value":resourceGroupName, "handled":False})
+
       resourceGroupRegion = instance.get("resourceGroupRegion")
-      self.backendVarsList.append({"key":"resourceGroupRegion", "value":resourceGroupRegion, "handled":False})
+      if not (resourceGroupRegion.startswith("$config")) :
+        #The config.yaml file will be copied in full into the new directory, so here we skip any $config vars to prevent conflicts
+        self.backendVarsList.append({"key":"resourceGroupRegion", "value":resourceGroupRegion, "handled":False})
+
       cfp = config_fileprocessor()
       subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
-      self.backendVarsList.append({"key":"subscriptionId", "value":subscriptionId, "handled":False})
+      if (not (subscriptionId.startswith("$config"))) and (len(subscriptionId)>0) :
+        #The config.yaml file will be copied in full into the new directory, so here we skip any $config vars to prevent conflicts
+        self.backendVarsList.append({"key":"subscriptionId", "value":subscriptionId, "handled":False})
+
       clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
       self.backendVarsList.append({"key":"clientId", "value":clientId, "handled":False})
       clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
       if clientSecret[0] == '-':
         clientSecret = '\'' + clientSecret + '\''
       self.backendVarsList.append({"key":"clientSecret", "value":clientSecret, "handled":False})
+
       tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
-      self.backendVarsList.append({"key":"tenantId", "value":tenantId, "handled":False})
-      orgName = systemConfig.get("organization") 
-      self.backendVarsList.append({"key":"orgName", "value":orgName, "handled":False})
+      if not (tenantId.startswith("$config")) and (len(tenantId)>0):
+        #The config.yaml file will be copied in full into the new directory, so here we skip any $config vars to prevent conflicts
+        self.backendVarsList.append({"key":"tenantId", "value":tenantId, "handled":False})
+
+      #orgName = systemConfig.get("organization") 
+      if systemConfig.get("organization").startswith("$config"):
+        if systemConfig.get("organization").count(".") == 0:
+          varName = "organization"
+        elif systemConfig.get("organization").count(".") == 1:
+          varName = systemConfig.get("organization").split(".")[1]
+        else:
+          logString = "ERROR: Too many dots . in organization field of your system template."
+          lw = log_writer()
+          lw.writeLogVerbose("acm", logString)
+          exit(1)
+        orgName = cb.processGlobalConfig(systemConfig.get("organization"), varName, "arm", keyDir)
+      else:
+        orgName = (systemConfig.get("organization")).lower()
+        #The config.yaml file will be copied in full into the new directory, so here we skip any $config vars to prevent conflicts
+        self.backendVarsList.append({"key":"orgName", "value":orgName, "handled":False})
+
       storageAccountName = instName.lower() + orgName.lower()
       self.backendVarsList.append({"key":"storageAccountName", "value":storageAccountName, "handled":False})
       #ADD VALIDATION TO CONFIRM THAT storageAccountName IS NOT LONGER THAN 24 CHARACTERS TO PREVENT DOWNSTREAM ERROR.
@@ -151,23 +181,28 @@ class config_keysassembler:
 
   #@public
   def writeTheVarsFile(self, systemConfig, instance, sourceOfCall, app_id, secKey):
-    instName = instance.get("instanceName")
     cfp = config_fileprocessor()
     lw = log_writer()
     cfm = command_formatter()
+
+    instName = instance.get("instanceName")
     keyDir = cfp.getKeyDir(systemConfig)
     outputDir = self.getOutputDir(instName)
     outputKeysFile = outputDir + "keys.yaml"
+
     if sourceOfCall == "admin":
       #this block ensures that anything already written to the destination file will remain in it, except for explicit changes handled by this function.
       if os.path.isfile(outputKeysFile):
         keyDir = outputDir
+
     self.getSourceLines(keyDir)
+
     #get secretsType
     typeOfSecret = "empty"
     for sourceLine in self.sourceLinesList:
       if sourceLine["key"] == "secretsType":
         typeOfSecret = sourceLine["value"]
+
     if sourceOfCall == "tfBackend":
       #if keys exist in outputDir, then use those.  Otherwise, pull keys in from source.  This should protect against overwriting keys.
       yaml_keys_file_and_path = cfm.getKeyFileAndPath(outputDir)
@@ -176,6 +211,7 @@ class config_keysassembler:
         self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, outputDir)
       else:
         self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, keyDir)
+
     if sourceOfCall == "admin":
       #Test the vars from azureAdmin
       if app_id.startswith('"') and app_id.endswith('"'):
@@ -194,25 +230,30 @@ class config_keysassembler:
       secKey = secKey.replace("'","")
       itemDict = {"key":"clientSecret", "value":secKey, "handled":False}
       self.adminVarsList.append(itemDict)
+
     if sourceOfCall == "tfBackend":
       # Integrate any backendVars that are also in sourceLinesList, while prioritizing the backendVar values
       for sourceLine in self.sourceLinesList:
         self.checkSourceLinesAgainstBackendVarsRecursively(typeOfSecret)
+
     if sourceOfCall == "admin":
       # Integrate any admin Vars that are also in sourceLinesList, while prioritizing the admin Var values
       for sourceLine in self.sourceLinesList:
         self.checkSourceLinesAgainstAdminVarsRecursively()
+
     # put into destinationLinesList any items from sourceLinesList that were not also present in backendVarsList
     for sourceLine in self.sourceLinesList:
       if sourceLine["handled"] == False:
         sourceLine["handled"] = True
         self.destinationLinesList.append(sourceLine)
+
     if sourceOfCall == "tfBackend":
       # put into destinationLinesList any items from backendVarsList that were not also present in sourceLinesList
       for backendVar in self.backendVarsList:
         if backendVar["handled"] == False:
           backendVar["handled"] = True
           self.destinationLinesList.append(backendVar)
+
     if sourceOfCall == "admin":
       # put into destinationLinesList any items from adminVarsList that were not also present in sourceLinesList
       for adminVar in self.adminVarsList:
@@ -223,6 +264,7 @@ class config_keysassembler:
       for destinationLine in self.destinationLinesList:
         if destinationLine["key"] == "secretsType":
           destinationLine["value"] = "child"
+
     finalDestinationLinesList = []
     for destinationLine in self.destinationLinesList:
       myVal = destinationLine["value"]
@@ -232,6 +274,7 @@ class config_keysassembler:
       newLine = newLine.replace('"','')
       newLine = newLine.replace("'","")
       finalDestinationLinesList.append(newLine)
+
     with open(outputKeysFile, mode='wt', encoding='utf-8') as myfile:
       for myLine in finalDestinationLinesList:
         myfile.write(myLine)
@@ -239,3 +282,4 @@ class config_keysassembler:
     self.backendVarsList.clear()
     self.adminVarsList.clear()
     self.destinationLinesList.clear()
+

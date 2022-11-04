@@ -46,7 +46,7 @@ def searchAllFilesForMatches(func_name):
   print("+++++++++++++++++++++++++++++++++++++++++++")
 
 def findVarReferences():
-  varNames = [    'yamlInfraConfigFileAndPath', 'yamlPlatformConfigFileAndPath', 'pathToApplicationRoot',
+  varNames = [    'yamlInfraConfigFileAndPath', 'yamlApplianceConfigFileAndPath', 'pathToApplicationRoot',
   'app_parent_path', 'configAndSecretsPath',  'dirOfYamlFile', 'dirOfYamlKeys',
   'dirOfReleaseDefJsonParts', 'dirOfReleaseDefYaml', 'dirOfOutput', 'nameOfYamlKeys_IAM_File', 
   'nameOfYamlKeys_AWS_Network_File', 'nameOfYamlKeys_Azure_AD_File', 'nameOfYamlKeys_Azure_Network_File', 

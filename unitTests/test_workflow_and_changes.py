@@ -11,7 +11,7 @@ import os
 #python -m unittest AgileCloudManager.unitTests.test_workflow_and_changes
 
 
-class test_workflow_platform(unittest.TestCase):
+class test_workflow_appliance(unittest.TestCase):
   logVerbose = ''
 
   def addAcmDirToPath(self):
@@ -91,7 +91,7 @@ class test_workflow_platform(unittest.TestCase):
       input = input[:-2] + '\n'
     return input
 
-  def getPlatformConfig(self):
+  def getApplianceConfig(self):
     yamlFileAndPath = str(pathlib.Path(__file__).parent.resolve())+'/input-files/acm.yaml'
     yamlFileAndPath = self.formatPathForOS(yamlFileAndPath)
     print('yamlFileAndPath is: ', yamlFileAndPath)
@@ -144,36 +144,36 @@ class test_workflow_platform(unittest.TestCase):
     return returnBool
 
 
-  def test_platformOn(self):
+  def test_applianceOn(self):
     self.addAcmDirToPath()
-    from AgileCloudManager.app.workflow_platform import workflow_platform
+    from AgileCloudManager.app.workflow_appliance import workflow_appliance
     import AgileCloudManager.app.config_cliprocessor
     from AgileCloudManager.app.log_writer import log_writer
-#    cliproc.processInputArgs(['AgileCloudManager\\app\\acm.py', 'platform', 'on'])
+#    cliproc.processInputArgs(['AgileCloudManager\\app\\acm.py', 'appliance', 'on'])
     self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
-    wfplat1 = workflow_platform() 
-    wfplat1.onPlatform()
+    wfplat1 = workflow_appliance() 
+    wfplat1.onAppliance()
     numChangeReportsExpected = 54
     numChangesExpected = 80
     returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
     print('test returnVal is: ', returnBool)
     self.assertTrue(returnBool)
 
-  def test_platformOff(self):
+  def test_applianceOff(self):
     self.addAcmDirToPath() 
-    from AgileCloudManager.app.workflow_platform import workflow_platform
+    from AgileCloudManager.app.workflow_appliance import workflow_appliance
     import AgileCloudManager.app.config_cliprocessor 
     from AgileCloudManager.app.log_writer import log_writer
     self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
-    wfplat2 = workflow_platform()
-    wfplat2.offPlatform()
+    wfplat2 = workflow_appliance()
+    wfplat2.offAppliance()
     numChangeReportsExpected = 54
     numChangesExpected = 80
     returnBool = self.checkLogWorkflowOutput(numChangeReportsExpected, numChangesExpected)
     self.assertTrue(returnBool)
 
 ####Add a test case to validate the force flag
-###  def test_platformOffForce(self):
+###  def test_applianceOffForce(self):
 ###    self.assertTrue(True)
 
   def test_foundationOn(self):

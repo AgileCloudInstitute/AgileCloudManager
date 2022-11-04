@@ -34,6 +34,7 @@ class workflow_service_type:
       if level == 'serviceinstance':
         if instance.get('instanceName') == instanceName:
           self.onServiceTypeInstance(cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, instance)
+          print("M")
       else:
         self.onServiceTypeInstance(cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, instance)
     logString = "done with -- " + serviceType + " -----------------------------------------------------------------------------"
@@ -72,6 +73,7 @@ class workflow_service_type:
           ctfbknd.createTfBackend(systemConfig, instance, armParamsDict)
         else:  
           carm.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, False)
+          print("k")
       elif instanceTool == 'cloudformation':
         ccf.createStack(systemConfig, instance, keyDir, 'serviceInstance', serviceType, instName)
       elif instanceTool.startswith('$customController.'):
@@ -91,6 +93,7 @@ class workflow_service_type:
           ctrlrazproj.onProject(serviceType, systemConfig, instance)
         else:
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, 'systems', serviceType, None, instName)
+      print("L")
       postprocessor = instance.get("postprocessor")
       if postprocessor:
         crnr.runPreOrPostProcessor("post", postprocessor, 'on')
@@ -211,21 +214,21 @@ class workflow_service_type:
     systemToModify = config_cliprocessor.inputVars.get('systemName')
     serviceType = config_cliprocessor.inputVars.get('serviceType')
     systemConfig = None
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    for systemName in platformConfig:
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    for systemName in applianceConfig:
       if systemName == systemToModify:
-        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
     if systemConfig == None: 
       print("220 systemToModify is: ", systemToModify)
-      print("221 platformConfig is: ", str(platformConfig))
-      logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
+      print("221 applianceConfig is: ", str(applianceConfig))
+      logString = "ERROR: The systemName that you specified does not exist in the appliance configuration that you provided."
       print(logString)
       sys.exit(1) 
     cm_son.initializeChangesManagementDataStructures(ct_son, cc_son, level, "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_son.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_son.updateStartOfPlatformRun(ct_son, cc_son, level, "In Process")
+    cm_son.updateStartOfApplianceRun(ct_son, cc_son, level, "In Process")
     cm_son.updateStartOfASystem(ct_son, cc_son, level, systemToModify, "In Process")
     cm_son.updateStartOfAServicesSection(ct_son, cc_son, level, systemToModify)
     typesToCreate = systemConfig.get("serviceTypes")
@@ -234,7 +237,7 @@ class workflow_service_type:
         self.onServiceType(cm_son, ct_son, cc_son, level, systemToModify, systemConfig, serviceType, typesToCreate)
     cm_son.updateEndOfAServicesSection(ct_son, cc_son, level, systemToModify)
     cm_son.updateEndOfASystem(ct_son, cc_son, level, systemToModify)
-    cm_son.updateEndOfPlatformRun(ct_son, cc_son, level)
+    cm_son.updateEndOfApplianceRun(ct_son, cc_son, level)
 
   def callOffServiceDirectly(self, level):
     import config_cliprocessor
@@ -246,25 +249,25 @@ class workflow_service_type:
     systemToModify = config_cliprocessor.inputVars.get('systemName')
     svcTyp = config_cliprocessor.inputVars.get('serviceType')
     systemConfig = None
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    for systemName in platformConfig:
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    for systemName in applianceConfig:
       print("systemName is: ", systemName)
       print("systemToModify is: ", systemToModify)
       if systemName == systemToModify:
-        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
         print("y systemConfig is: ", str(systemConfig))
     if systemConfig == None:
       print("255 systemToModify is: ", systemToModify)
-      print("256 platformConfig is: ", str(platformConfig))
-      print("yamlPlatformConfigFileAndPath is: ", yamlPlatformConfigFileAndPath)
-      logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
+      print("256 applianceConfig is: ", str(applianceConfig))
+      print("yamlApplianceConfigFileAndPath is: ", yamlApplianceConfigFileAndPath)
+      logString = "ERROR: The systemName that you specified does not exist in the appliance configuration that you provided."
       print(logString)
       sys.exit(1)
     cm_stoff.initializeChangesManagementDataStructures(ct_stoff, cc_stoff, level, "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_stoff.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_stoff.updateStartOfPlatformRun(ct_stoff, cc_stoff, level, "In Process")
+    cm_stoff.updateStartOfApplianceRun(ct_stoff, cc_stoff, level, "In Process")
     cm_stoff.updateStartOfASystem(ct_stoff, cc_stoff, level, systemToModify, "In Process")
     cm_stoff.updateStartOfAServicesSection(ct_stoff, cc_stoff, level, systemToModify)
     #NOTE: The foundation for releaseDefinitions needs to be an controller_azdoproject in order for forcing deletion of a releaseDefinition
@@ -277,7 +280,7 @@ class workflow_service_type:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     if svcTyp == "releaseDefinitions":
-        logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in acm.yaml while running platform off or services off, or 2. delete the containing project in order to cascade delete the releaseDefinitions contained within the project.  You can delete the containing project using either the serviceType off or serviceInstance off cli commands.  "
+        logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in acm.yaml while running appliance off or services off, or 2. delete the containing project in order to cascade delete the releaseDefinitions contained within the project.  You can delete the containing project using either the serviceType off or serviceInstance off cli commands.  "
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     typeName = 'networkFoundation'
@@ -293,7 +296,7 @@ class workflow_service_type:
         self.offServiceTypeGeneral(cm_stoff, ct_stoff, cc_stoff, level, systemToModify, systemConfig, typeName, typeParent)
     cm_stoff.updateEndOfAServicesSection(ct_stoff, cc_stoff, level, systemToModify)
     cm_stoff.updateEndOfASystem(ct_stoff, cc_stoff, level, systemToModify)
-    cm_stoff.updateEndOfPlatformRun(ct_stoff, cc_stoff, level)
+    cm_stoff.updateEndOfApplianceRun(ct_stoff, cc_stoff, level)
 
   #@private
   def checkDestroyType(self, typeName, typesToDestroy):

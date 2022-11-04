@@ -196,11 +196,11 @@ class workflow_system:
           logString = "WARNING:  ACM removed the releaseDefinitions from the list of objects to destroy because 1 your systemConfig contains a projects block and 2 you are using the --force flag.  ACM is assuming that the releaseDefinitions being skipped here are defined within the projects that your systemConfig defines, so that deleting each defined project would delete each of the releaseDefinitions defined within each project.  But if you have not configured your systemConfig properly, then the releaseDefinitions being skipped now might still remain in your deployment after this command completes its run.  "
           lw.writeLogVerbose("acm", logString)
         else:
-          logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in platformConfig.yaml or 2. comment out the releaseDefinitions block in the systemConfig file while also incuding the containing project in the systemConfig file, so that deletion of the containing project will cascade delete the releaseDefinitions contained within the project."
+          logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in applianceConfig.yaml or 2. comment out the releaseDefinitions block in the systemConfig file while also incuding the containing project in the systemConfig file, so that deletion of the containing project will cascade delete the releaseDefinitions contained within the project."
           lw.writeLogVerbose("acm", logString)
           sys.exit(1)
       else:
-        logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in platformConfig.yaml or 2. comment out the releaseDefinitions block in the systemConfig file while also incuding the containing project in the systemConfig file, so that deletion of the containing project will cascade delete the releaseDefinitions contained within the project."
+        logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in applianceConfig.yaml or 2. comment out the releaseDefinitions block in the systemConfig file while also incuding the containing project in the systemConfig file, so that deletion of the containing project will cascade delete the releaseDefinitions contained within the project."
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     typeName = 'networkFoundation'
@@ -253,27 +253,27 @@ class workflow_system:
     cc_fon = changes_comparer()
     systemToModify = config_cliprocessor.inputVars.get('systemName')
     systemConfig = None
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    for systemName in platformConfig:
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    for systemName in applianceConfig:
       if systemName == systemToModify:
-        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
     if systemConfig == None:
       print("262 systemToModify is: ", systemToModify)
-      print("263 platformConfig is: ", str(platformConfig))
-      logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
+      print("263 applianceConfig is: ", str(applianceConfig))
+      logString = "ERROR: The systemName that you specified does not exist in the appliance configuration that you provided."
       print(logString)
       sys.exit(1)
     cm_fon.initializeChangesManagementDataStructures(ct_fon, cc_fon, 'foundation', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_fon.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_fon.updateStartOfPlatformRun(ct_fon, cc_fon, 'foundation', "In Process")
+    cm_fon.updateStartOfApplianceRun(ct_fon, cc_fon, 'foundation', "In Process")
     cm_fon.updateStartOfASystem(ct_fon, cc_fon, 'foundation', systemToModify, "In Process")
     cm_fon.updateStartOfAFoundation(ct_fon, cc_fon, 'foundation', systemToModify, "In Process")
     self.onFoundation(systemToModify, systemConfig)
     cm_fon.updateEndOfAFoundation(ct_fon, cc_fon, 'foundation', systemToModify)
     cm_fon.updateEndOfASystem(ct_fon, cc_fon, 'foundation', systemToModify)
-    cm_fon.updateEndOfPlatformRun(ct_fon, cc_fon, 'foundation')
+    cm_fon.updateEndOfApplianceRun(ct_fon, cc_fon, 'foundation')
 
   def callOffFoundationDirectly(self):
     import config_cliprocessor
@@ -284,27 +284,27 @@ class workflow_system:
     cc_foff = changes_comparer()
     systemToModify = config_cliprocessor.inputVars.get('systemName')
     systemConfig = None
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    for systemName in platformConfig:
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    for systemName in applianceConfig:
       if systemName == systemToModify:
-        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
     if systemConfig == None:
       print("293 systemToModify is: ", systemToModify)
-      print("294 platformConfig is: ", str(platformConfig))
-      logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
+      print("294 applianceConfig is: ", str(applianceConfig))
+      logString = "ERROR: The systemName that you specified does not exist in the appliance configuration that you provided."
       print(logString)
       sys.exit(1)
     cm_foff.initializeChangesManagementDataStructures(ct_foff, cc_foff, 'foundation', "off")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_foff.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_foff.updateStartOfPlatformRun(ct_foff, cc_foff, 'foundation', "In Process")
+    cm_foff.updateStartOfApplianceRun(ct_foff, cc_foff, 'foundation', "In Process")
     cm_foff.updateStartOfASystem(ct_foff, cc_foff, 'foundation', systemToModify, "In Process")
     cm_foff.updateStartOfAFoundation(ct_foff, cc_foff, 'foundation', systemToModify, "In Process")
     self.offFoundation(systemToModify, systemConfig)
     cm_foff.updateEndOfAFoundation(ct_foff, cc_foff, 'foundation', systemToModify)
     cm_foff.updateEndOfASystem(ct_foff, cc_foff, 'foundation', systemToModify)
-    cm_foff.updateEndOfPlatformRun(ct_foff, cc_foff, 'foundation')
+    cm_foff.updateEndOfApplianceRun(ct_foff, cc_foff, 'foundation')
 
   def callOnServicesDirectly(self):
     import config_cliprocessor
@@ -315,27 +315,27 @@ class workflow_system:
     cc_son = changes_comparer()
     systemToModify = config_cliprocessor.inputVars.get('systemName')
     systemConfig = None
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    for systemName in platformConfig:
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    for systemName in applianceConfig:
       if systemName == systemToModify:
-        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
     if systemConfig == None:
       print("324 systemToModify is: ", systemToModify)
-      print("325 platformConfig is: ", str(platformConfig))
-      logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
+      print("325 applianceConfig is: ", str(applianceConfig))
+      logString = "ERROR: The systemName that you specified does not exist in the appliance configuration that you provided."
       print(logString)
       sys.exit(1)
     cm_son.initializeChangesManagementDataStructures(ct_son, cc_son, 'services', "on")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_son.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_son.updateStartOfPlatformRun(ct_son, cc_son, 'services', "In Process")
+    cm_son.updateStartOfApplianceRun(ct_son, cc_son, 'services', "In Process")
     cm_son.updateStartOfASystem(ct_son, cc_son, 'services', systemToModify, "In Process")
     cm_son.updateStartOfAServicesSection(ct_son, cc_son, 'services', systemToModify)
     self.onServices( cm_son, ct_son, cc_son, 'services', systemToModify, systemConfig)
     cm_son.updateEndOfAServicesSection(ct_son, cc_son, 'services', systemToModify)
     cm_son.updateEndOfASystem(ct_son, cc_son, 'services', systemToModify)
-    cm_son.updateEndOfPlatformRun(ct_son, cc_son, 'services')
+    cm_son.updateEndOfApplianceRun(ct_son, cc_son, 'services')
 
   def callOffServicesDirectly(self):
     import config_cliprocessor
@@ -346,24 +346,24 @@ class workflow_system:
     cc_soff = changes_comparer()
     systemToModify = config_cliprocessor.inputVars.get('systemName')
     systemConfig = None
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    for systemName in platformConfig:
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    for systemName in applianceConfig:
       if systemName == systemToModify:
-        systemConfig = cfp.getSystemConfig(platformConfig, systemName)
+        systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
     if systemConfig == None:
       print("355 systemToModify is: ", systemToModify)
-      print("356 platformConfig is: ", str(platformConfig))
-      logString = "ERROR: The systemName that you specified does not exist in the platform configuration that you provided."
+      print("356 applianceConfig is: ", str(applianceConfig))
+      logString = "ERROR: The systemName that you specified does not exist in the appliance configuration that you provided."
       print(logString)
       sys.exit(1)
     cm_soff.initializeChangesManagementDataStructures(ct_soff, cc_soff, 'services', "off")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_soff.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_soff.updateStartOfPlatformRun(ct_soff, cc_soff, 'services', "In Process")
+    cm_soff.updateStartOfApplianceRun(ct_soff, cc_soff, 'services', "In Process")
     cm_soff.updateStartOfASystem(ct_soff, cc_soff, 'services', systemToModify, "In Process")
     cm_soff.updateStartOfAServicesSection(ct_soff, cc_soff, 'services', systemToModify)
     self.offServices(cm_soff, ct_soff, cc_soff, 'services', systemToModify, systemConfig)
     cm_soff.updateEndOfAServicesSection(ct_soff, cc_soff, 'services', systemToModify)
     cm_soff.updateEndOfASystem(ct_soff, cc_soff, 'services', systemToModify)
-    cm_soff.updateEndOfPlatformRun(ct_soff, cc_soff, 'services')
+    cm_soff.updateEndOfApplianceRun(ct_soff, cc_soff, 'services')

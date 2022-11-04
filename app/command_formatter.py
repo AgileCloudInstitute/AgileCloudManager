@@ -97,6 +97,20 @@ class command_formatter:
     return yaml_keys_file_and_path
 
   #@public
+  def getConfigFileAndPath(self, keyDir):
+    yaml_keys_file_and_path = 'invalid'
+    if platform.system() == "Windows":
+      if keyDir[:-1] != "\\":
+        keyDir = keyDir + "\\"
+    if platform.system() == "Linux":
+      if keyDir[:-1] != "/":
+        keyDir = keyDir + "/"
+    keyDir = self.formatPathForOS(keyDir)
+    dirOfSourceKeys = keyDir
+    yaml_keys_file_and_path = dirOfSourceKeys + 'config.yaml'
+    return yaml_keys_file_and_path
+
+  #@public
   def formatKeyDir(self, keyDir):
     if platform.system() == "Windows":
       if keyDir[-1] != '\\':

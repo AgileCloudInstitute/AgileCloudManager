@@ -35,7 +35,7 @@ class changes_comparer:
       self.overallChecker(changeReports)
     systemsToChangeList = []
     numSystemsToChange = 0
-    logString = "    SYSTEMS:  Each system in the platform will be summarized one at a time as follows:  "
+    logString = "    SYSTEMS:  Each system in the appliance will be summarized one at a time as follows:  "
     if self.writeLogBoolean:
       lw.writeMetaLog("acm", logString)
     for changeDict in reversed(changeReports):
@@ -90,7 +90,7 @@ class changes_comparer:
           currentStepSecondToLast = lineDict['currentStep']
           stepsSecondToLast = lineDict['steps']
         reverseCounter += 1
-    logString = "PLATFORM LEVEL: "
+    logString = "APPLIANCE LEVEL: "
     if self.writeLogBoolean:
       lw.writeMetaLog("acm", logString)
     logString = "    command is: " + command
@@ -100,11 +100,11 @@ class changes_comparer:
       if overallStatusLast != overallStatusSecondToLast:
         logString = "    overallStatus changed from " + overallStatusSecondToLast + " to " + overallStatusLast
         if (overallStatusSecondToLast == "NOT Started") and (overallStatusLast == "In Process"):
-          changeDict = { "key":"platformStart", "changes":[logString] }
+          changeDict = { "key":"applianceStart", "changes":[logString] }
         elif (overallStatusSecondToLast == "In Process") and (overallStatusLast == "Completed"):
-          changeDict = { "key":"platformEnd", "changes":[logString] }
+          changeDict = { "key":"applianceEnd", "changes":[logString] }
         else:
-          logString = "ERROR: Failed to populate key in platformStart or in platformEnd. "
+          logString = "ERROR: Failed to populate key in applianceStart or in applianceEnd. "
           lw.writeMetaLog("acm", logString)
           sys.exit(1)
         self.changesList.append(changeDict)
@@ -116,7 +116,7 @@ class changes_comparer:
           lw.writeMetaLog("acm", logString)
       if currentStepLast != currentStepSecondToLast:
         logString = "    currentStep changed from " + str(currentStepSecondToLast) + " to " + str(currentStepLast) + " out of " + str(stepsLast) + " steps. "
-        changeDict = { "key":"platformStart", "changes":[logString] }
+        changeDict = { "key":"applianceStart", "changes":[logString] }
         self.changesList.append(changeDict)
         if self.writeLogBoolean:
           lw.writeMetaLog("acm", logString)
@@ -126,7 +126,7 @@ class changes_comparer:
           lw.writeMetaLog("acm", logString)
     else:
       logString = "ERROR: the total number of steps changed between changeDict instances.  This is NOT valid.  Skipping so you can review your configuration to identify and fix whatever caused this problem."
-      changeDict = { "key":"platformStart", "changes":[logString] }
+      changeDict = { "key":"applianceStart", "changes":[logString] }
       self.changesList.append(changeDict)
       if self.writeLogBoolean:
         lw.writeMetaLog("acm", logString)
@@ -141,7 +141,7 @@ class changes_comparer:
         exit(1)
     else:
       if foundationLast['name'] == foundationSecondToLast['name']:
-        changeKey = "platform/system:"+systemInstanceName+"/foundation"
+        changeKey = "appliance/system:"+systemInstanceName+"/foundation"
         logString = "            FOUNDATION LEVEL: "
         if self.writeLogBoolean:
           lw.writeMetaLog("acm", logString)
@@ -201,18 +201,18 @@ class changes_comparer:
             foundationLast = thisInstance['systemToChange']['foundation']
           else:
             hasFoundation = False
-          if (level == 'platform') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
+          if (level == 'appliance') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
             servicesInSystemLast = thisInstance['systemToChange']['services']
         if thisInstance['changeDictReverseCounter'] == 1:
           systemSummarySecondToLast = thisInstance['systemToChange']
           if 'foundation' in thisInstance['systemToChange']:
             foundationSecondToLast = thisInstance['systemToChange']['foundation']
-          if (level == 'platform') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
+          if (level == 'appliance') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
             servicesInSystemSecondToLast = thisInstance['systemToChange']['services']
       self.systemSummaryChecker(systemSummaryLast, systemSummarySecondToLast)
       if hasFoundation:
         self.foundationChecker(systemSummaryLast["name"], foundationLast, foundationSecondToLast)
-      if (level == 'platform') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
+      if (level == 'appliance') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
         self.servicesInSystemChecker(systemSummaryLast["name"], servicesInSystemLast, servicesInSystemSecondToLast)
     logString = "////////////////////////////////////////////////////////////////////"
     if self.writeLogBoolean:
@@ -228,7 +228,7 @@ class changes_comparer:
         exit(1)
     else:
       if systemSummaryLast['name'] == systemSummarySecondToLast['name']:
-        changeKey = "platform/system:"+systemSummaryLast['name']
+        changeKey = "appliance/system:"+systemSummaryLast['name']
         logString = "        " + systemSummaryLast['name'] + " SUMMARY LEVEL: "
         if self.writeLogBoolean:
           lw.writeMetaLog("acm", logString)
@@ -275,7 +275,7 @@ class changes_comparer:
         lw.writeMetaLog("acm", logString)
         exit(1)
     else:
-      changeKey = "platform/system:"+systemInstanceName+"/services"
+      changeKey = "appliance/system:"+systemInstanceName+"/services"
       logString = "            SERVICES SUMMARY LEVEL: "
       if self.writeLogBoolean:
         lw.writeMetaLog("acm", logString)
@@ -326,7 +326,7 @@ class changes_comparer:
       typeDict = {"type":typeName, "lastDict":lastDict, "secondToLastDict":secondToLastDict}
       typesList.append(typeDict)
     for type in typesList:
-      changeKey = "platform/system:"+systemInstanceName+"/serviceTypes/"+type['type'] #tfBackend
+      changeKey = "appliance/system:"+systemInstanceName+"/serviceTypes/"+type['type'] #tfBackend
       logString = "                    " + type['type'] + " summary is as follows: "
       if self.writeLogBoolean:
         lw.writeMetaLog("acm", logString)
@@ -376,8 +376,8 @@ class changes_comparer:
                   if self.writeLogBoolean:
                     lw.writeMetaLog("acm", logString)
                     exit(1)
-                else:
-                  changeKey = "platform/system:"+systemInstanceName+"/serviceTypes/"+type['type']+"/"+lastKey #tfBackend
+                else: 
+                  changeKey = "appliance/system:"+systemInstanceName+"/serviceTypes/"+type['type']+"/"+lastKey #tfBackend
                   logString = "                            " + lastKey + " instance of " + type['type']
                   if self.writeLogBoolean:
                     lw.writeMetaLog("acm", logString)

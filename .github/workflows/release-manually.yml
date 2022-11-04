@@ -224,23 +224,23 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-arm.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
-        name: Run platform on
+        name: Run appliance on
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform on
+          acm appliance on
       - shell: bash
-        name: Run platform off
+        name: Run appliance off
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - shell: bash
         name: Run foundation on
         run: |
@@ -369,23 +369,23 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
-        name: Run platform on
+        name: Run appliance on
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform on
+          acm appliance on
       - shell: bash
-        name: Run platform off
+        name: Run appliance off
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         shell: bash
         run: |
@@ -459,23 +459,23 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-custom.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-custom.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
-        name: Run platform on
+        name: Run appliance on
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform on
+          acm appliance on
       - shell: bash
-        name: Run platform off
+        name: Run appliance off
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           PATH=$PATH:/home/runner/acmhome/;export PATH
@@ -548,7 +548,7 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
@@ -693,21 +693,21 @@ jobs:
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-arm.git
           echo "About to dir"
           dir
-      - name: Run platform on
+      - name: Run appliance on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform on
-      - name: Run platform off
+          acm appliance on
+      - name: Run appliance off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Run foundation on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -822,21 +822,21 @@ jobs:
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
           echo "About to dir"
           dir
-      - name: Run platform on
+      - name: Run appliance on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd 'C:\\stgng\\'
           echo ".................about to run e2e test"
-          acm platform on
-      - name: Run platform off
+          acm appliance on
+      - name: Run appliance off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -903,21 +903,21 @@ jobs:
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-custom.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-custom.git
           echo "About to dir"
           dir
-      - name: Run platform on
+      - name: Run appliance on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform on
-      - name: Run platform off
+          acm appliance on
+      - name: Run appliance off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -986,7 +986,7 @@ jobs:
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
           echo "About to dir"
           dir
       - name: Run tfbackend serviceType on
@@ -1086,34 +1086,29 @@ jobs:
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
-######################################################################################
-### End of basic initial tests.  The rest below are to be added only after basic initial tests pass
-#####################################################################################
-
-
-#  push-to-master-branch:
-#    needs: [e2e-tests-linux-terraform-packer-type-instance, e2e-tests-linux-terraform-packer, e2e-tests-windows-terraform-packer]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          token: ${{ secrets.HUSH }}
-#      - shell: bash
-#        name: Push changes to master branch
-#        run: |
-#          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-#          git config --global user.name "AgileCloudInstitute"
-#          #git init
-#          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-#          #git branch -M master
-#          #git add --all
-#          #git push --force -u origin master
-#          git fetch --all
-#          git checkout staging
-#          git checkout master
-#          #git merge --allow-unrelated-histories staging
-#          #git push --force -u origin master
-#          git push --force origin staging:master
+  push-to-master-branch:
+    needs: [e2e-tests-linux-terraform-packer, e2e-tests-windows-terraform-packer, e2e-tests-windows-custom, e2e-tests-windows-cloudformation, e2e-tests-windows-arm, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.HUSH }}
+      - shell: bash
+        name: Push changes to master branch
+        run: |
+          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
+          git config --global user.name "AgileCloudInstitute"
+          #git init
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          #git branch -M master
+          #git add --all
+          #git push --force -u origin master
+          git fetch --all
+          git checkout staging
+          git checkout master
+          #git merge --allow-unrelated-histories staging
+          #git push --force -u origin master
+          git push --force origin staging:master
 
 #############################################################################################
 ### Below version was used only for development and can be deleted as soon as the tests pass

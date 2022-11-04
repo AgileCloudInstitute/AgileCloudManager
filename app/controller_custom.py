@@ -33,7 +33,7 @@ class controller_custom:
     varsFragment = cbldr.getVarsFragment(systemConfig, serviceType, instance, mappedVariables, 'customController', outputDict)
     controllerCommand = cmdPrefix+fullControllerPath+' '+operation+' '+varsFragment
     self.runShellCommand(controllerCommand)
-
+ 
   #@public
   def runShellCommand(self, commandToRun):
     lw = log_writer()

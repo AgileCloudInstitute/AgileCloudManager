@@ -19,7 +19,7 @@ class controller_arm:
 
   def __init__(self):  
     pass
- 
+
   #@public
   def createDeployment(self, systemConfig, instance, caller, serviceType, onlyFoundationOutput):
     import config_cliprocessor
@@ -31,32 +31,72 @@ class controller_arm:
     keyDir = cfp.getKeyDir(systemConfig)
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
     yaml_keys_file_and_path = cf.getKeyFileAndPath(keyDir)
+    yaml_global_config_file_and_path = cf.getConfigFileAndPath(keyDir)
+
+    resourceGroupName = instance.get("resourceGroupName")
+    if (resourceGroupName.startswith("$config")) :
+      resourceGroupName = cfp.getValueFromConfig(keyDir, resourceGroupName, "resourceGroupName")
+
+    resourceGroupRegion = instance.get("resourceGroupRegion")
+    if resourceGroupRegion.startswith("$config"):
+      resourceGroupRegion = cfp.getValueFromConfig(keyDir, resourceGroupRegion, "resourceGroupRegion")
+
     if caller == 'networkFoundation':
       typeParent = caller
       serviceType = 'networkFoundation'
-      resourceGroupName = instance.get("resourceGroupName")
-      resourceGroupRegion = instance.get("resourceGroupRegion")
       templateName = instance.get("templateName")
       deploymentName = instance.get("deploymentName")
+      if deploymentName.startswith("$config"):
+        deploymentName = cfp.getValueFromConfig(keyDir, deploymentName, "deploymentName")
     elif caller == 'serviceInstance':
       typeParent = 'systems'
-      resourceGroupName = instance.get("resourceGroupName")
-      resourceGroupRegion = instance.get("resourceGroupRegion")
       templateName = instance.get("templateName")
       deploymentName = instance.get("deploymentName")
+      if deploymentName.startswith("$config"):
+        deploymentName = cfp.getValueFromConfig(keyDir, deploymentName, "deploymentName")
       outputDict['typeParent'] = typeParent
       if "foundation" in systemConfig.keys():
         foundationResourceGroupName = systemConfig.get("foundation").get("resourceGroupName")
+        #resourceGroupName = instance.get("resourceGroupName")
+        if (foundationResourceGroupName.startswith("$config")) :
+          foundationResourceGroupName = cfp.getValueFromConfig(keyDir, foundationResourceGroupName, "resourceGroupName")
+          print("foundationResourceGroupName is: ", foundationResourceGroupName)
+#        quit("poiuytrewq")
         foundationDeploymentName = systemConfig.get("foundation").get("deploymentName")
+        if foundationDeploymentName.startswith("$config"):
+          foundationDeploymentName = cfp.getValueFromConfig(keyDir, foundationDeploymentName, "deploymentName")
         outputDict['resourceGroupName'] = foundationResourceGroupName
         outputDict['deploymentName'] = foundationDeploymentName
     subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
+    print("subscriptionId is: ", subscriptionId)
+    if (isinstance(subscriptionId, str)) and (len(subscriptionId)==0):
+      print("switch")
+      subscriptionId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'subscriptionId')
+      print("subscriptionId is: ", subscriptionId)
+
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
+    print("clientId is: ", clientId)
+    if (isinstance(clientId, str)) and (len(clientId)==0):
+      print("switch")
+      clientId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'clientId')
+      print("clientId is: ", clientId)
+
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
+
     tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
+    print("tenantId is: ", tenantId)
+    if (isinstance(tenantId, str)) and (len(tenantId)==0):
+      print("switch")
+      tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
+      print("tenantId is: ", tenantId)
+
+    print("resourceGroupName is: ", resourceGroupName)
+    print("resourceGroupRegion is: ", resourceGroupRegion)
+
+#    quit("hgtyr")
     ## STEP 2: Login to az cli and set subscription
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
-    ## STEP 3: Create Resource Group
+    ## STEP 3: Create Resource Group 
     resourceGroupCmd = 'az group create --name ' + resourceGroupName + ' --location ' + resourceGroupRegion
     logString = 'resourceGroupCmd is: az group create --name *** --location ' + resourceGroupRegion
     lw.writeLogVerbose("az-cli", logString)
@@ -70,6 +110,7 @@ class controller_arm:
     templateName = cf.formatPathForOS(templateName)
     ## STEP 5: Assemble and run command to deploy ARM template
     self.assembleAndRunArmDeploymentCommand(systemConfig, serviceType, instance, templatePathAndFile, resourceGroupName, deploymentName, outputDict, onlyFoundationOutput)
+    print("j")
     if not onlyFoundationOutput:
       ## STEP 6: If foundation, then create and deploy images, if images are present in config file
       if caller == 'networkFoundation':
@@ -78,6 +119,8 @@ class controller_arm:
           for imageInstance in instance.get("images"):
             templateName = imageInstance.get("templateName")
             deploymentName = imageInstance.get("deploymentName")
+            if deploymentName.startswith("$config"):
+              deploymentName = cfp.getValueFromConfig(keyDir, deploymentName, "deploymentName")
             ## STEP 4: Get template and config variable mapping file
             templatePathAndFile = userCallingDir + templateName
             templatePathAndFile = cf.formatPathForOS(templatePathAndFile)
@@ -95,19 +138,45 @@ class controller_arm:
     ## STEP 1: Populate variables
     cfp = config_fileprocessor()
     keyDir = cfp.getKeyDir(systemConfig)
-    yaml_keys_file_and_path = cf.getKeyFileAndPath(keyDir)
-    if caller == 'networkFoundation':
+    yaml_keys_file_and_path = cf.getKeyFileAndPath(keyDir) 
+    yaml_global_config_file_and_path = cf.getConfigFileAndPath(keyDir)
+    if (caller == 'networkFoundation') or (caller == 'serviceInstance'):
       resourceGroupName = instance.get('resourceGroupName')
+      if (resourceGroupName.startswith("$config")) :
+        resourceGroupName = cfp.getValueFromConfig(keyDir, resourceGroupName, "resourceGroupName")
+
       templateName = instance.get('emptyTemplateName')
       deploymentName = instance.get('deploymentName')
-    elif caller == 'serviceInstance':
-      resourceGroupName = instance.get("resourceGroupName")
-      templateName = instance.get("emptyTemplateName")
-      deploymentName = instance.get("deploymentName")
+      if deploymentName.startswith("$config"):
+        deploymentName = cfp.getValueFromConfig(keyDir, deploymentName, "deploymentName")
+
     subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
+    print("subscriptionId is: ", subscriptionId)
+    print("subscriptionId is: ", subscriptionId)
+    if (isinstance(subscriptionId, str)) and (len(subscriptionId)==0):
+      print("switch")
+      subscriptionId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'subscriptionId')
+      print("subscriptionId is: ", subscriptionId)
+
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
+    clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
+    print("clientId is: ", clientId)
+    if (isinstance(clientId, str)) and (len(clientId)==0):
+      print("switch")
+      clientId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'clientId')
+      print("clientId is: ", clientId)
+
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
-    tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
+
+    tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
+    print("tenantId is: ", tenantId)
+    if (isinstance(tenantId, str)) and (len(tenantId)==0):
+      print("switch")
+      tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
+      print("tenantId is: ", tenantId)
+
+#    quit("hgtyr")
+
     ## STEP 2: Login to az cli and set subscription
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
     resourceGroupCheckCmd = 'az group exists -n '+resourceGroupName
@@ -183,6 +252,10 @@ class controller_arm:
     lw = log_writer()
     import config_cliprocessor
     resourceGroupName = instance.get('resourceGroupName')
+    if (resourceGroupName.startswith("$config")) :
+      cfp = config_fileprocessor()
+      keyDir = cfp.getKeyDir(systemConfig)
+      resourceGroupName = cfp.getValueFromConfig(keyDir, resourceGroupName, "resourceGroupName")
     # create user assigned identity for image builder to access the storage account where the script is located
     dateTimeCode = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
     identityName = 'imgbuilder_'+dateTimeCode
@@ -308,11 +381,12 @@ class controller_arm:
     lw = log_writer()
     ## STEP 5: Assemble deployment command
     from command_builder import command_builder
-    cb = command_builder() 
+    cb = command_builder()  
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict)
     deployCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+deployVarsFragment
     logString = '--- deployCmd is: az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose ***'
     lw.writeLogVerbose("az-cli", logString)
+    print("deployVarsFragment is: ", deployVarsFragment)
     ## STEP 6: Run Deployment command and check results
     jsonStatus = self.getShellJsonResponse(deployCmd)
     jsonStatus = json.loads(jsonStatus)
@@ -328,7 +402,7 @@ class controller_arm:
           print('thisOutput is: ', str(thisOutput))
           print('outputs[thisOutput]["value"] is: ', str(outputs[thisOutput]['value']))
     if state == 'Succeeded':
-      logString = "Finished running deployment command in assembleAndRunDeploymentCommand()."
+      logString = "Finished running deployment command in assembleAndRunArmDeploymentCommand()."
       lw.writeLogVerbose("az-cli", logString)
     else:
       logString = "ERROR: provisioningState for the deployment is NOT Succeeded. "
@@ -341,6 +415,7 @@ class controller_arm:
     loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
     logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
     lw.writeLogVerbose('az-cli', logString)
+#    print("clientSecret is: ", clientSecret)
     self.getShellJsonResponse(loginCmd)
     logString = "Finished running login command."
     lw.writeLogVerbose("az-cli", logString)

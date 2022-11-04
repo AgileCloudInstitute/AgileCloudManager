@@ -17,7 +17,7 @@ class changes_manifest:
 
   #@private
   def changePreview(self, ct, level, command):
-    self.createStartOfPlatformRun()
+    self.createStartOfApplianceRun()
     for changeKey in ct.changeTaxonomy:
       if changeKey =="systemsToChange":
         if command == 'on':
@@ -26,12 +26,12 @@ class changes_manifest:
         elif command == 'off':
           for system in reversed(ct.changeTaxonomy[changeKey]):
             self.createManifestForASystem(level,system,command)
-    self.createEndOfPlatformRun()
+    self.createEndOfApplianceRun()
     self.emitChangesToLogs()
 
   #@private
   def createManifestForASystem(self,level,system,command):
-    systemString = "platform/system:"+system["name"]
+    systemString = "appliance/system:"+system["name"]
     self.createStartOfASystem(systemString)
     #WORK ITEM:  The following two command=on/off blocks can be shrunk by putting the foundation and 
     #services code into their own functions instead of repeating the same redundant code in 
@@ -42,7 +42,7 @@ class changes_manifest:
           foundationString = systemString + "/foundation"
           self.createStartOfAFoundation(systemString, foundationString)
           self.createEndOfAFoundation(foundationString)
-        if (level == 'platform') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
+        if (level == 'appliance') or (level == 'services') or (level == 'servicetype') or (level == 'serviceinstance'):
           if systemKey == "services":  
             serviceTypesString = systemString + "/serviceTypes"
             self.createStartOfAServicesSection(systemString, serviceTypesString)
@@ -99,21 +99,21 @@ class changes_manifest:
     self.changePreview(ct, level, command)
 
   #@private
-  def createStartOfPlatformRun(self):
+  def createStartOfApplianceRun(self):
     self.changeIndex = 1
     changeSummaryDict = {
       "changeIndex":self.changeIndex, 
-  	"changeType":"Start of platform run", 
-      "key":"platformStart",
+  	"changeType":"Start of appliance run", 
+      "key":"applianceStart",
       "changes": [
-  	  {"affectedUnit":"platform", "Status":"To In Process", "Step":"Same", "changeCompleted":False}
+  	  {"affectedUnit":"appliance", "Status":"To In Process", "Step":"Same", "changeCompleted":False}
 	  ]
     }
     self.changesManifest.append(changeSummaryDict)
     self.changeIndex += 1
 
   #@public
-  def updateStartOfPlatformRun(self, ct, cc, level, newStatus):
+  def updateStartOfApplianceRun(self, ct, cc, level, newStatus):
     lw = log_writer()
     #1 validate newStatus
     if (newStatus != "In Process") and (newStatus != "Completed"):
@@ -121,7 +121,7 @@ class changes_manifest:
       lw.writeLogVerbose("acm", logString)
       exit(1)
     #2 update changeTaxonomy
-    ct.updateStartOfPlatformRun(newStatus)
+    ct.updateStartOfApplianceRun(newStatus)
     #3 get list of changes in new changeTaxonomy
     outputLine = "[ acm ] " + " After update, changeTaxonomy is: " + str(ct.changeTaxonomy)
     ct.storeChangeTaxonomy(cc, level, outputLine)
@@ -138,7 +138,7 @@ class changes_manifest:
                   for changeKey in changesBlock:
                     if changeKey == "changes":
                       for change in changesBlock[changeKey]:
-                        if change["affectedUnit"] == "platform":
+                        if change["affectedUnit"] == "appliance":
                           if change["Status"].replace('To ','') == newStatus:
                             change["changeCompleted"] = True
     self.validateChangeManifest((len(ct.changeReports)-1))
@@ -155,7 +155,7 @@ class changes_manifest:
       "changeType":"Start of a system", 
       "key":systemString,
       "changes": [
-        {"affectedUnit":"platform", "Status":"same", "Step":"+1", "changeCompleted":False},
+        {"affectedUnit":"appliance", "Status":"same", "Step":"+1", "changeCompleted":False},
         {"affectedUnit":systemString, "Status":"To In Process", "Step":"Same", "changeCompleted":False}
       ]
     }
@@ -165,7 +165,7 @@ class changes_manifest:
   #@public
   def updateStartOfASystem(self, ct, cc, level, systemInstanceName, newStatus):
     lw = log_writer()
-    #1 update changeTaxonomy
+    #1 update changeTaxonomy 
     ct.updateStartOfASystem(level, systemInstanceName, newStatus)
     #2 get list of changes in new changeTaxonomy
     outputLine = "[ acm ] " + " After update, changeTaxonomy is: " + str(ct.changeTaxonomy)
@@ -181,17 +181,17 @@ class changes_manifest:
               if "system summary status changed from NOT Started to In Process" in changeItem:
                 match1 = True
                 for changeFields in change["changes"]:
-                  affUnitName = "platform/system:" + systemInstanceName
+                  affUnitName = "appliance/system:" + systemInstanceName
                   if changeFields['affectedUnit'] == affUnitName:
                     if changeFields["Status"].replace('To ','') == newStatus:
                       changeFields["changeCompleted"] = True
-          elif changeItems["key"] == "platformStart":
+          elif changeItems["key"] == "applianceStart":
             for changeItem in changeItems['changes']:
               if "currentStep changed from" in changeItem:
                 #ADD WORK ITEM TO CHECK THE SPECIFIC CURRENT STEP AND TOTAL STEPS TO COMPLEMENT THIS HIGH LEVEL CHECK.
                 match2 = True
                 for changeFields in change["changes"]:
-                  if changeFields["affectedUnit"] == "platform":
+                  if changeFields["affectedUnit"] == "appliance":
                     if (changeFields["Step"] == "+1") and (changeFields["Status"] == "same"):
                       if changeFields["changeCompleted"] == False:
                         changeFields["changeCompleted"] = True
@@ -240,7 +240,7 @@ class changes_manifest:
             for changeItem in changeItems['changes']:
               if "foundation status changed from NOT Started to In Process" in changeItem:
                 for changeElement in change['changes']:
-                  if changeElement["affectedUnit"] == "platform/system:"+systemInstanceName+"/foundation":
+                  if changeElement["affectedUnit"] == "appliance/system:"+systemInstanceName+"/foundation":
                     if (changeElement["Step"] == "+1") and ("To In Process" in changeElement["Status"]):
                       changeElement["changeCompleted"] = True
                       match1 = True
@@ -252,7 +252,7 @@ class changes_manifest:
             for changeItem in changeItems['changes']:
               if "system summary currentStep changed from" in changeItem:
                 for changeElement in change['changes']:
-                  if changeElement["affectedUnit"] == "platform/system:" + systemInstanceName:
+                  if changeElement["affectedUnit"] == "appliance/system:" + systemInstanceName:
                     if changeElement["Step"] == "+1":
                       changeElement["changeCompleted"] = True
                       match3 = True
@@ -293,7 +293,7 @@ class changes_manifest:
             for changeItem in changeItems['changes']:
               if "foundation status changed from In Process to Completed" in changeItem:
                 for changeElement in change['changes']:
-                  if changeElement["affectedUnit"] == "platform/system:"+systemInstanceName+"/foundation":
+                  if changeElement["affectedUnit"] == "appliance/system:"+systemInstanceName+"/foundation":
                     if "To Completed" in changeElement["Status"]:
                       changeElement["changeCompleted"] = True
                       match = True
@@ -337,7 +337,7 @@ class changes_manifest:
               for changeItem in changeItems['changes']:
                 if "system summary currentStep changed from" in changeItem:
                   for changeElement in change['changes']:
-                    affUnitName = "platform/system:" + systemInstanceName
+                    affUnitName = "appliance/system:" + systemInstanceName
                     if changeElement["affectedUnit"] == affUnitName:
                       if changeElement["Step"] == "+1":
                         changeElement["changeCompleted"] = True
@@ -347,7 +347,7 @@ class changes_manifest:
                 print('+++ changeItem is: ', changeItem)
                 if "all services summary status changed from NOT Started to In Process" in changeItem:
                   for changeElement in change['changes']:
-                    affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
+                    affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes"
                     print("+++  affUnitName is: ", affUnitName)
                     if changeElement["affectedUnit"] == affUnitName:
                       if changeElement["Status"].replace('To ','') == "In Process":
@@ -410,21 +410,21 @@ class changes_manifest:
       if changesBlock["changeType"] == "Start of a serviceType":
         if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
           for changeItems in cc.changesList:
-            if (changeItems['key'] == "platform/system:"+systemInstanceName+"/services") and (changesBlock['key'] == "platform/system:"+systemInstanceName+"/serviceTypes"):
+            if (changeItems['key'] == "appliance/system:"+systemInstanceName+"/services") and (changesBlock['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes"):
               for changeItem in changeItems['changes']:
                 if "all services summary currentStep changed from" in changeItem:
                   for changeElement in changesBlock['changes']:
-                    affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
+                    affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes"
                     if changeElement["affectedUnit"] == affUnitName:
                       if changeElement["Step"] == "+1":
                         changeElement["changeCompleted"] = True
                         match1 = True
-            if (changeItems['key'] == "platform/system:"+systemInstanceName+"/serviceTypes/"+typeName) and (changesBlock['key'] == "platform/system:"+systemInstanceName+"/serviceTypes"):
+            if (changeItems['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes/"+typeName) and (changesBlock['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes"):
               for changeItem in changeItems['changes']:
                 if (typeName) in changeItem:
                   if " summary status changed from" in changeItem:
                     for changeElement in changesBlock['changes']:
-                      affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName
+                      affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName
                       if changeElement["affectedUnit"] == affUnitName:
                         if changeElement["Status"].replace('To ','') == "In Process":
                           changeElement["changeCompleted"] = True
@@ -465,7 +465,7 @@ class changes_manifest:
       for changeKey in changesBlock:
         if changeKey == "changes":
           for change in changesBlock[changeKey]:
-            affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
+            affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
             if (change["affectedUnit"] == affUnitName) and (change["Status"].replace('To ','') == "In Process"):
               chgIdx = changesBlock["changeIndex"]
     #3 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
@@ -477,16 +477,16 @@ class changes_manifest:
         if changesBlock["changeType"] == "Start of an instance of a serviceType":
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
             for changeItems in cc.changesList:
-              if changeItems['key'] == "platform/system:"+systemInstanceName+"/serviceTypes/"+typeName: #) and (changesBlock['key'] == "platform/system:"+systemInstanceName+"/serviceTypes"):
+              if changeItems['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes/"+typeName: #) and (changesBlock['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes"):
                 for changeItem in changeItems['changes']:
                   if typeName+" summary currentStep changed from " in changeItem:
                     for changeElement in changesBlock['changes']:
-                      affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName
+                      affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName
                       if changeElement["affectedUnit"] == affUnitName:
                         if changeElement["Step"] == "+1":
                           changeElement["changeCompleted"] = True
                           match1 = True
-                      affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
+                      affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
                       if (changeElement["affectedUnit"] == affUnitName) and (changeElement["Step"] == "+1") and (changeElement["Status"].replace('To ','') == "In Process"):
                         changeElement["changeCompleted"] = True
                         match2 = True
@@ -525,7 +525,7 @@ class changes_manifest:
       for changeKey in changesBlock:
         if changeKey == "changes":
           for change in changesBlock[changeKey]:
-            affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
+            affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
             if (change["affectedUnit"] == affUnitName) and (change["Status"].replace('To ','') == "Completed"):
               chgIdx = changesBlock["changeIndex"]
     #3 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
@@ -536,11 +536,11 @@ class changes_manifest:
         if changesBlock["changeType"] == "End of an instance of a serviceType":
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
             for changeItems in cc.changesList:
-              if changeItems['key'] == "platform/system:"+systemInstanceName+"/serviceTypes/"+typeName+"/"+instanceName: 
+              if changeItems['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes/"+typeName+"/"+instanceName: 
                 for changeItem in changeItems['changes']:
                   if instanceName +" summary status changed from In Process to Completed" in changeItem:
                     for changeElement in changesBlock['changes']:
-                      affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
+                      affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName + "/" + instanceName
                       if (changeElement["affectedUnit"] == affUnitName) and (changeElement["Step"] == "same") and (changeElement["Status"].replace('To ','') == "Completed"):
                         changeElement["changeCompleted"] = True
                         match = True
@@ -579,7 +579,7 @@ class changes_manifest:
       for changeKey in changesBlock:
         if changeKey == "changes":
           for change in changesBlock[changeKey]:
-            affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName
+            affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName
             if (change["affectedUnit"] == affUnitName) and (change["Status"].replace('To ','') == "Completed"):
               chgIdx = changesBlock["changeIndex"]
     #3 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
@@ -590,11 +590,11 @@ class changes_manifest:
         if changesBlock["changeType"] == "End of a serviceType":
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
             for changeItems in cc.changesList:
-              if changeItems['key'] == "platform/system:"+systemInstanceName+"/serviceTypes/"+typeName: 
+              if changeItems['key'] == "appliance/system:"+systemInstanceName+"/serviceTypes/"+typeName: 
                 for changeItem in changeItems['changes']:
                   if typeName +" summary status changed from In Process to Completed" in changeItem:
                     for changeElement in changesBlock['changes']:
-                      affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes/" + typeName
+                      affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes/" + typeName
                       if changeElement["affectedUnit"] == affUnitName:
                         if changeElement["Status"].replace('To ','') == "Completed":
                           changeElement["changeCompleted"] = True
@@ -634,7 +634,7 @@ class changes_manifest:
       for changeKey in changesBlock:
         if changeKey == "changes":
           for change in changesBlock[changeKey]:
-            affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
+            affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes"
             if (change["affectedUnit"] == affUnitName) and (change["Status"].replace('To ','') == "Completed"):
               chgIdx = changesBlock["changeIndex"]
     #3 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
@@ -645,11 +645,11 @@ class changes_manifest:
         if changesBlock["changeType"] == "End of a services section":
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
             for changeItems in cc.changesList:
-              if changeItems['key'] == "platform/system:"+systemInstanceName+"/services": 
+              if changeItems['key'] == "appliance/system:"+systemInstanceName+"/services": 
                 for changeItem in changeItems['changes']:
                   if "all services summary status changed from In Process to Completed" in changeItem:
                     for changeElement in changesBlock['changes']:
-                      affUnitName = "platform/system:" + systemInstanceName + "/serviceTypes"
+                      affUnitName = "appliance/system:" + systemInstanceName + "/serviceTypes"
                       if changeElement['affectedUnit'] == affUnitName:
                         if changeElement["Status"].replace('To ','') == "Completed":
                           changeElement["changeCompleted"] = True
@@ -689,7 +689,7 @@ class changes_manifest:
       for changeKey in changesBlock:
         if changeKey == "changes":
           for change in changesBlock[changeKey]:
-            affUnitName = "platform/system:" + systemInstanceName
+            affUnitName = "appliance/system:" + systemInstanceName
             if (change["affectedUnit"] == affUnitName) and (change["Status"].replace('To ','') == "Completed"):
               chgIdx = changesBlock["changeIndex"]
     #4 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
@@ -700,11 +700,11 @@ class changes_manifest:
         if changesBlock["changeType"] == "End of a system":
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
             for changeItems in cc.changesList:
-              if changeItems['key'] == "platform/system:"+systemInstanceName: 
+              if changeItems['key'] == "appliance/system:"+systemInstanceName: 
                 for changeItem in changeItems['changes']:
                   if "system summary status changed from In Process to Completed" in changeItem:
                     for changeElement in changesBlock['changes']:
-                      affUnitName = "platform/system:" + systemInstanceName
+                      affUnitName = "appliance/system:" + systemInstanceName
                       if changeElement["affectedUnit"] == affUnitName:
                         if changeElement["Status"].replace('To ','') == "Completed":
                           changeElement["changeCompleted"] = True
@@ -717,23 +717,23 @@ class changes_manifest:
       exit(1)
 
   #@private
-  def createEndOfPlatformRun(self):
+  def createEndOfApplianceRun(self):
     changeSummaryDict = {
       "changeIndex":self.changeIndex, 
-      "changeType":"End of platform run", 
-      "key":"platformEnd",
+      "changeType":"End of appliance run", 
+      "key":"applianceEnd",
       "changes": [
-  	  {"affectedUnit":"platform", "Status":"To Completed", "Step":"Same", "changeCompleted":False}
+  	  {"affectedUnit":"appliance", "Status":"To Completed", "Step":"Same", "changeCompleted":False}
 	  ]
     }
     self.changesManifest.append(changeSummaryDict)
     self.changeIndex += 1
 
   #@public
-  def updateEndOfPlatformRun(self, ct, cc, level):
+  def updateEndOfApplianceRun(self, ct, cc, level):
     lw = log_writer()
     #1 update changeTaxonomy
-    ct.updateEndOfPlatformRun()
+    ct.updateEndOfApplianceRun()
     #2 get list of changes in new changeTaxonomy
     outputLine = "[ acm ] " + " After update, changeTaxonomy is: " + str(ct.changeTaxonomy)
     ct.storeChangeTaxonomy(cc, level, outputLine)
@@ -744,7 +744,7 @@ class changes_manifest:
       for changeKey in changesBlock:
         if changeKey == "changes":
           for change in changesBlock[changeKey]:
-            affUnitName = "platform"
+            affUnitName = "appliance"
             if (change["affectedUnit"] == affUnitName) and (change["Status"].replace('To ','') == "Completed"):
               chgIdx = changesBlock["changeIndex"]
     #4 update changes in changesManifest if and only if the required changes have been reported by the call to storeChangeTaxonomy()
@@ -752,14 +752,14 @@ class changes_manifest:
     #5 update change in changesManifest
     for changesBlock in self.changesManifest:
       if changesBlock["changeIndex"] == chgIdx:
-        if changesBlock["changeType"] == "End of platform run":
+        if changesBlock["changeType"] == "End of appliance run":
           if int(changesBlock['changeIndex']) == (len(ct.changeReports)-1):
             for changeItems in cc.changesList:
-              if changeItems['key'] == "platformEnd": 
+              if changeItems['key'] == "applianceEnd": 
                 for changeItem in changeItems['changes']:
                   if "overallStatus changed from In Process to Completed" in changeItem:
                     for changeElement in changesBlock['changes']:
-                      if changeElement["affectedUnit"] == "platform":  
+                      if changeElement["affectedUnit"] == "appliance":  
                         if changeElement["Status"].replace('To ','') == "Completed":  
                           changeElement["changeCompleted"] = True  
                           match = True
@@ -795,8 +795,8 @@ class changes_manifest:
                 print("...   for debugging: change is: ", change)
                 print("...   for debugging: changesBlock['changeIndex'] is: ", changesBlock['changeIndex'])
                 print('...   for debugging: index is: ', index)
-                import traceback
-                traceback.print_stack()
+#                import traceback
+#                traceback.print_stack()
                 logString = "ERROR: Change Manifest shows a false flag that should be true.  Post an issue on our github site so we can examine what caused this.  "
                 lw.writeLogVerbose("acm", logString)
                 exit(1)

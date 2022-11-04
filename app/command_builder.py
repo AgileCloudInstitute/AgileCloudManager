@@ -226,6 +226,8 @@ class command_builder:
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
+        print("a sourceField is: ", sourceField)
+        print("a valuaCoordinates is: ", str(valueCoordinates))
         print("ERROR: Only one . after $keys is allowed in configuration.  ")
         sys.exit(1)
     keypairs_dict = {}
@@ -235,7 +237,7 @@ class command_builder:
           lineParts = line.split(":",1)
           keypairs_dict[lineParts[0]] = lineParts[1].replace("\n","").strip('\"')
     myItems = keypairs_dict.items()
-    for key, value in myItems:  
+    for key, value in myItems:
       if (value[0] == "\"") and (value[-1] == "\""):
         #eliminate any pre-existing double quotes to avoid downstream errors.
         value = value[1:]
@@ -253,13 +255,18 @@ class command_builder:
         elif tool == 'customController':
           secretLine = {sourceField:value.replace(" ","")}
     if 'empty' in secretLine:
+      if ("foundationMapped" in sourceField) or ("foundationMapped" in valueCoordinates):
+        print("sourceField is: ", sourceField)
+        print("valueCoordinates is: ", valueCoordinates)
+        quit("rdftgyhujiklop")
+
       logString = "Not able to find matching value for "+tfInputVarName+" in "+yamlKeysFileAndPath+" .  Halting program so you can examine the root cause of this problem. "
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     return secretLine
 
   #@private
-  def getRawSecretFromKeys(self, keyDir, sourceField, valueCoordinates):
+  def getRawSecretFromKeys(self, varType, keyDir, sourceField, valueCoordinates):
     cfmtr = command_formatter()
     lw = log_writer()
     secret = "empty"
@@ -271,14 +278,19 @@ class command_builder:
         keyDir = keyDir + "/"
     yamlKeysPath = keyDir.replace("\\\\","\\")
     yamlKeysPath = cfmtr.formatPathForOS(yamlKeysPath)
-    yamlKeysFileAndPath = yamlKeysPath + 'keys.yaml'
-    if valueCoordinates == "$keys":
+    if varType == "key":
+      yamlKeysFileAndPath = yamlKeysPath + 'keys.yaml'
+    elif varType == "conf":
+      yamlKeysFileAndPath = yamlKeysPath + 'config.yaml'
+    if (valueCoordinates == "$keys") or (valueCoordinates == "$config"):
       tfInputVarName = sourceField
     else: 
       if valueCoordinates.count(".") == 1:
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
+        print("b sourceField is: ", sourceField)
+        print("b valuaCoordinates is: ", str(valueCoordinates))
         print("ERROR: Only one . after $keys is allowed in configuration.  ")
         sys.exit(1)
     keypairs_dict = {}
@@ -296,13 +308,18 @@ class command_builder:
       if key == tfInputVarName:
         secret = value.replace(" ","")
     if 'empty' in secret:
+      if ("foundationMapped" in sourceField) or ("foundationMapped" in valueCoordinates):
+        print("2 sourceField is: ", sourceField)
+        print("2 valueCoordinates is: ", valueCoordinates)
+        quit("ncbnvbmc")
+
       logString = "Not able to find matching value for "+tfInputVarName+" in "+yamlKeysFileAndPath+" .  Halting program so you can examine the root cause of this problem. "
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
     return secret
 
   #@private
-  def getSecretValueFromKeys(self, tool, keyDir, sourceField, valueCoordinates):
+  def getSecretValueFromKeys(self, keyDir, sourceField, valueCoordinates):
     cfmtr = command_formatter()
     lw = log_writer()
     returnValue = "empty"
@@ -318,10 +335,14 @@ class command_builder:
     if valueCoordinates == "$keys":
       tfInputVarName = sourceField
     else: 
-      if valueCoordinates.count(".") == 1:
+      if valueCoordinates.count(".") == 1: 
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
       else:
+        import traceback
+        traceback.print_stack()
+        print("c sourceField is: ", sourceField)
+        print("c valuaCoordinates is: ", str(valueCoordinates))
         print("ERROR: Only one . after $keys is allowed in configuration.  ")
         sys.exit(1)
     keypairs_dict = {}
@@ -339,6 +360,11 @@ class command_builder:
       if key == tfInputVarName:
         returnValue = value.replace(" ","")
     if 'empty' in returnValue:
+      if ("foundationMapped" in sourceField) or ("foundationMapped" in valueCoordinates):
+        print("3 sourceField is: ", sourceField)
+        print("3 valueCoordinates is: ", valueCoordinates)
+        quit("jjtjjejgdd")
+
       logString = "Not able to find matching value for "+tfInputVarName+" in "+yamlKeysFileAndPath+" .  Halting program so you can examine the root cause of this problem. "
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
@@ -401,7 +427,7 @@ class command_builder:
     #iterate through each mapped variable to get the value
     for varName in mappedVariables:
       #THIRD, get the value for each variable
-      value = self.getValueForOneMappedVariable(mappedVariables, varName, tool, keyDir, systemConfig, instance, varLines, outputDict)
+      value = self.getValueForOneMappedVariable(mappedVariables, varName, tool, keyDir, systemConfig, instance, outputDict)
       #FOURTH, Now add the value you just calculated into the result of this function
       if tool == "arm":
         varLine = self.getArmVarLine(varName, value)
@@ -457,17 +483,21 @@ class command_builder:
     return foundationOutputVariables
 
   #@private
-  def addPathFunction(self,funcCoordParts):
+  def addPathFunction(self,instance, keyDir):
     import config_cliprocessor
     cfmtr = command_formatter()
-    if len(funcCoordParts) == 3:
-      valRoot = funcCoordParts[2]
-    elif len(funcCoordParts) == 4:
-      valRoot = funcCoordParts[2] + '.' + funcCoordParts[3]
-    else:
-      logString = "ERROR: Only 2 or 3 dots . may be included in a call to the addPath function.  If a third dot is present, it must be to attack a file type as in someScript.py "
-      print(logString)
-      sys.exit(1)
+    cfp = config_fileprocessor()
+    valRoot = instance.get("relativePathToResource")
+    if valRoot.startswith("$config"): 
+      valRoot = cfp.getValueFromConfig(keyDir, valRoot, "relativePathToResource")
+    #if len(funcCoordParts) == 3:
+    #  valRoot = funcCoordParts[2]
+    #elif len(funcCoordParts) == 4:
+    #  valRoot = funcCoordParts[2] + '.' + funcCoordParts[3]
+    #else:
+    #  logString = "ERROR: Only 2 or 3 dots . may be included in a call to the addPath function.  If a third dot is present, it must be to attack a file type as in someScript.py "
+    #  print(logString)
+    #  sys.exit(1)
     filename = config_cliprocessor.inputVars.get('userCallingDir')+cfmtr.getSlashForOS()+valRoot
     filename = cfmtr.formatPathForOS(filename)
     if os.path.exists(filename):
@@ -548,196 +578,398 @@ class command_builder:
     return varSnip
 
   #@private
-  def getValueForOneMappedVariable(self, mappedVariables, varName, tool, keyDir, systemConfig, instance, varLines, outputDict):
-    cr = command_runner()
-    lw = log_writer()
+  def getValueForOneMappedVariable(self, mappedVariables, varName, tool, keyDir, systemConfig, instance, outputDict):
     if mappedVariables.get(varName).startswith('$env.'):
-      envVarName = mappedVariables.get(varName).replace('$env.', '')
-      if envVarName in os.environ:
-        value = os.environ.get(envVarName)
-      else:
-        logString = 'ERROR: '+envVarName+' is not among your environment variables. '
-        print(logString)
-        sys.exit(1)
-    elif mappedVariables.get(varName).startswith("$keys"):
-      #This is handled in a separate block below in this function
-      if tool == "arm":
-        #For ARM templates, vars get placed in a params file to obscure them from logs.  
-        #Later, below, add handling to take variables sourced from keys and put them into ARM templates
-        #For now, the $keys for ARM templates are handled by the custom controller which makes cli calls to the Azure API
-        if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
-          value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
-        else:
-          logString = "ERROR: For ARM templates, exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
-          print(logString)
-          sys.exit(1)
-      elif tool == "cloudformation":
-        value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
-      elif tool == "customController":
-        value = self.getSecretValueFromKeys(tool, keyDir, varName, mappedVariables.get(varName))
-      elif tool == "terraform":
-        if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
-          value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
-        else:
-          logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
-          print(logString)
-          sys.exit(1)
-      elif tool == "packer":
-        if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
-          value = self.getRawSecretFromKeys(keyDir, varName, mappedVariables.get(varName))
-        else:
-          logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
-          print(logString)
-          sys.exit(1)
+      value = self.getOneEnvironmentVariableValue(mappedVariables, varName)
+    elif (mappedVariables.get(varName).startswith("$keys")) or (mappedVariables.get(varName).startswith("$config")):
+      value = self.processKeysAndConfig(mappedVariables, varName, tool, keyDir)
     elif mappedVariables.get(varName).startswith("$this"):
-      if (not mappedVariables.get(varName).startswith('$this.instance')) and (not mappedVariables.get(varName).startswith('$this.tags')) and (not mappedVariables.get(varName).startswith('$this.foundation')):
-        logString = "ERROR: Illegal syntax for "+varName+":  "+mappedVariables.get(varName)
-        print(logString)
-        sys.exit(1)
-      if mappedVariables.get(varName).count(".") == 1:
-        varToCheck = varName
-      elif mappedVariables.get(varName).count(".") == 2:
-        thisParts = mappedVariables.get(varName).split(".")
-        varToCheck = thisParts[2]
-      else:
-        logString = 'ERROR: $this statement had an illegal number of dots ( . ).  Only either one or 2 dots are allowed in each $this statement.  '
-        print(logString)
-        sys.exit(1)
+      varToCheck = self.validateThisSyntaxAndGetVarToCheckValue(mappedVariables, varName)
       if mappedVariables.get(varName).startswith("$this.foundationMapped"):
-        value = systemConfig.get('foundation').get('mappedVariables').get(varToCheck)
+        value = self.getOneFoundationMappedVariableValue(systemConfig, varToCheck, mappedVariables, varName, tool, keyDir)
       if (str(mappedVariables.get(varName)).startswith('$this.foundation')) and (not mappedVariables.get(varName).startswith("$this.foundationMapped")):
-        value = systemConfig.get('foundation').get(varToCheck)
+        value = self.getOneFoundationVariableValue(systemConfig, varToCheck, tool, keyDir, mappedVariables, varName)
       elif mappedVariables.get(varName).startswith("$this.instance"):
-        value = instance.get(varToCheck)
+        value = self.getOneInstanceVariableValue(instance, varToCheck, tool, varName, keyDir, mappedVariables)
       elif mappedVariables.get(varName).startswith("$this.tags"):
         value = systemConfig.get('tags').get(varToCheck)
+        print("before value is: ", value)
+        if "$config" in value:
+          value = self.getOneTagsVariableValue(systemConfig.get('tags'), varToCheck, tool, keyDir, mappedVariables, varName)
+#        quit("alskdjfhg")
     elif mappedVariables.get(varName).startswith("$customFunction"):
       funcCoordParts = mappedVariables.get(varName).split(".")
       funcName = funcCoordParts[1]
       if funcName == 'foundationOutput':
         if tool == "arm":
-          if len(funcCoordParts) == 2:
-            varToCheck = varName
-          elif len(funcCoordParts) == 3:
-            varToCheck = funcCoordParts[2]
-          else:
-            logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
-            print(logString)
-            sys.exit(1)
-          if varToCheck in self.outputVariables.keys():
-            for thisOutput in self.outputVariables:
-              if varToCheck == thisOutput:
-                value = str(self.outputVariables[thisOutput]['value'])
-          else:
-            logString = "ERROR: "+varToCheck+" was not in your foundation output: "+str(self.outputVariables.keys())
-            print(logString)
-            sys.exit(1)
+          value = self.foundationOutput_ARM_CustomFunction(funcCoordParts, varName)
         elif tool == "cloudformation":
-          if len(funcCoordParts) == 2:
-            varToCheck = varName
-          elif len(funcCoordParts) == 3:
-            varToCheck = funcCoordParts[2]
-          else:
-            logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
-            print(logString)
-            sys.exit(1)
-          from controller_cf import controller_cf
-          ccf4output = controller_cf()
-          from config_fileprocessor import config_fileprocessor
-          cfp = config_fileprocessor()
-          outputKeyDir = cfp.getKeyDir(systemConfig)
-          value = ccf4output.getVarFromCloudFormationOutput(outputKeyDir, varToCheck, systemConfig.get("foundation").get('stackName'), systemConfig.get("foundation").get('region'))
+          value = self.foundationOutput_CloudFormation_CustomFunction(funcCoordParts, varName, systemConfig)
         elif tool == "customController":
-          if len(funcCoordParts) == 2:
-            nameToCheck = varName
-          elif len(funcCoordParts) == 3:
-            nameToCheck = funcCoordParts[2]
-          for thisOutput in self.outputVariables:
-            if thisOutput['varName'] == nameToCheck:
-              value = thisOutput['varValue']
+          value = self.foundationOutput_CustomController_CustomFunction(funcCoordParts, varName)
         else:
-          if mappedVariables.get(varName).count(".") == 1:
-            tfOutputVarName = varName
-          elif mappedVariables.get(varName).count(".") == 2:
-            tfOutputVarName = mappedVariables.get(varName).split(".")[2]
-          else:
-            logString = "ERROR: Incorrect number of dots in $customFunction.foundationOutput coordinates.  When using $customFunction.foundationOutput as a source for variable values, your config must use either one dot or two dots.  The line with problems is: "+mappedVariables.get(varName)
-            print(logString)
-            sys.exit(1)
-          value = self.getVarFromOutput(tool, tfOutputVarName)
+          value = self.foundationOutput_Other_CustomFunction(mappedVariables, varName, tool)
       elif funcName == "addPath":
-        value = self.addPathFunction(funcCoordParts)
-      elif funcName == 'imageBuilderId':
-        subscriptionId = outputDict['subscriptionId']
-        resourceGroupName = outputDict['resourceGroupName']
-        identityName = outputDict['identityName']
-        value='/subscriptions/'+subscriptionId+'/resourcegroups/'+resourceGroupName+'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/'+identityName
+        value = self.addPathFunction(instance, keyDir)
+      elif funcName == 'imageBuilderId': 
+        value = self.imageBuilderIdCustomFunction(outputDict)
       elif funcName == "currentDateTime":
-        if "dateTimeCode" in outputDict.keys():
-          value = outputDict.get('dateTimeCode')
-        else:
-          value = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
+        value = self.currentDateTimeCustomFunction(outputDict)
       elif funcName == "addDateTime":
-        if len(funcCoordParts) == 3:
-          if "dateTimeCode" in outputDict.keys():
-            dt = outputDict.get('dateTimeCode')
-          else:
-            dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
-          rootString = funcCoordParts[2]
-          value = (rootString+dt).replace(' ','').lower()
-        else:
-          logString = "ERROR: addDateTime function call must have exactly two dots in format: $customFunction.addDateTime.rootstring"
-          print(logString)
-          sys.exit(1)
+        value = self.addDateTimeCustomFunction(funcCoordParts, outputDict)
       elif funcName == "imageTemplateName":
-        if len(funcCoordParts) == 2:
-          if "dateTimeCode" in outputDict.keys():
-            dt = outputDict.get('dateTimeCode')
-          else:
-            dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
-          rootString = instance.get('instanceName')
-          value = (rootString+dt).replace(' ','').lower()
-        else:
-          logString = "ERROR: imageTemplateName function call must have exactly one dot in format: $customFunction.imageTemplateName"
-          print(logString)
-          sys.exit(1)
+        value = self.imageTemplateNameCustomFunction(funcCoordParts, outputDict, instance)
       elif funcName == "mostRecentImage":
         if tool == "arm":
-          imageNameRoot = funcCoordParts[2]
-          resourceGroupName = systemConfig.get('foundation').get("resourceGroupName")
-          getImagesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
-          logString = "getImagesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
-          lw.writeLogVerbose("shell", logString)
-          imgsJSON = cr.getShellJsonResponse(getImagesCmd) 
-          imageNamesList = []
-          imgsJSON = yaml.safe_load(imgsJSON)  
-          for image in imgsJSON['data']:
-            if imageNameRoot in image['name']:
-              imageNamesList.append(image.get("name"))
-          sortedImageList = list(sorted(imageNamesList))
-          if len(sortedImageList) >0:
-            value = sortedImageList[-1]
-          else:
-            logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
-            print(logString)
-            sys.exit(1)
+          value = self.mostRecentImageCustomFunction_ARM(systemConfig, instance, tool, keyDir)
         elif tool == "cloudformation":
-          from controller_cf import controller_cf
-          iccf = controller_cf()
-          imageNameRoot = funcCoordParts[2]
-          outputDict['ImageNameRoot'] = imageNameRoot
-          value = iccf.getMostRecentImage(systemConfig, keyDir, outputDict)
+          value = self.mostRecentImageCustomFunction_CloudFormation(systemConfig, instance, keyDir, outputDict)
         elif tool == 'terraform':
           print("WARNING: Please use terraform's internal syntax for filtering most recent images.  Program is halting here to allow you to change your terraform code and re-run so that this error can be avoided. ")
           sys.exit(1)
         else:
-          logString = "The $customFunction.mostRecentImage is currently supported for the terraform, arm and cloudformation controllers. "
+          logString = "The $customFunction.mostRecentImage is currently supported for the arm and cloudformation controllers only. "
           print(logString)
           sys.exit(1)
       elif funcName == "addOrganization":
-        valRoot = funcCoordParts[2]
-        value = (valRoot+systemConfig.get("organization")).lower()
+        value = self.addOrganizationCustomFunction(systemConfig, funcCoordParts, varName, tool, keyDir)
+        print("value is: ", value)
     else: 
       #Handle plaintext variables that do not require coordinate searching
       value = mappedVariables.get(varName)
     return value
+
+  def getOneEnvironmentVariableValue(self, mappedVariables, varName):
+    envVarName = mappedVariables.get(varName).replace('$env.', '')
+    if envVarName in os.environ:
+      value = os.environ.get(envVarName)
+    else:
+      logString = 'ERROR: '+envVarName+' is not among your environment variables. '
+      print(logString)
+      sys.exit(1)
+    return value
+
+  def validateThisSyntaxAndGetVarToCheckValue(self, mappedVariables, varName):
+    if (not mappedVariables.get(varName).startswith('$this.instance')) and (not mappedVariables.get(varName).startswith('$this.tags')) and (not mappedVariables.get(varName).startswith('$this.foundation')):
+      logString = "ERROR: Illegal syntax for "+varName+":  "+mappedVariables.get(varName)
+      print(logString)
+      sys.exit(1)
+    if mappedVariables.get(varName).count(".") == 1:
+      varToCheck = varName
+    elif mappedVariables.get(varName).count(".") == 2:
+      thisParts = mappedVariables.get(varName).split(".")
+      varToCheck = thisParts[2]
+    else:
+      logString = 'ERROR: $this statement had an illegal number of dots ( . ).  Only either one or 2 dots are allowed in each $this statement.  '
+      print(logString)
+      sys.exit(1)
+    return varToCheck
+
+  def getOneFoundationMappedVariableValue(self, systemConfig, varToCheck, mappedVariables, varName, tool, keyDir):
+    if (systemConfig.get('foundation').get('mappedVariables').get(varToCheck).startswith('$config')) and (mappedVariables.get(varName).count(".") == 1):
+      print("varName is: ", varName)
+      print("varToCheck is: ", varToCheck)
+      print("systemConfig.get('foundation').get('mappedVariables').get(varToCheck) is: ", systemConfig.get('foundation').get('mappedVariables').get(varToCheck))
+      print('mappedVariables.get(varName).split(".")[1] is: ', mappedVariables.get(varName).split(".")[1])
+      value = self.processGlobalConfig(systemConfig.get('foundation').get('mappedVariables').get(varToCheck), varToCheck, tool, keyDir)
+    elif (systemConfig.get('foundation').get('mappedVariables').get(varToCheck).startswith('$config')) and (mappedVariables.get(varName).count(".") == 2):
+      value = self.processGlobalConfig(systemConfig.get('foundation').get('mappedVariables').get(varToCheck), mappedVariables.get(varName).split(".")[2], tool, keyDir)
+    else:
+      value = systemConfig.get('foundation').get('mappedVariables').get(varToCheck)
+    return value
+
+  def getOneFoundationVariableValue(self, systemConfig, varToCheck, tool, keyDir, mappedVariables, varName):
+    value = systemConfig.get('foundation').get(varToCheck)
+    if (varToCheck != "controller") and (varToCheck != "templateName") and (varToCheck != "emptyTemplateName") and (varToCheck != "instanceName"):
+      if (systemConfig.get('foundation').get(varToCheck).startswith('$config')) and (systemConfig.get('foundation').get(varToCheck).count(".") == 0):
+        value = self.processGlobalConfig(systemConfig.get('foundation').get(varToCheck), varToCheck, tool, keyDir)
+      elif (systemConfig.get('foundation').get(varToCheck).startswith('$config')) and (systemConfig.get('foundation').get(varToCheck).count(".") == 1):
+        value = self.processGlobalConfig(systemConfig.get('foundation').get(varToCheck), mappedVariables.get(varName).split(".")[1], tool, keyDir)
+    return value
+
+  def getOneInstanceVariableValue(self, instance, varToCheck, tool, varName, keyDir, mappedVariables):
+    value = instance.get(varToCheck)
+    print("a")
+    if (varToCheck != "controller") and (varToCheck != "templateName") and (varToCheck != "emptyTemplateName") and (varToCheck != "instanceName"):
+      print("b")
+      if (value.startswith('$config')) and (value.count(".") == 0):
+        print("c")
+        value = self.processGlobalConfig(value, varToCheck, tool, keyDir)
+      elif (value.startswith('$config')) and (value.count(".") == 1):
+        print("d")
+        value = self.processGlobalConfig(value, mappedVariables.get(varName).split(".")[1], tool, keyDir)
+        print("varToCheck is: ", varToCheck)
+        print("value is: ", value)
+#    if tool == "arm":
+#      if (varName == "resourceGroupName") or (varName == "resourceGroupRegion"):
+#        if value.startswith("$config"):
+#          value = self.processGlobalConfig(value, varName, tool, keyDir)
+    if varToCheck == "deploymentName":
+      if "$config" in value:
+        print("value is: ", value)
+        quit("kjegcnrjs")
+    return value
+
+  def getOneTagsVariableValue(self, tags, varToCheck, tool, keyDir, mappedVariables, varName):
+    value = tags.get(varToCheck)
+    print("value is: ", value)
+    print("varToCheck is: ", varToCheck)
+    print("tool is: ", tool)
+    print("keyDir is: ", keyDir)
+    print("varName is: ", varName)
+    print("mappedVariables.get(varName) is: ", mappedVariables.get(varName))
+#    quit("sedrftgyhujiklioj")
+    print("a")
+    if (varToCheck != "controller") and (varToCheck != "templateName") and (varToCheck != "emptyTemplateName") and (varToCheck != "instanceName"):
+      print("b")
+      if (value.startswith('$config')) and (value.count(".") == 0):
+        print("c")
+        value = self.processGlobalConfig(value, varToCheck, tool, keyDir)
+      elif (value.startswith('$config')) and (value.count(".") == 1):
+        print("d")
+        value = self.processGlobalConfig(value, mappedVariables.get(varName).split(".")[1], tool, keyDir)
+        print("varToCheck is: ", varToCheck)
+        print("value is: ", value)
+    #if varToCheck == "deploymentName":
+    #  if "$config" in value:
+#    print("value is: ", value)
+#    quit("kjegcnrjs")
+    return value
+
+  def foundationOutput_ARM_CustomFunction(self, funcCoordParts, varName):
+    if len(funcCoordParts) == 2:
+      varToCheck = varName
+    elif len(funcCoordParts) == 3:
+      varToCheck = funcCoordParts[2]
+    else:
+      logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
+      print(logString)
+      sys.exit(1)
+    if varToCheck in self.outputVariables.keys():
+      for thisOutput in self.outputVariables:
+        if varToCheck == thisOutput:
+          value = str(self.outputVariables[thisOutput]['value'])
+    else:
+      logString = "ERROR: "+varToCheck+" was not in your foundation output: "+str(self.outputVariables.keys())
+      print(logString)
+      sys.exit(1)
+    return value
+
+  def foundationOutput_CloudFormation_CustomFunction(self, funcCoordParts, varName, systemConfig):
+    if len(funcCoordParts) == 2:
+      varToCheck = varName
+    elif len(funcCoordParts) == 3:
+      varToCheck = funcCoordParts[2]
+    else:
+      logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
+      print(logString)
+      sys.exit(1)
+    from controller_cf import controller_cf
+    ccf4output = controller_cf()
+    from config_fileprocessor import config_fileprocessor
+    cfp = config_fileprocessor()
+#    cf = command_formatter()
+    keyDir = cfp.getKeyDir(systemConfig)
+#    keyDir = cf.formatKeyDir(keyDir)
+    outputKeyDir = cfp.getKeyDir(systemConfig)
+    stackName = systemConfig.get("foundation").get('stackName')
+    if stackName.startswith("$config"):
+      stackName = cfp.getValueFromConfig(keyDir, stackName, "stackName")
+    region = systemConfig.get("foundation").get('region')
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(keyDir, region, "region")
+    value = ccf4output.getVarFromCloudFormationOutput(outputKeyDir, varToCheck, stackName, region)
+    return value
+
+  def foundationOutput_CustomController_CustomFunction(self, funcCoordParts, varName):
+    if len(funcCoordParts) == 2:
+      nameToCheck = varName
+    elif len(funcCoordParts) == 3:
+      nameToCheck = funcCoordParts[2]
+    for thisOutput in self.outputVariables:
+      if thisOutput['varName'] == nameToCheck:
+        value = thisOutput['varValue']
+    return value
+
+  def foundationOutput_Other_CustomFunction(self, mappedVariables, varName, tool):
+    if mappedVariables.get(varName).count(".") == 1:
+      tfOutputVarName = varName
+    elif mappedVariables.get(varName).count(".") == 2:
+      tfOutputVarName = mappedVariables.get(varName).split(".")[2]
+    else:
+      logString = "ERROR: Incorrect number of dots in $customFunction.foundationOutput coordinates.  When using $customFunction.foundationOutput as a source for variable values, your config must use either one dot or two dots.  The line with problems is: "+mappedVariables.get(varName)
+      print(logString)
+      sys.exit(1)
+    value = self.getVarFromOutput(tool, tfOutputVarName)
+    return value
+
+  def imageBuilderIdCustomFunction(self, outputDict):
+    subscriptionId = outputDict['subscriptionId']
+    resourceGroupName = outputDict['resourceGroupName']
+    identityName = outputDict['identityName']
+    value='/subscriptions/'+subscriptionId+'/resourcegroups/'+resourceGroupName+'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/'+identityName
+    return value
+
+  def currentDateTimeCustomFunction(self, outputDict):
+    if "dateTimeCode" in outputDict.keys():
+      value = outputDict.get('dateTimeCode')
+    else:
+      value = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
+    return value
+
+  def addDateTimeCustomFunction(self, funcCoordParts, outputDict):
+    if len(funcCoordParts) == 3:
+      if "dateTimeCode" in outputDict.keys():
+        dt = outputDict.get('dateTimeCode')
+      else:
+        dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
+      rootString = funcCoordParts[2]
+      value = (rootString+dt).replace(' ','').lower()
+    else:
+      logString = "ERROR: addDateTime function call must have exactly two dots in format: $customFunction.addDateTime.rootstring"
+      print(logString)
+      sys.exit(1)
+    return value
+
+  def imageTemplateNameCustomFunction(self, funcCoordParts, outputDict, instance):
+    if len(funcCoordParts) == 2:
+      if "dateTimeCode" in outputDict.keys():
+        dt = outputDict.get('dateTimeCode')
+      else:
+        dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
+      rootString = instance.get('instanceName')
+      value = (rootString+dt).replace(' ','').lower()
+    else:
+      logString = "ERROR: imageTemplateName function call must have exactly one dot in format: $customFunction.imageTemplateName"
+      print(logString)
+      sys.exit(1)
+    return value
+
+  def mostRecentImageCustomFunction_ARM(self, systemConfig, instance, tool, keyDir):
+    lw = log_writer()
+    cr = command_runner()
+    #imageNameRoot = funcCoordParts[2]
+    cfp = config_fileprocessor()
+    imageNameRoot = instance.get("imageName")
+    if imageNameRoot.startswith("$config"): 
+      imageNameRoot = cfp.getValueFromConfig(keyDir, imageNameRoot, "imageName")
+    resourceGroupName = systemConfig.get('foundation').get("resourceGroupName")
+    #Handle care were resourceGroupName comes from config.yaml
+    if (resourceGroupName.startswith('$config')) and (resourceGroupName.count(".") == 0):
+      resourceGroupName = self.processGlobalConfig(resourceGroupName, "resourceGroupName", tool, keyDir)
+    elif (resourceGroupName.startswith('$config')) and (resourceGroupName.count(".") == 1):
+      resourceGroupName = self.processGlobalConfig(resourceGroupName, resourceGroupName.split(".")[1], tool, keyDir)
+    getImagesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
+    logString = "getImagesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.Compute/images' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
+    lw.writeLogVerbose("shell", logString)
+    imgsJSON = cr.getShellJsonResponse(getImagesCmd) 
+    imageNamesList = []
+    imgsJSON = yaml.safe_load(imgsJSON)  
+    for image in imgsJSON['data']:
+      if imageNameRoot in image['name']:
+        imageNamesList.append(image.get("name"))
+    sortedImageList = list(sorted(imageNamesList))
+    if len(sortedImageList) >0:
+      value = sortedImageList[-1]
+    else:
+      logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
+      print(logString)
+      sys.exit(1)
+    return value
+
+  def mostRecentImageCustomFunction_CloudFormation(self, systemConfig, instance, keyDir, outputDict):
+    from controller_cf import controller_cf
+    iccf = controller_cf()
+    cfp = config_fileprocessor()
+#    print("h instance is: ", str(instance))
+    imageNameRoot = instance.get("imageName")
+#    print("i imageNameRoot is: ", imageNameRoot)
+    if imageNameRoot.startswith("$config"): 
+      imageNameRoot = cfp.getValueFromConfig(keyDir, imageNameRoot, "imageName")
+#    print("j imageNameRoot is: ", imageNameRoot)
+    #imageNameRoot = funcCoordParts[2]
+    outputDict['ImageNameRoot'] = imageNameRoot
+    value = iccf.getMostRecentImage(systemConfig, keyDir, outputDict)
+    return value
+
+  def addOrganizationCustomFunction(self, systemConfig, funcCoordParts, varName, tool, keyDir):
+    valRoot = funcCoordParts[2]
+    if systemConfig.get("organization").startswith("$config"):
+      realOrg=self.processGlobalConfig(systemConfig.get("organization"), varName, tool, keyDir).lower()
+      value = (valRoot+realOrg).lower()
+    else:
+      value = (valRoot+systemConfig.get("organization")).lower()
+    return value
+
+  def processKeysAndConfig(self, mappedVariables, varName, tool, keyDir):
+    if mappedVariables.get(varName).startswith("$keys"):
+      varType = "key"
+    elif mappedVariables.get(varName).startswith("$config"):
+      varType = "conf"
+    #This is handled in a separate block below in this function
+    if tool == "arm":
+      #For ARM templates, vars get placed in a params file to obscure them from logs.  
+      #Later, below, add handling to take variables sourced from keys and put them into ARM templates
+      #For now, the $keys for ARM templates are handled by the custom controller which makes cli calls to the Azure API
+      if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
+        value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      else:
+        logString = "ERROR: For ARM templates, exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
+        print(logString)
+        sys.exit(1)
+    elif tool == "cloudformation":
+      value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+    elif tool == "customController":
+      #value = self.getSecretValueFromKeys(keyDir, varName, mappedVariables.get(varName))
+      value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+    elif tool == "terraform":
+      if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
+        value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      else:
+        logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
+        print(logString)
+        sys.exit(1)
+    elif tool == "packer":
+      if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
+        value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      else:
+        logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
+        print(logString)
+        sys.exit(1)
+    return value
+
+  def processGlobalConfig(self, value, varName, tool, keyDir):
+    #This is handled in a separate block below in this function
+    if tool == "arm":
+      #For ARM templates, vars get placed in a params file to obscure them from logs.  
+      #Later, below, add handling to take variables sourced from keys and put them into ARM templates
+      #For now, the $keys for ARM templates are handled by the custom controller which makes cli calls to the Azure API
+      if (value.count('.') == 0) or (value.count('.') == 1):
+#        import traceback
+#        traceback.print_stack()
+        print("ok")
+        value = self.getRawSecretFromKeys("conf", keyDir, varName, value)
+      else:
+        logString = "ERROR: For ARM templates, exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
+        print(logString)
+        sys.exit(1)
+    elif tool == "cloudformation":
+      value = self.getRawSecretFromKeys("conf", keyDir, varName, value)
+    elif tool == "customController":
+      value = self.getSecretValueFromKeys(keyDir, varName, value)
+    elif tool == "terraform":
+      if (value.count('.') == 0) or (value.count('.') == 1):
+        value = self.getRawSecretFromKeys("conf", keyDir, varName, value)
+      else:
+        logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
+        print(logString)
+        sys.exit(1)
+    elif tool == "packer":
+      if (value.count('.') == 0) or (value.count('.') == 1):
+       value = self.getRawSecretFromKeys("conf", keyDir, varName, value)
+      else:
+        logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
+        print(logString)
+        sys.exit(1)
+    return value
+

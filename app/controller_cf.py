@@ -22,8 +22,11 @@ class controller_cf:
   #@public
   def createStack(self, systemConfig, instance, keyDir, caller, serviceType, instName):
     import config_cliprocessor
+    cfp = config_fileprocessor()
     #NOTE: THIS ADDS A REQUIREMENT THAT REGION FOR ENTIRE SYSTEM MUST BE DEFINED IN THE FOUNDATION BLOCK.
     region = systemConfig.get("foundation").get("region")
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(keyDir, region, "region")
     self.configureSecrets(keyDir, region)
     ## STEP 1: Populate variables
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
@@ -35,15 +38,22 @@ class controller_cf:
     elif caller == 'serviceInstance':
       templateName = instance.get("templateName")
       stackName = instance.get("stackName")
-      outputDict['ImageNameRoot'] = instance.get("imageName")
+      imageName = instance.get("imageName")
+      if imageName.startswith("$config"):
+        imageName = cfp.getValueFromConfig(keyDir, imageName, "imageName")
+      outputDict['ImageNameRoot'] = imageName
     elif caller == 'image':
       templateName = instance.get("templateName")
       stackName = instance.get("stackName")
+    if stackName.startswith("$config"):
+      stackName = cfp.getValueFromConfig(keyDir, stackName, "stackName")
+
     cb = command_builder()
     cf = command_formatter()
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, instance.get('mappedVariables'), 'cloudformation', self, outputDict)
     cfTemplateFileAndPath = userCallingDir+templateName
     cfTemplateFileAndPath = cf.formatPathForOS(cfTemplateFileAndPath)
+    print("x region is: ", region)
     self.configureSecrets(keyDir,region)
 
     lw = log_writer()
@@ -123,7 +133,10 @@ class controller_cf:
     cr = command_runner()
     cf = command_formatter()
     lw = log_writer()
+    cfp = config_fileprocessor()
     region = systemConfig.get("foundation").get("region")
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(keyDir, region, "region")
     self.configureSecrets(keyDir,region)
     ## STEP 1: Populate variables
     app_parent_path = config_cliprocessor.inputVars.get('app_parent_path')
@@ -136,6 +149,9 @@ class controller_cf:
     elif caller == 'image':
       templateName = instance.get("templateName")
       stackName = instance.get("stackName")
+    if stackName.startswith("$config"):
+      stackName = cfp.getValueFromConfig(keyDir, stackName, "stackName")
+
     thisStackId = self.getStackId(stackName)
     logString = 'thisStackId is: '+ thisStackId
     lw.writeLogVerbose("acm", logString)
@@ -296,6 +312,10 @@ class controller_cf:
         keyLine = 'aws_secret_access_key='+AWSSecretKey+'\n'
         f.write(keyLine)
       configFileName = outputDir+'/config'
+      print("new ....................................")
+#      import traceback
+#      traceback.print_stack()
+      print("y region is: ", region)
       with open(configFileName, 'w') as f:
         defaultLine = '[default]\n'
         f.write(defaultLine)
@@ -324,9 +344,14 @@ class controller_cf:
   def buildCloudFormationImage(self, systemConfig, image, keyDir):
     cr = command_runner()
     lw = log_writer()
+    cfp = config_fileprocessor()
     self.createStack(systemConfig, image, keyDir, 'image', 'images', image.get("instanceName"))
     region = systemConfig.get("foundation").get("region")
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(keyDir, region, "region")
     stackName = image.get("stackName")
+    if stackName.startswith("$config"):
+      stackName = cfp.getValueFromConfig(keyDir, stackName, "stackName")
     self.configureSecrets(keyDir,region)
     getImgIdCmd = 'aws cloudformation --region '+region+' describe-stacks --stack-name '+stackName
     logString = 'getImgIdCmd is: '+ getImgIdCmd
@@ -422,6 +447,7 @@ class controller_cf:
   #@public
   def getVarFromCloudFormationOutput(self, keyDir, outputVarName, stackName, region):
     cr = command_runner()
+    cfp = config_fileprocessor()
     self.configureSecrets(keyDir,region)
     getOutputsCommand = 'aws cloudformation describe-stacks --stack-name '+stackName + ' --region ' + region
     jsonStatus = cr.getShellJsonResponse(getOutputsCommand)
@@ -439,7 +465,10 @@ class controller_cf:
   def getMostRecentImage(self, systemConfig, keyDir, outputDict):
     cr = command_runner()
     lw = log_writer()
+    cfp = config_fileprocessor()
     region = systemConfig.get("foundation").get("region")
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(keyDir, region, "region")
     self.configureSecrets(keyDir, region)
     listImagesCommand = 'aws ec2 describe-images --owners self --filters "Name=state,Values=available"'
     logString = 'listImagesCommand is: '+listImagesCommand
@@ -452,11 +481,15 @@ class controller_cf:
     imageNamesList = []
     datesList = []
     imageNameIdDict = {}
+#    print("nameRoot is: ", nameRoot)
     for image in images:
+#      if (image['State'] == 'available'):
+#        print("image['Name'] is: ", image['Name'])
       if (image['State'] == 'available') and (nameRoot in image['Name']):
         imageNamesList.append(image['Name'])
         imageNameIdDict[image['Name']] = image['ImageId']
     for name in imageNamesList:
+#      print("x name is: ", name)
       datesList.append(name.split('_')[1])
     mostRecentDate = max(datesList)
     mostRecentImageName = nameRoot+'_'+mostRecentDate

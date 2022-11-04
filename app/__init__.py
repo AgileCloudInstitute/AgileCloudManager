@@ -3,7 +3,7 @@ __all__ = ['acm', 'changes_comparer', 'changes_manifest', 'changes_comparer', 'c
 'command_formatter', 'command_runner', 'config_cliprocessor', 'config_fileprocessor ', 'config_keysassembler', 
 'config_validator', 'controller_arm', 'controller_azdoproject', 'controller_azureadmin', 'controller_cf', 
 'controller_custom', 'controller_image', 'controller_packer', 'controller_release', 'controller_terraform', 
-'controller_tfbackendazrm', 'log_writer', 'workflow_platform', 'workflow_service_type', 'workflow_setup', 
+'controller_tfbackendazrm', 'log_writer', 'workflow_appliance', 'workflow_service_type', 'workflow_setup', 
 'workflow_system']
 
 import sys
@@ -96,9 +96,9 @@ sys.modules['controller_tfbackendazrm'] = controller_tfbackendazrm
 import AgileCloudManager.app.log_writer  as log_writer
 sys.modules['log_writer'] = log_writer
 
-#import workflow_platform
-import AgileCloudManager.app.workflow_platform  as workflow_platform
-sys.modules['workflow_platform'] = workflow_platform
+#import workflow_appliance
+import AgileCloudManager.app.workflow_appliance  as workflow_appliance
+sys.modules['workflow_appliance'] = workflow_appliance
 
 #import workflow_service_type
 import AgileCloudManager.app.workflow_service_type  as workflow_service_type

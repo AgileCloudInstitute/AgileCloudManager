@@ -21,7 +21,7 @@ print('inside unit-tests __init__.py')
 #import app.controller_terraform
 #import app.controller_tfbackendazrm
 #import app.log_writer
-#import app.workflow_platform
+#import app.workflow_appliance
 #import app.workflow_service_type
 #import app.workflow_setup
 #import app.workflow_system

@@ -25,7 +25,7 @@ class config_validator:
           typesList.append(typeName)
     print("a2")
     if len(typesList) != len(set(typesList)):
-      logString = "ERROR: Your configuration uses the same name to define multiple systems.  You must give each of your system instances a unique name within each platform configuration.  Halting program so you can fix your configuration. "
+      logString = "ERROR: Your configuration uses the same name to define multiple systems.  You must give each of your system instances a unique name within each appliance configuration.  Halting program so you can fix your configuration. "
       print(logString)
       sys.exit(1)
     print("a3")
@@ -36,7 +36,7 @@ class config_validator:
     #Third, validate each system
     print("acmConfig is ", str(acmConfig))
     for system in acmConfig:
-      sysCfg = cfp.getSystemConfig(acmConfig, system)
+      sysCfg = cfp.getSystemConfig(acmConfig, system) 
       print("***  sysCfg is: ", str(sysCfg))
       print("***  system is: ", system)
       #System config must be a dictionary

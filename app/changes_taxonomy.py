@@ -25,12 +25,12 @@ class changes_taxonomy:
     cfp = config_fileprocessor()
     lw = log_writer()
     import config_cliprocessor
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    if level == 'platform':
-      self.createTopLevelOfChangeTaxonomy(command, platformConfig)
-      for systemInstance in platformConfig:
-        sysCfg = cfp.getSystemConfig(platformConfig, systemInstance)
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    if level == 'appliance':
+      self.createTopLevelOfChangeTaxonomy(command, applianceConfig)
+      for systemInstance in applianceConfig:
+        sysCfg = cfp.getSystemConfig(applianceConfig, systemInstance)
         serviceTypes = sysCfg.get("serviceTypes")
         systemDict = { }
         systemDict["name"] = systemInstance
@@ -68,7 +68,7 @@ class changes_taxonomy:
       systemDict["name"] = systemInstanceName
       systemDict["status"] = "NOT Started"
       systemDict["currentStep"] = 0
-      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      systemConfig = cfp.getSystemConfig(applianceConfig, systemInstanceName)
       if 'foundation' in systemConfig.keys():
         systemDict["steps"] = 1 #foundation is only one step
         systemDict["foundation"] = self.createFoundationDict(systemConfig.get('foundation').get('instanceName'))
@@ -87,7 +87,7 @@ class changes_taxonomy:
     elif level == 'services':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      systemConfig = cfp.getSystemConfig(applianceConfig, systemInstanceName)
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):
         serviceTypes.append(sType)
@@ -119,7 +119,7 @@ class changes_taxonomy:
     elif level == 'servicetype':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      systemConfig = cfp.getSystemConfig(applianceConfig, systemInstanceName)
       svcType = config_cliprocessor.inputVars.get('serviceType')
       serviceTypes = []
       for sType in systemConfig.get('serviceTypes'):
@@ -153,7 +153,7 @@ class changes_taxonomy:
     elif level == 'serviceinstance':
       self.createTopLevelOfChangeTaxonomy_ServicesOnly(command)
       systemInstanceName = config_cliprocessor.inputVars.get('systemName')
-      systemConfig = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      systemConfig = cfp.getSystemConfig(applianceConfig, systemInstanceName)
       svcType = config_cliprocessor.inputVars.get('serviceType')
       svcInstance = config_cliprocessor.inputVars.get('serviceInstance')
       serviceTypes = []
@@ -240,12 +240,12 @@ class changes_taxonomy:
     return servicesSummaryDict
 
   #@private
-  def createTopLevelOfChangeTaxonomy(self, command, platformConfig):
+  def createTopLevelOfChangeTaxonomy(self, command, applianceConfig):
     cfp = config_fileprocessor()
     self.changeTaxonomy["command"] = command
     self.changeTaxonomy["overallStatus"] = "NOT Started"
-    #Calculate the number of steps for the entire platform, across all systems
-    numStepsAllSystems = len(cfp.getSystemNames(platformConfig))
+    #Calculate the number of steps for the entire appliance, across all systems
+    numStepsAllSystems = len(cfp.getSystemNames(applianceConfig))
     self.changeTaxonomy["steps"] = numStepsAllSystems
     self.changeTaxonomy["currentStep"] = 0
     self.changeTaxonomy["systemsToChange"] = []
@@ -254,7 +254,7 @@ class changes_taxonomy:
   def createTopLevelOfChangeTaxonomy_FoundationOnly(self, command):
     self.changeTaxonomy["command"] = command
     self.changeTaxonomy["overallStatus"] = "NOT Started"
-    #Calculate the number of steps for the entire platform, across all systems
+    #Calculate the number of steps for the entire appliance, across all systems
     numStepsAllSystems = 1 #Because there is only one system being changed
     self.changeTaxonomy["steps"] = numStepsAllSystems
     self.changeTaxonomy["currentStep"] = 0
@@ -264,7 +264,7 @@ class changes_taxonomy:
   def createTopLevelOfChangeTaxonomy_ServicesOnly(self, command):
     self.changeTaxonomy["command"] = command
     self.changeTaxonomy["overallStatus"] = "NOT Started"
-    #Calculate the number of steps for the entire platform, across all systems
+    #Calculate the number of steps for the entire appliance, across all systems
     numStepsAllSystems = 1 #Because there is only one system being changed
     self.changeTaxonomy["steps"] = numStepsAllSystems
     self.changeTaxonomy["currentStep"] = 0
@@ -297,7 +297,7 @@ class changes_taxonomy:
     return imageInstanceDict
 
   #@public
-  def updateStartOfPlatformRun(self, newStatus):
+  def updateStartOfApplianceRun(self, newStatus):
     ## Highest-level deployment summary.  Corresponds with acm.yaml
     self.changeTaxonomy["overallStatus"] = newStatus
 
@@ -306,7 +306,6 @@ class changes_taxonomy:
     for systemBeingChanged in self.changeTaxonomy["systemsToChange"]:
       if systemBeingChanged["name"] == systemInstanceName:
         systemBeingChanged["status"] = newStatus
-        ## Highest-level deployment summary.  Corresponds with platformConfig.yaml
         overallCurrentStep = self.changeTaxonomy["currentStep"]
         if self.changeTaxonomy["overallStatus"] == "In Process":
           overallCurrentStep += 1
@@ -412,5 +411,5 @@ class changes_taxonomy:
         systemBeingChanged["status"] = "Completed"
 
   #@public
-  def updateEndOfPlatformRun(self):
+  def updateEndOfApplianceRun(self):
     self.changeTaxonomy["overallStatus"] = "Completed"

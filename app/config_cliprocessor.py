@@ -104,8 +104,8 @@ def processInputArgs(inputArgs):
       if len(inputArgs) > 1:
         domain = inputArgs[1]
         command = inputArgs[2]
-        if (domain != 'platform') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'configure') and (domain != 'serviceType') and (domain != 'serviceInstance'):
-          logString = "Error: You must specify a valid value for the first parameter.  Either platform, foundation, services, serviceType, serviceInstance, setup, or configure now, but other valid values may be added in future releases.  "
+        if (domain != 'appliance') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'configure') and (domain != 'serviceType') and (domain != 'serviceInstance'):
+          logString = "Error: You must specify a valid value for the first parameter.  Either appliance, foundation, services, serviceType, serviceInstance, setup, or configure now, but other valid values may be added in future releases.  "
           print(logString)
           sys.exit(1)
       #Second, set any values conditionally based on flags entered by the user in the command line.  Add functionality here in future releases.

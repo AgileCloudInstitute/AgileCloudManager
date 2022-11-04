@@ -2,7 +2,7 @@
 ## Start at https://github.com/AgileCloudInstitute?tab=repositories    
 
 import config_cliprocessor as cliproc
-from workflow_platform import workflow_platform
+from workflow_appliance import workflow_appliance
 from workflow_system import workflow_system
 from workflow_service_type import workflow_service_type
 from workflow_setup import workflow_setup
@@ -15,7 +15,7 @@ inputArgs=sys.argv
 
 def runInfraCommands():
   wfsys = workflow_system()
-  wfpf = workflow_platform()
+  wfpf = workflow_appliance()
   wfst = workflow_service_type()
   lw = log_writer()
   cv = config_validator()
@@ -32,15 +32,15 @@ def runInfraCommands():
       ws.undoSetup() 
 
   #Validating config after setup is completed because setup creates the config location
-  if (cliproc.domain == 'platform') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):
+  if (cliproc.domain == 'appliance') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):
     print("inside acm.py, about to call cv.processAcmConfig()")
     cv.processAcmConfig()
 
-  if cliproc.domain == 'platform':
+  if cliproc.domain == 'appliance':
     if cliproc.command == 'on':
-      wfpf.onPlatform()
+      wfpf.onAppliance()
     elif cliproc.command == 'off': 
-      wfpf.offPlatform()
+      wfpf.offAppliance()
 
   elif cliproc.domain == 'foundation':
     if cliproc.command == 'on':
@@ -71,7 +71,7 @@ def runInfraCommands():
     sys.exit(0)
 
 ##############################################################################
-### Deploy Platform By Calling The Functions
+### Deploy appliance By Calling The Functions
 ##############################################################################
 
 cliproc.processInputArgs(inputArgs)

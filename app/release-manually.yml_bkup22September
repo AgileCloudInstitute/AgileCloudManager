@@ -104,23 +104,23 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-arm.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
-        name: Run platform on
+        name: Run appliance on
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform on
+          acm appliance on
       - shell: bash
-        name: Run platform off
+        name: Run appliance off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
@@ -178,23 +178,23 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
-        name: Run platform on
+        name: Run appliance on
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform on
+          acm appliance on
       - shell: bash
-        name: Run platform off
+        name: Run appliance off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         shell: bash
         run: |
@@ -253,23 +253,23 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-custom.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-custom.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
-        name: Run platform on
+        name: Run appliance on
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform on
+          acm appliance on
       - shell: bash
-        name: Run platform off
+        name: Run appliance off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
           cd /home/runner/testdir
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           PATH=$PATH:/home/runner/acmhome;export PATH
@@ -327,7 +327,7 @@ jobs:
           sudo chown runner:runner /home/runner/testdir
           cd /home/runner/testdir
           echo 'About to setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
           echo "........................About to ls -al "
           ls -al 
       - shell: bash
@@ -470,21 +470,21 @@ jobs:
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-arm.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-arm.git
           echo "About to dir"
           dir
-      - name: Run platform on
+      - name: Run appliance on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform on
-      - name: Run platform off
+          acm appliance on
+      - name: Run appliance off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -541,21 +541,21 @@ jobs:
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-projects-cf.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
           echo "About to dir"
           dir
-      - name: Run platform on
+      - name: Run appliance on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd 'C:\\stgng\\'
           echo ".................about to run e2e test"
-          acm platform on
-      - name: Run platform off
+          acm appliance on
+      - name: Run appliance off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -612,21 +612,21 @@ jobs:
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-custom.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-custom.git
           echo "About to dir"
           dir
-      - name: Run platform on
+      - name: Run appliance on
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform on
-      - name: Run platform off
+          acm appliance on
+      - name: Run appliance off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
           cd C:\\stgng\\
           echo ".................about to run e2e test"
-          acm platform off
+          acm appliance off
       - name: Setup Off
         run: |
           $env:Path += ";C:\\Users\\runneradmin\\acmhome\\"
@@ -683,7 +683,7 @@ jobs:
           cd C:\\stgng\\
           python -m pip install --upgrade pip requests
           echo 'About to: acm setup on'
-          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-config-terraform-packer.git
+          acm setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
           echo "About to dir"
           dir
       - name: Run tfbackend serviceType on

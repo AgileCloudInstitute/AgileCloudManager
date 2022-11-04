@@ -10,13 +10,13 @@ from changes_comparer import changes_comparer
 
 import sys
 
-class workflow_platform:
+class workflow_appliance:
   
   def __init__(self):  
     pass
  
   #@public
-  def onPlatform(self):
+  def onAppliance(self):
     import config_cliprocessor
     wfsys = workflow_system()
     cfp = config_fileprocessor()
@@ -27,28 +27,28 @@ class workflow_platform:
     command = 'on'
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    cm_on.initializeChangesManagementDataStructures(ct_on, cc_on, 'platform', command)
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    cm_on.initializeChangesManagementDataStructures(ct_on, cc_on, 'appliance', command)
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_on.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_on.updateStartOfPlatformRun(ct_on, cc_on, 'platform', "In Process")
-    for systemInstanceName in platformConfig:
-      cm_on.updateStartOfASystem(ct_on, cc_on, 'platform', systemInstanceName, "In Process")
-      sysCfg = cfp.getSystemConfig(platformConfig, systemInstanceName)
+    cm_on.updateStartOfApplianceRun(ct_on, cc_on, 'appliance', "In Process")
+    for systemInstanceName in applianceConfig:
+      cm_on.updateStartOfASystem(ct_on, cc_on, 'appliance', systemInstanceName, "In Process")
+      sysCfg = cfp.getSystemConfig(applianceConfig, systemInstanceName)
       if cfp.systemHasFoundation(sysCfg):
-        cm_on.updateStartOfAFoundation(ct_on, cc_on, 'platform', systemInstanceName, "In Process")
+        cm_on.updateStartOfAFoundation(ct_on, cc_on, 'appliance', systemInstanceName, "In Process")
         wfsys.onFoundation(systemInstanceName, sysCfg)
-        cm_on.updateEndOfAFoundation(ct_on, cc_on, 'platform', systemInstanceName)
+        cm_on.updateEndOfAFoundation(ct_on, cc_on, 'appliance', systemInstanceName)
       else:
         logString = "WARNING: There is NOT any foundation block defined for the system named " + systemInstanceName + " in your acm.yaml file.  The program is continuing in case you are launching something that does not need a Foundation.  If your configuration requires a foundation, then a downstream error will occur unless you add a foundation block. "
         lw.writeLogVerbose("acm", logString)
       logString = "------------------ DONE WITH onFoundation() -------------------"
       lw.writeLogVerbose("acm", logString)
-      cm_on.updateStartOfAServicesSection(ct_on, cc_on, 'platform', systemInstanceName)
-      wfsys.onServices(cm_on, ct_on, cc_on, 'platform', systemInstanceName, sysCfg)
-      cm_on.updateEndOfAServicesSection(ct_on, cc_on, 'platform', systemInstanceName)
-      cm_on.updateEndOfASystem(ct_on, cc_on, 'platform', systemInstanceName)
+      cm_on.updateStartOfAServicesSection(ct_on, cc_on, 'appliance', systemInstanceName)
+      wfsys.onServices(cm_on, ct_on, cc_on, 'appliance', systemInstanceName, sysCfg)
+      cm_on.updateEndOfAServicesSection(ct_on, cc_on, 'appliance', systemInstanceName)
+      cm_on.updateEndOfASystem(ct_on, cc_on, 'appliance', systemInstanceName)
       logString = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
@@ -59,10 +59,10 @@ class workflow_platform:
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
-    cm_on.updateEndOfPlatformRun(ct_on, cc_on, 'platform')
+    cm_on.updateEndOfApplianceRun(ct_on, cc_on, 'appliance')
 
   #@public
-  def offPlatform(self):
+  def offAppliance(self):
     import config_cliprocessor
     wfsys = workflow_system()
     cfp = config_fileprocessor()
@@ -72,40 +72,40 @@ class workflow_platform:
     lw = log_writer()
     test = config_cliprocessor.inputVars.get("test")
     typeOfTest = config_cliprocessor.inputVars.get("testType")
-    yamlPlatformConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
-    platformConfig = cfp.getPlatformConfig(yamlPlatformConfigFileAndPath)
-    systemInstanceNames = cfp.getSystemNames(platformConfig)
-    cm_off.initializeChangesManagementDataStructures(ct_off, cc_off, 'platform', "off")
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    systemInstanceNames = cfp.getSystemNames(applianceConfig)
+    cm_off.initializeChangesManagementDataStructures(ct_off, cc_off, 'appliance', "off")
     logString = "This run of the Agile Cloud Manager will complete " + str(len(cm_off.changesManifest)) + " changes. "
     lw.writeLogVerbose("acm", logString)
-    cm_off.updateStartOfPlatformRun(ct_off, cc_off, 'platform', "In Process")
+    cm_off.updateStartOfApplianceRun(ct_off, cc_off, 'appliance', "In Process")
     for systemInstanceName in reversed(systemInstanceNames):
-      sysCfg = cfp.getSystemConfig(platformConfig, systemInstanceName)
+      sysCfg = cfp.getSystemConfig(applianceConfig, systemInstanceName)
       useTheForce = sysCfg.get("forceDelete")
-      cm_off.updateStartOfASystem(ct_off, cc_off, 'platform', systemInstanceName, "In Process")
+      cm_off.updateStartOfASystem(ct_off, cc_off, 'appliance', systemInstanceName, "In Process")
       hasFoundation = cfp.systemHasFoundation(sysCfg)
       if (useTheForce == True) and (hasFoundation):
-        print("DEBUG has foundation in workflow_platform.py")
+        print("DEBUG has foundation in workflow_appliance.py")
         sys.exit(1)
         cm_off.updateStartOfSkipServicesSection()
-        cm_off.updateStartOfAServicesSection('platform', systemInstanceName)
+        cm_off.updateStartOfAServicesSection('appliance', systemInstanceName)
         print("test and typeOfTest are: ", test, " ", typeOfTest)
-        wfsys.skipServices('platform', systemInstanceName, yaml_infra_config_file_and_path)
-        cm_off.updateEndOfAServicesSection('platform', systemInstanceName)
+        wfsys.skipServices('appliance', systemInstanceName, yaml_infra_config_file_and_path)
+        cm_off.updateEndOfAServicesSection('appliance', systemInstanceName)
         cm_off.updateEndOfSkipServicesSection()
       else:
-        cm_off.updateStartOfAServicesSection(ct_off, cc_off, 'platform', systemInstanceName)
-        wfsys.offServices(cm_off, ct_off, cc_off, 'platform', systemInstanceName, sysCfg)
-        cm_off.updateEndOfAServicesSection(ct_off, cc_off, 'platform', systemInstanceName)
+        cm_off.updateStartOfAServicesSection(ct_off, cc_off, 'appliance', systemInstanceName)
+        wfsys.offServices(cm_off, ct_off, cc_off, 'appliance', systemInstanceName, sysCfg)
+        cm_off.updateEndOfAServicesSection(ct_off, cc_off, 'appliance', systemInstanceName)
         logString = "------------------ DONE WITH offServices() -------------------"
         lw.writeLogVerbose("acm", logString)
       if hasFoundation:
-        cm_off.updateStartOfAFoundation(ct_off, cc_off, 'platform', systemInstanceName, "In Process")
+        cm_off.updateStartOfAFoundation(ct_off, cc_off, 'appliance', systemInstanceName, "In Process")
         if (test==True) and (typeOfTest=="workflow"):
           pass
         else:
           wfsys.offFoundation(systemInstanceName, sysCfg)
-        cm_off.updateEndOfAFoundation(ct_off, cc_off, 'platform', systemInstanceName)
+        cm_off.updateEndOfAFoundation(ct_off, cc_off, 'appliance', systemInstanceName)
       else:
         logString = "WARNING: There is NOT any foundation block in system named " + systemInstanceName + " .  The program is continuing in case you are launching a SaaS that does not need a Foundation.  If your configuration requires a foundation, then a downstream error will occur unless you add a foundation block. "
         lw.writeLogVerbose("acm", logString)
@@ -114,7 +114,7 @@ class workflow_platform:
           lw.writeLogVerbose("acm", logString)
       logString = "------------------ DONE WITH offFoundation() -------------------"
       lw.writeLogVerbose("acm", logString)
-      cm_off.updateEndOfASystem(ct_off, cc_off, 'platform', systemInstanceName)
+      cm_off.updateEndOfASystem(ct_off, cc_off, 'appliance', systemInstanceName)
       logString = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
@@ -125,5 +125,5 @@ class workflow_platform:
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
       lw.writeLogVerbose("acm", logString)
-    cm_off.updateEndOfPlatformRun(ct_off, cc_off, 'platform')
+    cm_off.updateEndOfApplianceRun(ct_off, cc_off, 'appliance')
  
