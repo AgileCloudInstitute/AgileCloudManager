@@ -280,7 +280,7 @@ jobs:
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as config_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
@@ -359,7 +359,7 @@ jobs:
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as config_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
@@ -400,7 +400,7 @@ jobs:
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as config_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
@@ -441,7 +441,7 @@ jobs:
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as config_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
