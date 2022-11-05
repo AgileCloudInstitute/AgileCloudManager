@@ -10,6 +10,7 @@ runs:
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmconfig\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\
+          New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\starter\\
           New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\
           python -m pip install --upgrade pip requests
           python -m pip install --upgrade pip PyYaml
