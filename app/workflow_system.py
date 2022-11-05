@@ -133,7 +133,8 @@ class workflow_system:
       elif foundationTool == 'cloudformation':
         ccf.destroyStack(systemConfig, systemConfig.get("foundation"), keyDir, 'networkFoundation')
       elif foundationTool == 'terraform':
-        ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None)
+        #ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None)
+        ctf.terraformCrudOperation(operation, keyDir, systemConfig, systemConfig.get("foundation"), 'none', 'networkFoundation', None, None)
         if ctf.terraformResult == "Destroyed": 
           logString = "off operation succeeded.  Now inside Python conditional block to do only after the off operation has succeeded. "
           lw.writeLogVerbose("acm", logString)
