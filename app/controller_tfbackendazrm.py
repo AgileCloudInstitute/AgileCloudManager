@@ -69,7 +69,7 @@ class controller_tfbackendazrm:
 
       resourceGroupName = instance.get("resourceGroupName")
       if (resourceGroupName.startswith("$config")) :
-        resourceGroupName = ca.getValueFromConfig(keyDir, resourceGroupName, "resourceGroupName")
+        resourceGroupName = cfp.getValueFromConfig(keyDir, resourceGroupName, "resourceGroupName")
 
       print('systemConfig.get("organization") is: ', systemConfig.get("organization"))
       if systemConfig.get("organization").startswith("$config"):
