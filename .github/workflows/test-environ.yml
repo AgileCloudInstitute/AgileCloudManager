@@ -276,12 +276,12 @@ jobs:
         env:
           ACM_SECRET: ${{ secrets.ACM_REPO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-         ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
-       run: |
-         import base64, subprocess, sys, os, pathlib
-         #Import config file
-         with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as config_file:
-           key_file.write(os.environ['ACM_CONFIG'])
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import config file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as config_file:
+            key_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
