@@ -295,12 +295,15 @@ class command_builder:
         print("7x")
         coordParts = valueCoordinates.split(".")
         tfInputVarName = coordParts[1]
+        print("1 tfInputVarName is: ", tfInputVarName)
       else:
         print("b sourceField is: ", sourceField)
         print("b valuaCoordinates is: ", str(valueCoordinates))
         print("ERROR: Only one . after $keys is allowed in configuration.  ")
         sys.exit(1)
+    print("2 tfInputVarName is: ", tfInputVarName)
     keypairs_dict = {}
+    print("yamlKeysFileAndPath is: ", yamlKeysFileAndPath)
     with open(yamlKeysFileAndPath) as f:
       for line in f:
         if ("#" not in line) and (len(line.replace(" ", "")) > 1):

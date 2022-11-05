@@ -165,7 +165,7 @@ class config_keysassembler:
   #@public
   def getOutputDir(self, instName):
     import config_cliprocessor
-    cfm = command_formatter()
+    cfm = command_formatter() 
     outputDir = config_cliprocessor.inputVars.get('dirOfOutput')
     outputDir = outputDir + instName
     if not os.path.exists(outputDir):
@@ -208,7 +208,8 @@ class config_keysassembler:
       yaml_keys_file_and_path = cfm.getKeyFileAndPath(outputDir)
       if os.path.isfile(yaml_keys_file_and_path):
         #testing the following call with outputDir instead of keyDir
-        self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, outputDir)
+        #self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, outputDir)
+        self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, keyDir)
       else:
         self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, keyDir)
 

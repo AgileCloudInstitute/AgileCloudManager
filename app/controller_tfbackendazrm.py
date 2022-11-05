@@ -140,7 +140,7 @@ class controller_tfbackendazrm:
     inputConfigFile = keyDir+"config.yaml"
 
     instName = instance.get("instanceName")
-    outputDir = cka.getOutputDir(instName)
+    outputDir = cka.getOutputDir(instName) 
     outputConfigFile = outputDir + "config.yaml"
 
     shutil.copyfile(inputConfigFile, outputConfigFile)
