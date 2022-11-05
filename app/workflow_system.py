@@ -60,7 +60,8 @@ class workflow_system:
           logString = "WARNING: This network foundation does not have any image builds associated with it.  If you intend not to build images in this network, then everything is fine.  But if you do want to build images with this network, then check your configuration and re-run this command.  "
           lw.writeLogVerbose("acm", logString)
       elif foundationTool =='terraform':
-        ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None) 
+        ctf.terraformCrudOperation(operation, keyDir, systemConfig, systemConfig.get("foundation"), 'none', 'networkFoundation', None, None)  
+#        ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None)  
         if ctf.terraformResult == "Applied": 
           if "images" in systemConfig.get("foundation").keys():
             cimg.buildImages(systemConfig, keyDir)

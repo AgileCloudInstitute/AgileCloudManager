@@ -26,6 +26,7 @@ class command_builder:
   #@public
   def getVarsFragment(self, systemConfig, serviceType, instance, mappedVariables, tool, callingClass, outputDict={}):
     copyOfInstance = instance
+    print("zxc copyOfInstance is: ", str(copyOfInstance))
     if (tool == 'arm') or (tool == 'cloudformation'):
       mappedVariables = copyOfInstance.get("mappedVariables")
     varLines = self.readMappedVariablesFromConfig(systemConfig, serviceType, copyOfInstance, mappedVariables, tool, callingClass, outputDict)
@@ -503,6 +504,7 @@ class command_builder:
     import config_cliprocessor
     cfmtr = command_formatter()
     cfp = config_fileprocessor()
+    print("sdf instance is: ", str(instance))
     valRoot = instance.get("relativePathToResource")
     if valRoot.startswith("$config"): 
       valRoot = cfp.getValueFromConfig(keyDir, valRoot, "relativePathToResource")
