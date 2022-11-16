@@ -465,8 +465,6 @@ class TestControllerPacker(unittest.TestCase):
               'new_image_name': '$customFunction.addDateTime.EMPTY_IMAGE',
               'region': '$this.foundation.resourceGroupRegion',
               'resource_group': '$this.foundation.resourceGroupName',
-              'az_server': '$keys.azdoOrgServiceURL',
-              'az_pat': '$keys.azdoOrgPAT',
               'tenant_id': '$keys.tenantId',
               'subscription_id': '$keys.subscriptionId',
               'client_secret': '$keys.clientSecret',

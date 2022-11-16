@@ -23,7 +23,7 @@ jobs:
           path: /home/runner/work/AgileCloudManager/AgileCloudManager/app/acm_build.tar
           retention-days: 1
 
-  e2e-tests-linux-terraform-packer:
+  e2e-tests-linux-terraform-packer-appliance:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
@@ -36,13 +36,48 @@ jobs:
       - name: Put secrets in file
         shell: bash
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_ZERO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
+      - id: Acm_appliance_On_Ubuntu
+        uses: ./.github/actions/acm-appliance-on-ubuntu
+      - id: Acm_appliance_Off_Ubuntu
+        uses: ./.github/actions/acm-appliance-off-ubuntu
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-linux-terraform-packer-services:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_ONE }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
+        run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -116,7 +151,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
 
-  e2e-tests-linux-arm:
+  e2e-tests-linux-arm-appliance:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
@@ -129,13 +164,13 @@ jobs:
       - name: Put secrets in file
         shell: bash
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_ZERO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
           echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
           cat /home/runner/acmconfig/keys.yaml
       - uses: actions/checkout@v3
@@ -147,6 +182,40 @@ jobs:
         uses: ./.github/actions/acm-appliance-on-ubuntu
       - id: Acm_appliance_Off_Ubuntu
         uses: ./.github/actions/acm-appliance-off-ubuntu
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-linux-arm-services:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_ONE }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
+        run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
+          cat /home/runner/acmconfig/keys.yaml
+      - uses: actions/checkout@v3
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-arm.git
       - id: Acm_Foundation_On_Ubuntu
         uses: ./.github/actions/acm-foundation-on-ubuntu
         with:
@@ -192,7 +261,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
 
-  e2e-tests-linux-cloudformation:
+  e2e-tests-linux-cloudformation-appliance:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
@@ -205,13 +274,13 @@ jobs:
       - name: Put secrets in file
         shell: bash
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_ZERO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with: 
@@ -227,7 +296,7 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
 
-  e2e-tests-linux-custom:
+  e2e-tests-linux-cloudformation-services:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
@@ -240,13 +309,82 @@ jobs:
       - name: Put secrets in file
         shell: bash
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_ONE }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with: 
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
+      - id: Acm_Foundation_On_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: cf-demo
+      - id: Acm_Services_On_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: cf-demo
+      - id: Acm_Services_Off_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: cf-demo
+      - id: Acm_ServiceType_On_Ubuntu
+        uses: ./.github/actions/acm-service-type-on-ubuntu
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceType_Off_Ubuntu
+        uses: ./.github/actions/acm-service-type-off-ubuntu
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceInstance_On_Ubuntu
+        uses: ./.github/actions/acm-service-instance-on-ubuntu
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+          service_instance: ec2-with-custom-imgx
+      - id: Acm_ServiceInstance_Off_Ubuntu
+        uses: ./.github/actions/acm-service-instance-off-ubuntu
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+          service_instance: ec2-with-custom-imgx
+      - id: Acm_Foundation_Off_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: cf-demo
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-linux-custom-appliance:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_ZERO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
+        run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -262,8 +400,77 @@ jobs:
         run: |
           rm /home/runner/acmconfig/keys.yaml
 
-  e2e-tests-windows-arm:
-    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
+  e2e-tests-linux-custom-services:
+    needs: [create-exe-linux-and-upload-artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ExpandUbuntuArtifact
+        uses: ./.github/actions/ubuntu-artifact-expander
+      - uses: actions/checkout@v3
+      - id: ConfigureUbuntuAgent
+        uses: ./.github/actions/ubuntu-provisioner
+      - name: Put secrets in file
+        shell: bash
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_ONE }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
+        run: | 
+          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
+          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
+      - id: Acm_Setup_On_Ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-custom.git
+      - id: Acm_Foundation_On_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: custom-demo
+      - id: Acm_Services_On_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: custom-demo
+      - id: Acm_Services_Off_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: custom-demo
+      - id: Acm_ServiceType_On_Ubuntu
+        uses: ./.github/actions/acm-service-type-on-ubuntu
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceType_Off_Ubuntu
+        uses: ./.github/actions/acm-service-type-off-ubuntu
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceInstance_On_Ubuntu
+        uses: ./.github/actions/acm-service-instance-on-ubuntu
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+          service_instance: custom-scaleset
+      - id: Acm_ServiceInstance_Off_Ubuntu
+        uses: ./.github/actions/acm-service-instance-off-ubuntu
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+          service_instance: custom-scaleset
+      - id: Acm_Foundation_Off_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: custom-demo
+      - id: Acm_Setup_Off_Ubuntu
+        uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /home/runner/acmconfig/keys.yaml
+
+  e2e-tests-windows-arm-appliance:
+    needs: [ create-exe-linux-and-upload-artifact ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3 
@@ -274,9 +481,9 @@ jobs:
       - shell: python
         name: Save secrets to file
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_TWO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_TWO }}
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
@@ -286,8 +493,8 @@ jobs:
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-            key_file.write(os.environ['ACM_SECOND'])
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -296,6 +503,43 @@ jobs:
         uses: ./.github/actions/acm-appliance-on-windows
       - id: Acm_appliance_Off_Windows
         uses: ./.github/actions/acm-appliance-off-windows
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
+          del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
+
+  e2e-tests-windows-arm-services:
+    needs: [ create-exe-linux-and-upload-artifact ]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3 
+      - id: ConfigureWindowsAgent 
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_THREE }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_THREE }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import config file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
+            config_file.write(os.environ['ACM_CONFIG'])
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-arm.git
       - id: Acm_Foundation_On_Windows
         uses: ./.github/actions/acm-foundation-on-windows
         with:
@@ -341,8 +585,8 @@ jobs:
           del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
           del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
-  e2e-tests-windows-cloudformation:
-    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
+  e2e-tests-windows-cloudformation-appliance:
+    needs: [ create-exe-linux-and-upload-artifact ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -353,9 +597,9 @@ jobs:
       - shell: python
         name: Save secrets to file
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_TWO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_TWO }}
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
@@ -365,8 +609,8 @@ jobs:
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-            key_file.write(os.environ['ACM_SECOND'])
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -382,8 +626,8 @@ jobs:
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
-  e2e-tests-windows-custom:
-    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
+  e2e-tests-windows-cloudformation-services:
+    needs: [ create-exe-linux-and-upload-artifact ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -394,9 +638,9 @@ jobs:
       - shell: python
         name: Save secrets to file
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_THREE }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_THREE }}
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
@@ -406,8 +650,158 @@ jobs:
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-            key_file.write(os.environ['ACM_SECOND'])
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-cloudformation.git
+      - id: Acm_Foundation_On_Windows
+        uses: ./.github/actions/acm-foundation-on-windows
+        with:
+          system_name: cf-demo
+      - id: Acm_Services_On_Windows
+        uses: ./.github/actions/acm-services-on-windows
+        with:
+          system_name: cf-demo
+      - id: Acm_Services_Off_Windows
+        uses: ./.github/actions/acm-services-off-windows
+        with:
+          system_name: cf-demo
+      - id: Acm_ServiceType_On_Windows
+        uses: ./.github/actions/acm-service-type-on-windows
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceType_Off_Windows
+        uses: ./.github/actions/acm-service-type-off-windows
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceInstance_On_Windows
+        uses: ./.github/actions/acm-service-instance-on-windows
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+          service_instance: ec2-with-custom-imgx
+      - id: Acm_ServiceInstance_Off_Windows
+        uses: ./.github/actions/acm-service-instance-off-windows
+        with:
+          system_name: cf-demo
+          service_type: subnetsWithScaleSet
+          service_instance: ec2-with-custom-imgx
+      - id: Acm_Foundation_Off_Windows
+        uses: ./.github/actions/acm-foundation-off-windows
+        with:
+          system_name: cf-demo
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+  e2e-tests-windows-custom-services:
+    needs: [ create-exe-linux-and-upload-artifact ]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_THREE }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_THREE }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import config file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
+            config_file.write(os.environ['ACM_CONFIG'])
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-custom.git
+      - id: Acm_Foundation_On_Windows
+        uses: ./.github/actions/acm-foundation-on-windows
+        with:
+          system_name: custom-demo
+      - id: Acm_Services_On_Windows
+        uses: ./.github/actions/acm-services-on-windows
+        with:
+          system_name: custom-demo
+      - id: Acm_Services_Off_Windows
+        uses: ./.github/actions/acm-services-off-windows
+        with:
+          system_name: custom-demo
+      - id: Acm_ServiceType_On_Windows
+        uses: ./.github/actions/acm-service-type-on-windows
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceType_Off_Windows
+        uses: ./.github/actions/acm-service-type-off-windows
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+      - id: Acm_ServiceInstance_On_Windows
+        uses: ./.github/actions/acm-service-instance-on-windows
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+          service_instance: custom-scaleset
+      - id: Acm_ServiceInstance_Off_Windows
+        uses: ./.github/actions/acm-service-instance-off-windows
+        with:
+          system_name: custom-demo
+          service_type: subnetsWithScaleSet
+          service_instance: custom-scaleset
+      - id: Acm_Foundation_Off_Windows
+        uses: ./.github/actions/acm-foundation-off-windows
+        with:
+          system_name: custom-demo
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+  e2e-tests-windows-custom-appliance:
+    needs: [ create-exe-linux-and-upload-artifact ]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_TWO }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_TWO }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import config file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
+            config_file.write(os.environ['ACM_CONFIG'])
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -423,8 +817,8 @@ jobs:
           del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
-  e2e-tests-windows-terraform-packer:
-    needs: [ e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm ]
+  e2e-tests-windows-terraform-packer-appliance:
+    needs: [ create-exe-linux-and-upload-artifact ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -435,9 +829,9 @@ jobs:
       - shell: python
         name: Save secrets to file
         env:
-          ACM_SECRET: ${{ secrets.ACM_REPO }}
+          ACM_SECRET: ${{ secrets.ACM_REPO_TWO }}
           ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
-          ACM_CONFIG: ${{ secrets.ACM_CONFIG }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_TWO }}
         run: |
           import base64, subprocess, sys, os, pathlib
           #Import config file
@@ -447,8 +841,49 @@ jobs:
           with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
-          with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-            key_file.write(os.environ['ACM_SECOND'])
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
+      - id: Acm_Setup_On_Windows
+        uses: ./.github/actions/acm-setup-on-windows
+        with:
+          repo_url: https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
+      - id: Acm_appliance_On_Windows
+        uses: ./.github/actions/acm-appliance-on-windows
+      - id: Acm_appliance_Off_Windows
+        uses: ./.github/actions/acm-appliance-off-windows
+      - id: Acm_Setup_Off_Windows
+        uses: ./.github/actions/acm-setup-off-windows
+      - name: Delete Secrets
+        run: |
+          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
+
+  e2e-tests-windows-terraform-packer-services:
+    needs: [ create-exe-linux-and-upload-artifact ]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: ConfigureWindowsAgent
+        uses: ./.github/actions/windows-provisioner
+      - id: CompileAppForWindows
+        uses: ./.github/actions/app-compiler-windows
+      - shell: python
+        name: Save secrets to file
+        env:
+          ACM_SECRET: ${{ secrets.ACM_REPO_THREE }}
+          ACM_SECOND: ${{ secrets.ACM_REPO_SECOND }}
+          ACM_CONFIG: ${{ secrets.ACM_CONFIG_THREE }}
+        run: |
+          import base64, subprocess, sys, os, pathlib
+          #Import config file
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
+            config_file.write(os.environ['ACM_CONFIG'])
+          #Import first secrets file
+          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+            key_file.write(os.environ['ACM_SECRET'])
+          #Import second secrets file
+          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
+          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -523,7 +958,7 @@ jobs:
           del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   create-linux-exe-and-push-to-linux-release-branch:
-    needs: [e2e-tests-linux-terraform-packer, e2e-tests-linux-custom, e2e-tests-linux-cloudformation, e2e-tests-linux-arm]
+    needs: [ e2e-tests-linux-terraform-packer-appliance, e2e-tests-linux-terraform-packer-services, e2e-tests-linux-arm-appliance, e2e-tests-linux-arm-services, e2e-tests-linux-cloudformation-appliance, e2e-tests-linux-cloudformation-services, e2e-tests-linux-custom-appliance, e2e-tests-linux-custom-services, e2e-tests-windows-arm-appliance, e2e-tests-windows-arm-services, e2e-tests-windows-cloudformation-appliance, e2e-tests-windows-cloudformation-services, e2e-tests-windows-custom-services, e2e-tests-windows-custom-appliance, e2e-tests-windows-terraform-packer-appliance, e2e-tests-windows-terraform-packer-services]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -560,7 +995,7 @@ jobs:
           git push --force -u origin HEAD:release-linux
 
   create-windows-exe-and-push-to-windows-release-branch:
-    needs: [e2e-tests-windows-terraform-packer, e2e-tests-windows-custom, e2e-tests-windows-cloudformation, e2e-tests-windows-arm]
+    needs: [ e2e-tests-linux-terraform-packer-appliance, e2e-tests-linux-terraform-packer-services, e2e-tests-linux-arm-appliance, e2e-tests-linux-arm-services, e2e-tests-linux-cloudformation-appliance, e2e-tests-linux-cloudformation-services, e2e-tests-linux-custom-appliance, e2e-tests-linux-custom-services, e2e-tests-windows-arm-appliance, e2e-tests-windows-arm-services, e2e-tests-windows-cloudformation-appliance, e2e-tests-windows-cloudformation-services, e2e-tests-windows-custom-services, e2e-tests-windows-custom-appliance, e2e-tests-windows-terraform-packer-appliance, e2e-tests-windows-terraform-packer-services]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
