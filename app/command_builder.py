@@ -636,7 +636,7 @@ class command_builder:
       elif funcName == "addDateTime":
         value = self.addDateTimeCustomFunction(funcCoordParts, outputDict)
       elif funcName == "imageTemplateName":
-        value = self.imageTemplateNameCustomFunction(funcCoordParts, outputDict, instance)
+        value = self.imageTemplateNameCustomFunction(systemConfig, funcCoordParts, outputDict, instance)
       elif funcName == "mostRecentImage":
         if tool == "arm":
           value = self.mostRecentImageCustomFunction_ARM(systemConfig, instance, tool, keyDir)
@@ -849,18 +849,28 @@ class command_builder:
       sys.exit(1)
     return value
 
-  def imageTemplateNameCustomFunction(self, funcCoordParts, outputDict, instance):
+  def imageTemplateNameCustomFunction(self, systemConfig, funcCoordParts, outputDict, instance):
     if len(funcCoordParts) == 2:
       if "dateTimeCode" in outputDict.keys():
         dt = outputDict.get('dateTimeCode')
       else:
         dt = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
-      rootString = instance.get('instanceName')
+#      rootString = instance.get('instanceName')
+#..
+      rootString = instance.get('imageName')
+      if (rootString.startswith("$config")) :
+        cfp = config_fileprocessor()
+        keyDir = cfp.getKeyDir(systemConfig)
+        rootString = cfp.getValueFromConfig(keyDir, rootString, "imageName")
+      rootString = rootString+"_t_"
+#..
       value = (rootString+dt).replace(' ','').lower()
     else:
       logString = "ERROR: imageTemplateName function call must have exactly one dot in format: $customFunction.imageTemplateName"
       print(logString)
       sys.exit(1)
+#    print("value is: ", value)
+#    quit("kmnhy")
     return value
 
   def mostRecentImageCustomFunction_ARM(self, systemConfig, instance, tool, keyDir):
@@ -908,7 +918,7 @@ class command_builder:
     #imageNameRoot = funcCoordParts[2]
     outputDict['ImageNameRoot'] = imageNameRoot
     value = iccf.getMostRecentImage(systemConfig, keyDir, outputDict)
-    return value
+    return value 
 
   def addOrganizationCustomFunction(self, systemConfig, funcCoordParts, varName, tool, keyDir):
     valRoot = funcCoordParts[2]

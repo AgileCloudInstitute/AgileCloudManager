@@ -366,7 +366,13 @@ class controller_cf:
         stackCounter += 1
         val = 'empty'
         dateTimeCode = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
-        imgName = image.get("instanceName")+'_'+dateTimeCode
+#..
+        imageNameRoot = image.get("imageName")
+        print("i imageNameRoot is: ", imageNameRoot)
+        if imageNameRoot.startswith("$config"): 
+          imageNameRoot = cfp.getValueFromConfig(keyDir, imageNameRoot, "imageName")
+#..
+        imgName = imageNameRoot+'_'+dateTimeCode
         for outputVar in stack['Outputs']:
           if outputVar['OutputKey'] == 'EC2InstanceId':
             val = outputVar['OutputValue']
@@ -464,7 +470,7 @@ class controller_cf:
   #@public
   def getMostRecentImage(self, systemConfig, keyDir, outputDict):
     cr = command_runner()
-    lw = log_writer()
+    lw = log_writer() 
     cfp = config_fileprocessor()
     region = systemConfig.get("foundation").get("region")
     if region.startswith("$config"):
@@ -484,12 +490,14 @@ class controller_cf:
 #    print("nameRoot is: ", nameRoot)
     for image in images:
 #      if (image['State'] == 'available'):
-#        print("image['Name'] is: ", image['Name'])
+      print("image['Name'] is: ", image['Name'])
+      print("image['State'] is: ", image['State'])
+      print("nameRoot is: ", nameRoot)
       if (image['State'] == 'available') and (nameRoot in image['Name']):
         imageNamesList.append(image['Name'])
         imageNameIdDict[image['Name']] = image['ImageId']
     for name in imageNamesList:
-#      print("x name is: ", name)
+      print("x name is: ", name)
       datesList.append(name.split('_')[1])
     mostRecentDate = max(datesList)
     mostRecentImageName = nameRoot+'_'+mostRecentDate

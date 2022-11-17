@@ -298,7 +298,14 @@ class controller_arm:
     outputDict['hasImageBuilds'] = True
     outputDict['dateTimeCode'] = dateTimeCode
     self.assembleAndRunArmDeploymentCommand(systemConfig, serviceType, instance, templatePathAndFile, resourceGroupName, deploymentName, outputDict, False)
-    imageTemplateNameRoot = instance.get('instanceName')
+    imageTemplateNameRoot = instance.get('imageName')
+    if (imageTemplateNameRoot.startswith("$config")) :
+      cfp = config_fileprocessor()
+      keyDir = cfp.getKeyDir(systemConfig)
+      imageTemplateNameRoot = cfp.getValueFromConfig(keyDir, imageTemplateNameRoot, "imageName")
+    imageTemplateNameRoot = imageTemplateNameRoot+"_t_"
+    #print("imageTemplateNameRoot is: ", imageTemplateNameRoot)
+    #quit("..jhg...") 
     getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
     logString = "getImageTemplatesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
     lw.writeLogVerbose("az-cli", logString)
@@ -306,9 +313,11 @@ class controller_arm:
     imageTemplateNamesList = []
     imgTemplatesJSON = yaml.safe_load(imgTemplatesJSON)  
     for imageTemplate in imgTemplatesJSON['data']:
+      print("imageTemplate['name'] is: ", imageTemplate['name'])
       if imageTemplateNameRoot in imageTemplate['name']:
         imageTemplateNamesList.append(imageTemplate.get("name"))
     sortedImageTemplateList = list(sorted(imageTemplateNamesList))
+    print("sortedImageTemplateList is: ", str(sortedImageTemplateList))
     newestTemplateName = sortedImageTemplateList[-1]
     #Build the image from the template you just created.  
     buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
@@ -382,7 +391,7 @@ class controller_arm:
     ## STEP 5: Assemble deployment command
     from command_builder import command_builder
     cb = command_builder()  
-    deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict)
+    deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict) 
     deployCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+deployVarsFragment
     logString = '--- deployCmd is: az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose ***'
     lw.writeLogVerbose("az-cli", logString)
