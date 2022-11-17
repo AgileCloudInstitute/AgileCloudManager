@@ -44,7 +44,7 @@ jobs:
           echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
-        uses: ./.giesthub/actions/acm-setup-on-ubuntu
+        uses: ./.github/actions/acm-setup-on-ubuntu
         with:
           repo_url: https://github.com/AgileCloudInstitute/acm-demo-terraform-packer.git
       - id: Acm_appliance_On_Ubuntu
@@ -508,7 +508,7 @@ jobs:
       - name: Delete Secrets
         run: |
           del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
-          del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
+          #del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-arm-services:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -583,7 +583,7 @@ jobs:
       - name: Delete Secrets
         run: |
           del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
-          del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
+          #del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-cloudformation-appliance:
     needs: [ create-exe-linux-and-upload-artifact ]
