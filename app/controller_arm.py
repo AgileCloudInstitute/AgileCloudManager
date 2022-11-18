@@ -193,8 +193,9 @@ class controller_arm:
       templatePathAndFile = cf.formatPathForOS(templatePathAndFile)
       ## STEP 4: delete deployment
       destroyCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+' --mode complete'
-      logString = 'destroyCmd is: '+ 'az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose '+' --mode complete'
-      lw.writeLogVerbose("az-cli", logString)
+      #logString = 'destroyCmd is: '+ 'az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose '+' --mode complete'
+      logString = 'destroyCmd is: '+ destroyCmd
+      lw.writeLogVerbose("az-cli", logString) 
       jsonStatus = self.getShellJsonResponse(destroyCmd)
       jsonStatus = json.loads(jsonStatus)
       state = jsonStatus['properties']['provisioningState']
@@ -393,7 +394,8 @@ class controller_arm:
     cb = command_builder()  
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict) 
     deployCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+deployVarsFragment
-    logString = '--- deployCmd is: az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose ***'
+    #logString = '--- deployCmd is: az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose ***'
+    logString = '--- deployCmd is: '+deployCmd
     lw.writeLogVerbose("az-cli", logString)
     print("deployVarsFragment is: ", deployVarsFragment)
     ## STEP 6: Run Deployment command and check results
