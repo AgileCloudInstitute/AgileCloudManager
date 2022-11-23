@@ -41,7 +41,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -56,7 +56,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-terraform-packer-services:
     needs: [create-exe-linux-and-upload-artifact]
@@ -76,7 +76,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -149,7 +149,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-arm-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -169,10 +169,8 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
-          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
-          cat /home/runner/acmconfig/keys.yaml
       - uses: actions/checkout@v3
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -187,7 +185,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-arm-services:
     needs: [create-exe-linux-and-upload-artifact]
@@ -207,10 +205,8 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
-          echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
-          echo "About to print out contents of /home/runner/acmconfig/keys.yaml "
-          cat /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
+          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - uses: actions/checkout@v3
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -259,7 +255,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-cloudformation-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -279,7 +275,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -294,7 +290,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-cloudformation-services:
     needs: [create-exe-linux-and-upload-artifact]
@@ -314,7 +310,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -363,7 +359,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -383,7 +379,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -398,7 +394,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-services:
     needs: [create-exe-linux-and-upload-artifact]
@@ -418,7 +414,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ONE }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -467,7 +463,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-windows-arm-appliance:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -490,7 +486,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -507,7 +503,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
+          del "C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml"
           #del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-arm-services:
@@ -531,7 +527,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -582,7 +578,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del "C:\\Users\\runneradmin\\acmconfig\\keys.yaml"
+          del "C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml"
           #del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-cloudformation-appliance:
@@ -606,7 +602,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -623,7 +619,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
           #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-cloudformation-services:
@@ -647,7 +643,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -698,7 +694,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
           #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-custom-services:
@@ -722,7 +718,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -773,7 +769,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
           #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-custom-appliance:
@@ -797,7 +793,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -814,7 +810,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
           #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-terraform-packer-appliance:
@@ -838,7 +834,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -855,7 +851,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
           #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-terraform-packer-services:
@@ -879,7 +875,7 @@ jobs:
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\config.yaml', 'w') as config_file:
             config_file.write(os.environ['ACM_CONFIG'])
           #Import first secrets file
-          with open('C:\\Users\\runneradmin\\acmconfig\\keys.yaml', 'w') as key_file:
+          with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
           #Import second secrets file
           #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
@@ -954,7 +950,7 @@ jobs:
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
         run: |
-          del C:\\Users\\runneradmin\\acmconfig\\keys.yaml
+          del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
           #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-linux-custom-gitlab-appliance:
@@ -975,7 +971,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -990,7 +986,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-azdo-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -1010,7 +1006,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -1025,7 +1021,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-private-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -1045,7 +1041,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -1060,7 +1056,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-ingitlab-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -1080,7 +1076,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -1095,7 +1091,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-inazdo-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -1115,7 +1111,7 @@ jobs:
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_ZERO }}
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /home/runner/acmconfig/keys.yaml
+          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
           #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -1130,7 +1126,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /home/runner/acmconfig/keys.yaml
+          rm /usr/acm/keys/starter/keys.yaml
 
   create-linux-exe-and-push-to-linux-release-branch:
     needs: [ e2e-tests-linux-terraform-packer-appliance, e2e-tests-linux-terraform-packer-services, e2e-tests-linux-arm-appliance, e2e-tests-linux-arm-services, e2e-tests-linux-cloudformation-appliance, e2e-tests-linux-cloudformation-services, e2e-tests-linux-custom-appliance, e2e-tests-linux-custom-services, e2e-tests-windows-arm-appliance, e2e-tests-windows-arm-services, e2e-tests-windows-cloudformation-appliance, e2e-tests-windows-cloudformation-services, e2e-tests-windows-custom-services, e2e-tests-windows-custom-appliance, e2e-tests-windows-terraform-packer-appliance, e2e-tests-windows-terraform-packer-services, e2e-tests-linux-custom-inazdo-appliance, e2e-tests-linux-custom-ingitlab-appliance, e2e-tests-linux-custom-private-appliance, e2e-tests-linux-custom-azdo-appliance, e2e-tests-linux-custom-gitlab-appliance]
