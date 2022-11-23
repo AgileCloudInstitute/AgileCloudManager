@@ -29,14 +29,15 @@ runs:
           echo 'About to: git --version'
           git --version
           ## Install Terraform 
-          cd $HOME\\
-          New-Item -ItemType Directory -Force -Path $HOME\\terraform-download\\
-          cd $HOME\\terraform-download\\
-          curl -L https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip -o terraform_0.12.24_linux_amd64.zip -H 'Accept: application/octet-stream'
-          Expand-Archive -Path 'terraform_0.12.24_linux_amd64.zip' -DestinationPath 'D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\'
-          #Install ansible
-          cd $HOME
-          python -m pip install --upgrade pip ansible
+          #cd $HOME\\
+          #New-Item -ItemType Directory -Force -Path $HOME\\terraform-download\\
+          #cd $HOME\\terraform-download\\
+          #curl -L https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip -o terraform_0.12.24_linux_amd64.zip -H 'Accept: application/octet-stream'
+          #Expand-Archive -Path 'terraform_0.12.24_linux_amd64.zip' -DestinationPath 'D:\\a\\AgileCloudManager\\acmAdmin\\binaries\\'
+          ##Install ansible
+          #cd $HOME
+          #python -m pip install --upgrade pip ansible
+          #Prepend python to PATH
           $old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
           $new  =  "C:\\hostedtoolcache\\windows\\Python\\3.10.7\\x64\\Scripts\\;$old"  
           echo "About to set item property"
@@ -48,11 +49,11 @@ runs:
           python -m pip install --upgrade pip requests
           echo "About to show temporary PATH"
           echo $env:Path
-          echo 'About to: ansible --version'
-          ansible --version
-          echo 'About to: where ansible'
-          where ansible
+          #echo 'About to: ansible --version'
+          #ansible --version
+          #echo 'About to: where ansible'
+          #where ansible
           echo 'About to: aws --version'
           aws --version
-          #Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
-          #sudo chown -R runner:runner /opt/pipx_bin/ansible
+          ##Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
+          ##sudo chown -R runner:runner /opt/pipx_bin/ansible

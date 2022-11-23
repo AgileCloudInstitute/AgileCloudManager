@@ -23,7 +23,7 @@ def runInfraCommands():
  
   if cliproc.domain != 'unittest' :
     lw.replaceLogFile()
-    print("back inside acm.py, after just having replaced log file.")
+    #print("back inside acm.py, after just having replaced log file.")
  
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':
@@ -74,5 +74,5 @@ def runInfraCommands():
 ### Deploy appliance By Calling The Functions
 ##############################################################################
 
-cliproc.processInputArgs(inputArgs)
+cliproc.processInputArgs(inputArgs) 
 runInfraCommands()

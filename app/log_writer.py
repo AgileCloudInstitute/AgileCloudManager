@@ -16,7 +16,7 @@ class log_writer:
  
   #@public
   def replaceLogFile(self):
-    print('start of replaceLogFile()')
+#    print('start of replaceLogFile()')
     import config_cliprocessor
     cft = command_formatter()
     verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
@@ -102,8 +102,8 @@ class log_writer:
     if not os.path.exists(verboseLogFilePath):
       os.makedirs(verboseLogFilePath)
     self.writeMetaLog("acm", timeString)
-    print('end of replaceLogFile()')
-    print('extra line at end of replaceLogFile()')
+#    print('end of replaceLogFile()')
+#    print('extra line at end of replaceLogFile()')
 
   #@public
   def writeLogVerbose(self, tool, line):  

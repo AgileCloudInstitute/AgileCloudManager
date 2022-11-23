@@ -56,8 +56,8 @@ class workflow_setup:
         print('binariesPath is: ', str(binariesPath))
         binariesCommand = 'sudo mkdir '+str(binariesPath)
         crnr.runShellCommand(binariesCommand)
-        chownCommand = 'sudo chown -R packer:packer '+str(binariesPath)
-        crnr.runShellCommand(chownCommand)
+        #chownCommand = 'sudo chown -R packer:packer '+str(binariesPath)
+        #crnr.runShellCommand(chownCommand)
 
     varsPath = Path(varsPath)
     if not os.path.exists(varsPath):
@@ -75,8 +75,8 @@ class workflow_setup:
         logsCommand = 'sudo mkdir '+str(logsPath)
         crnr.runShellCommand(logsCommand)
         #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than packer
-        chownCommand = 'sudo chown -R packer:packer '+str(logsPath)
-        crnr.runShellCommand(chownCommand)
+        #chownCommand = 'sudo chown -R packer:packer '+str(logsPath)
+        #crnr.runShellCommand(chownCommand)
         print('logsPath is: ', str(logsPath))
 
     print('Contents of acmAdmin directory are: ')
@@ -122,21 +122,31 @@ class workflow_setup:
       propName = "download-link-windows"
     else:
       propName = "download-link-linux"
-    url_terraform = self.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "terraform", propName)
-    self.downloadAndExtractBinary(url_terraform, dependencies_binaries_path)
-    url_packer = self.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "packer", propName)
-    self.downloadAndExtractBinary(url_packer, dependencies_binaries_path)
-    if platform.system() == 'Linux':
-      #import stat
-      fullyQualifiedPath = dependencies_binaries_path + 'terraform'
-      myCmd = 'chmod +x ' + fullyQualifiedPath
-      crnr.runShellCommand(myCmd)
-      fullyQualifiedPath = dependencies_binaries_path + 'packer'
-      myCmd = 'chmod +x ' + fullyQualifiedPath
-      crnr.runShellCommand(myCmd)
+    dependenciesList = self.getDependenciesList(yaml_setup_config_file_and_path)
+    for dependency in dependenciesList:
+      if dependency == "azure-cli":
+        addExtensionCommand = 'az extension add --name azure-devops'
+        crnr.runShellCommandForTests(addExtensionCommand)
+        addAccountExtensionCommand = 'az extension add --upgrade -n account'
+        crnr.runShellCommandForTests(addAccountExtensionCommand)
+      elif dependency == "terraform":
+        url_terraform = self.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "terraform", propName)
+        self.downloadAndExtractBinary(url_terraform, dependencies_binaries_path)
+        if platform.system() == 'Linux':
+          fullyQualifiedPath = dependencies_binaries_path + 'terraform'
+          myCmd = 'chmod +x ' + fullyQualifiedPath
+          crnr.runShellCommand(myCmd)
+      elif dependency == "packer":
+        url_packer = self.getDependencyProperty(yaml_setup_config_file_and_path, "dependencies", "packer", propName)
+        self.downloadAndExtractBinary(url_packer, dependencies_binaries_path)
+        if platform.system() == 'Linux':
+          fullyQualifiedPath = dependencies_binaries_path + 'packer'
+          myCmd = 'chmod +x ' + fullyQualifiedPath
+          crnr.runShellCommand(myCmd)
 
   #@private
   def checkDependencies(self):
+    failedCheck = False
     import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
@@ -148,128 +158,164 @@ class workflow_setup:
     yaml_setup_config_file_and_path = cfmtr.formatPathForOS(yaml_setup_config_file_and_path)
     dependencies_binaries_path = config_cliprocessor.inputVars.get('dependenciesBinariesPath')
     dependencies_binaries_path = cfmtr.formatPathForOS(dependencies_binaries_path)
-    #Terraform
-    tfVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'terraform')
-    if tfVers.count('.') == 1:
-      tfVers = 'v' + tfVers + '.'
-    else:
-      logString = 'ERROR: The value you entered for terraform version in acm.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
-      lw.writeLogVerbose("acm", logString)
-      sys.exit(1)
-    tfCheck = None
-    tfDependencyCheckCommand = dependencies_binaries_path + "terraform --version"
-    tfResult = crnr.checkIfInstalled(tfDependencyCheckCommand, tfVers)
-    if 'Dependency is installed' in tfResult:
-      tfCheck = True
-    if 'NOT installed' in tfResult:
-      tfCheck = False
-    #ADD CHECK FOR SUCCESS TO MAKE TRUE
+    dependenciesList = self.getDependenciesList(yaml_setup_config_file_and_path)
+    for dependency in dependenciesList:
+      if dependency == "terraform":
+        #Terraform
+        tfVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'terraform')
+        if tfVers.count('.') == 1:
+          tfVers = 'v' + tfVers + '.'
+        else:
+          logString = 'ERROR: The value you entered for terraform version in acm.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+        tfCheck = None
+        tfDependencyCheckCommand = dependencies_binaries_path + "terraform --version"
+        tfResult = crnr.checkIfInstalled(tfDependencyCheckCommand, tfVers)
+        if 'Dependency is installed' in tfResult:
+          tfCheck = True
+        if 'NOT installed' in tfResult:
+          tfCheck = False
+          failedCheck = True
+        #ADD CHECK FOR SUCCESS TO MAKE TRUE
+      elif dependency == "packer":
+        #packer
+        pkrVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'packer')
+        if pkrVers.count('.') != 1:
+          logString = 'ERROR: The value you entered for packer version in acm.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+        if pkrVers.count('.') == 1:
+          pkrVers = pkrVers + '.'
+        pkrCheck = None
+        pkrDependencyCheckCommand = dependencies_binaries_path + "packer --version"
+        pkrResult = crnr.checkIfInstalled(pkrDependencyCheckCommand, pkrVers)
+        if 'Dependency is installed' in tfResult:
+          pkrCheck = True
+        if 'NOT installed' in pkrResult:
+          pkrCheck = False
+          failedCheck = True
+        #ADD CHECK FOR SUCCESS TO MAKE TRUE
+      elif dependency == "azure-cli":
+        #Azure CLI
+        azVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'azure-cli')
+        azCheck = None
+        azDependencyCheckCmd = "az version"
+        azResult = crnr.checkIfAzInstalled(azDependencyCheckCmd, azVers)
+        if 'Dependency is installed' in azResult:
+          azCheck = True
+        if 'NOT installed' in azResult:
+          azCheck = False
+          failedCheck = True
+        #ADD CHECK FOR SUCCESS TO MAKE TRUE
+      
+        #Azure-Devops CLI extension
+        azdoVers = self.getDependencyVersionSecondLevel(yaml_setup_config_file_and_path, 'dependencies', 'azure-cli', 'modules', 'azure-cli-ext-azure-devops')
+        azdoCheck = None
+        azDependencyCheckCmd = "az version"
+        azdoResult = crnr.checkIfAzdoInstalled(azDependencyCheckCmd, azdoVers)
+        if 'Dependency is installed' in azdoResult:
+          azdoCheck = True
+        if 'NOT installed' in azdoResult:
+          azdoCheck = False
+          failedCheck = True
+        #ADD CHECK FOR SUCCESS TO MAKE TRUE
+      elif dependency == "git":
+        #git check
+        gitVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'git')
+        if gitVers.count('.') != 0:
+          logString = 'ERROR: The value you entered for git version in acm.yaml is not valid.  Only the first block is accepted, as in \"x\" '
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+        if gitVers.count('.') == 0:
+          gitVers = gitVers + '.'
+        gitCheck = None
+        gitDependencyCheckCommand = "git --version"
+        gitResult = crnr.checkIfInstalled(gitDependencyCheckCommand, gitVers)
+        if 'Dependency is installed' in gitResult:
+          gitCheck = True
+        if 'NOT installed' in gitResult:
+          gitCheck = False
+          failedCheck = True
+        #ADD CHECK FOR SUCCESS TO MAKE TRUE
+#        print("gitResult is: ", gitResult)
+#        print("a gitCheck is: ", gitCheck)
+#        quit(".edcv...")
+      elif dependency == "aws-cli":
+        awsVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'aws-cli')
+        awsCheck = None
+        awsDependencyCheckCmd = "aws --version"
+        awsResult = crnr.checkIfAwsInstalled(awsDependencyCheckCmd, awsVers)
+#        print("x awsResult is: ", awsResult)
+        if 'Dependency is installed' in awsResult:
+          awsCheck = True
+        if 'NOT installed' in awsResult:
+          awsCheck = False
+          failedCheck = True
+#        quit("...mnb debug aws-cli dependency. ")
 
-    #packer
-    pkrVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'packer')
-    if pkrVers.count('.') != 1:
-      logString = 'ERROR: The value you entered for packer version in acm.yaml is not valid.  Only the first two blocks are accepted, as in \"x.y\" '
-      lw.writeLogVerbose("acm", logString)
-      sys.exit(1)
-    if pkrVers.count('.') == 1:
-      pkrVers = pkrVers + '.'
-    pkrCheck = None
-    pkrDependencyCheckCommand = dependencies_binaries_path + "packer --version"
-    pkrResult = crnr.checkIfInstalled(pkrDependencyCheckCommand, pkrVers)
-    if 'Dependency is installed' in tfResult:
-      pkrCheck = True
-    if 'NOT installed' in pkrResult:
-      pkrCheck = False
-    #ADD CHECK FOR SUCCESS TO MAKE TRUE
-
-    #Azure CLI
-    azVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'azure-cli')
-    azCheck = None
-    azDependencyCheckCmd = "az version"
-    azResult = crnr.checkIfAzInstalled(azDependencyCheckCmd, azVers)
-    if 'Dependency is installed' in azResult:
-      azCheck = True
-    if 'NOT installed' in azResult:
-      azCheck = False
-    #ADD CHECK FOR SUCCESS TO MAKE TRUE
-
-    #Azure-Devops CLI extension
-    azdoVers = self.getDependencyVersionSecondLevel(yaml_setup_config_file_and_path, 'dependencies', 'azure-cli', 'modules', 'azure-cli-ext-azure-devops')
-    azdoCheck = None
-    azDependencyCheckCmd = "az version"
-    azdoResult = crnr.checkIfAzdoInstalled(azDependencyCheckCmd, azdoVers)
-    if 'Dependency is installed' in azdoResult:
-      azdoCheck = True
-    if 'NOT installed' in azdoResult:
-      azdoCheck = False
-    #ADD CHECK FOR SUCCESS TO MAKE TRUE
-
-    #git check
-    gitVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'git')
-    if gitVers.count('.') != 0:
-      logString = 'ERROR: The value you entered for git version in acm.yaml is not valid.  Only the first block is accepted, as in \"x\" '
-      lw.writeLogVerbose("acm", logString)
-      sys.exit(1)
-    if gitVers.count('.') == 0:
-      gitVers = gitVers + '.'
-    gitCheck = None
-    gitDependencyCheckCommand = "git --version"
-    gitResult = crnr.checkIfInstalled(gitDependencyCheckCommand, gitVers)
-    if 'Dependency is installed' in gitResult:
-      gitCheck = True
-    if 'NOT installed' in gitResult:
-      gitCheck = False
-    #ADD CHECK FOR SUCCESS TO MAKE TRUE
+#azCheck, azdoCheck, gitCheck, tfCheck, pkrCheck 
     logString = "-------------------------------------------------------------------------"
     lw.writeLogVerbose("acm", logString)
-    if azCheck == True:
-      azCheckPassStr = "az cli version " + azVers + ":                              INSTALLED"
-      logString = azCheckPassStr
-      lw.writeLogVerbose("acm", logString)
-    elif (azCheck == False) or (azCheck == None):
-      azCheckFailStr = "az cli version " + azVers + ":                              MISSING"
-      logString = azCheckFailStr
-      lw.writeLogVerbose("acm", logString)
-    if azdoCheck == True:
-      azdoCheckPassStr = "azure-devops extension version " + azdoVers + " for az cli:   INSTALLED"
-      logString = azdoCheckPassStr
-      lw.writeLogVerbose("acm", logString)
-    elif (azCheck == False) or (azCheck == None):
-      azdoCheckFailStr = "azure-devops extension version " + azdoVers + " for az cli:   MISSING"
-      logString = azdoCheckFailStr
-      lw.writeLogVerbose("acm", logString)
-    if gitCheck == True:
-      gitCheckPassStr = "git version " + gitVers + ":                                INSTALLED"
-      logString = gitCheckPassStr
-      lw.writeLogVerbose("acm", logString)
-    elif (gitCheck == False) or (gitCheck == None):
-      gitCheckFailStr = "git version " + gitVers + ":                                MISSING"
-      logString = gitCheckFailStr
-      lw.writeLogVerbose("acm", logString)
-    if tfCheck == True:
-      tfCheckPassStr = "terraform version " + tfVers + ":                         INSTALLED"
-      logString = tfCheckPassStr
-      lw.writeLogVerbose("acm", logString)
-    elif (tfCheck == False) or (tfCheck == None):
-      tfCheckFailStr = "terraform version " + tfVers + ":                         MISSING"
-      logString = tfCheckFailStr
-      lw.writeLogVerbose("acm", logString)
-    if pkrCheck == True:
-      pkrCheckPassStr = "packer version " + pkrVers + ":                              INSTALLED"
-      logString = pkrCheckPassStr
-      lw.writeLogVerbose("acm", logString)
-    elif (pkrCheck == False) or (pkrCheck == None):
-      pkrCheckFailStr = "packer version " + pkrVers + ":                              MISSING"
-      logString = pkrCheckFailStr
-      lw.writeLogVerbose("acm", logString)
+    if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "azure-cli"):
+      if azCheck == True:
+        azCheckPassStr = "az cli version " + azVers + ":                              INSTALLED"
+        logString = azCheckPassStr
+        lw.writeLogVerbose("acm", logString)
+      elif (azCheck == False) or (azCheck == None):
+        azCheckFailStr = "az cli version " + azVers + ":                              MISSING"
+        logString = azCheckFailStr
+        lw.writeLogVerbose("acm", logString)
+      if azdoCheck == True:
+        azdoCheckPassStr = "azure-devops extension version " + azdoVers + " for az cli:   INSTALLED"
+        logString = azdoCheckPassStr
+        lw.writeLogVerbose("acm", logString)
+      elif (azCheck == False) or (azCheck == None):
+        azdoCheckFailStr = "azure-devops extension version " + azdoVers + " for az cli:   MISSING"
+        logString = azdoCheckFailStr
+        lw.writeLogVerbose("acm", logString)
+    if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "git"):
+#      print("b gitCheck is: ", gitCheck)
+      if gitCheck == True:
+        gitCheckPassStr = "git version " + gitVers + ":                                INSTALLED"
+        logString = gitCheckPassStr
+        lw.writeLogVerbose("acm", logString)
+      elif (gitCheck == False) or (gitCheck == None):
+        gitCheckFailStr = "git version " + gitVers + ":                                MISSING"
+        logString = gitCheckFailStr
+        lw.writeLogVerbose("acm", logString)
+    if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "terraform"):
+      if tfCheck == True:
+        tfCheckPassStr = "terraform version " + tfVers + ":                         INSTALLED"
+        logString = tfCheckPassStr
+        lw.writeLogVerbose("acm", logString)
+      elif (tfCheck == False) or (tfCheck == None):
+        tfCheckFailStr = "terraform version " + tfVers + ":                         MISSING"
+        logString = tfCheckFailStr
+        lw.writeLogVerbose("acm", logString)
+    if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "packer"):
+      if pkrCheck == True:
+        pkrCheckPassStr = "packer version " + pkrVers + ":                              INSTALLED"
+        logString = pkrCheckPassStr
+        lw.writeLogVerbose("acm", logString)
+      elif (pkrCheck == False) or (pkrCheck == None):
+        pkrCheckFailStr = "packer version " + pkrVers + ":                              MISSING"
+        logString = pkrCheckFailStr
+        lw.writeLogVerbose("acm", logString)
+
+    if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "aws-cli"):
+      if awsCheck == True:
+        awsCheckPassStr = "aws cli version " + awsVers + ":                              INSTALLED"
+        logString = awsCheckPassStr
+        lw.writeLogVerbose("acm", logString)
+      elif (awsCheck == False) or (awsCheck == None):
+        awsCheckFailStr = "aws cli version " + awsVers + ":                              MISSING"
+        logString = awsCheckFailStr
+        lw.writeLogVerbose("acm", logString)
+
     logString = "-------------------------------------------------------------------------"
     lw.writeLogVerbose("acm", logString)
-    if (azCheck != True) or (azdoCheck != True) or (gitCheck != True) or (tfCheck != True) or (pkrCheck != True): 
-      print("azCheck is: ", azCheck)
-      print("azdoCheck is: ", azdoCheck)
-      print("gitCheck is: ", gitCheck)
-      print("tfCheck is: ", tfCheck)
-      print("pkrCheck is: ", pkrCheck)
+    if failedCheck == True:
       logString = "ERROR:  Your system is missing one or more of the dependencies listed above.  Please make sure that the dependencies are properly installed and then re-run the setup on command. "
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
@@ -279,7 +325,6 @@ class workflow_setup:
     import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
-    cfp = config_fileprocessor()
     configPath = config_cliprocessor.inputVars.get('acmConfigPath') 
     yaml_setup_config_file_and_path = configPath +cfmtr.getSlashForOS() + "setupConfig.yaml"  
     yaml_setup_config_file_and_path = cfmtr.formatPathForOS(yaml_setup_config_file_and_path)
@@ -287,22 +332,33 @@ class workflow_setup:
     sourceRepoInstanceNames = self.getInstanceNames(yaml_setup_config_file_and_path, 'source')
     acmAdmin = userCallingDir + cfmtr.getSlashForOS() + 'acmAdmin'
     acmAdmin = cfmtr.formatPathForOS(acmAdmin)
-    keys = config_cliprocessor.inputVars.get('dirOfYamlKeys')
-    keys = cfmtr.formatPathForOS(keys)
-    keysPathPlusSlash = keys+cfmtr.getSlashForOS() 
-    keysPathPlusSlash = cfmtr.formatPathForOS(keysPathPlusSlash)
-    #WORK ITEM: Change the following line to make the file name cloud-agnostic
-    keys_file_and_path = keysPathPlusSlash+'keys.yaml'
-    pword = cfp.getFirstLevelValue(keys_file_and_path, 'gitPass')
-    for sourceRepoInstance in sourceRepoInstanceNames:
+    for sourceRepoInstance in sourceRepoInstanceNames: 
       repoUrl = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'repo')
-      repoUrlStart = repoUrl.split("//")[0] + "//"
-      repoUrlEnd = "@" + repoUrl.split("//")[1]
-      repoUrlCred = repoUrlStart + pword + repoUrlEnd
+      self.validateRepoStrings('repo', repoUrl)
+      public = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'public')
+      self.validateRepoStrings('public', public)
       repoBranch = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'branch')
-      gitCloneCommand = "git clone -b " + repoBranch + " " + repoUrlCred
+      self.validateRepoStrings('branch', repoBranch)
+      if (public != "true") and (public != "True"):
+        repoUrlCred = self.assembleSourceRepo(repoUrl)
+      else:
+        repoUrlCred = repoUrl
+      gitCloneCommand = "git clone -b " + repoBranch + " " + repoUrlCred  
       crnr.runShellCommandInWorkingDir(gitCloneCommand, userCallingDir)
     #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
+
+  def validateRepoStrings(self, fieldName, obj_to_test):
+    print("type(obj_to_test) is: ", type(obj_to_test))
+    if fieldName == "public":
+      if isinstance(obj_to_test, bool):
+        return
+    else:
+      if not isinstance(obj_to_test, str):
+        print("ERROR: Value for ", fieldName, " is not a string.  ")
+        quit()
+      if len(obj_to_test)<2:
+        print("ERROR: value of ", fieldName, " must be a valid string value at least 2 characters long.")
+        quit()
 
   #THIS FUNCTION IS NOT USED YET.  KEEPING IT HERE FOR WHEN LOCAL TERRAFORM REGISTRIES GET MANAGED BY THIS PROCESS.
   #@private
@@ -392,6 +448,34 @@ class workflow_setup:
     except FileNotFoundError:
       logString = "The acmConfig directory does not exist.  It may have already been deleted."
       lw.writeLogVerbose("acm", logString)
+
+  #@private
+  def getDependenciesList(self, yamlConfigFileAndPath):
+    dependenciesList = []
+    with open(yamlConfigFileAndPath) as f:  
+      my_dict = yaml.safe_load(f)
+      for key, value in my_dict.items():  
+        if key == "dependencies":
+          childTypes = my_dict.get(key)
+          for instanceOfType in childTypes: 
+            dependenciesList.append(instanceOfType.get("name"))
+    return dependenciesList
+
+  #@private
+  def getIfDependencyIsInList(self, yamlConfigFileAndPath, dependencyName):
+    isInList = False
+#    print("dependencyName is: ", dependencyName)
+    with open(yamlConfigFileAndPath) as f:  
+      my_dict = yaml.safe_load(f)
+      for key, value in my_dict.items():  
+        if key == "dependencies":
+          childTypes = my_dict.get(key)
+          for instanceOfType in childTypes: 
+#            print("instanceOfType.get('name') is: ", instanceOfType.get('name'))
+            if instanceOfType.get('name') == dependencyName:
+              isInList = True
+    return isInList
+
 
   #@private
   def getDependencyProperty(self, yamlConfigFileAndPath, typeParent, instanceName, propertyName):
@@ -522,21 +606,37 @@ class workflow_setup:
     return gitPass
 
   #@private
-  def assembleSourceRepo(self, gitPass, sourceRepo):
-    lw = log_writer()
-    ### Assemble the URL to use to clone the repo that contains the configurtion.  
-    if len(sourceRepo) == 0:
-      logString = 'ERROR: sourceRepo parameter must be properly included in your command.'
-      lw.writeLogVerbose("acm", logString)
-      sys.exit(1)
-    if sourceRepo[0:8] != 'https://':
-      logString = 'ERROR: the sourceRepo parameter must begin with https://'
-      lw.writeLogVerbose("acm", logString)
-      sys.exit(1)
+  def assembleSourceRepo(self, sourceRepo):
+    import config_cliprocessor
+    cfmtr = command_formatter()
+    cfp = config_fileprocessor()
+    keysStarterPath = config_cliprocessor.inputVars.get('dirOfYamlKeys')
+    destinationKeys = keysStarterPath +cfmtr.getSlashForOS()+'keys.yaml'
+    repoUrlStart = sourceRepo.split("//")[0] + "//"
+    repoUrlEnd = "@" + sourceRepo.split("//")[1]
+    gitProvider = sourceRepo.split("//")[1].split(".")[0]
+    if gitProvider == "github":
+      pword = cfp.getFirstLevelValue(destinationKeys, 'gitPass')
+      repoUrlCred = repoUrlStart + pword + repoUrlEnd
+    elif gitProvider == "gitlab":
+      pword = cfp.getFirstLevelValue(destinationKeys, 'gitlabPAT')
+      usr = cfp.getFirstLevelValue(destinationKeys, 'gitlabUser')
+      repoUrlCred = repoUrlStart + usr + ":" + pword + repoUrlEnd
+    elif gitProvider == "dev":
+      if sourceRepo.split("//")[1].split(".")[1] == "azure":
+        pword = cfp.getFirstLevelValue(destinationKeys, 'azdoPAT')
+        repoUrlCred = repoUrlStart + pword + repoUrlEnd
+      else:
+        secondPart = sourceRepo.split("//")[1].split(".")[1]
+        errorMessage = "ERROR: Your git provider "+gitProvider+"."+secondPart+" is not one of the currently supported options: github, gitlab, dev.azure. Place a feature request at the GitHub repo for this project requesting support for your additional git provider and we would be happy to reply.  "
+        print(errorMessage)
+        quit()
     else:
-      if gitPass != None:
-        sourceRepo = 'https://'+gitPass.strip()+'@'+sourceRepo[8:].strip()
-    return sourceRepo
+      errorMessage = "ERROR: Your git provider "+gitProvider+" is not one of the currently supported options: github, gitlab, dev.azure. Please submit a feature request at the GitHub repo for this project requesting support for your additional git provider and we would be happy to reply.  "
+      print(errorMessage)
+      quit()
+    return repoUrlCred
+
 
   #@private
   def assembleCloneCommand(self, sourceRepo):
@@ -554,15 +654,11 @@ class workflow_setup:
     import config_cliprocessor
     crnr = command_runner()
     cfmtr = command_formatter()
-    addExtensionCommand = 'az extension add --name azure-devops'
-    crnr.runShellCommandForTests(addExtensionCommand)
-    addAccountExtensionCommand = 'az extension add --upgrade -n account'
-    crnr.runShellCommandForTests(addAccountExtensionCommand)
     self.createDirectoryStructure()
-    sourceKeys = config_cliprocessor.inputVars.get('sourceKeys') + cfmtr.getSlashForOS() + 'keys.yaml'
-    gitPass = self.getGitPassFromSourceKeys(sourceKeys)
-    sourceRepo = config_cliprocessor.inputVars.get('sourceRepo')
-    sourceRepo = self.assembleSourceRepo(gitPass, sourceRepo)
+    sourceRepo = config_cliprocessor.inputVars.get('sourceRepo') 
+    public = config_cliprocessor.inputVars.get('repoPublic')
+    if (public != "true") and (public != "True"):
+      sourceRepo = self.assembleSourceRepo(sourceRepo)
     cloneCommand = self.assembleCloneCommand(sourceRepo)
     crnr.runShellCommand(cloneCommand) 
     sourceRepoDestinationDir = sourceRepo.split('/')[-1].replace('.git','')
@@ -573,11 +669,11 @@ class workflow_setup:
     import time
     time.sleep(10)
     os.rename(sourceRepoDestinationDir, acmConfigPath)
-    keysStarterPath = config_cliprocessor.inputVars.get('dirOfYamlKeys')
-    destinationKeys = keysStarterPath +cfmtr.getSlashForOS()+'keys.yaml'
-    shutil.copy(sourceKeys, destinationKeys)
     self.runConfigure()
 
   #@public
   def undoSetup(self):
     self.undoConfigure()
+    lw = log_writer()
+    logString = "Finished running acm setup off"
+    lw.writeLogVerbose("acm", logString)

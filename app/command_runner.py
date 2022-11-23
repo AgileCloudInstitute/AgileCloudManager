@@ -174,6 +174,50 @@ class command_runner:
       return logString
 
   #@public
+  def checkIfAwsInstalled(self, commandToRun, vers):
+    lw = log_writer()
+    print("commandToRun is: ", commandToRun)
+    print("expected version is: ", vers)
+    expectedMajorVers = vers.split(".")[0]
+    expectedMinorVers = vers.split(".")[1]
+#    print("expectedMajorVers is: ", expectedMajorVers)
+#    print("expectedMinorVers is: ", expectedMinorVers)
+    resp = self.getShellJsonResponse(commandToRun)
+    print("AWS response is: ", resp)
+    if isinstance(resp, str) and (resp.count(" ")>0):
+      firstPart = resp.split(" ")[0]
+      awsVers = firstPart.split('/')[1] 
+      majorVers = awsVers.split(".")[0]
+      minorVers = awsVers.split(".")[1]
+#      print("majorVers is: ", majorVers)
+#      print("minorVers is: ", minorVers)
+      if int(expectedMajorVers) < int(majorVers):
+#        print("q")
+        logString = 'Dependency is installed.'
+        lw.writeLogVerbose("acm", logString)
+        return logString
+      elif int(expectedMajorVers) == int(majorVers):
+#        print("w")
+        if int(expectedMinorVers) <= int(minorVers):
+#          print("e")
+          logString = 'Dependency is installed.'
+          lw.writeLogVerbose("acm", logString)
+          return logString
+        else:
+          logString = "Wrong version of dependency is installed for aws-cli.  Correct version is NOT installed."
+          lw.writeLogVerbose("acm", logString)
+          return logString
+      else:
+        logString = "Wrong version of dependency is installed for aws-cli.  Correct version is NOT installed."
+        lw.writeLogVerbose("acm", logString)
+        return logString
+    else:
+      logString = "Dependency is NOT installed for aws-cli."
+      lw.writeLogVerbose("acm", logString)
+      return logString
+#    quit("jkh...aws debug")
+
+  #@public
   def checkIfAzdoInstalled(self, commandToRun, vers):
     lw = log_writer()
     resp = json.loads(self.getShellJsonResponse(commandToRun))

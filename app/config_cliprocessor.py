@@ -14,6 +14,7 @@ command = ''
 keysDir = ''
 sourceRepo = ''
 repoBranch = ''
+repoPublic = ''
 systemName = ''
 serviceType = ''
 serviceInstance = ''
@@ -38,6 +39,7 @@ def processInputArgs(inputArgs):
     global keysDir
     global sourceRepo
     global repoBranch
+    global repoPublic
     global testType
     global test
     global systemName
@@ -124,6 +126,8 @@ def processInputArgs(inputArgs):
               sourceRepo = val
             elif key == "repoBranch":
               repoBranch = val
+            elif key == "repoPublic":
+              repoPublic = val
             elif key == "test":  
               testType = val
               test = True
@@ -174,6 +178,7 @@ def processInputArgs(inputArgs):
       'sourceKeys': sourceKeys,
       'sourceRepo': sourceRepo,
       'repoBranch': repoBranch,
+      'repoPublic': repoPublic,
       "test": test,
       "testType": testType, 
       "systemName": systemName,

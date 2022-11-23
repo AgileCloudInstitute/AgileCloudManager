@@ -40,7 +40,8 @@ class controller_packer:
         template_Name = nameParts[2]  
         path_to_application_root = userCallingDir + nameParts[0] + "\\" + nameParts[1] + "\\"
         path_to_application_root = cf.formatPathForOS(path_to_application_root)
-        template_config_file_name = userCallingDir + nameParts[0] + '\\packer\\' + template_Name + '.json'
+        #template_config_file_name = userCallingDir + nameParts[0] + '\\packer\\' + template_Name + '.json'
+        template_config_file_name = userCallingDir + nameParts[0] + '\\packer\\' + template_Name
         template_config_file_name = cf.formatPathForOS(template_config_file_name)
         startup_script_file_and_path = userCallingDir + nameParts[0] + '\\scripts\\' + 'fileName'
         startup_script_file_and_path = cf.formatPathForOS(startup_script_file_and_path)
