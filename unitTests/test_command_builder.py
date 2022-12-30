@@ -275,11 +275,12 @@ class TestCommandBuilder(unittest.TestCase):
       'tags': {'networkName': 'name-of-vnet', 'systemName': 'name-of-system', 'environmentName': 'name-of-environment', 'ownerName': 'name-of-owner'}, 
       'foundation': {
         'instanceName': 'custom', 
-        'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
-        'controller': '$customController.aws-building-blocks/controllers/customController.py', 
+        'templateName': 'acm-custom-controller/templates/sample.template.json', 
+        'controller': '$customController.acm-custom-controller/controller/customController.py', 
         'controllerCommand': self.getPython()+' $location', 
         'canary': 'isabird',
         'labrador': 'isadog',
+        'relativePathToResource': '/acm-custom-controller/templates',
         'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
         'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
@@ -291,18 +292,19 @@ class TestCommandBuilder(unittest.TestCase):
           'tName': '$this.foundation.canary',
           'networkName': '$this.tags',
           'owner': '$this.tags.ownerName',
-          'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+          'makePath': '$customFunction.addPath',
           'now': '$customFunction.currentDateTime',
           'addOrgTest': '$customFunction.addOrganization.somestring'
         }, 
         'images': [
           {
             'instanceName': 'custom-image', 
-            'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
-            'controller': '$customController.aws-building-blocks/controllers/customController.py', 
+            'templateName': 'acm-custom-controller/templates/sample.template.json', 
+            'controller': '$customController.acm-custom-controller/controller/customController.py', 
             'controllerCommand': self.getPython()+' $location', 
             'canine': 'describesadog',
             'feline': 'cat-like',
+            'relativePathToResource': '/acm-custom-controller/templates',
             'mappedVariables': {
               'KeyName': '$keys.KeyName', 
               'InstanceType': 't2.small', 
@@ -317,7 +319,7 @@ class TestCommandBuilder(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'now': '$customFunction.currentDateTime',
               'addOrgTest': '$customFunction.addOrganization.somestring'
             }
@@ -339,7 +341,7 @@ class TestCommandBuilder(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'now': '$customFunction.currentDateTime',
 #              'imageId': '$customFunction.mostRecentImage.image-demo',
               'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -348,12 +350,13 @@ class TestCommandBuilder(unittest.TestCase):
           'instances': [
             {
               'instanceName': 'custom-scaleset', 
-              'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
-              'controller': '$customController.aws-building-blocks/controllers/customController.py', 
+              'templateName': 'acm-custom-controller/templates/sample.template.json', 
+              'controller': '$customController.acm-custom-controller/controller/customController.py', 
               'controllerCommand': self.getPython()+' $location', 
               'imageName': 'image-demo', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
+              'relativePathToResource': '/acm-custom-controller/templates',
               'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
               'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
@@ -370,7 +373,7 @@ class TestCommandBuilder(unittest.TestCase):
                 'alternate': '$this.foundationMapped.secondString',
                 'firstOutputVar': '$customFunction.foundationOutput',
                 'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-                'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+                'makePath': '$customFunction.addPath',
 #                'imageId': '$customFunction.mostRecentImage.image-demo',
                 'now': '$customFunction.currentDateTime',
                 'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -398,6 +401,7 @@ class TestCommandBuilder(unittest.TestCase):
         'resourceGroupRegion': 'eastus',
         'canary': 'isabird',
         'labrador': 'isadog',
+        'relativePathToResource': '/acm-custom-controller/templates',
         'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
         'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
@@ -410,7 +414,7 @@ class TestCommandBuilder(unittest.TestCase):
           'tName': '$this.foundation.canary',
           'networkName': '$this.tags',
           'owner': '$this.tags.ownerName',
-          'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+          'makePath': '$customFunction.addPath',
           'now': '$customFunction.currentDateTime',
           'addOrgTest': '$customFunction.addOrganization.somestring'
         }, 
@@ -427,6 +431,7 @@ class TestCommandBuilder(unittest.TestCase):
             'runOutputName': 'testoutput',
             'canine': 'describesadog',
             'feline': 'cat-like',
+            'relativePathToResource': '/acm-custom-controller/templates',
             'mappedVariables': {
               'KeyName': '$keys.KeyName', 
               'InstanceType': 't2.small', 
@@ -444,7 +449,7 @@ class TestCommandBuilder(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'currentDateTimeAlphaNumeric': '$customFunction.currentDateTime',
               'imgBuilderId': '$customFunction.imageBuilderId',
               'imageTemplateName': '$customFunction.imageTemplateName',
@@ -470,7 +475,7 @@ class TestCommandBuilder(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'now': '$customFunction.currentDateTime',
               'imageId': '$customFunction.mostRecentImage.arm-image',
               'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -488,6 +493,7 @@ class TestCommandBuilder(unittest.TestCase):
               'imageName': 'arm-image', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
+              'relativePathToResource': '/acm-custom-controller/templates',
               'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
               'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
@@ -504,7 +510,7 @@ class TestCommandBuilder(unittest.TestCase):
                 'alternate': '$this.foundationMapped.secondString',
                 'firstOutputVar': '$customFunction.foundationOutput',
                 'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-                'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+                'makePath': '$customFunction.addPath',
                 'imageId': '$customFunction.mostRecentImage.testimage',
                 'now': '$customFunction.currentDateTime',
                 'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -530,6 +536,7 @@ class TestCommandBuilder(unittest.TestCase):
         'resourceGroupRegion': 'eastus',
         'canary': 'isabird',
         'labrador': 'isadog',
+        'relativePathToResource': '/acm-custom-controller/templates',
         'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
         'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
@@ -547,7 +554,7 @@ class TestCommandBuilder(unittest.TestCase):
           'tName': '$this.foundation.canary',
           'networkName': '$this.tags',
           'owner': '$this.tags.ownerName',
-          'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+          'makePath': '$customFunction.addPath',
           'now': '$customFunction.currentDateTime',
           'addOrgTest': '$customFunction.addOrganization.somestring'
         }, 
@@ -564,6 +571,7 @@ class TestCommandBuilder(unittest.TestCase):
             'runOutputName': 'testoutput',
             'canine': 'describesadog',
             'feline': 'cat-like',
+            'relativePathToResource': '/acm-custom-controller/templates',
             'mappedVariables': {
               'KeyName': '$keys.KeyName', 
               'InstanceType': 't2.small', 
@@ -581,7 +589,7 @@ class TestCommandBuilder(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'currentDateTimeAlphaNumeric': '$customFunction.currentDateTime',
               'imgBuilderId': '$customFunction.imageBuilderId',
               'imageTemplateName': '$customFunction.imageTemplateName',
@@ -607,7 +615,7 @@ class TestCommandBuilder(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'now': '$customFunction.currentDateTime',
               'imageId': '$customFunction.mostRecentImage.arm-image',
               'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -625,6 +633,7 @@ class TestCommandBuilder(unittest.TestCase):
               'imageName': 'arm-image', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
+              'relativePathToResource': '/acm-custom-controller/templates',
               'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
               'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
@@ -641,7 +650,7 @@ class TestCommandBuilder(unittest.TestCase):
                 'alternate': '$this.foundationMapped.secondString',
                 'firstOutputVar': '$customFunction.foundationOutput',
                 'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-                'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+                'makePath': '$customFunction.addPath',
                 'imageId': '$customFunction.mostRecentImage.testimage',
                 'now': '$customFunction.currentDateTime',
                 'addOrgTest': '$customFunction.addOrganization.somestring'

@@ -149,7 +149,6 @@ class test_workflow_appliance(unittest.TestCase):
     from AgileCloudManager.app.workflow_appliance import workflow_appliance
     import AgileCloudManager.app.config_cliprocessor
     from AgileCloudManager.app.log_writer import log_writer
-#    cliproc.processInputArgs(['AgileCloudManager\\app\\acm.py', 'appliance', 'on'])
     self.setAcmVariables(log_writer, AgileCloudManager.app.config_cliprocessor, "workflow")
     wfplat1 = workflow_appliance() 
     wfplat1.onAppliance()

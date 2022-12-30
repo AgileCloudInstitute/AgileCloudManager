@@ -1,0 +1,89 @@
+#Start tfbackend system
+tfbackend:
+  keysDir: $Default
+  forceDelete: True
+  cloud: azure
+  organization: a1b2c
+  tags:
+    networkName: name-of-vnet
+    systemName: name-of-system
+    environmentName: name-of-environment
+    ownerName: name-of-owner
+  serviceTypes:
+    tfBackend:
+      instances:
+        - instanceName: adminAccounts
+          deploymentName: adminAccountsTfBackend
+          templateName: azure-building-blocks/arm/tfbackend.json
+          emptyTemplateName: azure-building-blocks/arm/empty.template.json
+          controller: arm
+          type: azurerm
+          preprocessor: 
+            locationOn: azure-building-blocks/scripts/hello1.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello2.py
+            commandOff: python $location
+          postprocessor:
+            locationOn: azure-building-blocks/scripts/hello3.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello4.py
+            commandOff: python $location
+          keyVaultName: adminAccountsBackend
+          keyName: adminAccountsBackendKey
+          environment: Dev
+          resourceGroupName: adminAccountsTfBackendDev
+          resourceGroupRegion: eastus
+          mappedVariables:
+            storageAccountName: $customFunction.addOrganization.adminaccounts
+            environmentName: $this.tags.environmentName
+            resourceGroupRegion: $this.instance.resourceGroupRegion
+        - instanceName: pipelineAgents
+          deploymentName: pipelineAgentsTfBackend
+          templateName: azure-building-blocks/arm/tfbackend.json
+          emptyTemplateName: azure-building-blocks/arm/empty.template.json
+          controller: arm
+          type: azurerm
+          preprocessor: 
+            locationOn: azure-building-blocks/scripts/hello1.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello2.py
+            commandOff: python $location
+          postprocessor:
+            locationOn: azure-building-blocks/scripts/hello3.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello4.py
+            commandOff: python $location
+          keyVaultName: azdoAgentsBackend
+          keyName: azdoAgentsBackendKey
+          environment: Dev
+          resourceGroupName: pipelineAgentsTfBackend
+          resourceGroupRegion: eastus
+          mappedVariables:
+            storageAccountName: $customFunction.addOrganization.pipelineagents
+            environmentName: $this.tags.environmentName
+            resourceGroupRegion: $this.instance.resourceGroupRegion
+        - instanceName: projectManagement
+          deploymentName: projectManagementTfBackend
+          templateName: azure-building-blocks/arm/tfbackend.json
+          emptyTemplateName: azure-building-blocks/arm/empty.template.json
+          controller: arm
+          type: azurerm
+          preprocessor: 
+            locationOn: azure-building-blocks/scripts/hello1.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello2.py
+            commandOff: python $location
+          postprocessor:
+            locationOn: azure-building-blocks/scripts/hello3.py
+            commandOn: python $location
+            locationOff: azure-building-blocks/scripts/hello4.py
+            commandOff: python $location
+          keyVaultName: projectManagementBackend
+          keyName: projectManagementBackendKey
+          environment: Dev
+          resourceGroupName: projectManagementTfBackend
+          resourceGroupRegion: eastus
+          mappedVariables:
+            storageAccountName: $customFunction.addOrganization.projectmanagement
+            environmentName: $this.tags.environmentName
+            resourceGroupRegion: $this.instance.resourceGroupRegion

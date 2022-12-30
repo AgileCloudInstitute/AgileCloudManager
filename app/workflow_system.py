@@ -192,6 +192,8 @@ class workflow_system:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     elif (isReleaseDef == True):
+      logString = "WARNING: releaseDefinitions is a reserved name that will have special meaning and requirements in future releases.  Choose a different name for your service types to avoid problems later.  "
+      lw.writeLogVerbose("acm", logString)
       if useTheForce:
         if self.checkDestroyType('projects', typesToDestroy):
           typesToDestroy.pop('releaseDefinitions')

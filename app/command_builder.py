@@ -636,7 +636,7 @@ class command_builder:
       elif funcName == "addDateTime":
         value = self.addDateTimeCustomFunction(funcCoordParts, outputDict)
       elif funcName == "imageTemplateName":
-        value = self.imageTemplateNameCustomFunction(systemConfig, funcCoordParts, outputDict, instance)
+        value = self.imageTemplateNameCustomFunction(systemConfig, funcCoordParts, outputDict, instance) 
       elif funcName == "mostRecentImage":
         if tool == "arm":
           value = self.mostRecentImageCustomFunction_ARM(systemConfig, instance, tool, keyDir)

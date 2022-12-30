@@ -304,7 +304,7 @@ class controller_arm:
       cfp = config_fileprocessor()
       keyDir = cfp.getKeyDir(systemConfig)
       imageTemplateNameRoot = cfp.getValueFromConfig(keyDir, imageTemplateNameRoot, "imageName")
-    imageTemplateNameRoot = imageTemplateNameRoot+"_t_"
+    imageTemplateNameRoot = imageTemplateNameRoot+"_t_" 
     #print("imageTemplateNameRoot is: ", imageTemplateNameRoot)
     #quit("..jhg...") 
     getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""

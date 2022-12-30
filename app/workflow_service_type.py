@@ -86,6 +86,8 @@ class workflow_service_type:
           paramsDict = {}
           ctfbknd.createTfBackend(systemConfig, instance, paramsDict)
         elif serviceType == "releaseDefinitions":
+          logString = "WARNING: releaseDefinitions is a reserved name that will have special meaning and requirements in future releases.  Choose a different name for your service types to avoid problems later.  "
+          lw.writeLogVerbose("acm", logString)
           crls = controller_release()
           crls.onPipeline('projects', systemConfig, instance)
         elif serviceType == 'projects':
@@ -270,7 +272,7 @@ class workflow_service_type:
     cm_stoff.updateStartOfApplianceRun(ct_stoff, cc_stoff, level, "In Process")
     cm_stoff.updateStartOfASystem(ct_stoff, cc_stoff, level, systemToModify, "In Process")
     cm_stoff.updateStartOfAServicesSection(ct_stoff, cc_stoff, level, systemToModify)
-    #NOTE: The foundation for releaseDefinitions needs to be an controller_azdoproject in order for forcing deletion of a releaseDefinition
+    #NOTE: The foundation for releaseDefinitions needs to be a controller_azdoproject in order to force deletion of a releaseDefinition
     typesToDestroy = dict(systemConfig.get("serviceTypes"))
     isTfBackend = self.checkDestroyType('tfBackend', typesToDestroy)
     useTheForce = systemConfig.get("forceDelete") 
@@ -280,6 +282,8 @@ class workflow_service_type:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     if svcTyp == "releaseDefinitions":
+        logString = "Note: releaseDefinitions is a reserved name for service types that will have meaning in future releases.  "
+        lw.writeLogVerbose("acm", logString)
         logString = "Halting program because we are leaving the destruction of releaseDefinitions to be a manual step in the UI portal in order to protect your data. If you would like to forcibly delete these releaseDefinitions using automation, then your you must do either one of two things: 1. add a forceDelete:True field to the system's configuration in acm.yaml while running appliance off or services off, or 2. delete the containing project in order to cascade delete the releaseDefinitions contained within the project.  You can delete the containing project using either the serviceType off or serviceInstance off cli commands.  "
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)

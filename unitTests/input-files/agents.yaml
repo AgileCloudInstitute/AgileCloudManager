@@ -1,0 +1,77 @@
+# Start agents system
+agents:
+  keysDir: $Output\pipelineAgents
+  cloud: azure
+  organization: a1b2c
+  tags:
+    networkName: name-of-vnet
+    systemName: name-of-system
+    environmentName: name-of-environment
+    ownerName: name-of-owner
+  foundation:
+    instanceName: demo
+    templateName: azure-building-blocks/terraform/foundation
+    controller: terraform
+    resourceGroupRegion: eastus
+    mappedVariables:
+      subscriptionId: $keys
+      tenantId: $keys
+      clientId: $keys
+      clientSecret: $keys
+      resourceGroupName: azdo-agents
+      resourceGroupRegion: $this.foundation.resourceGroupRegion
+      keySourceFile: C:\projects\a\shared\keys\2nd\keys.yaml
+      file_secret_name: acmSecretsFile
+      vaultName: agentsFoundationVault
+      cidrSubnetPacker: 10.0.9.0/24
+    backendVariables:
+      storage_account_name: $keys.storageAccountName
+      container_name: $keys
+      access_key: $keys.tfBackendStorageAccessKey
+      key: agents.networkfoundation.tfstate
+    images:
+      - instanceName: RHEL73_AZDO_Agent
+        templateName: azure-building-blocks/packer/rhel7-azure-arm-azdo-agent
+        controller: packer
+        keySourceFile: C:\projects\a\shared\keys\2nd\keys.yaml
+        mappedVariables:
+          ssh_user: packer
+          ssh_pass: just-me-123
+          file_secret_name: acmSecretsFile
+          vault_name: agentsFoundationVault
+          init_script: $customFunction.addPath.\azure-building-blocks\scripts\rhel7-startup-azdo-agent.sh
+          new_image_name: $this.instance.instanceName
+          region: $this.foundation.resourceGroupRegion
+          resource_group: $foundationOutput.pipes_resource_group_name
+          az_server: $keys.azdoOrgServiceURL
+          az_pat: $keys.azdoOrgPAT
+          tenant_id: $foundationOutput
+          subscription_id: $foundationOutput
+          client_secret: $keys.clientSecret
+          client_id: $keys.clientId
+  serviceTypes:
+    subnetsWithScaleSet:
+      sharedVariables:
+        mappedVariables:
+          vnetName: $foundationOutput.vnetName
+          resourceGroupName: $foundationOutput.pipes_resource_group_name
+          clientSecret: $keys
+          clientId: $keys
+          tenantId: $foundationOutput.tenant_id
+          subscriptionId: $foundationOutput.subscription_id
+      instances:
+        - instanceName: azdoAgents
+          templateName: azure-building-blocks/terraform/snet-agents
+          controller: terraform
+          mappedVariables:
+            imageName: RHEL73_AZDO_Agent
+            cidrSubnet: 10.0.6.0/24
+            adminUser: azureuser
+            adminPwd: abc-some-pwd-123
+            cloudInit: $customFunction.addPath.\azure-building-blocks\scripts\startup-script-demo.sh
+            storageAccountDiagName: $foundationOutput.storageAccountDiagName
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: agents.azdo-subnet.tfstate
+            access_key: $keys.tfBackendStorageAccessKey

@@ -12,9 +12,9 @@ import time
 #Run the tests in this file by 
     ## First, navigating the terminal to the folder that is the PARENT of the folder that contains the agile-cloud-manager repository
     ## Second, make sure the directory structure is correct, including sibling directories for required repos, etc. 
+       #python AgileCloudManager\app\acm.py setup on sourceRepo=https://github.com/AgileCloudInstitute/acm-demo-custom.git
     ## Third, running the following command in the terminal:
        #python -m unittest AgileCloudManager.unitTests.test_controller_custom
-
 class TestControllerCustom(unittest.TestCase):
 
   def addAcmDirToPath(self):
@@ -177,13 +177,14 @@ class TestControllerCustom(unittest.TestCase):
       'tags': {'networkName': 'name-of-vnet', 'systemName': 'name-of-system', 'environmentName': 'name-of-environment', 'ownerName': 'name-of-owner'}, 
       'foundation': {
         'instanceName': 'custom', 
-        'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
-        'controller': '$customController.aws-building-blocks/controllers/customController.py', 
+        'templateName': 'acm-custom-controller/templates/sample.template.json', 
+        'controller': '$customController.acm-custom-controller/controller/customController.py', 
         'controllerCommand': self.getPython()+' $location', 
         'canary': 'isabird',
         'labrador': 'isadog',
-        'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
-        'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
+        'relativePathToResource': '/acm-custom-controller/templates',
+        'preprocessor': {'locationOn': 'acm-custom-controller/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'acm-custom-controller/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+        'postprocessor': {'locationOn': 'acm-custom-controller/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'acm-custom-controller/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
         'mappedVariables': {
           'vpcCIDR': '10.0.0.0/16',
           'secondString': 'bencher',
@@ -193,18 +194,19 @@ class TestControllerCustom(unittest.TestCase):
           'tName': '$this.foundation.canary',
           'networkName': '$this.tags',
           'owner': '$this.tags.ownerName',
-          'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+          'makePath': '$customFunction.addPath',
           'now': '$customFunction.currentDateTime',
           'addOrgTest': '$customFunction.addOrganization.somestring'
         }, 
         'images': [
           {
             'instanceName': 'custom-image', 
-            'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
-            'controller': '$customController.aws-building-blocks/controllers/customController.py', 
+            'templateName': 'acm-custom-controller/templates/sample.template.json', 
+            'controller': '$customController.acm-custom-controller/controller/customController.py', 
             'controllerCommand': self.getPython()+' $location', 
             'canine': 'describesadog',
             'feline': 'cat-like',
+            'relativePathToResource': '/acm-custom-controller/templates',
             'mappedVariables': {
               'KeyName': '$keys.KeyName', 
               'InstanceType': 't2.small', 
@@ -219,7 +221,7 @@ class TestControllerCustom(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath.',
               'now': '$customFunction.currentDateTime',
               'addOrgTest': '$customFunction.addOrganization.somestring'
             }
@@ -241,7 +243,7 @@ class TestControllerCustom(unittest.TestCase):
               'alternate': '$this.foundationMapped.secondString',
               'firstOutputVar': '$customFunction.foundationOutput',
               'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-              'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+              'makePath': '$customFunction.addPath',
               'now': '$customFunction.currentDateTime',
 #              'imageId': '$customFunction.mostRecentImage.image-demo',
               'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -250,14 +252,15 @@ class TestControllerCustom(unittest.TestCase):
           'instances': [
             {
               'instanceName': 'custom-scaleset', 
-              'templateName': 'aws-building-blocks/customTemplates/sample.template.json', 
-              'controller': '$customController.aws-building-blocks/controllers/customController.py', 
+              'templateName': 'acm-custom-controller/templates/sample.template.json', 
+              'controller': '$customController.acm-custom-controller/controller/customController.py', 
               'controllerCommand': self.getPython()+' $location', 
               'imageName': 'image-demo', 
               'oneInstanceVar': 'one-value',
               'twoInstanceVar': 'two-value',
-              'preprocessor': {'locationOn': 'aws-building-blocks/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
-              'postprocessor': {'locationOn': 'aws-building-blocks/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'aws-building-blocks/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
+              'relativePathToResource': '/acm-custom-controller/templates',
+              'preprocessor': {'locationOn': 'acm-custom-controller/scripts/hello1.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'acm-custom-controller/scripts/hello2.py', 'commandOff': self.getPython()+' $location'}, 
+              'postprocessor': {'locationOn': 'acm-custom-controller/scripts/hello3.py', 'commandOn': self.getPython()+' $location', 'locationOff': 'acm-custom-controller/scripts/hello4.py', 'commandOff': self.getPython()+' $location'}, 
               'mappedVariables': {
                 'KeyName': '$keys.KeyName', 
                 'InstanceType': 't2.small', 
@@ -272,7 +275,7 @@ class TestControllerCustom(unittest.TestCase):
                 'alternate': '$this.foundationMapped.secondString',
                 'firstOutputVar': '$customFunction.foundationOutput',
                 'secondVar': '$customFunction.foundationOutput.secondOutputVar',
-                'makePath': '$customFunction.addPath./azure-building-blocks/arm',
+                'makePath': '$customFunction.addPath',
 #                'imageId': '$customFunction.mostRecentImage.image-demo',
                 'now': '$customFunction.currentDateTime',
                 'addOrgTest': '$customFunction.addOrganization.somestring'
@@ -298,6 +301,12 @@ class TestControllerCustom(unittest.TestCase):
     tool = 'customController'
     outputDict = {}
     cb = command_builder()
+#    print("systemConfig is: ", systemConfig)
+#    print("serviceType is: ", serviceType)
+#    print("instance is: ", instance)
+#    print("mappedVariables is: ", mappedVariables)
+#    print("tool is: ", tool)
+#    print("outputDict is: ", outputDict)
     varsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, mappedVariables, tool, outputDict)
     print("varsFragment is: ", varsFragment)
     if ('--varsfile://' in varsFragment) and ('--templateFile://' in varsFragment):
@@ -306,7 +315,6 @@ class TestControllerCustom(unittest.TestCase):
     self.deleteAcmKeys()
     print('test returnVal is: ', structureIsCorrect)
     self.assertTrue(structureIsCorrect)
-
 
   def test_customcontroller_foundation_VarsFragmentContents(self):
     self.addAcmDirToPath()
@@ -322,7 +330,7 @@ class TestControllerCustom(unittest.TestCase):
       {"tName": "isabird"}, 
       {"networkName": "name-of-vnet"}, 
       {"owner": "name-of-owner"}, 
-      {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
+      {"makePath": "acm-custom-controller\\templates"}, 
       {"now": "20220616153103296962"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
@@ -333,6 +341,13 @@ class TestControllerCustom(unittest.TestCase):
     mappedVariables = systemConfig.get('foundation').get('mappedVariables')
     tool = 'customController'
     outputDict = {}
+#    print("systemConfig is: ", systemConfig)
+#    print("serviceType is: ", serviceType)
+#    print("instance is: ", instance)
+#    print("mappedVariables is: ", mappedVariables)
+#    print("tool is: ", tool)
+#    print("outputDict is: ", outputDict)
+#    print("correctExpectedResponse is: ", correctExpectedResponse)
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, mappedVariables, tool, outputDict, correctExpectedResponse)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
@@ -359,7 +374,7 @@ class TestControllerCustom(unittest.TestCase):
       {"alternate": "bencher"}, 
       {"firstOutputVar": "value-for-first-output-variable"}, 
       {"secondVar": "value-for-second-output-variable"}, 
-      {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
+      {"makePath": "acm-custom-controller\\templates"}, 
       {"now": "20220617181604103059"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
@@ -373,6 +388,13 @@ class TestControllerCustom(unittest.TestCase):
       self.assertTrue(False)
     tool = 'customController'
     outputDict = {}
+#    print("systemConfig is: ", systemConfig)
+#    print("serviceType is: ", serviceType)
+#    print("image is: ", image)
+#    print("image.get('mappedVariables') is: ", image.get('mappedVariables'))
+#    print("tool is: ", tool)
+#    print("outputDict is: ", outputDict)
+#    print("correctExpectedResponse is: ", correctExpectedResponse) 
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, image, image.get('mappedVariables'), tool, outputDict, correctExpectedResponse)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()
@@ -397,7 +419,7 @@ class TestControllerCustom(unittest.TestCase):
       {"alternate": "bencher"}, 
       {"firstOutputVar": "value-for-first-output-variable"}, 
       {"secondVar": "value-for-second-output-variable"}, 
-      {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
+      {"makePath": "acm-custom-controller\\templates"}, 
       {"now": "20220620095531060121"}, 
       {"addOrgTest": "somestringa1b2c"}, 
       {"InstanceType": "t2.small"}, 
@@ -419,6 +441,13 @@ class TestControllerCustom(unittest.TestCase):
       self.assertTrue(False)
     tool = 'customController'
     outputDict = {}
+#    print("systemConfig is: ", systemConfig)
+#    print("serviceType is: ", serviceType)
+#    print("instance is: ", instance)
+#    print("instance.get('mappedVariables') is: ", instance.get('mappedVariables'))
+#    print("tool is: ", tool)
+#    print("outputDict is: ", outputDict)
+#    print("correctExpectedResponse is: ", correctExpectedResponse)
     returnVal = self.checkVarsReturnedAgainstExpected(cb, systemConfig, serviceType, instance, instance.get('mappedVariables'), tool, outputDict, correctExpectedResponse)
     #THE FOLLOWING BLOCK DELETES THE KEY FILE, BUT YOU NEED THE KEYFILE DURING TEST DEVELOPMENT.
     self.deleteAcmKeys()

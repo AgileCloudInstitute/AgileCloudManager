@@ -10,6 +10,10 @@ on:
         description: 'Description of release'
         required: true
         type: string
+      RELEASE_BUCKET_NAME:
+        description: 's3 Bucket name to which releases are sent'
+        required: true
+        type: string
 jobs:
   release-linux-prerelease-version:
     runs-on: ubuntu-latest
@@ -25,7 +29,7 @@ jobs:
           GIT_PAT: ${{ secrets.HUSH }}  
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}  
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}  
           RELEASE_BUCKET_REGION: ${{ secrets.RELEASE_BUCKET_REGION }}  
         run: |
           vers="linux-"$VERSION
@@ -101,7 +105,7 @@ jobs:
           GH_TOKEN: ${{ secrets.HUSH }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}
           RELEASE_BUCKET_REGION: ${{ secrets.RELEASE_BUCKET_REGION }}
           GIT_PAT: ${{ secrets.HUSH }}
         run: |
@@ -175,7 +179,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}
         run: |
           nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
@@ -322,7 +326,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}
         run: |
           nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
@@ -412,7 +416,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}
         run: |
           nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
@@ -501,7 +505,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}
         run: |
           nameOfRelease="AgileCloudManager-linux-"$VERSION
           vers="linux-"$VERSION
@@ -651,7 +655,7 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
@@ -780,7 +784,7 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
@@ -861,7 +865,7 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
@@ -942,7 +946,7 @@ jobs:
         name: Download and extract Release
         env:
           DESCRIPTION: ${{ inputs.description }}
-          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
+          RELEASE_BUCKET_NAME: ${{ inputs.RELEASE_BUCKET_NAME }}  
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ secrets.HUSH }}
         run: |
@@ -1109,46 +1113,3 @@ jobs:
           #git merge --allow-unrelated-histories staging
           #git push --force -u origin master
           git push --force origin staging:master
-
-#############################################################################################
-### Below version was used only for development and can be deleted as soon as the tests pass
-#############################################################################################
-#  e2e-tests-windows-terraform-packer:
-#    needs: [release-windows-prerelease-version]
-#    runs-on: windows-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - id: ConfigureWindowsAgent
-#        uses: ./.github/actions/windows-provisioner
-#      - shell: pwsh
-#        name: Download and extract Release
-#        env:
-#          DESCRIPTION: ${{ inputs.description }}
-#          RELEASE_BUCKET_NAME: ${{ secrets.RELEASE_BUCKET_NAME }}  
-#          VERSION: ${{ inputs.version }}
-#          GH_TOKEN: ${{ secrets.HUSH }}
-#        run: |
-#          $vers="windows-"+$env:VERSION
-#          $zipName="AgileCloudManager-"+$vers+".zip"
-#
-#          echo "About to dir initially"
-#          dir
-#          $addressForCurl="https://"+$env:RELEASE_BUCKET_NAME+"/"+$zipName
-#          echo "About to curl"
-#          curl -o $zipName $addressForCurl
-#          echo "About to dir after curl"
-#          dir
-#          echo "Done with dir"
-#
-#          mkdir staging
-#          Expand-Archive $zipName -DestinationPath "staging"
-#          echo "About to dir staging"
-#          dir staging
-#          $folderName="AgileCloudManager-"+$vers
-#          #$stagingFolderName="staging\\"+$folderName
-#          #$sourceFolderName="staging\\"+$folderName+"\\*"
-#          $sourceFolderName="staging\\*"
-#          Copy-Item -Path $sourceFolderName -Recurse -Destination C:\\Users\\runneradmin\\acmhome\\ -Verbose
-#          echo "About to dir C:\\Users\\runneradmin\\acmhome\\"
-#          cd C:\\Users\\runneradmin\\acmhome\\
-#          dir 

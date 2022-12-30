@@ -1,0 +1,76 @@
+# Start admin system
+admin:
+  keysDir: $Output\adminAccounts
+  cloud: azure
+  organization: a1b2c
+  tags: 
+    networkName: name-of-vnet
+    systemName: name-of-system
+    environmentName: name-of-environment
+    ownerName: name-of-owner
+  foundation:
+    instanceName: admin
+    templateName: azure-building-blocks/terraform/foundationAdmin
+    controller: terraform
+    mappedVariables:
+      resourceGroupName: admin
+      resourceGroupRegion: eastus
+      subscriptionId: $keys
+      tenantId: $keys
+      clientId: $keys
+      clientSecret: $keys
+    backendVariables:
+      storage_account_name: $keys.storageAccountName
+      container_name: $keys
+      key: adminaccounts.networkfoundation.tfstate
+      access_key: $keys.tfBackendStorageAccessKey
+  serviceTypes:
+    admin:
+      sharedVariables:
+        mappedVariables:
+          subscriptionId: $keys
+          tenantId: $keys
+          clientId: $keys
+          clientSecret: $keys
+      instances:
+        - instanceName: pipelineAgents
+          templateName: azure-building-blocks/terraform/admin-agents
+          controller: terraform
+          mappedVariables:
+            instanceName: $this.instance
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: adminaccounts.pipelineagents.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+        - instanceName: projectManagement
+          templateName: azure-building-blocks/terraform/ad-admin
+          controller: terraform
+          mappedVariables:
+            instanceName: $this.instance
+            resourceGroupName: $this.foundationMapped.resourceGroupName
+            resourceGroupRegion: $this.foundationMapped.resourceGroupRegion
+            keyVaultName: $customFunction.addOrganization.projectmanagement
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: adminaccounts.projectmanagement.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
+    adminduplicatetestonly:
+      sharedVariables:
+        mappedVariables:
+          subscriptionId: $keys
+          tenantId: $keys
+          clientId: $keys
+          clientSecret: $keys
+      instances:
+        - instanceName: pipelineAgents
+          templateName: azure-building-blocks/terraform/admin-agents
+          controller: terraform
+          mappedVariables:
+            instanceName: $this.instance
+          backendVariables:
+            storage_account_name: $keys.storageAccountName
+            container_name: $keys
+            key: adminaccounts.pipelineagents.tfstate
+            access_key: $keys.tfBackendStorageAccessKey
