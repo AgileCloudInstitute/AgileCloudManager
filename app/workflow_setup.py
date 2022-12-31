@@ -322,7 +322,7 @@ class workflow_setup:
 
   #@private
   def cloneTheSourceCode(self):
-    import config_cliprocessor
+    import config_cliprocessor 
     crnr = command_runner()
     cfmtr = command_formatter()
     configPath = config_cliprocessor.inputVars.get('acmConfigPath') 
