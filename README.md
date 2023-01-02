@@ -1,9 +1,9 @@
 # Agile Cloud Manager  
-Web Site: [AgileCloudInstitute.io](https://AgileCloudInstitute.io/)  
-Architectural Documentation: [AgileCloudInstitute.io/architecture](https://AgileCloudInstitute.io/architecture)  
-Engineering Documentation: [AgileCloudInstitute.io/engineering](https://AgileCloudInstitute.io/engineering)  
-Download: [AgileCloudInstitute.io/download](https://AgileCloudInstitute.io/download)  
-Getting Started Guide For Engineers: [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
+* Web Site: [AgileCloudInstitute.io](https://AgileCloudInstitute.io/)  
+* Architectural Documentation: [AgileCloudInstitute.io/architecture](https://AgileCloudInstitute.io/architecture)  
+* Engineering Documentation: [AgileCloudInstitute.io/engineering](https://AgileCloudInstitute.io/engineering)  
+* Download: [AgileCloudInstitute.io/download](https://AgileCloudInstitute.io/download)  
+* Getting Started Guide For Engineers: [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
   
 The Agile Cloud Manager is a high-level tool for greatly simplifying the work of IT organizations.  It enables an enterprise to model its systems in terms of the enterprise's unique operating model.  It can help make it a lot easier to perform surgical operations on high-level components of an enterprise's unique business model.  It can help make it a lot easier for an organization to integrate all systems into one single enterprise-level value-stream pipeline.  It can be used to reduce the size of an enterprise attack surface.  
   
