@@ -21,6 +21,7 @@ serviceInstance = ''
 test = False
 testType = ''
 inputVars = {}
+acmVersion = 'f5g'
 
 def getAcmUserHome():
     if platform.system() == 'Windows':
@@ -46,6 +47,7 @@ def processInputArgs(inputArgs):
     global serviceType
     global serviceInstance
     global inputVars
+    global acmVersion
     cmdfrmtr = command_formatter()
     sourceKeys = str(Path.home())+cmdfrmtr.getSlashForOS()+'acmconfig'
     userCallingDir = str(os.path.abspath("."))+'\\'
@@ -102,16 +104,16 @@ def processInputArgs(inputArgs):
     if ('unittest' in inputArgs[0]):
       domain = 'unittest'
     elif ('unittest' not in inputArgs[0]):
-      #First process the domain and the command
+      #First validate the domain
       if len(inputArgs) > 1:
         domain = inputArgs[1]
-        command = inputArgs[2]
-        if (domain != 'appliance') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'configure') and (domain != 'serviceType') and (domain != 'serviceInstance'):
-          logString = "Error: You must specify a valid value for the first parameter.  Either appliance, foundation, services, serviceType, serviceInstance, setup, or configure now, but other valid values may be added in future releases.  "
+        if (domain != 'appliance') and (domain != 'foundation') and (domain != 'services') and (domain != 'setup') and (domain != 'serviceType') and (domain != 'serviceInstance') and (domain != 'version') :
+          logString = "Error: You must specify a valid value for the first parameter.  Either appliance, foundation, services, serviceType, serviceInstance, setup, or version now, but other valid values may be added in future releases.  "
           print(logString)
           sys.exit(1)
       #Second, set any values conditionally based on flags entered by the user in the command line.  Add functionality here in future releases.
       if len(inputArgs) > 2:      #loop through the cli input, validate it, and return the set properties.
+        command = inputArgs[2]
         for i in inputArgs[3:]:       # i is an item from inputArgs.
           if i.count("=") == 1:
             iParts = i.split("=")
@@ -184,6 +186,7 @@ def processInputArgs(inputArgs):
       "systemName": systemName,
       'serviceType': serviceType,
       'serviceInstance': serviceInstance,
+      'acmVersion': acmVersion,
       'tfBkndAzureParams': {     'resGroupName': 'NA' }
     }
  

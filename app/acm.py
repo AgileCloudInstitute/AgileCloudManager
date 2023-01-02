@@ -21,10 +21,13 @@ def runInfraCommands():
   cv = config_validator()
   ws = workflow_setup()
  
-  if cliproc.domain != 'unittest' :
+  if (cliproc.domain != 'unittest') and (cliproc.domain != 'version') :
     lw.replaceLogFile()
     #print("back inside acm.py, after just having replaced log file.")
- 
+
+  if cliproc.domain == 'version':
+    print(cliproc.inputVars.get('acmVersion'))
+
   if cliproc.domain == 'setup':
     if cliproc.command == 'on':
       ws.runSetup()

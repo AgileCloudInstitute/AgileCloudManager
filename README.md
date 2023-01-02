@@ -1,58 +1,28 @@
-An automated system for orchestration and project management for multi-cloud infrstructure as code leveraging widely used open source tools.    
+# Agile Cloud Manager  
+Web Site: [AgileCloudInstitute.io](https://AgileCloudInstitute.io/)  
+Architectural Documentation: [AgileCloudInstitute.io/architecture](https://AgileCloudInstitute.io/architecture)  
+Engineering Documentation: [AgileCloudInstitute.io/engineering](https://AgileCloudInstitute.io/engineering)  
+Download: [AgileCloudInstitute.io/download](https://AgileCloudInstitute.io/download)  
+Getting Started Guide For Engineers: [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
   
-Run a demo of this system by completing the following simple steps:  
+The Agile Cloud Manager is a high-level tool for greatly simplifying the work of IT organizations.  It enables an enterprise to model its systems in terms of the enterprise's unique operating model.  It can help make it a lot easier to perform surgical operations on high-level components of an enterprise's unique business model.  It can help make it a lot easier for an organization to integrate all systems into one single enterprise-level value-stream pipeline.  It can be used to reduce the size of an enterprise attack surface.  
   
-# STEP ONE: Assemble the Prerequisites:  
+# Getting Started  
+Working demos with detailed training and documentation are available at [AgileCloudInstitute.io](https://AgileCloudInstitute.io/) .  
   
-Prerequisites include:  
+We recommend that engineers start by reading the documentation at [AgileCloudInstitute.io/engineering](https://AgileCloudInstitute.io/engineering)  
   
-1.  [An Azure account](https://portal.azure.com/) with sufficient privileges such as subscription owner, Active Directory Contributor, Azure DevOps Organization Owner, etc.  
-2.  Azure resources configured as described in the training that comes with this system, including an Azure DevOps organization, an Azure Application Registration, a Personal Access Token, etc.  
-3.  [An AWS account]() with sufficient privilates, which here for demonstration purposes we will assume is the account root.
-4.  A compute instance such as a devbox, VM, or container into which to clone this repository.    
+To begin hands-on work immediately, engineers can use the working demos at [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
   
-Note that you will be able to restrict ammount permissions on your own separately.  The root and owner roles for this demo are just to simplify the demonstration process for new users.  
-   
-# STEP TWO: Clone this repository and run setup 
+Our working demos undergo frequent automated testing as part of our CICD process.  Therefore, we strongly recommend that you begin hands-on work with our working demos as explained in our website.  
   
-Open a command prompt in the compute instance into which you will clone this repository, and do the following:  
+The documentation in our website explains in detail how you can use the Agile Cloud Manager to perform normal debugging in the course of your development and operations work.  The minimum documentation that an engineer should read is included in a list of 6 prerequisites in the hands-on coding instructions at [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
   
-    cd <directory-into-which-repo-will-be-cloned>
-    git clone -b dev https://github.com/AgileCloudInstitute/agile-cloud-manager.git
-    cd agile-cloud-manager\controller
-    python3 acm.py setup on
+# Terms Of Service And License  
+Use of our software in any form and use of our training is subject our [Terms of Service](https://AgileCloudInstitute.io/terms) and licenses.  
   
-If the preceding `python3 acm.py setup on` command told you that you are missing any dependencies, then install those dependencies.  Otherwise, you should be ready to proceed with these instructions.  
+# Contribute  
+We hold a weekly online meeting for developers who would like to contribute to this project.  You can learn more at [AgileCloudInstitute.io/contribute](https://AgileCloudInstitute.io/contribute) , and you can can also contribute code directly to this repository.  
   
-# STEP THREE: Add secrets  
+If you would like to contribute to this project, you must certify that you have the legal right to contribute the code that you want to contribute.  
   
-Populate the secrets for Azure in ``, and for AWS in ``.  
-  
-# STEP FOUR: Run the ACM Creation Workflow commands  
-  
-Make sure that the Azure version is installed as `acm.yaml`.  
-  
-Type the following commands to get the demo up and running:  
-  
-    python3 acm.py admin on
-    python3 acm.py foundation on
-    python3 acm.py system on
-    python3 acm.py project on
-    python3 acm.py pipeline on
-  
-Manually confirm that everything works as intended in [the Azure Portal](https://portal.azure.com/)
-
-# STEP FIVE: Destroy the ACM Demo  
-  
-Manually destroy the Release definition in [the Azure Portal](https://portal.azure.com/) .  We are leaving release definition destruction as a manual step for security purposes, to protect your release logs.  
-  
-Type the following commands to destroy the rest of the demo infrastructure that you just created.  
-  
-    python3 acm.py project off
-    python3 acm.py system off
-    python3 acm.py foundation off
-    python3 acm.py admin off
-  
-# STEP SIX: Destroy Secrets
-  
-Remember to destroy the secrets that you populated into `` for Azure and into `` for AWS.  
