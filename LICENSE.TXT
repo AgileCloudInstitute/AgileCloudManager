@@ -1,0 +1,3 @@
+Copyright 2023 Agile Cloud Institute, Inc.  All Rights Reserved.  
+
+License will be placed in this file before the app is released.
