@@ -56,8 +56,6 @@ class workflow_setup:
         print('binariesPath is: ', str(binariesPath))
         binariesCommand = 'sudo mkdir '+str(binariesPath)
         crnr.runShellCommand(binariesCommand)
-        #chownCommand = 'sudo chown -R packer:packer '+str(binariesPath)
-        #crnr.runShellCommand(chownCommand)
 
     varsPath = Path(varsPath)
     if not os.path.exists(varsPath):
@@ -208,7 +206,6 @@ class workflow_setup:
           azCheck = False
           failedCheck = True
         #ADD CHECK FOR SUCCESS TO MAKE TRUE
-      
         #Azure-Devops CLI extension
         azdoVers = self.getDependencyVersionSecondLevel(yaml_setup_config_file_and_path, 'dependencies', 'azure-cli', 'modules', 'azure-cli-ext-azure-devops')
         azdoCheck = None
@@ -238,23 +235,17 @@ class workflow_setup:
           gitCheck = False
           failedCheck = True
         #ADD CHECK FOR SUCCESS TO MAKE TRUE
-#        print("gitResult is: ", gitResult)
-#        print("a gitCheck is: ", gitCheck)
-#        quit(".edcv...")
       elif dependency == "aws-cli":
         awsVers = self.getDependencyVersion(yaml_setup_config_file_and_path, 'aws-cli')
         awsCheck = None
         awsDependencyCheckCmd = "aws --version"
         awsResult = crnr.checkIfAwsInstalled(awsDependencyCheckCmd, awsVers)
-#        print("x awsResult is: ", awsResult)
         if 'Dependency is installed' in awsResult:
           awsCheck = True
         if 'NOT installed' in awsResult:
           awsCheck = False
           failedCheck = True
-#        quit("...mnb debug aws-cli dependency. ")
 
-#azCheck, azdoCheck, gitCheck, tfCheck, pkrCheck 
     logString = "-------------------------------------------------------------------------"
     lw.writeLogVerbose("acm", logString)
     if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "azure-cli"):
@@ -275,7 +266,6 @@ class workflow_setup:
         logString = azdoCheckFailStr
         lw.writeLogVerbose("acm", logString)
     if self.getIfDependencyIsInList(yaml_setup_config_file_and_path, "git"):
-#      print("b gitCheck is: ", gitCheck)
       if gitCheck == True:
         gitCheckPassStr = "git version " + gitVers + ":                                INSTALLED"
         logString = gitCheckPassStr
@@ -464,14 +454,12 @@ class workflow_setup:
   #@private
   def getIfDependencyIsInList(self, yamlConfigFileAndPath, dependencyName):
     isInList = False
-#    print("dependencyName is: ", dependencyName)
     with open(yamlConfigFileAndPath) as f:  
       my_dict = yaml.safe_load(f)
       for key, value in my_dict.items():  
         if key == "dependencies":
           childTypes = my_dict.get(key)
           for instanceOfType in childTypes: 
-#            print("instanceOfType.get('name') is: ", instanceOfType.get('name'))
             if instanceOfType.get('name') == dependencyName:
               isInList = True
     return isInList

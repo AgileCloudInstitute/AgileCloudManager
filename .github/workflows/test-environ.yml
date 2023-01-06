@@ -877,9 +877,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -972,7 +969,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -1007,7 +1003,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -1042,7 +1037,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -1077,7 +1071,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -1112,7 +1105,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -1164,14 +1156,8 @@ jobs:
         run: |
           git config --global user.email "$GH_USER_EMAIL"
           git config --global user.name "$GH_USER_NAME"
-          #git init
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          #git branch -M master
-          #git add --all
-          #git push --force -u origin master
           git fetch --all
           git checkout staging
           git checkout master
-          #git merge --allow-unrelated-histories staging
-          #git push --force -u origin master
           git push --force origin staging:master
