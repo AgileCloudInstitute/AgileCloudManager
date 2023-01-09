@@ -42,7 +42,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -77,7 +76,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -170,7 +168,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - uses: actions/checkout@v3
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -206,7 +203,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - uses: actions/checkout@v3
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
@@ -276,7 +272,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with: 
@@ -311,7 +306,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with: 
@@ -380,7 +374,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -415,7 +408,6 @@ jobs:
         run: | 
           echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
           echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
-          #echo "$ACM_SECOND" > /usr/acm/keys/adminAccounts/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with:
@@ -488,9 +480,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -504,7 +493,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del "C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml"
-          #del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-arm-services:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -529,9 +517,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -579,7 +564,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del "C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml"
-          #del 'C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml'
 
   e2e-tests-windows-cloudformation-appliance:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -604,9 +588,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -620,7 +601,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
-          #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-cloudformation-services:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -645,9 +625,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -695,7 +672,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
-          #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-custom-services:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -720,9 +696,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -770,7 +743,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
-          #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-custom-appliance:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -795,9 +767,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -811,7 +780,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
-          #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-terraform-packer-appliance:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -836,9 +804,6 @@ jobs:
           #Import first secrets file
           with open('C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml', 'w') as key_file:
             key_file.write(os.environ['ACM_SECRET'])
-          #Import second secrets file
-          #with open('C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml', 'w') as key_file:
-          #  key_file.write(os.environ['ACM_SECOND'])
       - id: Acm_Setup_On_Windows
         uses: ./.github/actions/acm-setup-on-windows
         with:
@@ -852,7 +817,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
-          #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-windows-terraform-packer-services:
     needs: [ create-exe-linux-and-upload-artifact ]
@@ -948,7 +912,6 @@ jobs:
       - name: Delete Secrets
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
-          #del C:\\Users\\runneradmin\\acm\\keys\\adminAccounts\\keys.yaml
 
   e2e-tests-linux-custom-gitlab-appliance:
     needs: [create-exe-linux-and-upload-artifact]
@@ -1141,23 +1104,3 @@ jobs:
           git add --all
           git push --force -u origin staging
 
-  push-to-master-branch:
-    needs: [push-to-staging-branch]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.HUSH }}
-      - shell: bash
-        name: Push changes to master branch
-        env:
-          GH_USER_NAME: ${{ secrets.GH_USER_NAME }}
-          GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
-        run: |
-          git config --global user.email "$GH_USER_EMAIL"
-          git config --global user.name "$GH_USER_NAME"
-          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --all
-          git checkout staging
-          git checkout master
-          git push --force origin staging:master

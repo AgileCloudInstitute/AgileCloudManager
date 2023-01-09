@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import sys
 
@@ -34,7 +34,6 @@ class workflow_service_type:
       if level == 'serviceinstance':
         if instance.get('instanceName') == instanceName:
           self.onServiceTypeInstance(cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, instance)
-          print("M")
       else:
         self.onServiceTypeInstance(cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, instance)
     logString = "done with -- " + serviceType + " -----------------------------------------------------------------------------"
@@ -73,7 +72,6 @@ class workflow_service_type:
           ctfbknd.createTfBackend(systemConfig, instance, armParamsDict)
         else:  
           carm.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, False)
-          print("k")
       elif instanceTool == 'cloudformation':
         ccf.createStack(systemConfig, instance, keyDir, 'serviceInstance', serviceType, instName)
       elif instanceTool.startswith('$customController.'):
@@ -95,7 +93,6 @@ class workflow_service_type:
           ctrlrazproj.onProject(serviceType, systemConfig, instance)
         else:
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, 'systems', serviceType, None, instName)
-      print("L")
       postprocessor = instance.get("postprocessor")
       if postprocessor:
         crnr.runPreOrPostProcessor("post", postprocessor, 'on')
@@ -171,11 +168,9 @@ class workflow_service_type:
         ctrlrazproj = controller_azdoproject()
         ctrlrazproj.offProject(typeName, systemConfig, instance)
       else:
-#1008 Start section to comment to get working again
         if instanceTool == 'arm':
           carm.destroyDeployment(systemConfig, instance, 'serviceInstance')
           pass
-#1008 End section to comment to get working again
         elif instanceTool == 'terraform':
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, typeParent, typeName, None, instName)
           if ctf.terraformResult == "Destroyed": 
@@ -196,7 +191,7 @@ class workflow_service_type:
           logString = "Error: The value selected for instanceTool is not supportd:  "+instanceTool
           lw.writeLogVerbose("acm", logString)
           sys.exit(1)
-#
+
       if "postprocessor" in instance.keys():
         postprocessor = instance.get("postprocessor")
         crnr.runPreOrPostProcessor("post", postprocessor, 'off')
@@ -254,11 +249,8 @@ class workflow_service_type:
     yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
     for systemName in applianceConfig:
-      print("systemName is: ", systemName)
-      print("systemToModify is: ", systemToModify)
       if systemName == systemToModify:
         systemConfig = cfp.getSystemConfig(applianceConfig, systemName)
-        print("y systemConfig is: ", str(systemConfig))
     if systemConfig == None:
       print("255 systemToModify is: ", systemToModify)
       print("256 applianceConfig is: ", str(applianceConfig))
@@ -308,4 +300,3 @@ class workflow_service_type:
       if typeName in serviceType:
         return True
     return False
-

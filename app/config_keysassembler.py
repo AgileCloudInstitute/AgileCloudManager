@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import os 
 import platform
@@ -207,8 +207,6 @@ class config_keysassembler:
       #if keys exist in outputDir, then use those.  Otherwise, pull keys in from source.  This should protect against overwriting keys.
       yaml_keys_file_and_path = cfm.getKeyFileAndPath(outputDir)
       if os.path.isfile(yaml_keys_file_and_path):
-        #testing the following call with outputDir instead of keyDir
-        #self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, outputDir)
         self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, keyDir)
       else:
         self.getBackendVarsList(systemConfig, instance, yaml_keys_file_and_path, keyDir)
@@ -283,4 +281,3 @@ class config_keysassembler:
     self.backendVarsList.clear()
     self.adminVarsList.clear()
     self.destinationLinesList.clear()
-

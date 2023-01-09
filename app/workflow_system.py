@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import sys
 import shutil
@@ -61,7 +61,6 @@ class workflow_system:
           lw.writeLogVerbose("acm", logString)
       elif foundationTool =='terraform':
         ctf.terraformCrudOperation(operation, keyDir, systemConfig, systemConfig.get("foundation"), 'none', 'networkFoundation', None, None)  
-#        ctf.terraformCrudOperation(operation, keyDir, systemConfig, None, 'none', 'networkFoundation', None, None)  
         if ctf.terraformResult == "Applied": 
           if "images" in systemConfig.get("foundation").keys():
             cimg.buildImages(systemConfig, keyDir)

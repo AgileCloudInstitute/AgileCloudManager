@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
   
 import yaml
 import sys
@@ -53,7 +53,6 @@ class controller_cf:
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, instance.get('mappedVariables'), 'cloudformation', self, outputDict)
     cfTemplateFileAndPath = userCallingDir+templateName
     cfTemplateFileAndPath = cf.formatPathForOS(cfTemplateFileAndPath)
-    print("x region is: ", region)
     self.configureSecrets(keyDir,region)
 
     lw = log_writer()
@@ -312,10 +311,6 @@ class controller_cf:
         keyLine = 'aws_secret_access_key='+AWSSecretKey+'\n'
         f.write(keyLine)
       configFileName = outputDir+'/config'
-      print("new ....................................")
-#      import traceback
-#      traceback.print_stack()
-      print("y region is: ", region)
       with open(configFileName, 'w') as f:
         defaultLine = '[default]\n'
         f.write(defaultLine)
@@ -366,12 +361,10 @@ class controller_cf:
         stackCounter += 1
         val = 'empty'
         dateTimeCode = str(datetime.datetime.now()).replace(' ','').replace('-','').replace(':','').replace('.','')
-#..
         imageNameRoot = image.get("imageName")
         print("i imageNameRoot is: ", imageNameRoot)
         if imageNameRoot.startswith("$config"): 
           imageNameRoot = cfp.getValueFromConfig(keyDir, imageNameRoot, "imageName")
-#..
         imgName = imageNameRoot+'_'+dateTimeCode
         for outputVar in stack['Outputs']:
           if outputVar['OutputKey'] == 'EC2InstanceId':
@@ -453,7 +446,6 @@ class controller_cf:
   #@public
   def getVarFromCloudFormationOutput(self, keyDir, outputVarName, stackName, region):
     cr = command_runner()
-    cfp = config_fileprocessor()
     self.configureSecrets(keyDir,region)
     getOutputsCommand = 'aws cloudformation describe-stacks --stack-name '+stackName + ' --region ' + region
     jsonStatus = cr.getShellJsonResponse(getOutputsCommand)
@@ -487,17 +479,11 @@ class controller_cf:
     imageNamesList = []
     datesList = []
     imageNameIdDict = {}
-#    print("nameRoot is: ", nameRoot)
     for image in images:
-#      if (image['State'] == 'available'):
-      print("image['Name'] is: ", image['Name'])
-      print("image['State'] is: ", image['State'])
-      print("nameRoot is: ", nameRoot)
       if (image['State'] == 'available') and (nameRoot in image['Name']):
         imageNamesList.append(image['Name'])
         imageNameIdDict[image['Name']] = image['ImageId']
     for name in imageNamesList:
-      print("x name is: ", name)
       datesList.append(name.split('_')[1])
     mostRecentDate = max(datesList)
     mostRecentImageName = nameRoot+'_'+mostRecentDate

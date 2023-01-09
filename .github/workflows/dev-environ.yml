@@ -12,21 +12,15 @@ jobs:
           token: ${{ secrets.HUSH }}
       - shell: bash
         name: Push changes to test branch
+        env:
+          GH_USER_NAME: ${{ secrets.GH_USER_NAME }}
+          GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
         run: |
-          git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          git config --global user.name "AgileCloudInstitute"
+          git config --global user.email "$GH_USER_EMAIL"
+          git config --global user.name "$GH_USER_NAME"
           git init
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git branch -M test
           git add --all
           git push --force -u origin test
-          #git config --global user.email "Agile.Cloud.Institute@GreenRiverIT.com"
-          #git config --global user.name "AgileCloudInstitute"
-          #git init
-          #git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          #git branch -M test
-          #git add --all
-          #git push --force -u origin test
-
-#  push-to-test-branch:
-#    needs: [unit-tests-linux-misc, unit-tests-linux-cloudformation, unit-tests-linux-terraform-packer, unit-tests-linux-arm-template, unit-tests-windows-misc, unit-tests-windows-cloudformation, unit-tests-windows-terraform-packer, unit-tests-windows-arm-template]
+ 

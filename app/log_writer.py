@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import io
 import os 
@@ -16,7 +16,6 @@ class log_writer:
  
   #@public
   def replaceLogFile(self):
-#    print('start of replaceLogFile()')
     import config_cliprocessor
     cft = command_formatter()
     verboseLogFilePath = config_cliprocessor.inputVars.get('verboseLogFilePath')
@@ -102,8 +101,6 @@ class log_writer:
     if not os.path.exists(verboseLogFilePath):
       os.makedirs(verboseLogFilePath)
     self.writeMetaLog("acm", timeString)
-#    print('end of replaceLogFile()')
-#    print('extra line at end of replaceLogFile()')
 
   #@public
   def writeLogVerbose(self, tool, line):  

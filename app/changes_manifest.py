@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 from log_writer import log_writer
 
@@ -795,8 +795,6 @@ class changes_manifest:
                 print("...   for debugging: change is: ", change)
                 print("...   for debugging: changesBlock['changeIndex'] is: ", changesBlock['changeIndex'])
                 print('...   for debugging: index is: ', index)
-#                import traceback
-#                traceback.print_stack()
                 logString = "ERROR: Change Manifest shows a false flag that should be true.  Post an issue on our github site so we can examine what caused this.  "
                 lw.writeLogVerbose("acm", logString)
                 exit(1)

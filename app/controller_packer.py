@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
   
 import sys
 import subprocess
@@ -40,7 +40,6 @@ class controller_packer:
         template_Name = nameParts[2]  
         path_to_application_root = userCallingDir + nameParts[0] + "\\" + nameParts[1] + "\\"
         path_to_application_root = cf.formatPathForOS(path_to_application_root)
-        #template_config_file_name = userCallingDir + nameParts[0] + '\\packer\\' + template_Name + '.json'
         template_config_file_name = userCallingDir + nameParts[0] + '\\packer\\' + template_Name
         template_config_file_name = cf.formatPathForOS(template_config_file_name)
         startup_script_file_and_path = userCallingDir + nameParts[0] + '\\scripts\\' + 'fileName'
