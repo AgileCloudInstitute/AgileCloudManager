@@ -21,7 +21,7 @@ serviceInstance = ''
 test = False
 testType = ''
 inputVars = {}
-acmVersion = 'f5g'
+acmVersion = '1.0'
 
 def getAcmUserHome():
     if platform.system() == 'Windows':
