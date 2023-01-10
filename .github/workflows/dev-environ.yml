@@ -6,9 +6,10 @@ on:
 jobs: 
   call-e2e-tests-workflow:
     uses: ./.github/workflows/e2e-tests.yml
-    secrets:
-      ACM_REPO_ZERO: ${{ secrets.ACM_REPO_ZERO }}
-      ACM_CONFIG_ZERO: ${{ secrets.ACM_REPO_ZERO }}
+    secrets: inherit
+#Delete the next 2 lines if inherit works
+#      ACM_REPO_ZERO: ${{ secrets.ACM_REPO_ZERO }}
+#      ACM_CONFIG_ZERO: ${{ secrets.ACM_REPO_ZERO }}
 #  push-to-test-branch:
 #    runs-on: ubuntu-latest
 #    steps:

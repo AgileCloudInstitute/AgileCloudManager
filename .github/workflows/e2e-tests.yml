@@ -1,11 +1,6 @@
 name: e2e-tests
 on:
   workflow_call:
-    secrets:
-      ACM_REPO_ZERO:
-        required: true
-      ACM_CONFIG_ZERO:
-        required: true
 jobs:
   create-exe-linux-and-upload-artifact:
     runs-on: ubuntu-latest
