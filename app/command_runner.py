@@ -47,8 +47,7 @@ class command_runner:
     if process.returncode == 0:
       #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
       if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(str(data).replace(" ","")) == 3):
-        if counter < 11:
-          counter +=1 
+        if counter < 16:
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
           lw.writeLogVerbose('acm', logString)
           logString = "Attempt "+str(counter)+ " out of 10. "
@@ -56,6 +55,7 @@ class command_runner:
           import time
           time.sleep(30)
           data = self.getShellJsonResponse(cmd,counter)
+          counter +=1 
           return data
         else:  
           logString = "Error: " + str(err)
