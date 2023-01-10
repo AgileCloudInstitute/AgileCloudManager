@@ -80,8 +80,8 @@ class command_runner:
         time.sleep(30)
         data = self.getShellJsonResponse(cmd,counter)
         counter +=1 
-        return data
-      else:  
+        return data 
+      else:   
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
           logString = "WARNING: "+"(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found."
           lw.writeLogVerbose('shell')
