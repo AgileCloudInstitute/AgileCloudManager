@@ -1059,25 +1059,3 @@ jobs:
         name: Delete Secrets
         run: |
           rm /usr/acm/keys/starter/keys.yaml
-
-  push-to-staging-branch:
-    needs: [ e2e-tests-linux-terraform-packer-appliance, e2e-tests-linux-terraform-packer-services, e2e-tests-linux-arm-appliance, e2e-tests-linux-arm-services, e2e-tests-linux-cloudformation-appliance, e2e-tests-linux-cloudformation-services, e2e-tests-linux-custom-appliance, e2e-tests-linux-custom-services, e2e-tests-windows-arm-appliance, e2e-tests-windows-arm-services, e2e-tests-windows-cloudformation-appliance, e2e-tests-windows-cloudformation-services, e2e-tests-windows-custom-services, e2e-tests-windows-custom-appliance, e2e-tests-windows-terraform-packer-appliance, e2e-tests-windows-terraform-packer-services, e2e-tests-linux-custom-inazdo-appliance, e2e-tests-linux-custom-ingitlab-appliance, e2e-tests-linux-custom-private-appliance, e2e-tests-linux-custom-azdo-appliance, e2e-tests-linux-custom-gitlab-appliance]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.HUSH }}
-      - shell: bash
-        name: Push changes to staging branch
-        env:
-          GH_USER_NAME: ${{ secrets.GH_USER_NAME }}
-          GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
-        run: |
-          git config --global user.email "$GH_USER_EMAIL"
-          git config --global user.name "$GH_USER_NAME"
-          git init
-          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git branch -M staging
-          git add --all
-          git push --force -u origin staging
-
