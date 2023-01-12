@@ -9,6 +9,7 @@ runs:
         python -m pip install --upgrade pip PyYaml
         python -m pip install --upgrade pip pyinstaller
         python -m pip install --upgrade charset-normalizer
+        python -m pip install --upgrade chardet
         New-Item -ItemType Directory -Force -Path C:\\Users\\runneradmin\\acmhome\\
         echo "About to start"
         cd app
