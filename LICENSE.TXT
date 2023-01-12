@@ -12,13 +12,13 @@ Cloud Institute"), and otherwise are in full compliance with this license.
 The full text of this License shall be included in all copies or portions of the Software.  
   
 For the purposes of debugging, patching, fixing, and upgrading, you are free to use and modify 
-Software’s source code, as long as you include this copyright statement, as long as you are in 
-full compliance with this license and Terms, as long as you do not use the Software to 
-create a competing product, and as long as you grant to Agile Cloud Institute and to recipients 
+Software’s source code, as long as (i) you include this copyright statement, (ii) you are in 
+full compliance with this license and Terms, (iii) you do not use the Software to 
+create a competing product, and (iv) you grant to Agile Cloud Institute and to recipients 
 of software distributed by Agile Cloud Institute a perpetual, worldwide, non-exclusive, 
 no-charge, royalty-free, irrevocable license to reproduce, prepare derivative works of, 
 publicly display, publicly perform, sublicense, distribute, and otherwise transfer your modifications 
-and such derivative works.
+and such derivative works.  
   
 Note however, that you may not do anything to the Software code, such as copyrighting it 
 yourself or claiming authorship of Software, that will prevent it from being distributed under 
