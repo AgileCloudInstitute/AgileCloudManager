@@ -30,6 +30,8 @@ runs:
         pip3 install requests
         pip3 install pyyaml
         pip3 install IPy
+        pip3 install charset-normalizer
+
         python3 --version
         python --version
 

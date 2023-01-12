@@ -10,6 +10,7 @@ jobs:
         name: Create linux exe and add exe to PATH
         run: |
           pip install -U pyinstaller
+          pip install chardet
           cd app
           rm __init__.py
           pyinstaller acm.py
