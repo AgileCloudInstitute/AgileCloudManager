@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 from command_runner import command_runner 
 from command_formatter import command_formatter
@@ -72,9 +72,6 @@ class workflow_setup:
       elif platform.system() == 'Linux':
         logsCommand = 'sudo mkdir '+str(logsPath)
         crnr.runShellCommand(logsCommand)
-        #WORK ITEM: Make username in next line dynamic so that acm config can specify usernames other than packer
-        #chownCommand = 'sudo chown -R packer:packer '+str(logsPath)
-        #crnr.runShellCommand(chownCommand)
         print('logsPath is: ', str(logsPath))
 
     print('Contents of acmAdmin directory are: ')
@@ -338,7 +335,6 @@ class workflow_setup:
     #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
 
   def validateRepoStrings(self, fieldName, obj_to_test):
-    print("type(obj_to_test) is: ", type(obj_to_test))
     if fieldName == "public":
       if isinstance(obj_to_test, bool):
         return

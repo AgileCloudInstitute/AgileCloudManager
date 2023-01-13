@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 from config_fileprocessor import config_fileprocessor
 import yaml
@@ -12,7 +12,6 @@ class config_validator:
  
   #@public
   def processAcmConfig(self):
-    print("a1")
     import config_cliprocessor
     cfp = config_fileprocessor()
     infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
@@ -23,22 +22,16 @@ class config_validator:
         if (not row[1].startswith(" ")) and(not row[1].startswith("#")) and (len(row[1].replace(" ","").replace("\n","")) > 0):
           typeName = row[1].replace(" ","").replace("\n","")
           typesList.append(typeName)
-    print("a2")
     if len(typesList) != len(set(typesList)):
       logString = "ERROR: Your configuration uses the same name to define multiple systems.  You must give each of your system instances a unique name within each appliance configuration.  Halting program so you can fix your configuration. "
       print(logString)
       sys.exit(1)
-    print("a3")
     #Second, load acm.yaml into a dict and iterate the systems:
     with open(infraConfigFileAndPath, 'r') as f:
       acmConfig = yaml.safe_load(f)
-    print("a4")
     #Third, validate each system
-    print("acmConfig is ", str(acmConfig))
     for system in acmConfig:
       sysCfg = cfp.getSystemConfig(acmConfig, system) 
-      print("***  sysCfg is: ", str(sysCfg))
-      print("***  system is: ", system)
       #System config must be a dictionary
       if (isinstance(sysCfg, dict)) and (isinstance(system, str)):
         self.validateSystem(sysCfg)
@@ -46,7 +39,6 @@ class config_validator:
         logString = "ERROR: Invalid format for system named "+ str(system)+". The contents of a system must be valid yaml and not just a string. "
         print(logString)
         sys.exit(1)
-    print("a5")
 
   #@private
   def validateSystem(self, system):

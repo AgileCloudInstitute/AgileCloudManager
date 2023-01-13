@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
   
 import json
 import yaml
@@ -57,43 +57,27 @@ class controller_arm:
       outputDict['typeParent'] = typeParent
       if "foundation" in systemConfig.keys():
         foundationResourceGroupName = systemConfig.get("foundation").get("resourceGroupName")
-        #resourceGroupName = instance.get("resourceGroupName")
         if (foundationResourceGroupName.startswith("$config")) :
           foundationResourceGroupName = cfp.getValueFromConfig(keyDir, foundationResourceGroupName, "resourceGroupName")
-          print("foundationResourceGroupName is: ", foundationResourceGroupName)
-#        quit("poiuytrewq")
         foundationDeploymentName = systemConfig.get("foundation").get("deploymentName")
         if foundationDeploymentName.startswith("$config"):
           foundationDeploymentName = cfp.getValueFromConfig(keyDir, foundationDeploymentName, "deploymentName")
         outputDict['resourceGroupName'] = foundationResourceGroupName
         outputDict['deploymentName'] = foundationDeploymentName
     subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
-    print("subscriptionId is: ", subscriptionId)
     if (isinstance(subscriptionId, str)) and (len(subscriptionId)==0):
-      print("switch")
       subscriptionId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'subscriptionId')
-      print("subscriptionId is: ", subscriptionId)
 
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
-    print("clientId is: ", clientId)
     if (isinstance(clientId, str)) and (len(clientId)==0):
-      print("switch")
       clientId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'clientId')
-      print("clientId is: ", clientId)
 
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
 
     tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
-    print("tenantId is: ", tenantId)
     if (isinstance(tenantId, str)) and (len(tenantId)==0):
-      print("switch")
       tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
-      print("tenantId is: ", tenantId)
 
-    print("resourceGroupName is: ", resourceGroupName)
-    print("resourceGroupRegion is: ", resourceGroupRegion)
-
-#    quit("hgtyr")
     ## STEP 2: Login to az cli and set subscription
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
     ## STEP 3: Create Resource Group 
@@ -110,7 +94,6 @@ class controller_arm:
     templateName = cf.formatPathForOS(templateName)
     ## STEP 5: Assemble and run command to deploy ARM template
     self.assembleAndRunArmDeploymentCommand(systemConfig, serviceType, instance, templatePathAndFile, resourceGroupName, deploymentName, outputDict, onlyFoundationOutput)
-    print("j")
     if not onlyFoundationOutput:
       ## STEP 6: If foundation, then create and deploy images, if images are present in config file
       if caller == 'networkFoundation':
@@ -151,31 +134,19 @@ class controller_arm:
         deploymentName = cfp.getValueFromConfig(keyDir, deploymentName, "deploymentName")
 
     subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
-    print("subscriptionId is: ", subscriptionId)
-    print("subscriptionId is: ", subscriptionId)
     if (isinstance(subscriptionId, str)) and (len(subscriptionId)==0):
-      print("switch")
       subscriptionId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'subscriptionId')
-      print("subscriptionId is: ", subscriptionId)
 
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
     clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
-    print("clientId is: ", clientId)
     if (isinstance(clientId, str)) and (len(clientId)==0):
-      print("switch")
       clientId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'clientId')
-      print("clientId is: ", clientId)
 
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
-
     tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
-    print("tenantId is: ", tenantId)
-    if (isinstance(tenantId, str)) and (len(tenantId)==0):
-      print("switch")
-      tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
-      print("tenantId is: ", tenantId)
 
-#    quit("hgtyr")
+    if (isinstance(tenantId, str)) and (len(tenantId)==0):
+      tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
 
     ## STEP 2: Login to az cli and set subscription
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
@@ -305,20 +276,16 @@ class controller_arm:
       keyDir = cfp.getKeyDir(systemConfig)
       imageTemplateNameRoot = cfp.getValueFromConfig(keyDir, imageTemplateNameRoot, "imageName")
     imageTemplateNameRoot = imageTemplateNameRoot+"_t_" 
-    #print("imageTemplateNameRoot is: ", imageTemplateNameRoot)
-    #quit("..jhg...") 
     getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
     logString = "getImageTemplatesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
     lw.writeLogVerbose("az-cli", logString)
-    imgTemplatesJSON = self.getShellJsonResponse(getImageTemplatesCmd)
+    imgTemplatesJSON = self.getImageListShellJsonResponse(getImageTemplatesCmd, imageTemplateNameRoot)
     imageTemplateNamesList = []
     imgTemplatesJSON = yaml.safe_load(imgTemplatesJSON)  
     for imageTemplate in imgTemplatesJSON['data']:
-      print("imageTemplate['name'] is: ", imageTemplate['name'])
       if imageTemplateNameRoot in imageTemplate['name']:
         imageTemplateNamesList.append(imageTemplate.get("name"))
     sortedImageTemplateList = list(sorted(imageTemplateNamesList))
-    print("sortedImageTemplateList is: ", str(sortedImageTemplateList))
     newestTemplateName = sortedImageTemplateList[-1]
     #Build the image from the template you just created.  
     buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
@@ -350,21 +317,6 @@ class controller_arm:
         self.getRegistered(theCmd, counter)
     return theState
 
-  ##@private
-  #def getUnRegistered(self, theCmd, counter=0):
-  #  lw = log_writer()
-  #  theState = 'NA'
-  #  if (theState != 'Unregistered') and (counter <20):
-  #    jsonStatus = json.loads(self.getShellJsonResponse(theCmd))
-  #    theState = jsonStatus['properties']['state']
-  #    logString = 'Attempt number ' + str(counter) + ' got response: ' + theState + ' from running command: '+theCmd
-  #    lw.writeLogVerbose('acm', logString)
-  #    if theState != 'Unregistered':
-  #      counter +=1
-  #      time.sleep(10)
-  #      self.getUnRegistered(theCmd, counter)
-  #  return theState
-
   #@private
   def checkRegistrationState(self, checkCmd):
     jsonStatus = json.loads(self.getShellJsonResponse(checkCmd))
@@ -394,10 +346,8 @@ class controller_arm:
     cb = command_builder()  
     deployVarsFragment = cb.getVarsFragment(systemConfig, serviceType, instance, None, 'arm', self, outputDict) 
     deployCmd = 'az deployment group create --name '+deploymentName+' --resource-group '+resourceGroupName+' --template-file '+templatePathAndFile+' --verbose '+deployVarsFragment
-    #logString = '--- deployCmd is: az deployment group create --name *** --resource-group *** --template-file '+templatePathAndFile+' --verbose ***'
     logString = '--- deployCmd is: '+deployCmd
     lw.writeLogVerbose("az-cli", logString)
-    print("deployVarsFragment is: ", deployVarsFragment)
     ## STEP 6: Run Deployment command and check results
     jsonStatus = self.getShellJsonResponse(deployCmd)
     jsonStatus = json.loads(jsonStatus)
@@ -407,11 +357,6 @@ class controller_arm:
     if serviceType == 'networkFoundation':
       outputs = jsonStatus['properties']['outputs']
       self.foundationOutput = outputs
-      print('outputs is: ', str(outputs))
-      if not outputs == None:
-        for thisOutput in outputs:
-          print('thisOutput is: ', str(thisOutput))
-          print('outputs[thisOutput]["value"] is: ', str(outputs[thisOutput]['value']))
     if state == 'Succeeded':
       logString = "Finished running deployment command in assembleAndRunArmDeploymentCommand()."
       lw.writeLogVerbose("az-cli", logString)
@@ -426,7 +371,6 @@ class controller_arm:
     loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
     logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
     lw.writeLogVerbose('az-cli', logString)
-#    print("clientSecret is: ", clientSecret)
     self.getShellJsonResponse(loginCmd)
     logString = "Finished running login command."
     lw.writeLogVerbose("az-cli", logString)
@@ -459,15 +403,15 @@ class controller_arm:
     if process.returncode == 0:
       #These next 20 lines added to help diagnose and handle azure latency problem with empty results and exit code 0
       if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(str(data).replace(" ","")) == 3):
-        if counter < 11:
-          counter +=1 
+        if counter < 16:
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
           lw.writeLogVerbose('acm', logString)
-          logString = "Attempt "+str(counter)+ " out of 10. "
+          logString = "Attempt "+str(counter)+ " out of 15. "
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
           data = self.getShellJsonResponse(cmd,counter)
+          counter +=1 
           return data
         else:  
           logString = "Error: " + str(err)
@@ -480,18 +424,18 @@ class controller_arm:
       else:
         logString = str(data)
         lw.writeLogVerbose("shell", logString)
-        decodedData = data #.decode('utf-8')
+        decodedData = data
         return decodedData
     else:
-      if counter < 11:
-        counter +=1 
+      if counter < 16:
         logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
-        logString = "Attempt "+str(counter)+ " out of 10. "
+        logString = "Attempt "+str(counter)+ " out of 15. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
         data = self.getShellJsonResponse(cmd,counter)
+        counter +=1 
         return data
       else:  
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
@@ -500,6 +444,88 @@ class controller_arm:
           logString = "Continuing because this error message is often benign.  If you encounter downstream problems resulting from this, please report your use case so that we can examine the cause. "
           lw.writeLogVerbose('acm', logString)
           return decodedData
+        else:
+          logString = "Error: " + str(err)
+          lw.writeLogVerbose("shell", logString)
+          logString = "Error: Return Code is: " + str(process.returncode)
+          lw.writeLogVerbose("shell", logString)
+          logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+
+  #@public
+  def getImageListShellJsonResponse(self, cmd, imageNameRoot, counter=0):
+    lw = log_writer()
+    process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
+    data = process.stdout
+    err = process.stderr
+    logString = "data string is: " + data
+    lw.writeLogVerbose("acm", logString)
+    logString = "err is: " + str(err)
+    lw.writeLogVerbose("acm", logString)
+    logString = "process.returncode is: " + str(process.returncode)
+    lw.writeLogVerbose("acm", logString)
+    
+    #These next 6 lines added to help diagnose and handle azure latency problem with empty results and exit code 0
+    logString = "type(data) is: "+str(type(data))
+    lw.writeLogVerbose("acm", logString)
+    logString = "type(list(data)) is: "+str(type(list(data)))
+    lw.writeLogVerbose("acm", logString)
+    logString = "str(data).replace(" ","") is: "+str(data).replace(" ","")
+    lw.writeLogVerbose("acm", logString)
+    logString = "len(str(data).replace(" ","")) is: "+str(len(str(data).replace(" ","")))
+    lw.writeLogVerbose("acm", logString)
+    logString = "counter is: "+str(counter)
+    lw.writeLogVerbose("acm", logString)
+
+    if process.returncode == 0:
+      if counter < 16:
+        imageNamesList = []
+        imgsJSON = yaml.safe_load(data)  
+        for image in imgsJSON['data']:
+          if imageNameRoot in image['name']:
+            imageNamesList.append(image.get("name"))
+        sortedImageList = list(sorted(imageNamesList))
+        logString = "Number of matching images found so far is: " + str(sortedImageList)
+        lw.writeLogVerbose("acm", logString)
+        if len(sortedImageList) >0:
+          return data
+        else:
+          logString = "Sleeping 30 seconds before running the command a second time in case a latency problem is causing a delay in image creation. "
+          lw.writeLogVerbose('acm', logString)
+          logString = "Attempt "+str(counter)+ " out of 15. "
+          lw.writeLogVerbose('acm', logString)
+          import time
+          time.sleep(30)
+          counter +=1 
+          data = self.getShellJsonResponse(cmd,counter)
+          return data
+      else:  
+        logString = "Error: " + str(err)
+        lw.writeLogVerbose("shell", logString)
+        logString = "Error: Return Code is: " + str(process.returncode)
+        lw.writeLogVerbose("shell", logString)
+        logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
+        lw.writeLogVerbose("acm", logString)
+        sys.exit(1)
+    else:
+      if counter < 16:
+        logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
+        lw.writeLogVerbose('acm', logString)
+        logString = "Attempt "+str(counter)+ " out of 15. "
+        lw.writeLogVerbose('acm', logString)
+        import time
+        time.sleep(30)
+        data = self.getShellJsonResponse(cmd,counter)
+        counter +=1 
+        return data 
+      else:   
+        if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
+          logString = "WARNING: "+"(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found."
+          lw.writeLogVerbose('shell')
+          logString = "Continuing because this error message is often benign.  If you encounter downstream problems resulting from this, please report your use case so that we can examine the cause. "
+          lw.writeLogVerbose('acm', logString)
+          return data
         else:
           logString = "Error: " + str(err)
           lw.writeLogVerbose("shell", logString)

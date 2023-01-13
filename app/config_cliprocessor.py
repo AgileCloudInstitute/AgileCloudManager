@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import os
 import sys
@@ -21,7 +21,7 @@ serviceInstance = ''
 test = False
 testType = ''
 inputVars = {}
-acmVersion = 'f5g'
+acmVersion = '1.0'
 
 def getAcmUserHome():
     if platform.system() == 'Windows':

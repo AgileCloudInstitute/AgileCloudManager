@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import fileinput 
 import sys
@@ -392,48 +392,60 @@ class controller_terraform:
     else:
       logString = "Given Directory doesn't exist: " + parentDirOfCallInstance
       myLogWriter.writeLogVerbose("acm", logString)
-
+    
   #@private
-  def runTerraformCommand(self, commandToRun, workingDir):
-    myLogWriter = log_writer()
-    reachedOutputs = False
-    if " apply" in commandToRun:
-      commFragment = "apply"
-    elif " destroy" in commandToRun:
-      commFragment = "destroy"
-    elif " output" in commandToRun:
-      commFragment = "output"
-    else:
-      commFragment = "other"
-    lineNum = 0
-    errIdx = 0
-    isError = "no"
-    #Make a work item to re-write this function to throw an error and stop the program whenever an error is encountered.
-    proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    while True:
-      line = proc.stdout.readline()
-      if line:
-        lineNum += 1
-        thetext=line.decode('utf-8').rstrip('\r|\n')
-        decodedline=self.ansi_escape.sub('', thetext)
-        myLogWriter.writeLogVerbose("terraform", decodedline)
-        if 'Outputs' in decodedline:
-          reachedOutputs = True
-        if (commFragment == 'output'):
-          if (decodedline.count('=') == 1):
-            lineParts = decodedline.split('=')
-            key = lineParts[0].replace(' ','').replace('"','').replace("'","")
-            value = lineParts[1].replace(' ','').replace('"','').replace("'","")
-            self.tfOutputDict[key] = value
-        if (commFragment != 'output') and (self.foundationApply == True):
-          if (decodedline.count('=') == 1) and (reachedOutputs == True):
-            lineParts = decodedline.split('=')
-            key = lineParts[0].replace(' ','').replace('"','').replace("'","")
-            value = lineParts[1].replace(' ','').replace('"','').replace("'","")
-            self.tfOutputDict[key] = value
-        errIdx = self.processDecodedLine(decodedline, errIdx, commFragment)
+  def runTerraformCommand(self, commandToRun, workingDir, counter=0):
+    try:
+      myLogWriter = log_writer()
+      reachedOutputs = False
+      if " apply" in commandToRun:
+        commFragment = "apply"
+      elif " destroy" in commandToRun:
+        commFragment = "destroy"
+      elif " output" in commandToRun:
+        commFragment = "output"
       else:
-        break
+        commFragment = "other"
+      lineNum = 0
+      errIdx = 0
+      isError = "no"
+      #Make a work item to re-write this function to throw an error and stop the program whenever an error is encountered.
+      proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+      while True:
+        line = proc.stdout.readline()
+        if line:
+          lineNum += 1
+          thetext=line.decode('utf-8').rstrip('\r|\n')
+          decodedline=self.ansi_escape.sub('', thetext)
+          myLogWriter.writeLogVerbose("terraform", decodedline)
+          if 'Outputs' in decodedline:
+            reachedOutputs = True
+          if (commFragment == 'output'):
+            if (decodedline.count('=') == 1):
+              lineParts = decodedline.split('=')
+              key = lineParts[0].replace(' ','').replace('"','').replace("'","")
+              value = lineParts[1].replace(' ','').replace('"','').replace("'","")
+              self.tfOutputDict[key] = value
+          if (commFragment != 'output') and (self.foundationApply == True):
+            if (decodedline.count('=') == 1) and (reachedOutputs == True):
+              lineParts = decodedline.split('=')
+              key = lineParts[0].replace(' ','').replace('"','').replace("'","")
+              value = lineParts[1].replace(' ','').replace('"','').replace("'","")
+              self.tfOutputDict[key] = value
+          errIdx = self.processDecodedLine(decodedline, errIdx, commFragment)
+        else:
+          break
+    except:
+      counter += 1
+      logString = "ERROR: Terraform encountered an error.  We will rerun the terraform command up to 5 times before quitting, in case the problem was caused by latency in the cloud provider. "
+      myLogWriter.writeLogVerbose("acm", logString)
+      if counter < 6:
+        logString = "counter is: "+str(counter)+" .  Going to retry. "
+        myLogWriter.writeLogVerbose("acm", logString)
+        self.runTerraformCommand(commandToRun, workingDir, counter)
+      elif counter >= 6:
+        logString = "counter is: "+str(counter)+" .  Going to let the program break so you can examine the root cause of the error. "
+        myLogWriter.writeLogVerbose("acm", logString)
 
   #@private
   def processDecodedLine(self, decodedline, errIdx, commFragment):

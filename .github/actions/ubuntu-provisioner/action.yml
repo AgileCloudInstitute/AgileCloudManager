@@ -24,26 +24,20 @@ runs:
         sudo mkdir /opt/acm
         sudo chown -R $USER:$USER /opt/acm
         git --version
-        sudo apt install -y dos2unix
-        ## Install Terraform
-        #cd $HOME
-        #mkdir terraform-download
-        #cd terraform-download
-        #wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
-        #unzip terraform_0.12.24_linux_amd64.zip
-        ##Move the terraform binary into a folder that is listed as part of the PATH variable.  
-        #mv terraform /usr/local/bin/
         echo 'and---------------------------------'
         cd $HOME
-        #sudo apt -y install ansible
         aws --version
         pip3 install requests
         pip3 install pyyaml
         pip3 install IPy
+        pip3 install charset-normalizer
+
         python3 --version
         python --version
-        ##Cause the ansible configuration to be owned by the agent user so that pipelines can change things like hosts file, etc.  
-        #sudo chown -R $USER:$USER /opt/pipx_bin/ansible
+
         echo 'then--------------------------------'
-        sudo apt update && sudo apt upgrade
-        sudo apt clean
+        #The final 3 lines below were causing intermittent break-errors for some libraries we do not require.
+        #We are commenting these for now to prevent the breaking errors.  Assuming Ubuntu-latest is fresh.
+        #sudo apt-get install -y dos2unix
+        #sudo apt-get update && sudo apt upgrade
+        #sudo apt-get clean

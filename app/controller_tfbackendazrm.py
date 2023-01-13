@@ -1,5 +1,5 @@
-## Copyright 2022 Green River IT (GreenRiverIT.com) as described in LICENSE.txt distributed with this project on GitHub.  
-## Start at https://github.com/AgileCloudInstitute?tab=repositories    
+## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 from config_fileprocessor import config_fileprocessor
 from config_keysassembler import config_keysassembler
@@ -39,39 +39,27 @@ class controller_tfbackendazrm:
       onlyFoundationOutput = False
       ca = controller_arm()
       ca.createDeployment(systemConfig, instance, 'serviceInstance', serviceType, onlyFoundationOutput)
-      print("z done createDeployment(")
       cka.writeTheVarsFile(systemConfig, instance, "tfBackend", None, None)
       self.copyTheConfigFile(systemConfig, instance)
 
       #Get the variable values
       subscriptionId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'subscriptionId')
-      print("subscriptionId is: ", subscriptionId)
       if (isinstance(subscriptionId, str)) and (len(subscriptionId)==0):
-        print("switch")
         subscriptionId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'subscriptionId')
-        print("subscriptionId is: ", subscriptionId)
 
       clientId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientId')
-      print("clientId is: ", clientId)
       if (isinstance(clientId, str)) and (len(clientId)==0):
-        print("switch")
         clientId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'clientId')
-        print("clientId is: ", clientId)
 
       clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
-
       tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
-      print("tenantId is: ", tenantId)
       if (isinstance(tenantId, str)) and (len(tenantId)==0):
-        print("switch")
         tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
-        print("tenantId is: ", tenantId)
 
       resourceGroupName = instance.get("resourceGroupName")
       if (resourceGroupName.startswith("$config")) :
         resourceGroupName = cfp.getValueFromConfig(keyDir, resourceGroupName, "resourceGroupName")
 
-      print('systemConfig.get("organization") is: ', systemConfig.get("organization"))
       if systemConfig.get("organization").startswith("$config"):
         if systemConfig.get("organization").count(".") == 0:
           varName = "organization"
@@ -85,11 +73,7 @@ class controller_tfbackendazrm:
       else:
         orgName = (systemConfig.get("organization")).lower()
 
-      #storageAccountName = (instance.get("instanceName")+systemConfig.get("organization")).lower()
       storageAccountName = (instance.get("instanceName")+orgName).lower()
-
-      print("storageAccountName is: ", storageAccountName)
-#      quit("...RRR@@@")
 
       if len(storageAccountName) > 24:
         logString = "ERROR: The storage account name "+storageAccountName+" has more than 24 characters, which exceeds the length allowed by Azure.  "
