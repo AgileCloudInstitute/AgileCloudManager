@@ -279,7 +279,7 @@ class controller_arm:
     getImageTemplatesCmd = "az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '"+resourceGroupName+"' | project name, resourceGroup | sort by name asc\""
     logString = "getImageTemplatesCmd is: az graph query -q \"Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates' and resourceGroup =~ '***' | project name, resourceGroup | sort by name asc\""
     lw.writeLogVerbose("az-cli", logString)
-    imgTemplatesJSON = self.getShellJsonResponse(getImageTemplatesCmd)
+    imgTemplatesJSON = self.getImageListShellJsonResponse(getImageTemplatesCmd, imageTemplateNameRoot)
     imageTemplateNamesList = []
     imgTemplatesJSON = yaml.safe_load(imgTemplatesJSON)  
     for imageTemplate in imgTemplatesJSON['data']:
@@ -479,7 +479,6 @@ class controller_arm:
     lw.writeLogVerbose("acm", logString)
 
     if process.returncode == 0:
-      #These next 20 lines added 24 August to handle azure latency problem with empty results and exit code 0
       if counter < 16:
         imageNamesList = []
         imgsJSON = yaml.safe_load(data)  
@@ -500,6 +499,7 @@ class controller_arm:
           time.sleep(30)
           counter +=1 
           data = self.getShellJsonResponse(cmd,counter)
+          return data
       else:  
         logString = "Error: " + str(err)
         lw.writeLogVerbose("shell", logString)
@@ -525,7 +525,7 @@ class controller_arm:
           lw.writeLogVerbose('shell')
           logString = "Continuing because this error message is often benign.  If you encounter downstream problems resulting from this, please report your use case so that we can examine the cause. "
           lw.writeLogVerbose('acm', logString)
-          return decodedData
+          return data
         else:
           logString = "Error: " + str(err)
           lw.writeLogVerbose("shell", logString)
