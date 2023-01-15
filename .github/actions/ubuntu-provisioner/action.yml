@@ -36,8 +36,3 @@ runs:
         python --version
 
         echo 'then--------------------------------'
-        sudo apt-get install -y dos2unix
-        #The final 2 lines below were causing intermittent break-errors for some libraries we do not require.
-        #We are commenting these for now to prevent the breaking errors.  Assuming Ubuntu-latest is fresh.
-        #sudo apt-get update && sudo apt upgrade
-        #sudo apt-get clean
