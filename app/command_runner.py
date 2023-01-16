@@ -50,12 +50,12 @@ class command_runner:
         if counter < 16:
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
           lw.writeLogVerbose('acm', logString)
+          counter +=1 
           logString = "Attempt "+str(counter)+ " out of 15. "
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
           data = self.getShellJsonResponse(cmd,counter)
-          counter +=1 
           return data
         else:  
           logString = "Error: " + str(err)
@@ -74,12 +74,12 @@ class command_runner:
       if counter < 16:
         logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
+        counter +=1 
         logString = "Attempt "+str(counter)+ " out of 15. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
         data = self.getShellJsonResponse(cmd,counter)
-        counter +=1 
         return data 
       else:   
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
