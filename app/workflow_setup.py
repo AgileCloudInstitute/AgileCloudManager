@@ -23,6 +23,8 @@ class workflow_setup:
   def __init__(self):  
     pass
 
+  ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+
   #@private
   def createDirectoryStructure(self):
     import config_cliprocessor
@@ -326,12 +328,41 @@ class workflow_setup:
       self.validateRepoStrings('public', public)
       repoBranch = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'branch')
       self.validateRepoStrings('branch', repoBranch)
+
+
       if (public != "true") and (public != "True"):
         repoUrlCred = self.assembleSourceRepo(repoUrl)
       else:
         repoUrlCred = repoUrl
       gitCloneCommand = "git clone -b " + repoBranch + " " + repoUrlCred  
       crnr.runShellCommandInWorkingDir(gitCloneCommand, userCallingDir)
+      #Start the API if repo is an API
+      apiBool = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'api')
+      print("apiBool is: ", apiBool)
+      print("type(apiBool) is: ", type(apiBool))
+      if (apiBool != None):
+        if (isinstance(apiBool, bool)):
+          if apiBool: 
+            setupScript = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'setupScript')
+            #shutdownScript = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'shutdownScript')
+            if setupScript.endswith(".py"):
+              repoFolderName = repoUrl.split("/")[-1].replace(".git","")
+              repoFolderAndPath = userCallingDir + cfmtr.getSlashForOS() + repoFolderName
+              setupCommand = "python "+setupScript
+              #self.runShellCommandInWorkingDir(setupCommand, repoFolderAndPath)
+              os.chdir(repoFolderAndPath)
+              import subprocess
+              stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL)
+            else:
+              logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
+              print(logString)
+              exit(1)
+        else:
+          logString = "ERROR: Value for the 'api' field must be a boolean if the 'api' field is used."
+          print(logString)
+          exit(1)
+#        quit("mnbvcxz BREAKPOINT")
+
     #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
 
   def validateRepoStrings(self, fieldName, obj_to_test):
@@ -365,7 +396,10 @@ class workflow_setup:
   def runConfigure(self):
     self.getDependencies()
     self.checkDependencies()
-    self.cloneTheSourceCode()
+    import config_cliprocessor
+    print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
+    if config_cliprocessor.inputVars.get('minSetup') != True:
+      self.cloneTheSourceCode()
 
   #@private
   def undoConfigure(self):
@@ -373,8 +407,8 @@ class workflow_setup:
     crnr = command_runner()
     cfmtr = command_formatter()
     lw = log_writer()
-    admin_path = config_cliprocessor.inputVars.get('acmAdminPath')
-    self.deleteLocalCopiesOfGitRepos()
+
+    #Destroy the acmAdmin directory, and then destroy the binaries location if linux
     admin_path = config_cliprocessor.inputVars.get('acmAdminPath')
     try:
       shutil.rmtree(admin_path, ignore_errors=True)
@@ -389,6 +423,10 @@ class workflow_setup:
         logString = "The /opt/acm/ directory does not exist.  It may have already been deleted."
         lw.writeLogVerbose("acm", logString)
       crnr.runShellCommandInWorkingDir("dir", '/opt')
+
+    #Delete the location where the terraform controller placed the calls to modules.  
+    #Note this might be the wrong location because these are probably put in the building blocks folder.  
+    # Also note that .gitignore in the actual location in the building blocks folder should keep these out of version control.  
     userCallingDir = config_cliprocessor.inputVars.get('userCallingDir')
     callsToModulesDir = userCallingDir + cfmtr.getSlashForOS() + 'calls-to-modules'
     try:
@@ -396,6 +434,12 @@ class workflow_setup:
     except FileNotFoundError:
       logString = "The calls-to-modules directory does not exist.  It may have already been deleted."
       lw.writeLogVerbose("acm", logString)
+
+    print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
+    #quit("vbnmnbvcqwertyytrewq")
+    if config_cliprocessor.inputVars.get('minSetup') != True:
+      #Delete the local copies of the repos you cloned to create this instance
+      self.deleteLocalCopiesOfGitRepos()
 
   #@private
   def deleteLocalCopiesOfGitRepos(self):
@@ -419,6 +463,34 @@ class workflow_setup:
       repoUrlEnd = repoUrl.split("//")[1]
       repoName = repoUrlEnd.split('/')[-1].replace('.git','')
       repoPath = userCallingDir + cfmtr.getSlashForOS() + repoName
+#//start stuff to clean up
+      #Start the API if repo is an API
+      apiBool = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'api')
+      print("apiBool is: ", apiBool)
+      print("type(apiBool) is: ", type(apiBool))
+      if (apiBool != None):
+        if (isinstance(apiBool, bool)):
+          if apiBool: 
+            #setupScript = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'setupScript')
+            shutdownScript = self.getSourceCodeProperty(yaml_setup_config_file_and_path, 'source', sourceRepoInstance, 'shutdownScript')
+            if shutdownScript.endswith(".py"):
+              repoFolderName = repoUrl.split("/")[-1].replace(".git","")
+              repoFolderAndPath = userCallingDir + cfmtr.getSlashForOS() + repoFolderName
+              shutdownCommand = "python "+shutdownScript
+              self.runShellCommandInWorkingDir(shutdownCommand, repoFolderAndPath)
+              #os.chdir(repoFolderAndPath)
+              #import subprocess
+              #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL)
+            else:
+              logString = "ERROR: The shutdown script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
+              print(logString)
+              exit(1)
+        else:
+          print("sourceRepoInstance is: ", sourceRepoInstance)
+          logString = "ERROR: Value for the 'api' field must be a boolean if the 'api' field is used."
+          print(logString)
+          exit(1)
+#//end stuff to clean up
       #Delete the repo if it exists locally.  This handles case where repo was NOT cloned locally due to incomplete setup. 
       if os.path.exists(repoPath):
         crnr.runShellCommandInWorkingDir(gitRemoveCmd, repoPath)
@@ -639,20 +711,23 @@ class workflow_setup:
     crnr = command_runner()
     cfmtr = command_formatter()
     self.createDirectoryStructure()
-    sourceRepo = config_cliprocessor.inputVars.get('sourceRepo') 
-    public = config_cliprocessor.inputVars.get('repoPublic')
-    if (public != "true") and (public != "True"):
-      sourceRepo = self.assembleSourceRepo(sourceRepo)
-    cloneCommand = self.assembleCloneCommand(sourceRepo)
-    crnr.runShellCommand(cloneCommand) 
-    sourceRepoDestinationDir = sourceRepo.split('/')[-1].replace('.git','')
-    sourceRepoDestinationDir = config_cliprocessor.inputVars.get('userCallingDir') + sourceRepoDestinationDir
-    sourceRepoDestinationDir = cfmtr.formatPathForOS(sourceRepoDestinationDir)
-    acmConfigPath = config_cliprocessor.inputVars.get('acmConfigPath')
-    acmConfigPath = cfmtr.formatPathForOS(acmConfigPath)
-    import time
-    time.sleep(10)
-    os.rename(sourceRepoDestinationDir, acmConfigPath)
+    print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
+    #quit("vbnmnbvcqwertyytrewq")
+    if config_cliprocessor.inputVars.get('minSetup') != True:
+      sourceRepo = config_cliprocessor.inputVars.get('sourceRepo') 
+      public = config_cliprocessor.inputVars.get('repoPublic')
+      if (public != "true") and (public != "True"):
+        sourceRepo = self.assembleSourceRepo(sourceRepo)
+      cloneCommand = self.assembleCloneCommand(sourceRepo)
+      crnr.runShellCommand(cloneCommand) 
+      sourceRepoDestinationDir = sourceRepo.split('/')[-1].replace('.git','')
+      sourceRepoDestinationDir = config_cliprocessor.inputVars.get('userCallingDir') + sourceRepoDestinationDir
+      sourceRepoDestinationDir = cfmtr.formatPathForOS(sourceRepoDestinationDir)
+      acmConfigPath = config_cliprocessor.inputVars.get('acmConfigPath')
+      acmConfigPath = cfmtr.formatPathForOS(acmConfigPath)
+      import time
+      time.sleep(15)
+      os.rename(sourceRepoDestinationDir, acmConfigPath)
     self.runConfigure()
 
   #@public
@@ -661,3 +736,18 @@ class workflow_setup:
     lw = log_writer()
     logString = "Finished running acm setup off"
     lw.writeLogVerbose("acm", logString)
+
+  #@public
+  def runShellCommandInWorkingDir(self, commandToRun, workingDir):
+    import subprocess
+    lw = log_writer()
+    proc = subprocess.Popen( commandToRun,cwd=workingDir, stdout=subprocess.PIPE, shell=True)
+    while True:
+      line = proc.stdout.readline()
+      if line:
+        thetext=line.decode('utf-8').rstrip('\r|\n')
+        decodedline=self.ansi_escape.sub('', thetext)
+        logString = decodedline
+        lw.writeLogVerbose("shell", logString)
+      else:
+        break

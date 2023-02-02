@@ -486,7 +486,7 @@ class controller_arm:
           if imageNameRoot in image['name']:
             imageNamesList.append(image.get("name"))
         sortedImageList = list(sorted(imageNamesList))
-        logString = "Number of matching images found so far is: " + str(sortedImageList)
+        logString = "List of matching images found so far is: " + str(sortedImageList)
         lw.writeLogVerbose("acm", logString)
         if len(sortedImageList) >0:
           return data
