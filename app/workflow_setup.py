@@ -351,6 +351,8 @@ class workflow_setup:
               setupCommand = "python "+setupScript
               #self.runShellCommandInWorkingDir(setupCommand, repoFolderAndPath)
               os.chdir(repoFolderAndPath)
+              print("os.getcwd() is: ", str(os.getcwd()))
+              print("repoFolderAndPath is: ", str(repoFolderAndPath))
               import subprocess
               stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL)
             else:
