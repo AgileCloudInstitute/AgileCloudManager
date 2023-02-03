@@ -353,8 +353,12 @@ class workflow_setup:
               os.chdir(repoFolderAndPath)
               print("os.getcwd() is: ", str(os.getcwd()))
               print("repoFolderAndPath is: ", str(repoFolderAndPath))
+              print("About to list contents of repoFolderAndPath. ")
+              from pathlib import Path
+              print(*Path(str(repoFolderAndPath)).iterdir(), sep="\n")
               import subprocess
-              stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL)
+              #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL) #This line works on windows, but not on linux.
+              stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd="str(repoFolderAndPath)")
             else:
               logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
               print(logString)
