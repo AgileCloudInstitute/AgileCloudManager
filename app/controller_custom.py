@@ -112,6 +112,7 @@ class controller_custom:
     myurl = myurl.replace("$customControllerAPI.", "")
     myurl = "http://localhost:"+myurl
     print("myurl is: ", myurl)
+    time.sleep(30)
     import platform
     if platform.system() == 'Linux':
       curlCommand = "curl "+myurl
