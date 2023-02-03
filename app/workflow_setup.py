@@ -348,7 +348,8 @@ class workflow_setup:
             if setupScript.endswith(".py"):
               repoFolderName = repoUrl.split("/")[-1].replace(".git","")
               repoFolderAndPath = userCallingDir + cfmtr.getSlashForOS() + repoFolderName
-              setupCommand = "python "+setupScript
+              #setupCommand = "python "+setupScript #Commenting this line because linux could not find setupScript even though windows could
+              setupCommand = "python "+repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
               #self.runShellCommandInWorkingDir(setupCommand, repoFolderAndPath)
               os.chdir(repoFolderAndPath)
               print("os.getcwd() is: ", str(os.getcwd()))
