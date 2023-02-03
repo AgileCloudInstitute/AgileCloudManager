@@ -348,7 +348,7 @@ class workflow_setup:
             if setupScript.endswith(".py"):
               repoFolderName = repoUrl.split("/")[-1].replace(".git","")
               repoFolderAndPath = userCallingDir + cfmtr.getSlashForOS() + repoFolderName
-              repoFolderAndPath = repoFolderAndPath.replace("/", "") #for linux case in which double slash is present
+              #repoFolderAndPath = repoFolderAndPath.replace("//", "/") #for linux case in which double slash is present
               #setupCommand = "python "+setupScript #Commenting this line because linux could not find setupScript even though windows could
               #setupCommand = "python "+repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
               setupCommand = repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
