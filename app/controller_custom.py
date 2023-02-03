@@ -112,7 +112,16 @@ class controller_custom:
     myurl = myurl.replace("$customControllerAPI.", "")
     myurl = "http://localhost:"+myurl
     print("myurl is: ", myurl)
-    #quit("BREAKPOINT X")
+    import platform
+    if platform.system() == 'Linux':
+      curlCommand = "curl "+myurl
+      print("curlCommand is: ", curlCommand)
+      self.runShellCommand(curlCommand)
+    if platform.system() == 'Windows':
+      pshellCommand = 'powershell -command "$Response = Invoke-WebRequest -Uri "+myurl+";$StatusCode = $Response.StatusCode;$StatusCode;$Response"'
+      self.runShellCommand(pshellCommand)
+    print("BREAKPOINT X")
+    sys.exit(1)
     if (operation == "on") or (operation == "off"):
       self.postCommand(myurl, postJson)
     elif operation == "output":
