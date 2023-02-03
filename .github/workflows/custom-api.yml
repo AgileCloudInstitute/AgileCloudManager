@@ -80,41 +80,41 @@ jobs:
       - id: Acm_Foundation_On_Ubuntu
         uses: ./.github/actions/acm-foundation-on-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_Services_On_Ubuntu
         uses: ./.github/actions/acm-services-on-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_Services_Off_Ubuntu
         uses: ./.github/actions/acm-services-off-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_ServiceType_On_Ubuntu
         uses: ./.github/actions/acm-service-type-on-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
       - id: Acm_ServiceType_Off_Ubuntu
         uses: ./.github/actions/acm-service-type-off-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
       - id: Acm_ServiceInstance_On_Ubuntu
         uses: ./.github/actions/acm-service-instance-on-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
           service_instance: custom-scaleset
       - id: Acm_ServiceInstance_Off_Ubuntu
         uses: ./.github/actions/acm-service-instance-off-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
           service_instance: custom-scaleset
       - id: Acm_Foundation_Off_Ubuntu
         uses: ./.github/actions/acm-foundation-off-ubuntu
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_Setup_Off_Ubuntu
         uses: ./.github/actions/acm-setup-off-ubuntu
       - shell: bash
@@ -151,41 +151,41 @@ jobs:
       - id: Acm_Foundation_On_Windows
         uses: ./.github/actions/acm-foundation-on-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_Services_On_Windows
         uses: ./.github/actions/acm-services-on-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_Services_Off_Windows
         uses: ./.github/actions/acm-services-off-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_ServiceType_On_Windows
         uses: ./.github/actions/acm-service-type-on-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
       - id: Acm_ServiceType_Off_Windows
         uses: ./.github/actions/acm-service-type-off-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
       - id: Acm_ServiceInstance_On_Windows
         uses: ./.github/actions/acm-service-instance-on-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
           service_instance: custom-scaleset
       - id: Acm_ServiceInstance_Off_Windows
         uses: ./.github/actions/acm-service-instance-off-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
           service_type: subnetsWithScaleSet
           service_instance: custom-scaleset
       - id: Acm_Foundation_Off_Windows
         uses: ./.github/actions/acm-foundation-off-windows
         with:
-          system_name: custom-demo
+          system_name: custom-api-demo
       - id: Acm_Setup_Off_Windows
         uses: ./.github/actions/acm-setup-off-windows
       - name: Delete Secrets
