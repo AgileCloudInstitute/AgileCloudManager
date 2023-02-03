@@ -348,9 +348,10 @@ class workflow_setup:
             if setupScript.endswith(".py"):
               repoFolderName = repoUrl.split("/")[-1].replace(".git","")
               repoFolderAndPath = userCallingDir + cfmtr.getSlashForOS() + repoFolderName
+              repoFolderAndPath = repoFolderAndPath.replace("/", "") #for linux case in which double slash is present
               #setupCommand = "python "+setupScript #Commenting this line because linux could not find setupScript even though windows could
-              setupCommand = "python "+repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
-              #self.runShellCommandInWorkingDir(setupCommand, repoFolderAndPath)
+              #setupCommand = "python "+repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
+              setupCommand = repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
               os.chdir(repoFolderAndPath)
               print("os.getcwd() is: ", str(os.getcwd()))
               print("repoFolderAndPath is: ", str(repoFolderAndPath))
@@ -359,7 +360,9 @@ class workflow_setup:
               print(*Path(str(repoFolderAndPath)).iterdir(), sep="\n")
               import subprocess
               #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL) #This line works on windows, but not on linux.
-              stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
+              #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
+              stream = subprocess.Popen(["python", setupCommand], stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
+              #["/usr/bin/git", "commit", "-m", "Fixes a bug."]
             else:
               logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
               print(logString)
