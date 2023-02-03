@@ -358,7 +358,7 @@ class workflow_setup:
               print(*Path(str(repoFolderAndPath)).iterdir(), sep="\n")
               import subprocess
               #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL) #This line works on windows, but not on linux.
-              stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd="str(repoFolderAndPath)")
+              stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
             else:
               logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
               print(logString)
