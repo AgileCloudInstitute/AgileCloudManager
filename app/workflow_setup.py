@@ -363,6 +363,7 @@ class workflow_setup:
               #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
               stream = subprocess.Popen(["python", setupScript], stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
               #["/usr/bin/git", "commit", "-m", "Fixes a bug."]
+              quit("BREAKPOINT 098abc")
             else:
               logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
               print(logString)
