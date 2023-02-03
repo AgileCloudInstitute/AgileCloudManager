@@ -362,9 +362,9 @@ class workflow_setup:
               #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL) #This line works on windows, but not on linux.
               #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
               #NEXT LINE IS CORRECT, BUT WE ARE COMMENTING IT IN ORDER TO SEE THE OUTPUT WHEN RUNNING IN FOREGROUND DURING DEVELOPMENT.
-              stream = subprocess.Popen(["python", setupScript], stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
+              #stream = subprocess.Popen(["python", setupScript], stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
               #Next line is for debugging because the next line runs in the foreground when uncommented
-              #subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath))
+              subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath))
               #["/usr/bin/git", "commit", "-m", "Fixes a bug."]
               #print("BREAKPOINT 098abc")
               #sys.exit(1)
