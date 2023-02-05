@@ -365,7 +365,7 @@ class workflow_setup:
               #stream = subprocess.Popen(["python", setupScript], stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
               #Next line is for debugging because the next line runs in the foreground when uncommented
               #subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-              subprocess.Popen(["python", setupScript])
+              subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath))
               #["/usr/bin/git", "commit", "-m", "Fixes a bug."]
               #print("BREAKPOINT 098abc")
               #sys.exit(1)
