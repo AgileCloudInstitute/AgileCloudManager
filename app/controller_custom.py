@@ -121,7 +121,7 @@ class controller_custom:
     if platform.system() == 'Windows':
       pshellCommand = 'powershell -command "$Response = Invoke-WebRequest -Uri "+myurl+";$StatusCode = $Response.StatusCode;$StatusCode;$Response"'
       self.runShellCommand(pshellCommand)
-    print("BREAKPOINT X")
+    #print("BREAKPOINT X")
     sys.exit(1)
     if (operation == "on") or (operation == "off"):
       self.postCommand(myurl, postJson)
