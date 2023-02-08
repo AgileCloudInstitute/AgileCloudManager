@@ -349,27 +349,31 @@ class workflow_setup:
               repoFolderName = repoUrl.split("/")[-1].replace(".git","")
               repoFolderAndPath = userCallingDir + cfmtr.getSlashForOS() + repoFolderName
               #repoFolderAndPath = repoFolderAndPath.replace("//", "/") #for linux case in which double slash is present
-              #setupCommand = "python "+setupScript #Commenting this line because linux could not find setupScript even though windows could
-              #setupCommand = "python "+repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
-              setupCommand = repoFolderAndPath+cfmtr.getSlashForOS()+setupScript
               os.chdir(repoFolderAndPath)
               print("os.getcwd() is: ", str(os.getcwd()))
               print("repoFolderAndPath is: ", str(repoFolderAndPath))
               print("About to list contents of repoFolderAndPath. ")
               from pathlib import Path
               print(*Path(str(repoFolderAndPath)).iterdir(), sep="\n")
+              #import subprocess
+              #subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath))
+              #print("Just finished starting custom controller.")
+#//
+              print("About to start custom controller.")
               import subprocess
-              #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL) #This line works on windows, but not on linux.
-              #stream = subprocess.Popen(setupCommand, stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
-              #NEXT LINE IS CORRECT, BUT WE ARE COMMENTING IT IN ORDER TO SEE THE OUTPUT WHEN RUNNING IN FOREGROUND DURING DEVELOPMENT.
-              #stream = subprocess.Popen(["python", setupScript], stdout=subprocess.DEVNULL, cwd=str(repoFolderAndPath))
-              #Next line is for debugging because the next line runs in the foreground when uncommented
-              #subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-              subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath))
-              #["/usr/bin/git", "commit", "-m", "Fixes a bug."]
-              #print("BREAKPOINT 098abc")
-              #sys.exit(1)
+              #The version of command on next line runs the server in the background.  Comment it out and replace with the one below it if you want to see output.
+              server = subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath),stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              while True:
+                line = server.stdout.readline()
+                if line:
+                  print(self.ansi_escape.sub('', line.decode('utf-8').rstrip('\r|\n')))
+                else:
+                  break
+
+              #The second version of the command below will print output to the console, but will also halt your program because it runs the server in the foreground.
+              #server = subprocess.Popen(["python", "setup.py"], cwd=str(path))
               print("Just finished starting custom controller.")
+#//
             else:
               logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
               print(logString)
