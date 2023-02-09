@@ -22,7 +22,7 @@ The documentation in our website explains in detail how you can use the Agile Cl
 Use of our software in any form and use of our training/documentation is subject our [Terms of Service](https://AgileCloudInstitute.io/terms) and licenses.  
   
 # Contribute  
-We hold a weekly online meeting for developers who would like to contribute to this project.  You can learn more at [AgileCloudInstitute.io/contribute](https://AgileCloudInstitute.io/contribute) , and you can can also contribute code directly to this repository.  
+We hold a weekly online meeting for developers who would like to contribute to this project.  You can learn more at [AgileCloudInstitute.io/contribute](https://AgileCloudInstitute.io/contribute) , and you can also contribute code directly to this repository.  
   
 If you would like to contribute to this project, you must certify that you have the legal right to contribute the code that you want to contribute.  
   

@@ -404,8 +404,13 @@ class command_builder:
       if (hasattr(callingClass, 'foundationOutput')) and (len(callingClass.foundationOutput) > 0):
         foundationOutputVariables = callingClass.foundationOutput
       else:
-        foundationOutputVariables = self.populateFoundationOutput(tool, systemConfig, keyDir, instance)
+        #print("abcdefghijklmnopqrstuvwxyz")
+        foundationTool = systemConfig.get("foundation").get("controller")
+        #foundationOutputVariables = self.populateFoundationOutput(tool, systemConfig, keyDir, instance)
+        foundationOutputVariables = self.populateFoundationOutput(foundationTool, systemConfig, keyDir, instance) #replace tool with foundationTool 31 January 2023
       self.outputVariables = foundationOutputVariables
+      #print("self.outputVariables is: ", self.outputVariables)
+      #quit("cvbnm")
     #iterate through each mapped variable to get the value
     for varName in mappedVariables:
       #THIRD, get the value for each variable
@@ -440,7 +445,12 @@ class command_builder:
 
   def populateFoundationOutput(self, tool, systemConfig, keyDir, instance):
     foundationOutputVariables = {}
-    if (tool == "packer") or (tool == "terraform"):
+    #Adding next 2 lines, commenting out the 3rd line, and adding 4th line below 31 January 2023 to allow different foundation controllers instead of requiring that foundation and other elements have same controller.
+    foundationTool = systemConfig.get("foundation").get("controller")
+    tool = foundationTool
+    print("tool is: ", tool)
+    #if (tool == "packer") or (tool == "terraform"):
+    if (tool == "terraform"):
       foundationTool = systemConfig.get("foundation").get("controller")
       if foundationTool == "terraform":
         from controller_terraform import controller_terraform
@@ -450,13 +460,25 @@ class command_builder:
       else:
         print("Other output tools handled elsewhere in code, so this should never be triggered.")
         sys.exit(1)
-    elif tool == 'customController':
+    #elif tool == 'customController': #replacing with next line 31 January 2023
+    elif 'customController' in tool:
       cc = controller_custom()
-      controllerPathFoundation = instance.get('controller').replace('$customController.','')
-      controllerCommandFoundation = instance.get('controllerCommand')
-      foundationMappedVariables = systemConfig.get('foundation').get('mappedVariables')
-      foundationInstance = systemConfig.get('foundation')
-      cc.runCustomController('output', systemConfig, controllerPathFoundation, controllerCommandFoundation, foundationMappedVariables, None, foundationInstance)
+      #if '$customController.' in instance.get('controller'): #replacing with next line 31 January 2023
+      if '$customController.' in systemConfig.get('foundation').get('controller'):
+        #controllerPathFoundation = instance.get('controller').replace('$customController.','') #replacing with next line 31 January 2023
+        #controllerCommandFoundation = instance.get('controllerCommand') #replacing with next line 31 January 2023
+        controllerPathFoundation = systemConfig.get('foundation').replace('$customController.','')
+        controllerCommandFoundation = systemConfig.get('foundation').get('controllerCommand')
+        foundationMappedVariables = systemConfig.get('foundation').get('mappedVariables')
+        foundationInstance = systemConfig.get('foundation')
+        cc.runCustomController('output', systemConfig, controllerPathFoundation, controllerCommandFoundation, foundationMappedVariables, None, foundationInstance)
+      #if '$customControllerAPI.' in instance.get('controller'): #replacing with next line 31 January 2023
+      if '$customControllerAPI.' in systemConfig.get('foundation').get('controller'):
+        #controllerPathFoundation = instance.get('controller').replace('$customControllerAPI.','') #replacing with next line 31 January 2023
+        controllerPathFoundation = systemConfig.get('foundation').get('controller').replace('$customControllerAPI.','')
+        foundationMappedVariables = systemConfig.get('foundation').get('mappedVariables')
+        foundationInstance = systemConfig.get('foundation')
+        cc.runCustomControllerAPI('output', systemConfig, controllerPathFoundation, foundationMappedVariables, None, foundationInstance)
       foundationOutputVariables = cc.outputVariables
     elif tool == 'arm':
       ca = controller_arm()
@@ -573,14 +595,17 @@ class command_builder:
       funcCoordParts = mappedVariables.get(varName).split(".")
       funcName = funcCoordParts[1]
       if funcName == 'foundationOutput':
+        tool = systemConfig.get("foundation").get("controller") #Override tool with foundationTool 31 January 2023
         if tool == "arm":
           value = self.foundationOutput_ARM_CustomFunction(funcCoordParts, varName)
         elif tool == "cloudformation":
           value = self.foundationOutput_CloudFormation_CustomFunction(funcCoordParts, varName, systemConfig)
-        elif tool == "customController":
+        #elif tool == "customController":
+        elif "customController" in tool: #rewrote this line to accommodate elif tool == "customController": above
           value = self.foundationOutput_CustomController_CustomFunction(funcCoordParts, varName)
         else:
           value = self.foundationOutput_Other_CustomFunction(mappedVariables, varName, tool)
+        #quit("cftyhbgresxawq")
       elif funcName == "addPath":
         value = self.addPathFunction(instance, keyDir)
       elif funcName == 'imageBuilderId': 
@@ -716,6 +741,9 @@ class command_builder:
     return value
 
   def foundationOutput_CustomController_CustomFunction(self, funcCoordParts, varName):
+    print("funcCoordParts is: ", funcCoordParts)
+    print("varName is: ", varName)
+    print("self.outputVariables is: ", str(self.outputVariables))
     if len(funcCoordParts) == 2:
       nameToCheck = varName
     elif len(funcCoordParts) == 3:
@@ -726,6 +754,7 @@ class command_builder:
     return value
 
   def foundationOutput_Other_CustomFunction(self, mappedVariables, varName, tool):
+    print("mappedVariables.get(varName) is: ", mappedVariables.get(varName))
     if mappedVariables.get(varName).count(".") == 1:
       tfOutputVarName = varName
     elif mappedVariables.get(varName).count(".") == 2:

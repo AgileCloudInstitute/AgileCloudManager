@@ -41,6 +41,11 @@ class controller_image:
           mappedVariables = image.get("mappedVariables")
           c_cust = controller_custom()
           c_cust.runCustomController('on', systemConfig, controllerPath, controllerCommand, mappedVariables, 'images', image)
+        elif instanceTool.startswith('$customControllerAPI.'):
+          controllerPath = instanceTool.replace("$customControllerAPI.","")
+          mappedVariables = image.get("mappedVariables")
+          c_cust = controller_custom()
+          c_cust.runCustomControllerAPI('on', systemConfig, controllerPath, mappedVariables, 'images', image)
         else:
           logString = "Your config file specified an image build tool not supported: "+instanceTool+" . Halting program so you can check your configuration."
           lw.writeLogVerbose("acm", logString)
