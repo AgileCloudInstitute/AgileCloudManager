@@ -1095,7 +1095,7 @@ jobs:
           rm /usr/acm/keys/starter/keys.yaml
 
 
-  e2e-tests-linux-custom-appliance:
+  e2e-tests-linux-custom-api-appliance:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
@@ -1128,7 +1128,7 @@ jobs:
         run: |
           rm /usr/acm/keys/starter/keys.yaml
 
-  e2e-tests-linux-custom-services:
+  e2e-tests-linux-custom-api-services:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
@@ -1195,7 +1195,7 @@ jobs:
         run: |
           rm /usr/acm/keys/starter/keys.yaml
 
-  e2e-tests-windows-custom-services:
+  e2e-tests-windows-custom-api-services:
     needs: [ create-exe-linux-and-upload-artifact ]
     runs-on: windows-latest
     steps:
@@ -1265,7 +1265,7 @@ jobs:
         run: |
           del C:\\Users\\runneradmin\\acm\\keys\\starter\\keys.yaml
 
-  e2e-tests-windows-custom-appliance:
+  e2e-tests-windows-custom-api-appliance:
     needs: [ create-exe-linux-and-upload-artifact ]
     runs-on: windows-latest
     steps:
