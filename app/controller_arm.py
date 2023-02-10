@@ -562,11 +562,20 @@ class controller_arm:
       decodedData = data
       return decodedData
     else:
-      if counter < 51:
+      if counter < 71:
+        numMins = 0
+        numSeconds = 0
         logString = "Sleeping 30 seconds before running the command another time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
         counter +=1 
-        logString = "Attempt "+str(counter)+ " out of 50. "
+        logString = "Attempt "+str(counter)+ " out of 70. "
+        lw.writeLogVerbose('acm', logString)
+        if counter % 2 == 0: #Even
+          numMins = counter/2
+        else: # Odd
+          numMins = (counter-1)/2
+          numSeconds = 30
+        logString = str(numMins)+" and "+str(numSeconds)+" have elapsed. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
