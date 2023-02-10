@@ -481,7 +481,7 @@ class controller_arm:
     lw.writeLogVerbose("acm", logString)
 
     if process.returncode == 0:
-      if counter < 16:
+      if counter < 31:
         imageNamesList = []
         imgsJSON = yaml.safe_load(data)  
         for image in imgsJSON['data']:
@@ -493,10 +493,19 @@ class controller_arm:
         if len(sortedImageList) >0:
           return data
         else:
-          logString = "Sleeping 30 seconds before running the command a second time in case a latency problem is causing a delay in image creation. "
+          logString = "Sleeping 30 seconds before running the command another time in case a latency problem is causing a delay in image creation. "
           lw.writeLogVerbose('acm', logString)
           counter +=1 
-          logString = "Attempt "+str(counter)+ " out of 15. "
+          logString = "Attempt "+str(counter)+ " out of 30. "
+          lw.writeLogVerbose('acm', logString)
+          numMins = 0
+          numSeconds = 0
+          if counter % 2 == 0: #Even
+            numMins = counter/2
+          else: # Odd
+            numMins = (counter-1)/2
+            numSeconds = 30
+          logString = str(numMins)+" and "+str(numSeconds)+" have elapsed. "
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
@@ -511,11 +520,20 @@ class controller_arm:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     else:
-      if counter < 16:
-        logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
+      if counter < 31:
+        logString = "Sleeping 30 seconds before running the command another time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
         counter +=1 
-        logString = "Attempt "+str(counter)+ " out of 15. "
+        logString = "Attempt "+str(counter)+ " out of 30. "
+        lw.writeLogVerbose('acm', logString)
+        numMins = 0
+        numSeconds = 0
+        if counter % 2 == 0: #Even
+          numMins = counter/2
+        else: # Odd
+          numMins = (counter-1)/2
+          numSeconds = 30
+        logString = str(numMins)+" and "+str(numSeconds)+" have elapsed. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
@@ -533,7 +551,7 @@ class controller_arm:
           lw.writeLogVerbose("shell", logString)
           logString = "Error: Return Code is: " + str(process.returncode)
           lw.writeLogVerbose("shell", logString)
-          logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
+          logString = "ERROR: Failed to return Json response from invokation of the `az graph query -q Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates'` command.  Halting the program so that you can debug the cause of the problem."
           lw.writeLogVerbose("acm", logString)
           sys.exit(1)
 
@@ -563,13 +581,13 @@ class controller_arm:
       return decodedData
     else:
       if counter < 71:
-        numMins = 0
-        numSeconds = 0
         logString = "Sleeping 30 seconds before running the command another time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
         counter +=1 
         logString = "Attempt "+str(counter)+ " out of 70. "
         lw.writeLogVerbose('acm', logString)
+        numMins = 0
+        numSeconds = 0
         if counter % 2 == 0: #Even
           numMins = counter/2
         else: # Odd
