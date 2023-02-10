@@ -813,7 +813,7 @@ class command_builder:
       sys.exit(1)
     return value
 
-  def mostRecentImageCustomFunction_ARM(self, systemConfig, instance, tool, keyDir):
+  def mostRecentImageCustomFunction_ARM(self, systemConfig, instance, tool, keyDir, counter=0):
     lw = log_writer()
     cfp = config_fileprocessor()
     carm = controller_arm()
@@ -839,9 +839,17 @@ class command_builder:
     if len(sortedImageList) >0:
       value = sortedImageList[-1]
     else:
-      logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
-      print(logString)
-      sys.exit(1)
+      if counter < 21: # Retry for up to 10 minutes
+        logString = ""
+        logString = "WARNING: No images with names containing "+imageNameRoot+" exist yet in the resource group named "+resourceGroupName +" .  About to sleep 30 seconds before trying again.  Attempt "+str(counter)+" of 20. "
+        import time
+        time.sleep(30)
+        counter +=1
+        self.mostRecentImageCustomFunction_ARM(systemConfig, instance, tool, keyDir, counter)
+      else:
+        logString = "ERROR: No images with names containing "+imageNameRoot+" exist in the resource group named "+resourceGroupName 
+        print(logString)
+        sys.exit(1)
     return value
 
   def mostRecentImageCustomFunction_CloudFormation(self, systemConfig, instance, keyDir, outputDict):

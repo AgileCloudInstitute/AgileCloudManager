@@ -403,11 +403,11 @@ class controller_arm:
     if process.returncode == 0:
       #These next 20 lines added to help diagnose and handle azure latency problem with empty results and exit code 0
       if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(str(data).replace(" ","")) == 3):
-        if counter < 16:
+        if counter < 31:
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
           lw.writeLogVerbose('acm', logString)
           counter +=1 
-          logString = "Attempt "+str(counter)+ " out of 15. "
+          logString = "Attempt "+str(counter)+ " out of 30. "
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
@@ -427,11 +427,11 @@ class controller_arm:
         decodedData = data
         return decodedData
     else:
-      if counter < 16:
+      if counter < 31:
         logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
         counter +=1 
-        logString = "Attempt "+str(counter)+ " out of 15. "
+        logString = "Attempt "+str(counter)+ " out of 30. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
