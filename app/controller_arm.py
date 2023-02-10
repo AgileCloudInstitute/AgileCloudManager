@@ -286,6 +286,8 @@ class controller_arm:
       if imageTemplateNameRoot in imageTemplate['name']:
         imageTemplateNamesList.append(imageTemplate.get("name"))
     sortedImageTemplateList = list(sorted(imageTemplateNamesList))
+    print('sortedImageTemplateList is: ', str(sortedImageTemplateList))
+    print("len(sortedImageTemplateList) is: ", str(len(sortedImageTemplateList)))
     newestTemplateName = sortedImageTemplateList[-1]
     #Build the image from the template you just created.  
     buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
@@ -498,7 +500,7 @@ class controller_arm:
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
-          data = self.getShellJsonResponse(cmd,counter)
+          data = self.getImageListShellJsonResponse(cmd, imageNameRoot, counter)
           return data
       else:  
         logString = "Error: " + str(err)
@@ -517,7 +519,7 @@ class controller_arm:
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
-        data = self.getShellJsonResponse(cmd,counter)
+        data = self.getImageListShellJsonResponse(cmd, imageNameRoot, counter)
         return data 
       else:   
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
