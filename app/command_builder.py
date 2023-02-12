@@ -5,7 +5,6 @@ from config_fileprocessor import config_fileprocessor
 from controller_custom import controller_custom
 from controller_arm import controller_arm
 from command_formatter import command_formatter
-from command_runner import command_runner
 from log_writer import log_writer
 
 import datetime
@@ -225,7 +224,8 @@ class command_builder:
       else:
         print("a sourceField is: ", sourceField)
         print("a valuaCoordinates is: ", str(valueCoordinates))
-        print("ERROR: Only one . after $keys is allowed in configuration.  ")
+        logString = "ERROR: Only one . after $keys is allowed in configuration.  "
+        lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     keypairs_dict = {}
     with open(yamlKeysFileAndPath) as f:
@@ -283,7 +283,8 @@ class command_builder:
       else:
         print("b sourceField is: ", sourceField)
         print("b valuaCoordinates is: ", str(valueCoordinates))
-        print("ERROR: Only one . after $keys is allowed in configuration.  ")
+        logString = "ERROR: Only one . after $keys is allowed in configuration.  "
+        lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     keypairs_dict = {}
     with open(yamlKeysFileAndPath) as f:
@@ -330,7 +331,8 @@ class command_builder:
         traceback.print_stack()
         print("c sourceField is: ", sourceField)
         print("c valuaCoordinates is: ", str(valueCoordinates))
-        print("ERROR: Only one . after $keys is allowed in configuration.  ")
+        logString = "ERROR: Only one . after $keys is allowed in configuration.  "
+        lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     keypairs_dict = {}
     with open(yamlKeysFileAndPath) as f:
@@ -404,13 +406,11 @@ class command_builder:
       if (hasattr(callingClass, 'foundationOutput')) and (len(callingClass.foundationOutput) > 0):
         foundationOutputVariables = callingClass.foundationOutput
       else:
-        #print("abcdefghijklmnopqrstuvwxyz")
         foundationTool = systemConfig.get("foundation").get("controller")
-        #foundationOutputVariables = self.populateFoundationOutput(tool, systemConfig, keyDir, instance)
-        foundationOutputVariables = self.populateFoundationOutput(foundationTool, systemConfig, keyDir, instance) #replace tool with foundationTool 31 January 2023
+        foundationOutputVariables = self.populateFoundationOutput(foundationTool, systemConfig, keyDir, instance) 
       self.outputVariables = foundationOutputVariables
-      #print("self.outputVariables is: ", self.outputVariables)
-      #quit("cvbnm")
+      logString = "self.outputVariables is: "+str(self.outputVariables)
+      lw.writeLogVerbose("acm", logString)
     #iterate through each mapped variable to get the value
     for varName in mappedVariables:
       #THIRD, get the value for each variable
@@ -449,7 +449,6 @@ class command_builder:
     foundationTool = systemConfig.get("foundation").get("controller")
     tool = foundationTool
     print("tool is: ", tool)
-    #if (tool == "packer") or (tool == "terraform"):
     if (tool == "terraform"):
       foundationTool = systemConfig.get("foundation").get("controller")
       if foundationTool == "terraform":
@@ -460,21 +459,15 @@ class command_builder:
       else:
         print("Other output tools handled elsewhere in code, so this should never be triggered.")
         sys.exit(1)
-    #elif tool == 'customController': #replacing with next line 31 January 2023
     elif 'customController' in tool:
       cc = controller_custom()
-      #if '$customController.' in instance.get('controller'): #replacing with next line 31 January 2023
       if '$customController.' in systemConfig.get('foundation').get('controller'):
-        #controllerPathFoundation = instance.get('controller').replace('$customController.','') #replacing with next line 31 January 2023
-        #controllerCommandFoundation = instance.get('controllerCommand') #replacing with next line 31 January 2023
         controllerPathFoundation = systemConfig.get('foundation').replace('$customController.','')
         controllerCommandFoundation = systemConfig.get('foundation').get('controllerCommand')
         foundationMappedVariables = systemConfig.get('foundation').get('mappedVariables')
         foundationInstance = systemConfig.get('foundation')
         cc.runCustomController('output', systemConfig, controllerPathFoundation, controllerCommandFoundation, foundationMappedVariables, None, foundationInstance)
-      #if '$customControllerAPI.' in instance.get('controller'): #replacing with next line 31 January 2023
       if '$customControllerAPI.' in systemConfig.get('foundation').get('controller'):
-        #controllerPathFoundation = instance.get('controller').replace('$customControllerAPI.','') #replacing with next line 31 January 2023
         controllerPathFoundation = systemConfig.get('foundation').get('controller').replace('$customControllerAPI.','')
         foundationMappedVariables = systemConfig.get('foundation').get('mappedVariables')
         foundationInstance = systemConfig.get('foundation')
@@ -939,4 +932,3 @@ class command_builder:
         print(logString)
         sys.exit(1)
     return value
-

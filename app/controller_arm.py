@@ -533,7 +533,7 @@ class controller_arm:
         else: # Odd
           numMins = (counter-1)/2
           numSeconds = 30
-        logString = str(numMins)+" and "+str(numSeconds)+" have elapsed. "
+        logString = str(int(numMins))+" minutes and "+str(numSeconds)+" seconds have elapsed. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)

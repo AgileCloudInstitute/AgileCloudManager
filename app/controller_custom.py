@@ -121,8 +121,6 @@ class controller_custom:
     if platform.system() == 'Windows':
       pshellCommand = 'powershell -command "$Response = Invoke-WebRequest -Uri "+myurl+";$StatusCode = $Response.StatusCode;$StatusCode;$Response"'
       self.runShellCommand(pshellCommand)
-    #print("BREAKPOINT X")
-    #sys.exit(1)
     if (operation == "on") or (operation == "off"):
       self.postCommand(myurl, postJson)
     elif operation == "output":
@@ -131,8 +129,6 @@ class controller_custom:
       logString = "ERROR: Invalid value for operation.  You must specify either on, off, or output. The value given was: "+operation
       lw.writeLogVerbose("acm", logString)
       exit(1)
-    #if operation == "output":
-    #  quit("BREAKPOINT 0987654321")
 
   #@public
   def runShellCommand(self, commandToRun):
@@ -216,6 +212,7 @@ class controller_custom:
         exit(1)
 
   def getOutputs(self, myurl, source, counter=0):
+    self.outputVariables = []
     headers = {
       'content-type': 'application/json',
       'api-string': cliproc.inputVars.get('apiString')
@@ -280,7 +277,6 @@ class controller_custom:
       for item in res.json()['outputVars']:
         logString = "item is: "+ str(item)
         lw.writeLogVerbose("acm", logString)
-        #quit("0987654321acbdefghijklmnopqrstuvwxyz")
         self.outputVariables.append(item)
 
     if res.status_code == 500: #This indicates an error from the server.
@@ -297,4 +293,3 @@ class controller_custom:
         logString = "ERROR: GET request to custom controller did not return a 200 response even after retrying for "+ str(timeOutMins)+ " minutes. Check your cloud provider portal to make sure there are no orphaned resources.  Also, consider re-running the command again and consider posting a request on our GitHub site for the time out interval to be increased.  "
         lw.writeLogVerbose("acm", logString)
         exit(1)
-    #quit("zyxwvutsrqponmlkjihgfedcba")
