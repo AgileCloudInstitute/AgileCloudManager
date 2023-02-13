@@ -84,6 +84,19 @@ class workflow_system:
         else:
           logString = "WARNING: This network foundation does not have any image builds associated with it.  If you intend not to build images in this network, then everything is fine.  But if you do want to build images with this network, then check your configuration and re-run this command.  "
           lw.writeLogVerbose("acm", logString)
+      elif foundationTool.startswith("$customControllerAPI."):
+        controllerPath = foundationTool.replace("$customControllerAPI.","")
+        #controllerCommand = systemConfig.get("foundation").get("controllerCommand")
+        mappedVariables = systemConfig.get("foundation").get("mappedVariables")
+        serviceType = None
+        instance = systemConfig.get("foundation")
+        ccust = controller_custom() 
+        ccust.runCustomControllerAPI('on', systemConfig, controllerPath, mappedVariables, serviceType, instance)
+        if "images" in systemConfig.get("foundation").keys():
+          cimg.buildImages(systemConfig, keyDir)
+        else:
+          logString = "WARNING: This network foundation does not have any image builds associated with it.  If you intend not to build images in this network, then everything is fine.  But if you do want to build images with this network, then check your configuration and re-run this command.  "
+          lw.writeLogVerbose("acm", logString)
       else:
         logString = "The following value for foundationTool from your systemConfig is not supported: " + foundationTool
         lw.writeLogVerbose("acm", logString)
@@ -149,6 +162,13 @@ class workflow_system:
         instance = systemConfig.get("foundation")
         ccust = controller_custom()
         ccust.runCustomController('off', systemConfig, controllerPath, controllerCommand, mappedVariables, serviceType, instance)
+      elif foundationTool.startswith('$customControllerAPI.'):
+        controllerPath = foundationTool.replace("$customController.","")
+        mappedVariables = systemConfig.get("foundation").get("mappedVariables")
+        serviceType = None
+        instance = systemConfig.get("foundation")
+        ccust = controller_custom()
+        ccust.runCustomControllerAPI('off', systemConfig, controllerPath, mappedVariables, serviceType, instance)
       else:
         logString = "The following value for foundationTool from your systemConfig is not supported: " + foundationTool
         lw.writeLogVerbose("acm", logString)
@@ -165,7 +185,7 @@ class workflow_system:
   def onServices(self, cm, ct, cc, level, systemInstanceName, systemConfig):
     wst_on = workflow_service_type()
     typesToCreate = systemConfig.get("serviceTypes")
-    for serviceType in typesToCreate:
+    for serviceType in typesToCreate: 
       if (serviceType != "networkFoundation") and (serviceType != "subnetForBuilds") and (serviceType != "images"): #Make work item to check if this check for these 3 service types is still necessary.
         wst_on.onServiceType(cm, ct, cc, level, systemInstanceName, systemConfig, serviceType, typesToCreate)
 

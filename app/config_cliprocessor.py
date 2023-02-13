@@ -5,7 +5,9 @@ import os
 import sys
 from pathlib import Path 
 import platform
+import random, string
 
+from command_formatter import command_formatter
 from command_formatter import command_formatter
 
 #The following variables will need to be returned as properties.
@@ -21,7 +23,10 @@ serviceInstance = ''
 test = False
 testType = ''
 inputVars = {}
-acmVersion = '1.0'
+minSetup = ''
+apiString = ''
+apiStringLocation = ''
+acmVersion = '1.1'
 
 def getAcmUserHome():
     if platform.system() == 'Windows':
@@ -32,6 +37,10 @@ def getAcmUserHome():
     if not os.path.exists(acmUserHome):
       os.makedirs(acmUserHome, exist_ok=True) 
     return acmUserHome
+
+def randomword(length):
+   letters = string.ascii_lowercase
+   return ''.join(random.choice(letters) for i in range(length))
 
 #The following function will set all the values for the returned properties
 def processInputArgs(inputArgs):
@@ -47,6 +56,7 @@ def processInputArgs(inputArgs):
     global serviceType
     global serviceInstance
     global inputVars
+    global minSetup
     global acmVersion
     cmdfrmtr = command_formatter()
     sourceKeys = str(Path.home())+cmdfrmtr.getSlashForOS()+'acmconfig'
@@ -68,6 +78,12 @@ def processInputArgs(inputArgs):
     dirOfOutput = acmUserHome + '\\keys\\' 
     dirOfOutput = cmdfrmtr.formatPathForOS(dirOfOutput)
     varsPath = acmAdmin + cmdfrmtr.getSlashForOS() + 'vars'
+
+    cfmtr = command_formatter()
+    apiString = randomword(40)
+    apiStringLocation = dirOfOutput+cfmtr.getSlashForOS()+"custom.txt"
+    with open(apiStringLocation, 'w') as new_file:
+      new_file.write(apiString)
 
     dynamicVarsPath = acmAdmin+'\\dynamicVars\\'
     dynamicVarsPath = cmdfrmtr.formatPathForOS(dynamicVarsPath)
@@ -139,6 +155,10 @@ def processInputArgs(inputArgs):
               serviceType = val
             elif key == "serviceInstance":
               serviceInstance = val
+          elif (i=="min") and (inputArgs[1]=="setup") and (len(inputArgs) > 3):
+            # set the value of minSetup for local setup if user specifies to do so.
+            minSetup = True
+            print("minSetup is: ", str(minSetup))
           else:
             logString = "Your input contained a malformed parameter: " + i
             print(logString)
@@ -176,6 +196,8 @@ def processInputArgs(inputArgs):
       'keySource': keySource,
       'pub': pub,
       'sec': sec,
+      'apiString': apiString,
+      'apiStringLocation': apiStringLocation,
       'keysDir': keysDir,
       'sourceKeys': sourceKeys,
       'sourceRepo': sourceRepo,
@@ -183,6 +205,7 @@ def processInputArgs(inputArgs):
       'repoPublic': repoPublic,
       "test": test,
       "testType": testType, 
+      "minSetup": minSetup,
       "systemName": systemName,
       'serviceType': serviceType,
       'serviceInstance': serviceInstance,
