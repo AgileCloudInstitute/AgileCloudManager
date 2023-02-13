@@ -286,13 +286,15 @@ class controller_arm:
       if imageTemplateNameRoot in imageTemplate['name']:
         imageTemplateNamesList.append(imageTemplate.get("name"))
     sortedImageTemplateList = list(sorted(imageTemplateNamesList))
+    print('sortedImageTemplateList is: ', str(sortedImageTemplateList))
+    print("len(sortedImageTemplateList) is: ", str(len(sortedImageTemplateList)))
     newestTemplateName = sortedImageTemplateList[-1]
     #Build the image from the template you just created.  
     buildImageCommand = 'az resource invoke-action --resource-group '+resourceGroupName+' --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
     logString = "buildImageCommand is: "+'az resource invoke-action --resource-group *** --resource-type  Microsoft.VirtualMachineImages/imageTemplates -n '+newestTemplateName+' --action Run '
     lw = log_writer()
     lw.writeLogVerbose("acm", logString)
-    jsonResponse = self.getShellJsonResponse(buildImageCommand)
+    jsonResponse = self.getShellBuildImageResponse(buildImageCommand)
     roleFile = config_cliprocessor.inputVars.get('userCallingDir') + 'ad-role.json'
     try:
       os.remove(roleFile)
@@ -403,15 +405,15 @@ class controller_arm:
     if process.returncode == 0:
       #These next 20 lines added to help diagnose and handle azure latency problem with empty results and exit code 0
       if ("az resource list --resource-group" in cmd) and ("--resource-type Microsoft.Compute/images" in cmd) and (len(str(data).replace(" ","")) == 3):
-        if counter < 16:
+        if counter < 31:
           logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
           lw.writeLogVerbose('acm', logString)
-          logString = "Attempt "+str(counter)+ " out of 15. "
+          counter +=1 
+          logString = "Attempt "+str(counter)+ " out of 30. "
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
           data = self.getShellJsonResponse(cmd,counter)
-          counter +=1 
           return data
         else:  
           logString = "Error: " + str(err)
@@ -427,15 +429,15 @@ class controller_arm:
         decodedData = data
         return decodedData
     else:
-      if counter < 16:
-        logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
+      if counter < 31:
+        logString = "Sleeping 30 seconds before running the command another time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
-        logString = "Attempt "+str(counter)+ " out of 15. "
+        counter +=1 
+        logString = "Attempt "+str(counter)+ " out of 30. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
         data = self.getShellJsonResponse(cmd,counter)
-        counter +=1 
         return data
       else:  
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
@@ -479,26 +481,35 @@ class controller_arm:
     lw.writeLogVerbose("acm", logString)
 
     if process.returncode == 0:
-      if counter < 16:
+      if counter < 31:
         imageNamesList = []
         imgsJSON = yaml.safe_load(data)  
         for image in imgsJSON['data']:
           if imageNameRoot in image['name']:
             imageNamesList.append(image.get("name"))
         sortedImageList = list(sorted(imageNamesList))
-        logString = "Number of matching images found so far is: " + str(sortedImageList)
+        logString = "List of matching images found so far is: " + str(sortedImageList)
         lw.writeLogVerbose("acm", logString)
         if len(sortedImageList) >0:
           return data
         else:
-          logString = "Sleeping 30 seconds before running the command a second time in case a latency problem is causing a delay in image creation. "
+          logString = "Sleeping 30 seconds before running the command another time in case a latency problem is causing a delay in image creation. "
           lw.writeLogVerbose('acm', logString)
-          logString = "Attempt "+str(counter)+ " out of 15. "
+          counter +=1 
+          logString = "Attempt "+str(counter)+ " out of 30. "
+          lw.writeLogVerbose('acm', logString)
+          numMins = 0
+          numSeconds = 0
+          if counter % 2 == 0: #Even
+            numMins = counter/2
+          else: # Odd
+            numMins = (counter-1)/2
+            numSeconds = 30
+          logString = str(numMins)+" and "+str(numSeconds)+" have elapsed. "
           lw.writeLogVerbose('acm', logString)
           import time
           time.sleep(30)
-          counter +=1 
-          data = self.getShellJsonResponse(cmd,counter)
+          data = self.getImageListShellJsonResponse(cmd, imageNameRoot, counter)
           return data
       else:  
         logString = "Error: " + str(err)
@@ -509,15 +520,24 @@ class controller_arm:
         lw.writeLogVerbose("acm", logString)
         sys.exit(1)
     else:
-      if counter < 16:
-        logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the attempt to fail. "
+      if counter < 31:
+        logString = "Sleeping 30 seconds before running the command another time in case a latency problem caused the attempt to fail. "
         lw.writeLogVerbose('acm', logString)
-        logString = "Attempt "+str(counter)+ " out of 15. "
+        counter +=1 
+        logString = "Attempt "+str(counter)+ " out of 30. "
+        lw.writeLogVerbose('acm', logString)
+        numMins = 0
+        numSeconds = 0
+        if counter % 2 == 0: #Even
+          numMins = counter/2
+        else: # Odd
+          numMins = (counter-1)/2
+          numSeconds = 30
+        logString = str(int(numMins))+" minutes and "+str(numSeconds)+" seconds have elapsed. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
-        data = self.getShellJsonResponse(cmd,counter)
-        counter +=1 
+        data = self.getImageListShellJsonResponse(cmd, imageNameRoot, counter)
         return data 
       else:   
         if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
@@ -531,6 +551,66 @@ class controller_arm:
           lw.writeLogVerbose("shell", logString)
           logString = "Error: Return Code is: " + str(process.returncode)
           lw.writeLogVerbose("shell", logString)
-          logString = "ERROR: Failed to return Json response.  Halting the program so that you can debug the cause of the problem."
+          logString = "ERROR: Failed to return Json response from invokation of the `az graph query -q Resources | where type =~ 'Microsoft.VirtualMachineImages/imageTemplates'` command.  Halting the program so that you can debug the cause of the problem."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
+
+  #@private
+  def getShellBuildImageResponse(self, cmd,counter=0):
+    lw = log_writer()
+    process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
+    data = process.stdout
+    err = process.stderr
+    logString = "data string is: " + data
+    lw.writeLogVerbose("acm", logString)
+    logString = "err is: " + str(err)
+    lw.writeLogVerbose("acm", logString)
+    logString = "process.returncode is: " + str(process.returncode)
+    lw.writeLogVerbose("acm", logString)
+    #These next 6 lines added to help diagnose azure latency problem with empty results and exit code 0
+    logString = "type(data) is: "+str(type(data))
+    lw.writeLogVerbose("acm", logString)
+    logString = "type(list(data)) is: "+str(type(list(data)))
+    lw.writeLogVerbose("acm", logString)
+    logString = "len(list(data)) is: "+ str(len(list(data)))
+    lw.writeLogVerbose("acm", logString)
+    if process.returncode == 0:
+      logString = str(data)
+      lw.writeLogVerbose("shell", logString)
+      decodedData = data
+      return decodedData
+    else:
+      if counter < 71:
+        logString = "Sleeping 30 seconds before running the command another time in case a latency problem caused the attempt to fail. "
+        lw.writeLogVerbose('acm', logString)
+        counter +=1 
+        logString = "Attempt "+str(counter)+ " out of 70. "
+        lw.writeLogVerbose('acm', logString)
+        numMins = 0
+        numSeconds = 0
+        if counter % 2 == 0: #Even
+          numMins = counter/2
+        else: # Odd
+          numMins = (counter-1)/2
+          numSeconds = 30
+        logString = str(numMins)+" and "+str(numSeconds)+" have elapsed. "
+        lw.writeLogVerbose('acm', logString)
+        import time
+        time.sleep(30)
+        data = self.getShellBuildImageResponse(cmd,counter)
+        return data
+      else:  
+        if "(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found." in str(err):
+          logString = "WARNING: "+"(FeatureNotFound) The feature 'VirtualMachineTemplatePreview' could not be found."
+          lw.writeLogVerbose('shell', logString)
+          logString = "Continuing because this error message is often benign.  If you encounter downstream problems resulting from this, please report your use case so that we can examine the cause. "
+          lw.writeLogVerbose('acm', logString)
+          return decodedData
+        else:
+          logString = "Error: " + str(err)
+          lw.writeLogVerbose("shell", logString)
+          logString = "Error: Return Code is: " + str(process.returncode)
+          lw.writeLogVerbose("shell", logString)
+          logString = "ERROR: Failed to return Json response from invocation of `az resource invoke-action` command.  Halting the program so that you can debug the cause of the problem."
           lw.writeLogVerbose("acm", logString)
           sys.exit(1)

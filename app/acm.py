@@ -32,7 +32,7 @@ def runInfraCommands():
       ws.runSetup()
     elif cliproc.command == 'off':
       ws.undoSetup() 
-
+ 
   #Validating config after setup is completed because setup creates the config location
   if (cliproc.domain == 'appliance') or (cliproc.domain == 'foundation') or (cliproc.domain == 'services') or (cliproc.domain == 'serviceType') or (cliproc.domain == 'serviceInstance'):
     print("inside acm.py, about to call cv.processAcmConfig()")
@@ -77,4 +77,5 @@ def runInfraCommands():
 ##############################################################################
 
 cliproc.processInputArgs(inputArgs) 
+
 runInfraCommands()
