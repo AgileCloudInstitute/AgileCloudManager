@@ -1,25 +1,25 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
-from command_runner import command_runner 
-from command_formatter import command_formatter
-from config_fileprocessor import config_fileprocessor 
-from log_writer import log_writer
+from command_runner import command_runner   
+from command_formatter import command_formatter  
+from config_fileprocessor import config_fileprocessor   
+from log_writer import log_writer  
 
-import os
-from pathlib import Path 
-import shutil 
-import sys
-import requests 
-import platform
-import zipfile
-import tarfile
-import shutil
-import yaml
-import re
-
-class workflow_setup:
+import os  
+from pathlib import Path   
+import shutil   
+import sys  
+import requests   
+import platform  
+import zipfile  
+import tarfile  
+import shutil  
+import yaml  
+import re  
   
+class workflow_setup:  
+    
   def __init__(self):  
     pass
 
