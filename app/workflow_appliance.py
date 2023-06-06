@@ -1,20 +1,20 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
-from config_fileprocessor import config_fileprocessor
-from workflow_system import workflow_system
-from log_writer import log_writer
-from changes_manifest import changes_manifest
-from changes_taxonomy import changes_taxonomy
-from changes_comparer import changes_comparer
-
-import sys
-
-class workflow_appliance:
+from config_fileprocessor import config_fileprocessor  
+from workflow_system import workflow_system  
+from log_writer import log_writer  
+from changes_manifest import changes_manifest  
+from changes_taxonomy import changes_taxonomy  
+from changes_comparer import changes_comparer  
   
-  def __init__(self):  
-    pass
- 
+import sys  
+  
+class workflow_appliance:  
+    
+  def __init__(self):    
+    pass  
+   
   #@public
   def onAppliance(self):
     import config_cliprocessor

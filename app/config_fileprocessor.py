@@ -11,13 +11,13 @@ class config_fileprocessor:
 
   def __init__(self):  
     pass
-
-  #@public
-  def getApplianceConfig(self, yamlFileAndPath):
-    with open(yamlFileAndPath) as f:  
-      topLevel_dict = yaml.safe_load(f)
-    return topLevel_dict
- 
+  
+  #@public  
+  def getApplianceConfig(self, yamlFileAndPath):  
+    with open(yamlFileAndPath) as f:    
+      topLevel_dict = yaml.safe_load(f)  
+    return topLevel_dict  
+   
   #@public
   def getSystemConfig(self, applianceConfig, systemName):
     cfmtr = command_formatter()
