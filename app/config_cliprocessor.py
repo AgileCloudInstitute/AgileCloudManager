@@ -26,7 +26,7 @@ inputVars = {}
 minSetup = ''
 apiString = ''
 apiStringLocation = ''
-acmVersion = '1.1'
+acmVersion = '1.2'
 
 def getAcmUserHome():
     if platform.system() == 'Windows':
