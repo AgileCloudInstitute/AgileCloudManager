@@ -1,23 +1,23 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
-import json  
-import yaml  
-import re  
-import sys    
-import requests  
-import base64  
+import json
+import yaml
+import re
+import sys  
+import requests
+import base64
 
-from command_runner import command_runner  
-from command_formatter import command_formatter  
-from controller_terraform import controller_terraform  
-from log_writer import log_writer  
-from config_fileprocessor import config_fileprocessor  
+from command_runner import command_runner
+from command_formatter import command_formatter
+from controller_terraform import controller_terraform
+from log_writer import log_writer
+from config_fileprocessor import config_fileprocessor
+
+class controller_release:
   
-class controller_release:  
-  
-  def __init__(self):    
-    pass  
+  def __init__(self):  
+    pass
  
   #@public
   def onPipeline(self, serviceType, systemConfig, instance):

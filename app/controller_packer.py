@@ -10,16 +10,16 @@ from command_formatter import command_formatter
 from log_writer import log_writer
   
 class controller_packer:
-    
-  foundationOutput = {}  
-  ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')  
-  success_packer = ''  
-    
-  def __init__(self):    
-    pass  
   
-  #@public  
-  def packerCrudOperation(self, operation, systemConfig, image):  
+  foundationOutput = {}
+  ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+  success_packer = ''
+  
+  def __init__(self):  
+    pass
+  
+  #@public
+  def packerCrudOperation(self, operation, systemConfig, image):
     import config_cliprocessor
     lw = log_writer()
     cf = command_formatter()

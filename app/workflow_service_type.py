@@ -3,22 +3,22 @@
 
 import sys
 
-from command_runner import command_runner  
-from controller_custom import controller_custom  
-from controller_terraform import controller_terraform  
-from controller_release import controller_release  
-from controller_azdoproject import controller_azdoproject  
-from controller_tfbackendazrm import controller_tfbackendazrm  
-from controller_arm import controller_arm  
-from controller_cf import controller_cf  
-from log_writer import log_writer  
-from config_fileprocessor import config_fileprocessor  
-from changes_manifest import changes_manifest  
-from changes_taxonomy import changes_taxonomy  
-from changes_comparer import changes_comparer  
+from command_runner import command_runner
+from controller_custom import controller_custom
+from controller_terraform import controller_terraform
+from controller_release import controller_release
+from controller_azdoproject import controller_azdoproject
+from controller_tfbackendazrm import controller_tfbackendazrm
+from controller_arm import controller_arm
+from controller_cf import controller_cf
+from log_writer import log_writer
+from config_fileprocessor import config_fileprocessor
+from changes_manifest import changes_manifest
+from changes_taxonomy import changes_taxonomy
+from changes_comparer import changes_comparer
+
+class workflow_service_type:
   
-class workflow_service_type:  
-    
   def __init__(self):  
     pass
 

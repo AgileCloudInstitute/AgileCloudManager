@@ -16,7 +16,7 @@ To begin hands-on work immediately, engineers can use the working demos at [Agil
   
 Our working demos undergo frequent automated testing as part of our CICD process.  Therefore, we strongly recommend that you begin hands-on work with our working demos as explained in our website.  
   
-The documentation in our website explains in detail how you can use the Agile Cloud Manager to perform normal debugging in the course of your development and operations work.  The minimum documentation that an engineer should read is included in a list of prerequisites in the hands-on coding instructions at [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
+The documentation in our website explains in detail how you can use the Agile Cloud Manager to perform normal debugging in the course of your development and operations work.  The minimum documentation that an engineer should read is included in a list of 6 prerequisites in the hands-on coding instructions at [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
   
 # Terms Of Service And License  
 Use of our software in any form and use of our training/documentation is subject our [Terms of Service](https://AgileCloudInstitute.io/terms) and licenses.  

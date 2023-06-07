@@ -16,8 +16,8 @@ class controller_image:
   
   def __init__(self):  
     pass
-  
-  #@public     
+
+  #@public 
   def buildImages(self, systemConfig, keyDir):
     lw = log_writer()
     cfmtr = command_formatter()

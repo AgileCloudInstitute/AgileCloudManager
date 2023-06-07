@@ -10,21 +10,21 @@ from distutils.dir_util import copy_tree
 import shutil
 import subprocess
 import re
-  
+
 from log_writer import log_writer
 from command_formatter import command_formatter
 from controller_azureadmin import controller_azureadmin
 from controller_azdoproject import controller_azdoproject
-    
-class controller_terraform:  
-    
-  tfOutputDict = {}  
-  foundationApply = True  
-  ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')  
-  terraformResult = ''  
 
-  def __init__(self):    
-    pass  
+class controller_terraform:
+
+  tfOutputDict = {}
+  foundationApply = True
+  ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+  terraformResult = ''
+
+  def __init__(self):  
+    pass
  
   #@public
   def terraformCrudOperation(self, operation, keyDir, systemConfig, instance, typeParent, typeName, typeGrandChild, typeInstanceName):

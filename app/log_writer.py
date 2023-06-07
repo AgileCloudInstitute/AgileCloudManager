@@ -1,18 +1,18 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
-import io  
-import os   
-import time  
-import calendar  
-import sys  
+import io
+import os 
+import time
+import calendar
+import sys
 
-from command_formatter import command_formatter  
+from command_formatter import command_formatter
+
+class log_writer:
   
-class log_writer:  
-    
   def __init__(self):  
-    pass  
+    pass
  
   #@public
   def replaceLogFile(self):

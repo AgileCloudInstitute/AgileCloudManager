@@ -10,20 +10,20 @@ import platform
 import pathlib
 import shutil
 import json
-  
+
 class controller_azureadmin:
-    
+  
   def __init__(self):  
     pass
-   
+ 
   #@public
   def cleanUp(self, operation, systemConfig, instance, typeName, instanceName, destinationCallInstance, myTfCtrlr):
     import config_cliprocessor
-    crun = command_runner()  
-    myKeysAssmblr = config_keysassembler()  
-    myCmdFrmtr = command_formatter()  
-    myLogWriter = log_writer()  
-    if operation == "on":  
+    crun = command_runner()
+    myKeysAssmblr = config_keysassembler()
+    myCmdFrmtr = command_formatter()
+    myLogWriter = log_writer()
+    if operation == "on":
       if myTfCtrlr.terraformResult == "Applied":
         dest_keys_file_and_path = myCmdFrmtr.getKeyFileLocation(instanceName)
         ### Save the newly-generated keys

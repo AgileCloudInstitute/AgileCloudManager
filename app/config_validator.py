@@ -9,16 +9,16 @@ class config_validator:
   
   def __init__(self):  
     pass
-   
-  #@public  
-  def processAcmConfig(self):  
-    import config_cliprocessor  
-    cfp = config_fileprocessor()  
-    infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')  
-    #First, validate that every system has a unique name in acm.yaml  
-    typesList = []  
-    with open(infraConfigFileAndPath, 'r') as f:  
-      for row in enumerate(f):  
+ 
+  #@public
+  def processAcmConfig(self):
+    import config_cliprocessor
+    cfp = config_fileprocessor()
+    infraConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    #First, validate that every system has a unique name in acm.yaml
+    typesList = []
+    with open(infraConfigFileAndPath, 'r') as f:
+      for row in enumerate(f):
         if (not row[1].startswith(" ")) and(not row[1].startswith("#")) and (len(row[1].replace(" ","").replace("\n","")) > 0):
           typeName = row[1].replace(" ","").replace("\n","")
           typesList.append(typeName)

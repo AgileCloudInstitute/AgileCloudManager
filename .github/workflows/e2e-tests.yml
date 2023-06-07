@@ -103,6 +103,14 @@ jobs:
         uses: ./.github/actions/acm-services-on-ubuntu
         with:
           system_name: tfbackend
+      - id: Acm_Foundation_On_admin_Ubuntu
+        uses: ./.github/actions/acm-foundation-on-ubuntu
+        with:
+          system_name: admin
+      - id: Acm_Services_On_admin_Ubuntu
+        uses: ./.github/actions/acm-services-on-ubuntu
+        with:
+          system_name: admin
       - id: Acm_Foundation_On_agents_Ubuntu
         uses: ./.github/actions/acm-foundation-on-ubuntu
         with:
@@ -119,6 +127,14 @@ jobs:
         uses: ./.github/actions/acm-foundation-off-ubuntu
         with:
           system_name: agents
+      - id: Acm_Services_Off_admin_Ubuntu
+        uses: ./.github/actions/acm-services-off-ubuntu
+        with:
+          system_name: admin
+      - id: Acm_Foundation_Off_admin_Ubuntu
+        uses: ./.github/actions/acm-foundation-off-ubuntu
+        with:
+          system_name: admin
       - id: Acm_Services_Off_tfbackend_Ubuntu
         uses: ./.github/actions/acm-services-off-ubuntu
         with:
@@ -838,6 +854,14 @@ jobs:
         uses: ./.github/actions/acm-services-on-windows
         with:
           system_name: tfbackend
+      - id: Acm_Foundation_On_Admin_Windows
+        uses: ./.github/actions/acm-foundation-on-windows
+        with:
+          system_name: admin
+      - id: Acm_Services_On_Admin_Windows
+        uses: ./.github/actions/acm-services-on-windows
+        with:
+          system_name: admin
       - id: Acm_Foundation_On_Agents_Windows
         uses: ./.github/actions/acm-foundation-on-windows
         with:
@@ -854,6 +878,14 @@ jobs:
         uses: ./.github/actions/acm-foundation-off-windows
         with:
           system_name: agents
+      - id: Acm_Services_Off_Admin_Windows
+        uses: ./.github/actions/acm-services-off-windows
+        with:
+          system_name: admin
+      - id: Acm_Foundation_Off_Admin_Windows
+        uses: ./.github/actions/acm-foundation-off-windows
+        with:
+          system_name: admin
       - id: Acm_Services_Off_tfbackend_Windows
         uses: ./.github/actions/acm-services-off-windows
         with:
@@ -1030,7 +1062,7 @@ jobs:
           rm /usr/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-custom-inazdo-appliance:
-    needs: [create-exe-linux-and-upload-artifact] 
+    needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

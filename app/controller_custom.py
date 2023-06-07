@@ -1,17 +1,17 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
-import subprocess  
-import re  
-import sys  
-import json  
-import os  
-import requests  
-import time  
+import subprocess
+import re
+import sys
+import json
+import os
+import requests
+import time
 
-from command_formatter import command_formatter  
-from log_writer import log_writer  
-import config_cliprocessor as cliproc  
+from command_formatter import command_formatter
+from log_writer import log_writer
+import config_cliprocessor as cliproc
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 timeOutMins = 1

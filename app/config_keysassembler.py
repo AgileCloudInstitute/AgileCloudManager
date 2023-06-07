@@ -1,15 +1,15 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
-import os   
-import platform  
+import os 
+import platform
 
-from log_writer import log_writer  
-from config_fileprocessor import config_fileprocessor  
-from command_formatter import command_formatter  
-  
+from log_writer import log_writer
+from config_fileprocessor import config_fileprocessor
+from command_formatter import command_formatter
+
 class config_keysassembler:
-    
+  
   def __init__(self):  
     pass
 

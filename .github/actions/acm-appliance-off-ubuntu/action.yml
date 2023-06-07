@@ -8,5 +8,5 @@ runs:
       run: |
         PATH=$PATH:/home/runner/acmhome/;export PATH
         cd /home/runner/testdir
-        echo ".................about to run e2e test"  
+        echo ".................about to run e2e test"
         acm appliance off

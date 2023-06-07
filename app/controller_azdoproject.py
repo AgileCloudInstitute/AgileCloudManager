@@ -4,23 +4,23 @@
 import json
 import platform 
 import sys
+
+from config_fileprocessor import config_fileprocessor
+from command_runner import command_runner
+from command_formatter import command_formatter
+from log_writer import log_writer
+
+class controller_azdoproject:
   
-from config_fileprocessor import config_fileprocessor  
-from command_runner import command_runner  
-from command_formatter import command_formatter  
-from log_writer import log_writer  
-  
-class controller_azdoproject:  
-  
-  def __init__(self):    
-    pass  
+  def __init__(self):  
+    pass
  
-  #@public  
-  def onProject(self, serviceType, systemConfig, instance):  
-    import config_cliprocessor  
-    fproc = config_fileprocessor()  
-    cmd_fmrtr = command_formatter()  
-    lw = log_writer()  
+  #@public
+  def onProject(self, serviceType, systemConfig, instance):
+    import config_cliprocessor
+    fproc = config_fileprocessor()
+    cmd_fmrtr = command_formatter()
+    lw = log_writer()
     crnr = command_runner()
     from controller_terraform import controller_terraform
     ctf = controller_terraform()

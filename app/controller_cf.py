@@ -18,7 +18,7 @@ class controller_cf:
   
   def __init__(self):  
     pass
-   
+ 
   #@public
   def createStack(self, systemConfig, instance, keyDir, caller, serviceType, instName):
     import config_cliprocessor
@@ -133,9 +133,7 @@ class controller_cf:
     cf = command_formatter()
     lw = log_writer()
     cfp = config_fileprocessor()
-    #This next line adds requirement that region must be specified in the foundation block.
     region = systemConfig.get("foundation").get("region")
-    print("1 region is: ", region)
     if region.startswith("$config"):
       region = cfp.getValueFromConfig(keyDir, region, "region")
     self.configureSecrets(keyDir,region)
@@ -150,16 +148,12 @@ class controller_cf:
     elif caller == 'image':
       templateName = instance.get("templateName")
       stackName = instance.get("stackName")
-
     if stackName.startswith("$config"):
       stackName = cfp.getValueFromConfig(keyDir, stackName, "stackName")
-    
+
     thisStackId = self.getStackId(stackName)
     logString = 'thisStackId is: '+ thisStackId
     lw.writeLogVerbose("acm", logString)
-    if caller == 'networkFoundation':
-      self.deleteImagesAndSnapshots(region, thisStackId, systemConfig, keyDir)
-
     if thisStackId == 'none':
       logString = 'WARNING: No stacks with the name '+stackName+' are currently in the CREATE_COMPLETE state when this run is initiated.  We are therefore skipping the delete process for this stack and continuing the program flow to proceed with any downstream steps.  '
       lw.writeLogVerbose("acm", logString)
@@ -173,112 +167,6 @@ class controller_cf:
       lw.writeLogVerbose("acm", logString)
       self.trackStackProgress(thisStackId, region)
     self.destroySecrets()
-
-  #@private
-  def deleteImagesAndSnapshots(self, region, thisStackId, systemConfig, keyDir, counter=0):
-    lw = log_writer()
-    cr = command_runner()
-    cfp = config_fileprocessor()
-    #Get AWS user id and image name root for use in subsequent cli commands
-    if isinstance(thisStackId, str):
-      if (":" in thisStackId) and (thisStackId.count(":")==5):
-        awsUserId = thisStackId.split(":")[4]
-        if (awsUserId.isdigit()) and (len(awsUserId)==12):
-          if "images" in systemConfig.get("foundation").keys():
-            for image in systemConfig.get("foundation").get("images"):
-              imageNameRoot = image.get("imageName")
-              if imageNameRoot.startswith("$config"): 
-                imageNameRoot = cfp.getValueFromConfig(keyDir, imageNameRoot, "imageName")
-        else:
-          logString = "ERROR: aws user id is malformed: "+awsUserId
-          lw.writeLogVerbose("acm", logString)
-          exit(1)
-      else:
-        logString = "ERROR: Malformed stack id does not contain 5 instances colon separator character : "+thisStackId
-        lw.writeLogVerbose("acm", logString)
-        exit(1)
-    else:
-      logString = "ERROR: StackId is not a string."
-      lw.writeLogVerbose("acm", logString)
-    
-    # 1. Return image id and snapshot id for each of all images that contain root name and that were created by current user
-    getImageAndSnapshotIdsCommand='aws ec2 describe-images --owners '+awsUserId+' --filters "Name=name,Values='+imageNameRoot+'*" --query "Images[*].[ImageId,BlockDeviceMappings[].Ebs[].SnapshotId]"[] --no-paginate'
-    logString = "getImageAndSnapshotIdsCommand is: "+getImageAndSnapshotIdsCommand
-    lw.writeLogVerbose("acm", logString)
-    jsonResponse = cr.getShellJsonResponse(getImageAndSnapshotIdsCommand)
-    responseData = yaml.safe_load(jsonResponse)
-    if len(responseData) == 0:
-      logString = "INFO: No images or snapshots were returned that included the characters "+imageNameRoot+" and that are owned by the user with user id "+awsUserId
-      lw.writeLogVerbose("acm", logString)
-    else:
-      logString = "Number of items image and snapshot ids list is: "+str(len(responseData))
-      lw.writeLogVerbose("acm", logString)
-      imageIdsList = []
-      snapshotsIdsList = []
-      for item in responseData:
-        if type(item) == str:
-          if item.startswith("ami-"):
-            imageIdsList.append(item)
-        elif type(item) == list:
-          for snapshot in item:
-            if snapshot.startswith("snap-"):
-              snapshotsIdsList.append(snapshot)
-      # 2. Deregister each image by id
-      logString = "About to deregister each image by looping through the following list of image ids: "+str(imageIdsList)
-      lw.writeLogVerbose("acm", logString)
-      for thisImageId in imageIdsList:
-        deregisterImageCommand = "aws ec2 deregister-image --image-id "+thisImageId
-        logString = "deregisterImageCommand is: "+deregisterImageCommand
-        lw.writeLogVerbose("acm", logString)
-        imgDeregResponse = cr.getShellJsonResponse(deregisterImageCommand)
-        print(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
-        logString = "Response returned by running deregisterImageCommand is: "+str(imgDeregResponse)
-        lw.writeLogVerbose("acm", logString)
-        print(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
-      
-      # 4. Delete snapshot by id
-      logString = "About to delete each snapshot by looping through the following list of snapshot ids: "+str(snapshotsIdsList)
-      lw.writeLogVerbose("acm", logString)
-      for thisSnapshotId in snapshotsIdsList:
-        deleteSnapshotCommand = "aws ec2 delete-snapshot --snapshot-id "+thisSnapshotId
-        logString = "deleteSnapshotCommand is: "+deleteSnapshotCommand
-        lw.writeLogVerbose("acm", logString)
-        snapDeleteResponse = cr.getShellJsonResponse(deleteSnapshotCommand)
-        print("----------------------------------------------------------------")
-        logString = "Response returned by running deleteSnapshotCommand is: "+str(snapDeleteResponse)
-        lw.writeLogVerbose("acm", logString)
-        print("----------------------------------------------------------------")
-    
-    # 5. Return image id and snapshot id for each of all images that contain root name and that were created by current user
-    responseData = self.getImageAndSnapshotIds(awsUserId, imageNameRoot)
-    print("len(responseData) is: ", str(len(responseData)))
-    if len(responseData) != 0:
-      if counter < 5:
-        counter += 1
-        logString = "Sleeping 30 seconds because deletions of snapshots and images have not yet been reported in the AWS portal. "
-        lw.writeLogVerbose("acm", logString)
-        responseData = self.getImageAndSnapshotIds(awsUserId, imageNameRoot)
-        if len(responseData) != 0:
-          logString = "About to re-run the delete images and snapshots function.  Attempt number "+counter+". "  
-          lw.writeLogVerbose("acm", logString)  
-          self.deleteImagesAndSnapshots(region, thisStackId, systemConfig, keyDir, counter)  
-      else:
-        logString = "ERROR: There are still images and snapshots whose names start with "+imageNameRoot+" that are owned by the current user.  "
-        lw.writeLogVerbose("acm", logString)
-        exit(1)
-
-  #@private
-  def getImageAndSnapshotIds(self, awsUserId, imageNameRoot):
-    lw = log_writer()
-    cr = command_runner()
-    logString = "About to check to confirm whether or not the images and snapshots have been deleted whose names start with "+imageNameRoot+"  have been deleted. "
-    lw.writeLogVerbose("acm", logString)  
-    getImageAndSnapshotIdsCommand='aws ec2 describe-images --owners '+awsUserId+' --filters "Name=name,Values='+imageNameRoot+'*" --query "Images[*].[ImageId,BlockDeviceMappings[].Ebs[].SnapshotId]"[] --no-paginate'
-    logString = "getImageAndSnapshotIdsCommand is: "+getImageAndSnapshotIdsCommand
-    lw.writeLogVerbose("acm", logString)
-    jsonResponse = cr.getShellJsonResponse(getImageAndSnapshotIdsCommand)
-    responseData = yaml.safe_load(jsonResponse)
-    return responseData
 
   #@private
   def trackStackProgress(self, stackId, region):

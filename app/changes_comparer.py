@@ -3,14 +3,14 @@
 
 import re
 import ast
-import sys  
-  
-from log_writer import log_writer  
-  
+import sys
+
+from log_writer import log_writer
+
 class changes_comparer:
   
   def __init__(self):  
-    pass  
+    pass
 
   ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
   changesList = []

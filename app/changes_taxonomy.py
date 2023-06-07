@@ -7,23 +7,23 @@ import io
 from config_fileprocessor import config_fileprocessor
 from command_formatter import command_formatter
 from log_writer import log_writer
-  
-  
+
+
 class changes_taxonomy:
-    
-  def __init__(self):    
+  
+  def __init__(self):  
     self.changeTaxonomy = {}
     self.changeReports = []
     self.changeCounter = 0
  
   changeTaxonomy = {}
   changeReports = []
-  changeCounter = 0  
-  
-  #@public  
-  def assembleChangeTaxonomy(self, level, command):  
-    cfp = config_fileprocessor()  
-    lw = log_writer()  
+  changeCounter = 0
+
+  #@public
+  def assembleChangeTaxonomy(self, level, command):
+    cfp = config_fileprocessor()
+    lw = log_writer()
     import config_cliprocessor
     yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
