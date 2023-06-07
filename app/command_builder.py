@@ -14,14 +14,14 @@ import requests
 import sys
 import os
 import yaml
-
+  
 class command_builder:
-
+  
   outputVariables = []
-
+  
   def __init__(self):  
     pass
-
+  
   #@public
   def getVarsFragment(self, systemConfig, serviceType, instance, mappedVariables, tool, callingClass, outputDict={}):
     copyOfInstance = instance
@@ -39,13 +39,13 @@ class command_builder:
     elif tool == "packer":
       varsFragment = self.getPackerParamsFile(varLines)
     return varsFragment
-
-  #@public
-  def getBackendVarsFragment(self, backendVarCoordinates, tool, keyDir):
-    bkndVarSnip = "empty"
-    varsFragment = ''
-    bkndVarSnip = self.getBackendVars(backendVarCoordinates, tool, keyDir)
-    if bkndVarSnip != 'empty':
+  
+  #@public  
+  def getBackendVarsFragment(self, backendVarCoordinates, tool, keyDir):  
+    bkndVarSnip = "empty"  
+    varsFragment = ''  
+    bkndVarSnip = self.getBackendVars(backendVarCoordinates, tool, keyDir)  
+    if bkndVarSnip != 'empty':  
       if bkndVarSnip is not None:
         varsFragment = varsFragment + bkndVarSnip
     return varsFragment

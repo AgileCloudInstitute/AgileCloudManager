@@ -11,16 +11,16 @@ import os
 
 from command_formatter import command_formatter
 from log_writer import log_writer
-
-class command_runner:
   
+class command_runner:
+    
   def __init__(self):  
     pass
- 
+   
   ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-
+  
   #@public
-  def getShellJsonResponse(self, cmd,counter=0):
+  def getShellJsonResponse(self, cmd,counter=0):  
     lw = log_writer()
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
     data = process.stdout

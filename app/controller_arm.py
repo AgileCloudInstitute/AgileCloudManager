@@ -8,18 +8,18 @@ import time
 import datetime
 import os
 import subprocess
-
-from command_formatter import command_formatter
-from config_fileprocessor import config_fileprocessor
-from log_writer import log_writer
-
-class controller_arm:
-
-  foundationOutput = {}
-
-  def __init__(self):  
-    pass 
-
+  
+from command_formatter import command_formatter  
+from config_fileprocessor import config_fileprocessor  
+from log_writer import log_writer  
+  
+class controller_arm:  
+  
+  foundationOutput = {}  
+  
+  def __init__(self):    
+    pass   
+  
   #@public
   def createDeployment(self, systemConfig, instance, caller, serviceType, onlyFoundationOutput):
     import config_cliprocessor

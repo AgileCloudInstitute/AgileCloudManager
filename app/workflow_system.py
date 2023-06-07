@@ -131,10 +131,10 @@ class workflow_system:
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
-        pass
+        pass  
       #add code to confirm that output operation succeeded.
       #Also, if output showed there is no network foundation, then skip the rest of the off operations because there would be nothing to off in that case.
-      #ADD LOGIC HERE TO PREPARE BEFORE DELETING THE FOUNDATION 
+      #ADD LOGIC HERE TO PREPARE BEFORE DELETING THE FOUNDATION   
       ##########################################################################################
       ### off the Network Foundation and the Instance of the Call To The Foundation Module
       ##########################################################################################
