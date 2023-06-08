@@ -10,15 +10,15 @@ class changes_manifest:
     self.changeIndex = 0
     self.changeCounter = 0
     pass
- 
+   
   changesManifest = []
   changeIndex = 0
   changeCounter = 0
-
-  #@private
-  def changePreview(self, ct, level, command):
-    self.createStartOfApplianceRun()
-    for changeKey in ct.changeTaxonomy:
+  
+  #@private  
+  def changePreview(self, ct, level, command):  
+    self.createStartOfApplianceRun()  
+    for changeKey in ct.changeTaxonomy:  
       if changeKey =="systemsToChange":
         if command == 'on':
           for system in ct.changeTaxonomy[changeKey]:

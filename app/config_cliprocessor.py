@@ -9,12 +9,12 @@ import random, string
 
 from command_formatter import command_formatter
 from command_formatter import command_formatter
-
-#The following variables will need to be returned as properties.
-domain = ''
-command = ''
-keysDir = ''
-sourceRepo = ''
+  
+#The following variables will need to be returned as properties.  
+domain = ''  
+command = ''  
+keysDir = ''  
+sourceRepo = ''  
 repoBranch = ''
 repoPublic = ''
 systemName = ''
@@ -26,7 +26,7 @@ inputVars = {}
 minSetup = ''
 apiString = ''
 apiStringLocation = ''
-acmVersion = '1.1'
+acmVersion = '1.2'
 
 def getAcmUserHome():
     if platform.system() == 'Windows':

@@ -8,10 +8,10 @@ from workflow_service_type import workflow_service_type
 from workflow_setup import workflow_setup
 from log_writer import log_writer
 from config_validator import config_validator
-  
+    
 import sys
-  
-inputArgs=sys.argv
+    
+inputArgs=sys.argv  
 
 def runInfraCommands():
   wfsys = workflow_system()

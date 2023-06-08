@@ -20,12 +20,12 @@ class command_formatter:
       input = input.replace('\\\\\\\\', '\\\\')
       #Now replace singles with doubles for terraform so you get C:\\path\\to\\a\\file with proper escape sequence.
       input = input.replace('\\','\\\\')
- 
-    elif platform.system() == "Linux":
-      input = input.replace('\\','/')
-      input = input.replace('//','/')
-      input = input.replace('///','/')
-    if input.endswith('/n'):
+   
+    elif platform.system() == "Linux":  
+      input = input.replace('\\','/')  
+      input = input.replace('//','/')  
+      input = input.replace('///','/')  
+    if input.endswith('/n'):  
       input = input[:-2] + '\n'
     return input
 
