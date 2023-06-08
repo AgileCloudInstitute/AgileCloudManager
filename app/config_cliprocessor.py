@@ -27,7 +27,7 @@ minSetup = ''
 apiString = ''
 apiStringLocation = ''
 acmVersion = '1.2'
-
+    
 def getAcmUserHome():
     if platform.system() == 'Windows':
       acmUserHome = os.path.expanduser("~")+'/acm/'
