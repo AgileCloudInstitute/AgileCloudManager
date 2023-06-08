@@ -1,6 +1,6 @@
 ## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
-
+  
 import os
 import sys
 from pathlib import Path 
@@ -27,7 +27,7 @@ minSetup = ''
 apiString = ''
 apiStringLocation = ''
 acmVersion = '1.2'
-
+    
 def getAcmUserHome():
     if platform.system() == 'Windows':
       acmUserHome = os.path.expanduser("~")+'/acm/'
