@@ -355,25 +355,29 @@ class workflow_setup:
               print("About to list contents of repoFolderAndPath. ")
               from pathlib import Path
               print(*Path(str(repoFolderAndPath)).iterdir(), sep="\n")
-              #import subprocess
-              #subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath))
-              #print("Just finished starting custom controller.")
-#//
               print("About to start custom controller.")
               import subprocess
               #The version of command on next line runs the server in the background.  Comment it out and replace with the one below it if you want to see output.
               server = subprocess.Popen(["python", setupScript], cwd=str(repoFolderAndPath),stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              data = server.stdout
+              err = server.stderr
               while True:
                 line = server.stdout.readline()
                 if line:
                   print(self.ansi_escape.sub('', line.decode('utf-8').rstrip('\r|\n')))
                 else:
+                  data, err = server.communicate()
+                  logString = "proc.returncode at end of command run is: "+str(server.returncode)
+                  print(logString)
+                  if (server.returncode != 0) and (server.returncode != None):
+                    logString = "About to terminate program due to a non-zero return code."
+                    print(logString)
+                    sys.exit(1)
                   break
 
               #The second version of the command below will print output to the console, but will also halt your program because it runs the server in the foreground.
               #server = subprocess.Popen(["python", "setup.py"], cwd=str(path))
               print("Just finished starting custom controller.")
-#//
             else:
               logString = "ERROR: The setup script name does not end in '.py'.  If you require support for scripts in other languages besides python, please either submit a feature request describing your requirements, or a pull request with the solution you suggest.  "
               print(logString)
@@ -382,9 +386,8 @@ class workflow_setup:
           logString = "ERROR: Value for the 'api' field must be a boolean if the 'api' field is used."
           print(logString)
           exit(1)
-#        quit("mnbvcxz BREAKPOINT")
 
-    #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
+  #RETURN FAILURE QUIT IF ANY DEPENDENCY IS MISSING.  INCLUDE MESSAGE STATING WHICH DEPENDENCY IS MISSING.
 
   def validateRepoStrings(self, fieldName, obj_to_test):
     if fieldName == "public":
@@ -733,7 +736,6 @@ class workflow_setup:
     cfmtr = command_formatter()
     self.createDirectoryStructure()
     print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
-    #quit("vbnmnbvcqwertyytrewq")
     if config_cliprocessor.inputVars.get('minSetup') != True:
       sourceRepo = config_cliprocessor.inputVars.get('sourceRepo') 
       public = config_cliprocessor.inputVars.get('repoPublic')
