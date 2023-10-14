@@ -298,7 +298,6 @@ jobs:
         run: |
           rm /usr/acm/keys/starter/keys.yaml
 
-
   e2e-tests-linux-cloudformation-services:
     needs: [create-exe-linux-and-upload-artifact]
     runs-on: ubuntu-latest
