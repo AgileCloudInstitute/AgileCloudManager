@@ -281,8 +281,8 @@ jobs:
           ACM_SECRET: ${{ secrets.ACM_REPO_LH }}
           ACM_CONFIG: ${{ secrets.ACM_CONFIG_LH }}
         run: | 
-          echo "$ACM_CONFIG" > /usr/acm/keys/starter/config.yaml
-          echo "$ACM_SECRET" > /usr/acm/keys/starter/keys.yaml
+          echo "$ACM_CONFIG" > /home/runner/acm/keys/starter/config.yaml
+          echo "$ACM_SECRET" > /home/runner/acm/keys/starter/keys.yaml
       - id: Acm_Setup_On_Ubuntu
         uses: ./.github/actions/acm-setup-on-ubuntu
         with: 
@@ -296,7 +296,7 @@ jobs:
       - shell: bash
         name: Delete Secrets
         run: |
-          rm /usr/acm/keys/starter/keys.yaml
+          rm /home/runner/acm/keys/starter/keys.yaml
 
   e2e-tests-linux-cloudformation-services:
     needs: [create-exe-linux-and-upload-artifact]
