@@ -293,6 +293,11 @@ jobs:
         uses: ./.github/actions/acm-appliance-off-ubuntu
       - id: Acm_Setup_Off_Ubuntu
         uses: ./.github/actions/acm-setup-off-ubuntu
+      - shell: bash
+        name: Delete Secrets
+        run: |
+          rm /usr/acm/keys/starter/keys.yaml
+
 
   e2e-tests-linux-cloudformation-services:
     needs: [create-exe-linux-and-upload-artifact]
