@@ -148,10 +148,10 @@ class controller_custom:
         if decodedline.startswith('Finished output variables.'):
           captureOutputs = False
         if captureOutputs:
-          lineParts = decodedline.split(' = ')
+          lineParts = decodedline.split(' = ') 
           lineDict = {'varName':lineParts[0].replace(' ', ''), 'varValue':lineParts[1].replace(' ','')}
           self.outputVariables.append(lineDict)
-        if decodedline.startswith('Output variables:'):
+        if decodedline.startswith('Output variables:'): 
           captureOutputs = True
         lw.writeLogVerbose("shell", decodedline)
       else:
