@@ -99,7 +99,7 @@ class controller_packer:
       lw.writeLogVerbose("acm", logString)
       sys.exit(1)
 
-  #@private
+  #@private 
   def getImageRepoDir(self, image):
     import config_cliprocessor
     cf = command_formatter()
