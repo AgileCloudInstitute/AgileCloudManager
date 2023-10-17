@@ -155,9 +155,9 @@ class command_runner:
     if os.path.isfile(fullyQualifiedPathToScript):
       commandToRun = command.replace('$location',fullyQualifiedPathToScript)
       if preOrPost == "pre":
-        logString = "preprocessor command is: "+commandToRun
+        logString = "cr preprocessor command is: "+commandToRun
       elif preOrPost == "post":
-        logString = "postprocessor command is: "+commandToRun
+        logString = "cr postprocessor command is: "+commandToRun
       else:
         logString = str(preOrPost)+" is not a valid value for preOrPost.  Halting program so this can be fixed where the error originates. "
         lw.writeLogVerbose('shell', logString)
