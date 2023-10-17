@@ -421,7 +421,7 @@ class workflow_setup:
     self.getDependencies()
     self.checkDependencies()
     import config_cliprocessor
-    print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
+    print("in workflow_setup.py runConfigure(), minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
     if config_cliprocessor.inputVars.get('minSetup') != True:
       self.cloneTheSourceCode()
 
@@ -459,7 +459,7 @@ class workflow_setup:
       logString = "The calls-to-modules directory does not exist.  It may have already been deleted."
       lw.writeLogVerbose("acm", logString)
 
-    print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
+    print("in workflow_setup.py undoConfigure() minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
     #quit("vbnmnbvcqwertyytrewq")
     if config_cliprocessor.inputVars.get('minSetup') != True:
       #Delete the local copies of the repos you cloned to create this instance
@@ -735,7 +735,7 @@ class workflow_setup:
     crnr = command_runner()
     cfmtr = command_formatter()
     self.createDirectoryStructure()
-    print("minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
+    print("in workflow_setup.py runSetup(), minSetup is: ", str(config_cliprocessor.inputVars.get('minSetup')))
     if config_cliprocessor.inputVars.get('minSetup') != True:
       sourceRepo = config_cliprocessor.inputVars.get('sourceRepo') 
       public = config_cliprocessor.inputVars.get('repoPublic')
@@ -751,6 +751,7 @@ class workflow_setup:
       import time
       time.sleep(15)
       os.rename(sourceRepoDestinationDir, acmConfigPath)
+    print("About to call runConfigure()")
     self.runConfigure()
 
   #@public
