@@ -25,6 +25,13 @@ class command_runner:
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
     data = process.stdout
     err = process.stderr
+    try:
+      if process:
+        data, err = process.communicate()
+        if process.returncode != 0:
+          print("ERROR: The subprocess command returned a non-zero return code: ", process.returncode)
+    except AttributeError: #This should handle CompletedpProcess error.  
+      pass
     logString = "data string is: " + data
     lw.writeLogVerbose("acm", logString)
     logString = "err is: " + str(err)
@@ -100,7 +107,13 @@ class command_runner:
   #@public
   def runShellCommand(self, commandToRun):
     lw = log_writer()
+    logString = "commandToRun is: "+commandToRun
+    lw.writeLogVerbose("acm", logString)
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    logString = "Immediate return code is: "+str(proc.returncode)
+    lw.writeLogVerbose("acm", logString)
+    logString = "Immediate stdout is: "+str(proc.stdout)
+    lw.writeLogVerbose("acm", logString)
     while True:
       line = proc.stdout.readline()
       if line:
@@ -109,6 +122,13 @@ class command_runner:
         logString = decodedline
         lw.writeLogVerbose("shell", logString)
       else:
+        data, err = proc.communicate()
+        logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+        lw.writeLogVerbose("acm", logString)
+        if (proc.returncode != 0) and (proc.returncode != None):
+          logString = "About to terminate program due to a non-zero return code."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
         break
 
   #@public
@@ -117,11 +137,17 @@ class command_runner:
     cf = command_formatter()
     lw = log_writer()
     if operation == 'on':
-      location = processorSpecs['locationOn']
-      command = processorSpecs['commandOn']
+      if ('locationOn' in processorSpecs) and ('commandOn' in processorSpecs):
+        location = processorSpecs['locationOn']
+        command = processorSpecs['commandOn']
+      else: # return without doing anyting because there is no processor present for this case
+        return
     elif operation == 'off':
-      location = processorSpecs['locationOff']
-      command = processorSpecs['commandOff']
+      if ('locationOff' in processorSpecs) and ('commandOff' in processorSpecs):
+        location = processorSpecs['locationOff']
+        command = processorSpecs['commandOff']
+      else: # return without doing anyting because there is no processor present for this case
+        return
     fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('userCallingDir')+location
     fullyQualifiedPathToScript = cf.formatPathForOS(fullyQualifiedPathToScript)
     logString = "fullyQualifiedPathToScript is: "+fullyQualifiedPathToScript
@@ -129,9 +155,9 @@ class command_runner:
     if os.path.isfile(fullyQualifiedPathToScript):
       commandToRun = command.replace('$location',fullyQualifiedPathToScript)
       if preOrPost == "pre":
-        logString = "preprocessor command is: "+commandToRun
+        logString = "cr preprocessor command is: "+commandToRun
       elif preOrPost == "post":
-        logString = "postprocessor command is: "+commandToRun
+        logString = "cr postprocessor command is: "+commandToRun
       else:
         logString = str(preOrPost)+" is not a valid value for preOrPost.  Halting program so this can be fixed where the error originates. "
         lw.writeLogVerbose('shell', logString)
@@ -147,6 +173,8 @@ class command_runner:
   def getAccountKey(self, commandToRun):
     lw = log_writer()
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, shell=True)
+    data = proc.stdout
+    err = proc.stderr
     while True:
       line = proc.stdout.readline()
       if line:
@@ -155,6 +183,13 @@ class command_runner:
         lw.writeLogVerbose("shell", decodedline)
         return decodedline
       else:
+        data, err = proc.communicate()
+        logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+        lw.writeLogVerbose("acm", logString)
+        if (proc.returncode != 0) and (proc.returncode != None):
+          logString = "About to terminate program due to a non-zero return code."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
         break
 
   #@public
@@ -229,6 +264,8 @@ class command_runner:
   def checkIfInstalled(self, commandToRun, vers):
     lw = log_writer()
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    data = proc.stdout
+    err = proc.stderr
     match = False
     while True:
       line = proc.stdout.readline()
@@ -241,6 +278,13 @@ class command_runner:
           lw.writeLogVerbose("acm", logString)
           return logString
       else:
+        data, err = proc.communicate()
+        logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+        lw.writeLogVerbose("acm", logString)
+        if (proc.returncode != 0) and (proc.returncode != None):
+          logString = "About to terminate program due to a non-zero return code."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
         break
     logString = 'Dependency is NOT installed.  Please make sure your machine is properly provisioned.'
     lw.writeLogVerbose("acm", logString)
@@ -250,6 +294,8 @@ class command_runner:
   def runShellCommandInWorkingDir(self, commandToRun, workingDir):
     lw = log_writer()
     proc = subprocess.Popen( commandToRun,cwd=workingDir, stdout=subprocess.PIPE, shell=True)
+    data = proc.stdout
+    err = proc.stderr
     while True:
       line = proc.stdout.readline()
       if line:
@@ -258,6 +304,13 @@ class command_runner:
         logString = decodedline
         lw.writeLogVerbose("shell", logString)
       else:
+        data, err = proc.communicate()
+        logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+        lw.writeLogVerbose("acm", logString)
+        if (proc.returncode != 0) and (proc.returncode != None):
+          logString = "About to terminate program due to a non-zero return code."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
         break
 
   #@public
@@ -269,7 +322,15 @@ class command_runner:
         cmd,cwd=workingDir,
         shell=True,
         stdout=subprocess.PIPE)
-    data, err = process.communicate()
+    data = process.stdout
+    err = process.stderr
+    try:
+      if process:
+        data, err = process.communicate()
+        if process.returncode != 0:
+          print("ERROR: The subprocess command returned a non-zero return code: ", process.returncode)
+    except AttributeError: #This should handle CompletedpProcess error.  
+      pass
     filename = workingDir + 'my-directory-list.txt'
     try:
       os.remove(filename)
@@ -373,6 +434,9 @@ class command_runner:
   #@public
   def runShellCommandForTests(self, commandToRun):
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    data = proc.stdout
+    err = proc.stderr
+    lw = log_writer()
     while True:
       line = proc.stdout.readline()
       if line:
@@ -380,6 +444,13 @@ class command_runner:
         decodedline=self.ansi_escape.sub('', thetext)
         print(decodedline)
       else:
+        data, err = proc.communicate()
+        logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+        lw.writeLogVerbose("acm", logString)
+        if (proc.returncode != 0) and (proc.returncode != None):
+          logString = "About to terminate program due to a non-zero return code."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
         proc.kill()
         break
     proc.kill()

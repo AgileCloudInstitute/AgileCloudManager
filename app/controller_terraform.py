@@ -411,6 +411,8 @@ class controller_terraform:
       isError = "no"
       #Make a work item to re-write this function to throw an error and stop the program whenever an error is encountered.
       proc = subprocess.Popen( commandToRun,cwd=workingDir,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+      data = proc.stdout
+      err = proc.stderr
       while True:
         line = proc.stdout.readline()
         if line:
@@ -434,6 +436,13 @@ class controller_terraform:
               self.tfOutputDict[key] = value
           errIdx = self.processDecodedLine(decodedline, errIdx, commFragment)
         else:
+          data, err = proc.communicate()
+          logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+          myLogWriter.writeLogVerbose("acm", logString)
+          if (proc.returncode != 0) and (proc.returncode != None):
+            logString = "About to terminate program due to a non-zero return code."
+            myLogWriter.writeLogVerbose("acm", logString)
+            sys.exit(1)
           break
     except:
       counter += 1

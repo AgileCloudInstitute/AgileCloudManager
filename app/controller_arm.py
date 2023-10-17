@@ -389,6 +389,8 @@ class controller_arm:
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
     data = process.stdout
     err = process.stderr
+    if process.returncode != 0:
+      print("ERROR: The subprocess command returned a non-zero return code: ", process.returncode)
     logString = "data string is: " + data
     lw.writeLogVerbose("acm", logString)
     logString = "err is: " + str(err)
@@ -461,6 +463,13 @@ class controller_arm:
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
     data = process.stdout
     err = process.stderr
+    try:
+      if process:
+        data, err = process.communicate()
+        if process.returncode != 0:
+          print("ERROR: The subprocess command returned a non-zero return code: ", process.returncode)
+    except AttributeError: #This should handle CompletedpProcess error.  
+      pass
     logString = "data string is: " + data
     lw.writeLogVerbose("acm", logString)
     logString = "err is: " + str(err)
@@ -561,6 +570,13 @@ class controller_arm:
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
     data = process.stdout
     err = process.stderr
+    try:
+      if process:
+        data, err = process.communicate()
+        if process.returncode != 0:
+          print("ERROR: The subprocess command returned a non-zero return code: ", process.returncode)
+    except AttributeError: #This should handle CompletedpProcess error.  
+      pass
     logString = "data string is: " + data
     lw.writeLogVerbose("acm", logString)
     logString = "err is: " + str(err)
