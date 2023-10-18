@@ -6,7 +6,7 @@ import re
 import sys  
 import json  
 import os  
-import requests  
+import requests
 import time  
 
 from command_formatter import command_formatter  
@@ -134,6 +134,8 @@ class controller_custom:
   def runShellCommand(self, commandToRun):
     lw = log_writer()
     proc = subprocess.Popen( commandToRun,cwd=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    data = proc.stdout
+    err = proc.stderr
     captureOutputs = False
     while True:
       line = proc.stdout.readline()
@@ -146,13 +148,20 @@ class controller_custom:
         if decodedline.startswith('Finished output variables.'):
           captureOutputs = False
         if captureOutputs:
-          lineParts = decodedline.split(' = ')
+          lineParts = decodedline.split(' = ') 
           lineDict = {'varName':lineParts[0].replace(' ', ''), 'varValue':lineParts[1].replace(' ','')}
           self.outputVariables.append(lineDict)
-        if decodedline.startswith('Output variables:'):
+        if decodedline.startswith('Output variables:'): 
           captureOutputs = True
         lw.writeLogVerbose("shell", decodedline)
       else:
+        data, err = proc.communicate()
+        logString = "proc.returncode at end of command run is: "+str(proc.returncode)
+        lw.writeLogVerbose("acm", logString)
+        if (proc.returncode != 0) and (proc.returncode != None):
+          logString = "About to terminate program due to a non-zero return code."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
         break
 
   def isListOfDictionaries(self, myjson):

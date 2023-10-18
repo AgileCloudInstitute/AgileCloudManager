@@ -31,7 +31,7 @@ class config_validator:
       acmConfig = yaml.safe_load(f)
     #Third, validate each system
     for system in acmConfig:
-      sysCfg = cfp.getSystemConfig(acmConfig, system) 
+      sysCfg = cfp.getSystemConfig(acmConfig, system)
       #System config must be a dictionary
       if (isinstance(sysCfg, dict)) and (isinstance(system, str)):
         self.validateSystem(sysCfg)
@@ -226,6 +226,8 @@ class config_validator:
             sys.exit(1)
     else:
       print("ERROR: The block that defines each type of service must evaluate to a dictionary. ")
+      print("Relevant serviceType section causing this error is: ", str(serviceType))
+      print("type(serviceType) is: ", type(serviceType))
       sys.exit(1)
 
   #@private
@@ -249,9 +251,24 @@ class config_validator:
         else:
           #All other keys in an instance of a service must have associated values that are strings
           if not isinstance(instance.get(instanceKey), str):
-            print(str(instance.get(instanceKey)))
-            print("ERROR: All fields within each instance of each type of service must have string values, with the exception of mappedVariables, backendVariables, preprocessor, and postprocessor sections, which themselves must each be a dictionary of key/value pairs.  ")
-            sys.exit(1)
+            if "controller" in instance.keys():
+              if (instance.get("controller") == "cloudformation") and (instanceKey == "capabilities"):
+                print("controller is: ",instance.get("controller"))
+                print("instanceKey is: ", instanceKey)
+                print("type is: ", type(instance.get(instanceKey)))
+                if type(instance.get(instanceKey)) == list: #pass, because the capabilities should be in list form, even if just one capability to add.
+                  pass
+                else:
+                  print("ERROR: If you include a capabilities key when using the cloudformation crontroller, the value for capabilities must be a list with a minimum of one item. ")
+                  sys.exit(1)
+              else:
+                print(str(instance.get(instanceKey)))
+                print("ERROR: All fields within each instance of each type of service must have string values, with the exception of mappedVariables, backendVariables, preprocessor, and postprocessor sections, which themselves must each be a dictionary of key/value pairs.  ")
+                sys.exit(1)
+            else:
+              print(str(instance.get(instanceKey)))
+              print("ERROR: All fields within each instance of each type of service must have string values, with the exception of mappedVariables, backendVariables, preprocessor, and postprocessor sections, which themselves must each be a dictionary of key/value pairs.  ")
+              sys.exit(1)
     else:
       print("ERROR: Each instance of each instance of a serviceType must be a dictionary. ")
       sys.exit(1)
@@ -262,8 +279,10 @@ class config_validator:
     if isinstance(mappedVarsBlock, dict):
       for mappedVar in mappedVarsBlock:
         #Each variable defined in the mappedVariables block must be a string
-        if not isinstance(mappedVarsBlock.get(mappedVar), str):
-          logString = "ERROR: Value of each of the variables within each mappedVariables block must be a string.  You are seeing this because at least one of the variables defined within a mappedVariables block is not a string. "
+        if len(str(mappedVarsBlock.get(mappedVar)))>150:
+          logString = "ERROR: Value of each of the variables within each mappedVariables block must be a string with a relatively short length.  You are seeing this because at least one of the variables defined within a mappedVariables block is longer than 200 characters. Note that long strings can break your automation, depending on how your automation is set up, even if the string is less than 150 characters long. "
+          print(logString)
+          logString = "Relevant portion of mapped variables is: "+str(mappedVar)+": "+str(mappedVarsBlock.get(mappedVar))
           print(logString)
           sys.exit(1)
     else:

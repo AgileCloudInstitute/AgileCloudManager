@@ -18,6 +18,7 @@ import yaml
 class command_builder:
   
   outputVariables = []
+  otherOutputVariables = []
   
   def __init__(self):  
     pass
@@ -388,9 +389,19 @@ class command_builder:
   def needsFoundationOutput(self, mappedVariables):
     needsFoundationOutput = False
     for varName in mappedVariables:
-      if mappedVariables.get(varName).startswith("$customFunction.foundationOutput"):
+      if str(mappedVariables.get(varName)).startswith("$customFunction.foundationOutput"):
         needsFoundationOutput = True
     return needsFoundationOutput
+
+  #@private
+  def listOtherSystemsForFoundationOutput(self, mappedVariables):
+    listOfSystems = []
+    for varName in mappedVariables:
+      if (mappedVariables.get(varName).startswith("$customFunction.sys:")) and (".foundationOutput" in mappedVariables.get(varName)):
+        #$customFunction.sys:lakehouse-core.foundationOutput.PublicSubnet
+        sysName = (mappedVariables.get(varName).lstrip("$customFunction.sys:")).split(".")[0]
+        listOfSystems.append(sysName)
+    return listOfSystems
 
   #@private
   def readMappedVariablesFromConfig(self, systemConfig, serviceType, instance, mappedVariables, tool, callingClass, outputDict={}):
@@ -411,6 +422,7 @@ class command_builder:
       self.outputVariables = foundationOutputVariables
       logString = "self.outputVariables is: "+str(self.outputVariables)
       lw.writeLogVerbose("acm", logString)
+
     #iterate through each mapped variable to get the value
     for varName in mappedVariables:
       #THIRD, get the value for each variable
@@ -568,24 +580,25 @@ class command_builder:
 
   #@private
   def getValueForOneMappedVariable(self, mappedVariables, varName, tool, keyDir, systemConfig, instance, outputDict):
-    if mappedVariables.get(varName).startswith('$env.'):
+    rawVal = str((mappedVariables.get(varName)))
+    if str(rawVal).startswith('$env.'):
       value = self.getOneEnvironmentVariableValue(mappedVariables, varName)
-    elif (mappedVariables.get(varName).startswith("$keys")) or (mappedVariables.get(varName).startswith("$config")):
+    elif rawVal.startswith("$keys") or rawVal.startswith("$config"):
       value = self.processKeysAndConfig(mappedVariables, varName, tool, keyDir)
-    elif mappedVariables.get(varName).startswith("$this"):
+    elif rawVal.startswith("$this"):
       varToCheck = self.validateThisSyntaxAndGetVarToCheckValue(mappedVariables, varName)
-      if mappedVariables.get(varName).startswith("$this.foundationMapped"):
+      if rawVal.startswith("$this.foundationMapped"):
         value = self.getOneFoundationMappedVariableValue(systemConfig, varToCheck, mappedVariables, varName, tool, keyDir)
-      if (str(mappedVariables.get(varName)).startswith('$this.foundation')) and (not mappedVariables.get(varName).startswith("$this.foundationMapped")):
+      if (rawVal.startswith('$this.foundation')) and (not rawVal.startswith("$this.foundationMapped")):
         value = self.getOneFoundationVariableValue(systemConfig, varToCheck, tool, keyDir, mappedVariables, varName)
-      elif mappedVariables.get(varName).startswith("$this.instance"):
+      elif rawVal.startswith("$this.instance"):
         value = self.getOneInstanceVariableValue(instance, varToCheck, tool, varName, keyDir, mappedVariables)
-      elif mappedVariables.get(varName).startswith("$this.tags"):
+      elif rawVal.startswith("$this.tags"):
         value = systemConfig.get('tags').get(varToCheck)
         if "$config" in value:
           value = self.getOneTagsVariableValue(systemConfig.get('tags'), varToCheck, tool, keyDir, mappedVariables, varName)
-    elif mappedVariables.get(varName).startswith("$customFunction"):
-      funcCoordParts = mappedVariables.get(varName).split(".")
+    elif rawVal.startswith("$customFunction"):
+      funcCoordParts = rawVal.split(".")
       funcName = funcCoordParts[1]
       if funcName == 'foundationOutput':
         tool = systemConfig.get("foundation").get("controller") #Override tool with foundationTool 31 January 2023
@@ -593,12 +606,12 @@ class command_builder:
           value = self.foundationOutput_ARM_CustomFunction(funcCoordParts, varName)
         elif tool == "cloudformation":
           value = self.foundationOutput_CloudFormation_CustomFunction(funcCoordParts, varName, systemConfig)
-        #elif tool == "customController":
         elif "customController" in tool: #rewrote this line to accommodate elif tool == "customController": above
           value = self.foundationOutput_CustomController_CustomFunction(funcCoordParts, varName)
         else:
           value = self.foundationOutput_Other_CustomFunction(mappedVariables, varName, tool)
-        #quit("cftyhbgresxawq")
+      elif funcName.startswith("sys:"):
+        value = self.foundationOutput_CloudFormation_OtherSystem_CustomFunction(funcCoordParts, varName, systemConfig)
       elif funcName == "addPath":
         value = self.addPathFunction(instance, keyDir)
       elif funcName == 'imageBuilderId': 
@@ -625,7 +638,7 @@ class command_builder:
         value = self.addOrganizationCustomFunction(systemConfig, funcCoordParts, varName, tool, keyDir)
     else: 
       #Handle plaintext variables that do not require coordinate searching
-      value = mappedVariables.get(varName)
+      value = str(rawVal)
     return value
 
   def getOneEnvironmentVariableValue(self, mappedVariables, varName):
@@ -733,10 +746,42 @@ class command_builder:
     value = ccf4output.getVarFromCloudFormationOutput(outputKeyDir, varToCheck, stackName, region)
     return value
 
-  def foundationOutput_CustomController_CustomFunction(self, funcCoordParts, varName):
+  def foundationOutput_CloudFormation_OtherSystem_CustomFunction(self, funcCoordParts, varName, systemConfig):
     print("funcCoordParts is: ", funcCoordParts)
-    print("varName is: ", varName)
-    print("self.outputVariables is: ", str(self.outputVariables))
+    if len(funcCoordParts) == 2:
+      varToCheck = varName
+    elif len(funcCoordParts) == 3:
+      varToCheck = funcCoordParts[2]
+      if funcCoordParts[1].startswith("sys:"):
+        sysName = funcCoordParts[1].lstrip("sys:")
+        varToCheck = varName
+    elif len(funcCoordParts) == 4:
+      varToCheck = funcCoordParts[3]
+      sysName = funcCoordParts[1].lstrip("sys:")
+    else:
+      logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
+      print(logString)
+      sys.exit(1)
+    import config_cliprocessor
+    from config_fileprocessor import config_fileprocessor
+    cfp = config_fileprocessor()
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    thisSystemConfig = cfp.getSystemConfig(applianceConfig, sysName)
+    thisSystemKeyDir = cfp.getKeyDir(thisSystemConfig)
+    from controller_cf import controller_cf
+    ccf4output = controller_cf()
+    outputKeyDir = cfp.getKeyDir(thisSystemConfig)
+    stackName = thisSystemConfig.get("foundation").get('stackName')
+    if stackName.startswith("$config"):
+      stackName = cfp.getValueFromConfig(thisSystemKeyDir, stackName, "stackName")
+    region = thisSystemConfig.get("foundation").get('region')
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(thisSystemKeyDir, region, "region")
+    value = ccf4output.getVarFromCloudFormationOutput(outputKeyDir, varToCheck, stackName, region)
+    return value
+
+  def foundationOutput_CustomController_CustomFunction(self, funcCoordParts, varName):
     if len(funcCoordParts) == 2:
       nameToCheck = varName
     elif len(funcCoordParts) == 3:
@@ -747,7 +792,6 @@ class command_builder:
     return value
 
   def foundationOutput_Other_CustomFunction(self, mappedVariables, varName, tool):
-    print("mappedVariables.get(varName) is: ", mappedVariables.get(varName))
     if mappedVariables.get(varName).count(".") == 1:
       tfOutputVarName = varName
     elif mappedVariables.get(varName).count(".") == 2:
@@ -866,35 +910,42 @@ class command_builder:
     return value
 
   def processKeysAndConfig(self, mappedVariables, varName, tool, keyDir):
-    if mappedVariables.get(varName).startswith("$keys"):
+    lw = log_writer()
+    rawVal = str((mappedVariables.get(varName)))
+    if rawVal.startswith("$keys"):
       varType = "key"
-    elif mappedVariables.get(varName).startswith("$config"):
+    elif rawVal.startswith("$config"):
       varType = "conf"
+    else:
+      logString = "ERROR: "
+      lw.writeLogVerbose("acm", logString)
+      logString = "rawValue is: "+str(rawVal)
+      lw.writeLogVerbose("acm", logString)
     #This is handled in a separate block below in this function
     if tool == "arm":
       #For ARM templates, vars get placed in a params file to obscure them from logs.  
       #Later, below, add handling to take variables sourced from keys and put them into ARM templates
       #For now, the $keys for ARM templates are handled by the custom controller which makes cli calls to the Azure API
-      if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
-        value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      if (rawVal.count('.') == 0) or (rawVal.count('.') == 1):
+        value = self.getRawSecretFromKeys(varType, keyDir, varName, rawVal)
       else:
         logString = "ERROR: For ARM templates, exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
         print(logString)
         sys.exit(1)
     elif tool == "cloudformation":
-      value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      value = self.getRawSecretFromKeys(varType, keyDir, varName, rawVal)
     elif tool == "customController":
-      value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      value = self.getRawSecretFromKeys(varType, keyDir, varName, rawVal)
     elif tool == "terraform":
-      if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
-        value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      if (rawVal.count('.') == 0) or (rawVal.count('.') == 1):
+        value = self.getRawSecretFromKeys(varType, keyDir, varName, rawVal)
       else:
         logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
         print(logString)
         sys.exit(1)
     elif tool == "packer":
-      if (mappedVariables.get(varName).count('.') == 0) or (mappedVariables.get(varName).count('.') == 1):
-        value = self.getRawSecretFromKeys(varType, keyDir, varName, mappedVariables.get(varName))
+      if (rawVal.count('.') == 0) or (rawVal.count('.') == 1):
+        value = self.getRawSecretFromKeys(varType, keyDir, varName, rawVal)
       else:
         logString = "ERROR: Exactly either zero or one dot is allowed in $keys coordinates, as in $keys.varName "
         print(logString)
