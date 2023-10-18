@@ -26,7 +26,7 @@ inputVars = {}
 minSetup = ''
 apiString = ''
 apiStringLocation = ''
-acmVersion = '1.2'
+acmVersion = '1.3'
     
 def getAcmUserHome():
     if platform.system() == 'Windows':
@@ -158,7 +158,7 @@ def processInputArgs(inputArgs):
           elif (i=="min") and (inputArgs[1]=="setup") and (len(inputArgs) > 3):
             # set the value of minSetup for local setup if user specifies to do so.
             minSetup = True
-            print("minSetup is: ", str(minSetup))
+            print("in config_cliprocessor.py, minSetup is: ", str(minSetup))
           else:
             logString = "Your input contained a malformed parameter: " + i
             print(logString)

@@ -23,8 +23,17 @@ class controller_cf:
   def createStack(self, systemConfig, instance, keyDir, caller, serviceType, instName):
     import config_cliprocessor
     cfp = config_fileprocessor()
-    #NOTE: THIS ADDS A REQUIREMENT THAT REGION FOR ENTIRE SYSTEM MUST BE DEFINED IN THE FOUNDATION BLOCK.
-    region = systemConfig.get("foundation").get("region")
+    #NOTE: THIS SETS THE REGION SEPARATELY FOR ANY INSTANCE THAT DEFINES A region KEY, AND THEN DEFAULTS TO THE FOUNDATION'S region KEY IF THERE IS NO region KEY IN ANY GIVEN INSTANCE. 
+    region = None
+    if "region" in instance.keys():
+      region = instance.get("region")
+    if region == None:
+      if "foundation" in systemConfig.keys():
+        region = systemConfig.get("foundation").get("region")
+      else:
+        logString = "ERROR: There is no key named 'region' in either the instance or in the foundation of your system config file. "
+        lw.writeLogVerbose("acm", logString)
+        sys.exit(1)
     if region.startswith("$config"):
       region = cfp.getValueFromConfig(keyDir, region, "region")
     self.configureSecrets(keyDir, region)
@@ -39,9 +48,10 @@ class controller_cf:
       templateName = instance.get("templateName")
       stackName = instance.get("stackName")
       imageName = instance.get("imageName")
-      if imageName.startswith("$config"):
-        imageName = cfp.getValueFromConfig(keyDir, imageName, "imageName")
-      outputDict['ImageNameRoot'] = imageName
+      if imageName:
+        if imageName.startswith("$config"):
+          imageName = cfp.getValueFromConfig(keyDir, imageName, "imageName")
+        outputDict['ImageNameRoot'] = imageName
     elif caller == 'image':
       templateName = instance.get("templateName")
       stackName = instance.get("stackName")
@@ -64,7 +74,11 @@ class controller_cf:
     cr = command_runner()
     if self.checkIfStackExists(checkExistCmd):
       createChangeSetCommand = 'aws cloudformation create-change-set --change-set-name my-change --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)+' --output text --query Id '
-      logString = 'createChangeSetCommand is: aws cloudformation create-change-set --change-set-name my-change --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' *** --output text --query Id '
+      print("instance is: ", instance)
+      capString = self.getCapabilities(instance)
+      if capString != '':
+        createChangeSetCommand = createChangeSetCommand+capString
+      logString = 'createChangeSetCommand is: '+createChangeSetCommand
       lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(createChangeSetCommand)
       logString = 'Initial response from stack command is: '+str(jsonStatus)
@@ -93,10 +107,14 @@ class controller_cf:
         lw.writeLogVerbose("acm", logString)
         return
       elif respStatus == 'CREATE_COMPLETE':
+        print("instance is: ", instance)
         cfDeployCommand = 'aws cloudformation update-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
+        capString = self.getCapabilities(instance)
+        if capString != '':
+          cfDeployCommand = cfDeployCommand+capString
         logString = 'Response from check existance of stack command is: True'
         lw.writeLogVerbose("acm", logString)
-        logString = "cfDeployCommand is: "+'aws cloudformation update-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' ***'
+        logString = "cfDeployCommand is: "+cfDeployCommand
         lw.writeLogVerbose("acm", logString)
         jsonStatus = cr.getShellJsonResponse(cfDeployCommand)
         logString = 'Initial response from stack command is: ', str(jsonStatus)
@@ -112,9 +130,12 @@ class controller_cf:
         sys.exit(1)
     else:
       cfDeployCommand = 'aws cloudformation create-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' '+str(deployVarsFragment)
+      capString = self.getCapabilities(instance)
+      if capString != '':
+        cfDeployCommand = cfDeployCommand+capString
       logString = 'Response from check existance of stack command is: False'
       lw.writeLogVerbose("acm", logString)
-      logString = 'cfDeployCommand is: aws cloudformation create-stack --stack-name '+stackName+' --template-body file://'+cfTemplateFileAndPath+' ***'
+      logString = 'cfDeployCommand is: '+cfDeployCommand
       lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(cfDeployCommand)
       logString = 'Initial response from stack command is: '+ str(jsonStatus)
@@ -126,6 +147,18 @@ class controller_cf:
         sys.exit(1)
     self.destroySecrets()
 
+  #@private
+  def getCapabilities(self, instance):
+    capString = ''
+    rootStr = ' --capabilities'
+    if (instance.get("controller") == "cloudformation") and ("capabilities" in instance.keys()):
+      for cap in instance.get("capabilities"):
+        spaceCap = ' '+cap
+        capString += spaceCap
+    if capString != None:
+      capString = rootStr+capString
+    return capString
+
   #@public
   def destroyStack(self, systemConfig, instance, keyDir, caller):
     import config_cliprocessor
@@ -133,9 +166,19 @@ class controller_cf:
     cf = command_formatter()
     lw = log_writer()
     cfp = config_fileprocessor()
-    #This next line adds requirement that region must be specified in the foundation block.
-    region = systemConfig.get("foundation").get("region")
-    print("1 region is: ", region)
+    #NOTE: THIS SETS THE REGION SEPARATELY FOR ANY INSTANCE THAT DEFINES A region KEY, AND THEN DEFAULTS TO THE FOUNDATION'S region KEY IF THERE IS NO region KEY IN ANY GIVEN INSTANCE. 
+    region = None
+    if "region" in instance.keys():
+      region = instance.get("region")
+    if region == None:
+      if "foundation" in systemConfig.keys():
+        region = systemConfig.get("foundation").get("region")
+      else:
+        logString = "ERROR: There is no key named 'region' in either the instance or in the foundation of your system config file. "
+        lw.writeLogVerbose("acm", logString)
+        sys.exit(1)
+    if region.startswith("$config"):
+      region = cfp.getValueFromConfig(keyDir, region, "region")
     if region.startswith("$config"):
       region = cfp.getValueFromConfig(keyDir, region, "region")
     self.configureSecrets(keyDir,region)
@@ -158,8 +201,8 @@ class controller_cf:
     logString = 'thisStackId is: '+ thisStackId
     lw.writeLogVerbose("acm", logString)
     if caller == 'networkFoundation':
-      self.deleteImagesAndSnapshots(region, thisStackId, systemConfig, keyDir)
-
+      if "images" in systemConfig.get("foundation").keys():
+        self.deleteImagesAndSnapshots(region, thisStackId, systemConfig, keyDir)
     if thisStackId == 'none':
       logString = 'WARNING: No stacks with the name '+stackName+' are currently in the CREATE_COMPLETE state when this run is initiated.  We are therefore skipping the delete process for this stack and continuing the program flow to proceed with any downstream steps.  '
       lw.writeLogVerbose("acm", logString)
@@ -300,10 +343,21 @@ class controller_cf:
             lw.writeLogVerbose("acm", logString)
             return
       n+=1
-      if n>10:
-        logString = "ERROR:  Quitting because operation failed to complete after " + str(n) + " attempts. "
-        lw.writeLogVerbose("acm", logString)
-        sys.exit(1)
+      if n>15:
+        keepGoing = False
+        for item in responseData['Stacks']:
+          status = item['StackStatus']
+          aStackId = item['StackId']
+          if stackId == aStackId:
+            thisStatus = status
+            if status == 'DELETE_IN_PROGRESS':
+              logString = "INFO: Delete operation is continuing to run on stack, but is taking longer than expected."
+              lw.writeLogVerbose("acm", logString)
+              keepGoing = True
+        if not keepGoing:
+          logString = "ERROR:  Quitting because operation failed to complete after " + str(n) + " attempts. "
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
       logString = "Operation still in process.  About to sleep 30 seconds before trying progress check number: " + str(n)
       lw.writeLogVerbose("acm", logString)
       time.sleep(30)
@@ -325,7 +379,21 @@ class controller_cf:
         logString = name+ ' : '+ status+ ' : '+ stackId
         lw.writeLogVerbose("acm", logString)
         idToReturn = stackId
-    return idToReturn
+    if idToReturn != 'none':
+      return idToReturn
+    else:
+      checkCmd = 'aws cloudformation list-stacks --stack-status-filter DELETE_FAILED'
+      jsonStatus = cr.getShellJsonResponse(checkCmd)
+      responseData = yaml.safe_load(jsonStatus)
+      for item in responseData['StackSummaries']:
+        name = item['StackName']
+        status = item['StackStatus']
+        stackId = item['StackId']
+        if (name == stackName) and (status == 'DELETE_FAILED'):
+          logString = name+ ' : '+ status+ ' : '+ stackId
+          lw.writeLogVerbose("acm", logString)
+          idToReturn = stackId
+      return idToReturn
 
   #@private
   def checkStatusOfStackCommand(self, operation, stackName):
@@ -372,6 +440,13 @@ class controller_cf:
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
     data = process.stdout
     err = process.stderr
+    try:
+      if process:
+        data, err = process.communicate()
+        if process.returncode != 0:
+          print("ERROR: The subprocess command returned a non-zero return code: ", process.returncode)
+    except AttributeError: #This should handle CompletedpProcess error.  
+      pass
     logString = "data string is: " + str(data)
     lw.writeLogVerbose("acm", logString)
     logString = "err is: " + str(err)
