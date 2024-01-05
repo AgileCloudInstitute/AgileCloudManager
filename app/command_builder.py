@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 from config_fileprocessor import config_fileprocessor
@@ -39,6 +39,8 @@ class command_builder:
       varsFragment = self.getTerraformParamsFile(varLines)
     elif tool == "packer":
       varsFragment = self.getPackerParamsFile(varLines)
+    print("varsFragment is: ", varsFragment)
+#    quit("new breakpoint")
     return varsFragment
   
   #@public  
@@ -124,10 +126,14 @@ class command_builder:
     if len(varLines)>0:
       armVarsFileAndPath=varsFileAndPath.replace(".tfvars",".json")
       for rawLine in varLines:
-        cleanLine = rawLine.replace('"','').replace(' ','')
+#        cleanLine = self.stripLeadingSpacesARM(rawLine)
+        cleanLine = rawLine.replace('"','').lstrip()#.replace(' ','')#Version 1.4 comment added here to accommodate spaces in time zones in ARM templates. 
+        print("dd cleanLine is: ", cleanLine)
         revisedVarLines.append(cleanLine)
       varsDict = dict()   
+      print("revisedVarLines is: ", revisedVarLines)
       for line in revisedVarLines:
+        print("x line is: ", line)
         varsDict[line.split(":", 1)[0]] = json.loads(line.split(":", 1)[1].replace('\'','"'))
       paramsDict = {
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
@@ -142,6 +148,7 @@ class command_builder:
       lw.writeLogVerbose("acm", logString)
       exit(1)
     varSnip = cfmtr.formatPathForOS(varSnip)
+#    quit("extra breakpoint")
     return varSnip
 
   #@private
@@ -398,7 +405,6 @@ class command_builder:
     listOfSystems = []
     for varName in mappedVariables:
       if (mappedVariables.get(varName).startswith("$customFunction.sys:")) and (".foundationOutput" in mappedVariables.get(varName)):
-        #$customFunction.sys:lakehouse-core.foundationOutput.PublicSubnet
         sysName = (mappedVariables.get(varName).lstrip("$customFunction.sys:")).split(".")[0]
         listOfSystems.append(sysName)
     return listOfSystems
@@ -416,6 +422,7 @@ class command_builder:
     if self.needsFoundationOutput(mappedVariables):
       if (hasattr(callingClass, 'foundationOutput')) and (len(callingClass.foundationOutput) > 0):
         foundationOutputVariables = callingClass.foundationOutput
+        quit("Z BREAKPOINT")
       else:
         foundationTool = systemConfig.get("foundation").get("controller")
         foundationOutputVariables = self.populateFoundationOutput(foundationTool, systemConfig, keyDir, instance) 
@@ -430,7 +437,8 @@ class command_builder:
       #FOURTH, Now add the value you just calculated into the result of this function
       if tool == "arm":
         varLine = self.getArmVarLine(varName, value)
-        varLines.append(varLine.replace(" ", ""))
+#        varLines.append(varLine.replace(" ", ""))
+        varLines.append(varLine)
       elif tool == "cloudformation":
         lineDict = {"ParameterKey":varName,"ParameterValue":value}
         varLines.append(lineDict)
@@ -457,7 +465,7 @@ class command_builder:
 
   def populateFoundationOutput(self, tool, systemConfig, keyDir, instance):
     foundationOutputVariables = {}
-    #Adding next 2 lines, commenting out the 3rd line, and adding 4th line below 31 January 2023 to allow different foundation controllers instead of requiring that foundation and other elements have same controller.
+    #Adding next 2 lines, commenting out the 3rd line, and adding 4th line below 31 January 2024 to allow different foundation controllers instead of requiring that foundation and other elements have same controller.
     foundationTool = systemConfig.get("foundation").get("controller")
     tool = foundationTool
     print("tool is: ", tool)
@@ -580,6 +588,7 @@ class command_builder:
 
   #@private
   def getValueForOneMappedVariable(self, mappedVariables, varName, tool, keyDir, systemConfig, instance, outputDict):
+    lw = log_writer()
     rawVal = str((mappedVariables.get(varName)))
     if str(rawVal).startswith('$env.'):
       value = self.getOneEnvironmentVariableValue(mappedVariables, varName)
@@ -601,7 +610,7 @@ class command_builder:
       funcCoordParts = rawVal.split(".")
       funcName = funcCoordParts[1]
       if funcName == 'foundationOutput':
-        tool = systemConfig.get("foundation").get("controller") #Override tool with foundationTool 31 January 2023
+        tool = systemConfig.get("foundation").get("controller") #Override tool with foundationTool 31 January 2024
         if tool == "arm":
           value = self.foundationOutput_ARM_CustomFunction(funcCoordParts, varName)
         elif tool == "cloudformation":
@@ -611,7 +620,21 @@ class command_builder:
         else:
           value = self.foundationOutput_Other_CustomFunction(mappedVariables, varName, tool)
       elif funcName.startswith("sys:"):
-        value = self.foundationOutput_CloudFormation_OtherSystem_CustomFunction(funcCoordParts, varName, systemConfig)
+        #Add check to confirm that the system named after sys: exists in acm.yaml.
+        if systemConfig:
+          print("tool is: ", tool)
+          print("funcCoordParts is: ", funcCoordParts)
+          print("varName is: ", varName)
+          print("systemConfig is: ", systemConfig)
+          if tool == "arm":
+            value = self.foundationOutput_ARM_OtherSystem_CustomFunction(funcCoordParts, varName, systemConfig)
+#            quit("x BREAKPOINT")
+          elif tool == "cloudformation": 
+            value = self.foundationOutput_CloudFormation_OtherSystem_CustomFunction(funcCoordParts, varName, systemConfig)
+        else:
+          logString = "ERROR: The system "+str(funcName).replace('sys:','')+" named in '"+str(funcName)+"' does not exist in the appliance.  Halting program so you can examine your acm.yaml to confirm that your configuration is correct."
+          lw.writeLogVerbose("acm", logString)
+          sys.exit(1)
       elif funcName == "addPath":
         value = self.addPathFunction(instance, keyDir)
       elif funcName == 'imageBuilderId': 
@@ -639,6 +662,20 @@ class command_builder:
     else: 
       #Handle plaintext variables that do not require coordinate searching
       value = str(rawVal)
+    if varName == "TIME_ZONE":
+      print("mappedVariables is: ", mappedVariables)
+      print("varName is: ", varName)
+      print("tool is: ", tool)
+      print("keyDir is: ", keyDir)
+      #print("systemConfig is: ", systemConfig)
+      #print("instance is: ", instance)
+      #print("outputDict is: ", outputDict)
+      print("value is: ", value)
+      if " " in value:
+        print("Spaces were found. ")
+        value = '"'+value+'"'
+        print("revised value is: ", value)
+      #quit("BREAKPOINT FOR TESTING")
     return value
 
   def getOneEnvironmentVariableValue(self, mappedVariables, varName):
@@ -767,6 +804,8 @@ class command_builder:
     cfp = config_fileprocessor()
     yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
     applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    print("x applianceConfig is: ", applianceConfig)
+    print("x sysName is: ", sysName)
     thisSystemConfig = cfp.getSystemConfig(applianceConfig, sysName)
     thisSystemKeyDir = cfp.getKeyDir(thisSystemConfig)
     from controller_cf import controller_cf
@@ -780,6 +819,63 @@ class command_builder:
       region = cfp.getValueFromConfig(thisSystemKeyDir, region, "region")
     value = ccf4output.getVarFromCloudFormationOutput(outputKeyDir, varToCheck, stackName, region)
     return value
+
+  def foundationOutput_ARM_OtherSystem_CustomFunction(self, funcCoordParts, varName, systemConfig):
+    print("funcCoordParts is: ", funcCoordParts)
+    lw = log_writer()
+    if len(funcCoordParts) == 2:
+      varToCheck = varName
+    elif len(funcCoordParts) == 3:
+      varToCheck = funcCoordParts[2]
+      if funcCoordParts[1].startswith("sys:"):
+        sysName = funcCoordParts[1].lstrip("sys:")
+        varToCheck = varName
+    elif len(funcCoordParts) == 4:
+      varToCheck = funcCoordParts[3]
+      sysName = funcCoordParts[1].lstrip("sys:")
+    else:
+      logString = "ERROR: $customFunction.foundationOutput is only allowed to have either one or two dots . in the command.  "
+      print(logString)
+      sys.exit(1)
+    import config_cliprocessor
+    from config_fileprocessor import config_fileprocessor
+    cfp = config_fileprocessor()
+    yamlApplianceConfigFileAndPath = config_cliprocessor.inputVars.get('yamlInfraConfigFileAndPath')
+    applianceConfig = cfp.getApplianceConfig(yamlApplianceConfigFileAndPath)
+    print("x applianceConfig is: ", applianceConfig)
+    print("x sysName is: ", sysName)
+    thisSystemConfig = cfp.getSystemConfig(applianceConfig, sysName)
+    thisSystemKeyDir = cfp.getKeyDir(thisSystemConfig)
+    from controller_cf import controller_cf
+    ccf4output = controller_cf()
+    outputKeyDir = cfp.getKeyDir(thisSystemConfig)
+    resourceGroupName = thisSystemConfig.get("foundation").get('resourceGroupName')
+    if resourceGroupName.startswith("$config"):
+      resourceGroupName = cfp.getValueFromConfig(thisSystemKeyDir, resourceGroupName, "resourceGroupName")
+    resourceGroupRegion = thisSystemConfig.get("foundation").get('resourceGroupRegion')
+    if resourceGroupRegion.startswith("$config"):
+      resourceGroupRegion = cfp.getValueFromConfig(thisSystemKeyDir, resourceGroupRegion, "region")
+    ca = controller_arm()
+    ca.createDeployment(thisSystemConfig, thisSystemConfig.get("foundation"), 'networkFoundation', 'networkFoundation', True)
+    foundationOutputVariables = ca.foundationOutput
+#    value = ccf4output.getVarFromCloudFormationOutput(outputKeyDir, varToCheck, stackName, region)
+    print("The core system's foundationOutputVariables is: ", foundationOutputVariables)
+#    print("varToCheck is: ", varToCheck)
+    for thisOutputVar in foundationOutputVariables:
+#      print("thisOutputVar is: ", thisOutputVar)
+#      print("foundationOutputVariables.get(thisOutputVar) is: ", foundationOutputVariables.get(thisOutputVar))
+      if varToCheck == thisOutputVar:
+        value = foundationOutputVariables.get(thisOutputVar).get("value")
+#        print("value is: ", value)
+#      print("--------------------------------------------------------------------")
+#    quit("c BREAKPOINT")
+    if value: 
+      return value
+    else:
+      logString = "ERROR: No value was returned for "+varToCheck+" in the foundation output variables for the core system."
+      lw.writeLogVerbose("acm", logString)
+      sys.exit(1) 
+
 
   def foundationOutput_CustomController_CustomFunction(self, funcCoordParts, varName):
     if len(funcCoordParts) == 2:

@@ -672,7 +672,7 @@ class TestControllerPacker(unittest.TestCase):
 'networkName="name-of-vnet"',
 'owner="name-of-owner"',
 'makePath="userCallingDir\\azure-building-blocks\\arm"',
-'now="20220624125048860330"',
+'now="20240624125048860330"',
 'addOrgTest="somestringtstaxy"'
     ]
     cb = command_builder()

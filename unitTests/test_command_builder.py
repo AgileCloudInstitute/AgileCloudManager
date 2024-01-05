@@ -700,7 +700,7 @@ class TestCommandBuilder(unittest.TestCase):
       {"networkName": "name-of-vnet"}, 
       {"owner": "name-of-owner"}, 
       {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
-      {"now": "20220616153103296962"}, 
+      {"now": "20240616153103296962"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
     cb = command_builder()
@@ -737,7 +737,7 @@ class TestCommandBuilder(unittest.TestCase):
       {"firstOutputVar": "value-for-first-output-variable"}, 
       {"secondVar": "value-for-second-output-variable"}, 
       {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
-      {"now": "20220617181604103059"}, 
+      {"now": "20240617181604103059"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
     cb = command_builder()
@@ -775,7 +775,7 @@ class TestCommandBuilder(unittest.TestCase):
       {"firstOutputVar": "value-for-first-output-variable"}, 
       {"secondVar": "value-for-second-output-variable"}, 
       {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
-      {"now": "20220620095531060121"}, 
+      {"now": "20240620095531060121"}, 
       {"addOrgTest": "somestringa1b2c"}, 
       {"InstanceType": "t2.small"}, 
       {"oneVar": "one-value"}, 
@@ -820,7 +820,7 @@ class TestCommandBuilder(unittest.TestCase):
       {"networkName": "name-of-vnet"}, 
       {"owner": "name-of-owner"}, 
       {"makePath": "userCallingDir\\azure-building-blocks\\arm"}, 
-      {"now": "20220621123906081117"}, 
+      {"now": "20240621123906081117"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
     cb = command_builder()
@@ -858,7 +858,7 @@ class TestCommandBuilder(unittest.TestCase):
 'networkName="name-of-vnet"',
 'owner="name-of-owner"',
 'makePath="userCallingDir\\azure-building-blocks\\arm"',
-'now="20220624125048860330"',
+'now="20240624125048860330"',
 'addOrgTest="somestringa1b2c"'
     ]
     cb = command_builder()

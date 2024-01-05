@@ -363,7 +363,7 @@ class TestControllerArm(unittest.TestCase):
           "networkName": {"value": "name-of-vnet"}, 
           "owner": {"value": "name-of-owner"}, 
           "makePath": {"value": "userCallingDir\\azure-building-blocks\\arm"}, 
-          "now": {"value": "20220621123906081117"}, 
+          "now": {"value": "20240621123906081117"}, 
           "addOrgTest": {"value": "somestringa1b2c"}
       }
     }
@@ -415,7 +415,7 @@ class TestControllerArm(unittest.TestCase):
     "firstOutputVar": {"value": "one-value"}, 
     "secondVar": {"value": "two-value"}, 
     "makePath": {"value": "userCallingDir\\azure-building-blocks\\arm"}, 
-    "now": {"value": "20220623103255682461"}, 
+    "now": {"value": "20240623103255682461"}, 
     "imageId": {"value": "testimage"}, 
     "addOrgTest": {"value": "somestringa1b2c"}, 
     "InstanceType": {"value": "t2.small"}, 
