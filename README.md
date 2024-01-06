@@ -4,6 +4,7 @@
 * Engineering Documentation: [AgileCloudInstitute.io/engineering](https://AgileCloudInstitute.io/engineering)  
 * Download: [AgileCloudInstitute.io/download](https://AgileCloudInstitute.io/download)  
 * Getting Started Guide For Engineers: [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
+* Marketplace of Example Appliances: [AgileCloudInstitute.io/marketplace/](https://agilecloudinstitute.io/marketplace/)    
   
 The Agile Cloud Manager is a high-level tool for dramatically simplifying the work of IT organizations.  It enables an enterprise to model its systems in terms of the enterprise's unique operating model.  It can help make it a lot easier to perform surgical operations on high-level components of an enterprise's unique business model.  It can help make it a lot easier for an organization to integrate all systems into one single enterprise-level value-stream pipeline.  It can be used to reduce the size of an enterprise attack surface.  
   
@@ -12,11 +13,11 @@ Working demos with detailed training and documentation are available at [AgileCl
   
 We recommend that engineers start by reading the documentation at [AgileCloudInstitute.io/engineering](https://AgileCloudInstitute.io/engineering)  
   
-To begin hands-on work immediately, engineers can use the working demos at [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
+To begin hands-on work immediately, engineers can use the example appliances at [AgileCloudInstitute.io/marketplace/](https://agilecloudinstitute.io/marketplace/)  
   
-Our working demos undergo frequent automated testing as part of our CICD process.  Therefore, we strongly recommend that you begin hands-on work with our working demos as explained in our website.  
+Our example appliances undergo frequent automated testing as part of our CICD process.  Therefore, we strongly recommend that you begin hands-on work with our example appliances as explained in our website.  
   
-The documentation in our website explains in detail how you can use the Agile Cloud Manager to perform normal debugging in the course of your development and operations work.  The minimum documentation that an engineer should read is included in a list of prerequisites in the hands-on coding instructions at [AgileCloudInstitute.io/engineering/getting-started-for-engineers/](https://AgileCloudInstitute.io/engineering/getting-started-for-engineers/)  
+The documentation in our website explains in detail how you can use the Agile Cloud Manager to perform normal debugging in the course of your development and operations work.  
   
 # Terms Of Service And License  
 Use of our software in any form and use of our training/documentation is subject our [Terms of Service](https://AgileCloudInstitute.io/terms) and licenses.  

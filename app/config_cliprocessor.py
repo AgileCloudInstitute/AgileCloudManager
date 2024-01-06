@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
   
 import os
@@ -26,7 +26,7 @@ inputVars = {}
 minSetup = ''
 apiString = ''
 apiStringLocation = ''
-acmVersion = '1.3'
+acmVersion = '1.4'
     
 def getAcmUserHome():
     if platform.system() == 'Windows':

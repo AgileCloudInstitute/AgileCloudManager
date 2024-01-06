@@ -331,7 +331,7 @@ class TestControllerCustom(unittest.TestCase):
       {"networkName": "name-of-vnet"}, 
       {"owner": "name-of-owner"}, 
       {"makePath": "acm-custom-controller\\templates"}, 
-      {"now": "20220616153103296962"}, 
+      {"now": "20240616153103296962"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
     cb = command_builder()
@@ -375,7 +375,7 @@ class TestControllerCustom(unittest.TestCase):
       {"firstOutputVar": "value-for-first-output-variable"}, 
       {"secondVar": "value-for-second-output-variable"}, 
       {"makePath": "acm-custom-controller\\templates"}, 
-      {"now": "20220617181604103059"}, 
+      {"now": "20240617181604103059"}, 
       {"addOrgTest": "somestringa1b2c"}
     ]
     cb = command_builder()
@@ -420,7 +420,7 @@ class TestControllerCustom(unittest.TestCase):
       {"firstOutputVar": "value-for-first-output-variable"}, 
       {"secondVar": "value-for-second-output-variable"}, 
       {"makePath": "acm-custom-controller\\templates"}, 
-      {"now": "20220620095531060121"}, 
+      {"now": "20240620095531060121"}, 
       {"addOrgTest": "somestringa1b2c"}, 
       {"InstanceType": "t2.small"}, 
       {"oneVar": "one-value"}, 

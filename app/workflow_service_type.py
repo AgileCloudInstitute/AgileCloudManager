@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import sys
@@ -62,7 +62,7 @@ class workflow_service_type:
     else:
       if "preprocessor" in instance.keys():
         preprocessor = instance.get("preprocessor") 
-        crnr.runPreOrPostProcessor("pre", preprocessor, 'on') 
+        crnr.runPreOrPostProcessor("pre", preprocessor, 'on', systemConfig) 
       else:
         pass
       instanceTool = instance.get("controller")
@@ -99,7 +99,7 @@ class workflow_service_type:
           ctf.terraformCrudOperation(operation, keyDir, systemConfig, instance, 'systems', serviceType, None, instName)
       postprocessor = instance.get("postprocessor")
       if postprocessor:
-        crnr.runPreOrPostProcessor("post", postprocessor, 'on')
+        crnr.runPreOrPostProcessor("post", postprocessor, 'on', systemConfig)
       else:
         pass
     cm.updateEndOfAnInstanceOfAServiceType(ct, cc, level, systemInstanceName, serviceType, instName)
@@ -162,7 +162,7 @@ class workflow_service_type:
     else:
       if "preprocessor" in instance.keys():
         preprocessor = instance.get("preprocessor")
-        crnr.runPreOrPostProcessor("pre", preprocessor, 'off')
+        crnr.runPreOrPostProcessor("pre", preprocessor, 'off', systemConfig)
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -202,7 +202,7 @@ class workflow_service_type:
 
       if "postprocessor" in instance.keys():
         postprocessor = instance.get("postprocessor")
-        crnr.runPreOrPostProcessor("post", postprocessor, 'off')
+        crnr.runPreOrPostProcessor("post", postprocessor, 'off', systemConfig)
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
