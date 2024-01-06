@@ -394,9 +394,18 @@ class controller_arm:
     logoutCmd = "az logout"
     logString = "Log out of az cli first to ensure clean connection.  logoutCmd is: "+logoutCmd
     lw.writeLogVerbose("az-cli", logString)
-    self.getShellJsonResponse(logoutCmd)
+#    self.getShellJsonResponse(logoutCmd)
+
+    process = subprocess.run(logoutCmd, shell=True, stdout=subprocess.PIPE, text=True)
+    logString = "logout command's stdout is: "+ str(process.stdout)
+    lw.writeLogVerbose("az-cli", logString)
+    logString = "logout command's stderr is: "+ str(process.stderr)
+    lw.writeLogVerbose("az-cli", logString)
+    logString = "logout command's returncode is: "+ str(process.returncode)
+    lw.writeLogVerbose("az-cli", logString)
+
     logString = "Done logging out of az cli.  About to log in next. "
-    #### #The following command gets the client logged in and able to operate on azure repositories.
+    #### #The following command gets the client logged in and able to operate on azure repositories. 
     loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
     logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
     logString = "loginCmd is: az login "+loginCmd
