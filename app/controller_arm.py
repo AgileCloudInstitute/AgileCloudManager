@@ -408,7 +408,7 @@ class controller_arm:
     #### #The following command gets the client logged in and able to operate on azure repositories. 
     loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
     logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
-    logString = "loginCmd is: az login "+loginCmd
+    logString = "loginCmd is: az login --service-principal -u "+clientId+" -p *** --tenant "+tenantId 
     lw.writeLogVerbose('az-cli', logString)
     self.getShellJsonResponse(loginCmd)
     logString = "Finished running login command."

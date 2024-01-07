@@ -753,6 +753,7 @@ class workflow_setup:
       os.rename(sourceRepoDestinationDir, acmConfigPath)
     print("About to call runConfigure()")
     self.runConfigure()
+    print("Finished running acm setup on.")
 
   #@public
   def undoSetup(self):
