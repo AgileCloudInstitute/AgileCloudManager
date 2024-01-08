@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import sys
@@ -45,7 +45,7 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
-        cr.runPreOrPostProcessor("pre", preprocessor, 'on')
+        cr.runPreOrPostProcessor("pre", preprocessor, 'on', systemConfig)
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -103,7 +103,7 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
-        cr.runPreOrPostProcessor("post", postprocessor, 'on')
+        cr.runPreOrPostProcessor("post", postprocessor, 'on', systemConfig)
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -127,7 +127,7 @@ class workflow_system:
     else:
       if "preprocessor" in systemConfig.get("foundation").keys():
         preprocessor = systemConfig.get("foundation").get("preprocessor")
-        cr.runPreOrPostProcessor("pre", preprocessor, 'off')
+        cr.runPreOrPostProcessor("pre", preprocessor, 'off', systemConfig)
       else:
         logString = 'NO preprocessor present.'
         lw.writeLogVerbose("acm", logString)
@@ -175,7 +175,7 @@ class workflow_system:
         sys.exit(1)
       if "postprocessor" in systemConfig.get("foundation").keys():
         postprocessor = systemConfig.get("foundation").get('postprocessor')
-        cr.runPreOrPostProcessor("post", postprocessor, 'off')
+        cr.runPreOrPostProcessor("post", postprocessor, 'off', systemConfig)
       else:
         logString = 'NO postprocessor present.'
         lw.writeLogVerbose("acm", logString)

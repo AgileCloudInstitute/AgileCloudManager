@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
   
 import json
@@ -73,20 +73,42 @@ class controller_arm:
       clientId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'clientId')
 
     clientSecret = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'clientSecret')
-
+#    print("clientSecret is: ", clientSecret)
+#    print("yaml_keys_file_and_path is: ", yaml_keys_file_and_path)
+#x    quit("xcf")
     tenantId = cfp.getFirstLevelValue(yaml_keys_file_and_path, 'tenantId')
     if (isinstance(tenantId, str)) and (len(tenantId)==0):
       tenantId = cfp.getFirstLevelValue(yaml_global_config_file_and_path, 'tenantId')
 
     ## STEP 2: Login to az cli and set subscription
     self.loginToAzAndSetSubscription(clientId, clientSecret,tenantId,subscriptionId)
+##Start 13 Nov
+#    #### #The following command gets the client logged in and able to operate on azure repositories.
+#    loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
+#    logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
+##    logString = "loginCmd is: "+loginCmd
+#    lw.writeLogVerbose('az-cli', logString)
+#    self.getShellJsonResponse(loginCmd)
+#    logString = "Finished running login command."
+#    lw.writeLogVerbose("az-cli", logString)
+#    setSubscriptionCommand = 'az account set --subscription '+subscriptionId
+#    logString = 'setSubscriptionCommand is: az account set --subscription ***'
+##    logString = 'setSubscriptionCommand is: '+setSubscriptionCommand
+#    lw.writeLogVerbose("az-cli", logString)
+#    self.getShellJsonResponse(setSubscriptionCommand)
+#    logString = 'Finished setting subscription to ***'
+#    lw.writeLogVerbose("az-cli", logString)
+
+###########end 13 Nov
     ## STEP 3: Create Resource Group 
     resourceGroupCmd = 'az group create --name ' + resourceGroupName + ' --location ' + resourceGroupRegion
     logString = 'resourceGroupCmd is: az group create --name *** --location ' + resourceGroupRegion
+#    logString = 'resourceGroupCmd is: ' + resourceGroupCmd
     lw.writeLogVerbose("az-cli", logString)
     self.getShellJsonResponse(resourceGroupCmd)
     logString = "Finished running create resource group command. "
     lw.writeLogVerbose("az-cli", logString)
+#    quit("asdfghj")
     ## STEP 4: Get template and config variable mapping file
     templatePathAndFile = userCallingDir + templateName
     templatePathAndFile = cf.formatPathForOS(templatePathAndFile)
@@ -369,15 +391,31 @@ class controller_arm:
   #@private
   def loginToAzAndSetSubscription(self, clientId, clientSecret,tenantId,subscriptionId):
     lw = log_writer()
-    #### #The following command gets the client logged in and able to operate on azure repositories.
+    logoutCmd = "az logout"
+    logString = "Log out of az cli first to ensure clean connection.  logoutCmd is: "+logoutCmd
+    lw.writeLogVerbose("az-cli", logString)
+#    self.getShellJsonResponse(logoutCmd)
+
+    process = subprocess.run(logoutCmd, shell=True, stdout=subprocess.PIPE, text=True)
+    logString = "logout command's stdout is: "+ str(process.stdout)
+    lw.writeLogVerbose("az-cli", logString)
+    logString = "logout command's stderr is: "+ str(process.stderr)
+    lw.writeLogVerbose("az-cli", logString)
+    logString = "logout command's returncode is: "+ str(process.returncode)
+    lw.writeLogVerbose("az-cli", logString)
+
+    logString = "Done logging out of az cli.  About to log in next. "
+    #### #The following command gets the client logged in and able to operate on azure repositories. 
     loginCmd = "az login --service-principal -u " + clientId + " -p " + clientSecret + " --tenant " + tenantId
     logString = "loginCmd is: az login --service-principal -u *** -p *** --tenant ***"
+    logString = "loginCmd is: az login --service-principal -u "+clientId+" -p *** --tenant "+tenantId 
     lw.writeLogVerbose('az-cli', logString)
     self.getShellJsonResponse(loginCmd)
     logString = "Finished running login command."
     lw.writeLogVerbose("az-cli", logString)
     setSubscriptionCommand = 'az account set --subscription '+subscriptionId
     logString = 'setSubscriptionCommand is: az account set --subscription ***'
+#    logString = 'setSubscriptionCommand is: '+setSubscriptionCommand
     lw.writeLogVerbose("az-cli", logString)
     self.getShellJsonResponse(setSubscriptionCommand)
     logString = 'Finished setting subscription to ***'
@@ -387,6 +425,8 @@ class controller_arm:
   def getShellJsonResponse(self, cmd,counter=0):
     lw = log_writer()
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
+#    print("::::::::::::::::::::::::::::::::::::::::::::::::")
+#    print("cmd is: ", cmd)
     data = process.stdout
     err = process.stderr
     if process.returncode != 0:

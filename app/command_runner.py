@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 import subprocess
@@ -11,6 +11,7 @@ import os
 
 from command_formatter import command_formatter
 from log_writer import log_writer
+from config_fileprocessor import config_fileprocessor
   
 class command_runner:
     
@@ -132,7 +133,7 @@ class command_runner:
         break
 
   #@public
-  def runPreOrPostProcessor(self, preOrPost, processorSpecs, operation):
+  def runPreOrPostProcessor(self, preOrPost, processorSpecs, operation, systemConfig):
     import config_cliprocessor
     cf = command_formatter()
     lw = log_writer()
@@ -148,11 +149,36 @@ class command_runner:
         command = processorSpecs['commandOff']
       else: # return without doing anyting because there is no processor present for this case
         return
+    #Replace $config values in command if present
+    commandParts = command.split(" ")
+    if len(commandParts) > 2:
+      newCommand = ""
+      for myPart in commandParts:
+        thisPart = myPart
+        if myPart.count("=") == 1:
+          varNameScript = myPart.split("=")[0]
+          varValDraft = myPart.split("=")[1]
+          if "$config" in myPart:
+            if "$config." in myPart:
+              varName = myPart.split("$config.",1)[1]
+            else:
+              varName = varNameScript
+            cfp = config_fileprocessor()
+            keyDir = cfp.getKeyDir(systemConfig)
+            varValue = cfp.getValueFromConfig(keyDir, varValDraft, varName)
+            myPartNew = varNameScript+"="+varValue
+            thisPart = myPartNew
+        if len(newCommand) == 0:
+          newCommand = newCommand+thisPart
+        elif len(newCommand) > 0:
+          newCommand = newCommand+" "+thisPart
+      command = newCommand
+
     fullyQualifiedPathToScript = config_cliprocessor.inputVars.get('userCallingDir')+location
     fullyQualifiedPathToScript = cf.formatPathForOS(fullyQualifiedPathToScript)
     logString = "fullyQualifiedPathToScript is: "+fullyQualifiedPathToScript
     lw.writeLogVerbose('shell', logString)
-    if os.path.isfile(fullyQualifiedPathToScript):
+    if os.path.isfile(fullyQualifiedPathToScript): 
       commandToRun = command.replace('$location',fullyQualifiedPathToScript)
       if preOrPost == "pre":
         logString = "cr preprocessor command is: "+commandToRun

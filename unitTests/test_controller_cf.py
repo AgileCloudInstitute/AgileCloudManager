@@ -455,9 +455,9 @@ class TestControllerCf(unittest.TestCase):
 {'ParameterKey': 'networkName', 'ParameterValue': 'name-of-vnet'}, 
 {'ParameterKey': 'owner', 'ParameterValue': 'name-of-owner'}, 
 {'ParameterKey': 'makePath', 'ParameterValue': 'userCallingDir\\\\\\\\azure-building-blocks\\\\arm'}, 
-{'ParameterKey': 'now', 'ParameterValue': '20220704111638627971'}, 
+{'ParameterKey': 'now', 'ParameterValue': '20240704111638627971'}, 
 {'ParameterKey': 'addOrgTest', 'ParameterValue': 'somestringa1b2c'}, 
-{'ParameterKey': 'addDateTime', 'ParameterValue': 'somestring20220704111638627971'}
+{'ParameterKey': 'addDateTime', 'ParameterValue': 'somestring20240704111638627971'}
     ]
     cb = command_builder()
     systemConfig = self.getSystemConfig_CloudFormation()
@@ -508,7 +508,7 @@ class TestControllerCf(unittest.TestCase):
 {'ParameterKey': 'InstanceType', 'ParameterValue': 't2.small'}, 
 {'ParameterKey': 'AvailabilityZone', 'ParameterValue': 'us-west-2a'}, 
 {'ParameterKey': 'CidrBlock', 'ParameterValue': '10.0.0.0/24'}, 
-{'ParameterKey': 'newImageName', 'ParameterValue': 'empty_image20220704140832135208'}, 
+{'ParameterKey': 'newImageName', 'ParameterValue': 'empty_image20240704140832135208'}, 
 {'ParameterKey': 'region', 'ParameterValue': 'us-west-2'}, 
 {'ParameterKey': 'KeyNm', 'ParameterValue': 'xxxxxxxxxxx'}, 
 {'ParameterKey': 'canary', 'ParameterValue': 'isabird'}, 
@@ -522,7 +522,7 @@ class TestControllerCf(unittest.TestCase):
 {'ParameterKey': 'firstOutputVar', 'ParameterValue': 'oneValue'}, 
 {'ParameterKey': 'secondVar', 'ParameterValue': 'twoValue'}, 
 {'ParameterKey': 'makePath', 'ParameterValue': 'userCallingDir\\\\\\\\azure-building-blocks\\\\arm'}, 
-{'ParameterKey': 'currentDateTimeAlphaNumeric', 'ParameterValue': '20220704140834595445'}, 
+{'ParameterKey': 'currentDateTimeAlphaNumeric', 'ParameterValue': '20240704140834595445'}, 
 {'ParameterKey': 'addOrgTest', 'ParameterValue': 'somestringa1b2c'}
 ]
 
@@ -565,7 +565,7 @@ class TestControllerCf(unittest.TestCase):
 {"ParameterKey": "firstOutputVar", "ParameterValue": "oneValue"}, 
 {"ParameterKey": "secondVar", "ParameterValue": "twoValue"}, 
 {"ParameterKey": "makePath", "ParameterValue": "userCallingDir\\\\\\\\azure-building-blocks\\\\arm"}, 
-{"ParameterKey": "now", "ParameterValue": "20220705155052861754"}, 
+{"ParameterKey": "now", "ParameterValue": "20240705155052861754"}, 
 {"ParameterKey": "addOrgTest", "ParameterValue": "somestringa1b2c"}
     ]
 
