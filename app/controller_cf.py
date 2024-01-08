@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
   
 import yaml
@@ -211,6 +211,8 @@ class controller_cf:
       cfTemplateFileAndPath = app_parent_path+templateName
       cfTemplateFileAndPath = cf.formatPathForOS(cfTemplateFileAndPath)
       cfDeployCommand = 'aws cloudformation delete-stack --stack-name '+stackName
+      logString = 'cfDeployCommand to delete is: '+cfDeployCommand 
+      lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(cfDeployCommand)
       logString = 'Initial response from stack command is: '+ str(jsonStatus)
       lw.writeLogVerbose("acm", logString)
@@ -331,6 +333,8 @@ class controller_cf:
     n=0
     while thisStatus!='DELETE_COMPLETE':
       checkCmd = 'aws cloudformation describe-stacks --stack-name '+stackId + ' --region '+region
+      logString = 'checkCmd to describe stacks is: '+checkCmd
+      lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(checkCmd)
       responseData = yaml.safe_load(jsonStatus)
       for item in responseData['Stacks']:
@@ -411,6 +415,8 @@ class controller_cf:
     failureStatus = 'ROLLBACK_COMPLETE'
     while (status != successStatus) or(status != failureStatus):
       cfStatusCommand = 'aws cloudformation describe-stack-events --stack-name '+stackName
+      logString = 'cfStatusCommand to describe stack events is: '+cfStatusCommand
+      lw.writeLogVerbose("acm", logString)
       jsonStatus = cr.getShellJsonResponse(cfStatusCommand)
       responseYaml = yaml.safe_load(jsonStatus)
       for event in responseYaml['StackEvents']:
@@ -462,7 +468,7 @@ class controller_cf:
     else:
       if counter == 0:
         counter +=1 
-        logString = "Sleeping 30 seconds bewfore running the command a second time in case a latency problem caused the first attempt to fail. "
+        logString = "Sleeping 30 seconds before running the command a second time in case a latency problem caused the first attempt to fail. "
         lw.writeLogVerbose('acm', logString)
         import time
         time.sleep(30)
@@ -633,8 +639,11 @@ class controller_cf:
   #@public
   def getVarFromCloudFormationOutput(self, keyDir, outputVarName, stackName, region):
     cr = command_runner()
+    lw = log_writer()
     self.configureSecrets(keyDir,region)
     getOutputsCommand = 'aws cloudformation describe-stacks --stack-name '+stackName + ' --region ' + region
+    logString = 'getOutputsCommand is: '+getOutputsCommand
+    lw.writeLogVerbose("acm", logString)
     jsonStatus = cr.getShellJsonResponse(getOutputsCommand)
     jsonStatus = yaml.safe_load(jsonStatus)
     stacks = jsonStatus['Stacks']

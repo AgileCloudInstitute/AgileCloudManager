@@ -1,4 +1,4 @@
-## Copyright 2023 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
+## Copyright 2024 Agile Cloud Institute (AgileCloudInstitute.io) as described in LICENSE.txt distributed with this repository.
 ## Start at https://github.com/AgileCloudInstitute/AgileCloudManager    
 
 from command_runner import command_runner   
@@ -753,6 +753,7 @@ class workflow_setup:
       os.rename(sourceRepoDestinationDir, acmConfigPath)
     print("About to call runConfigure()")
     self.runConfigure()
+    print("Finished running acm setup on.")
 
   #@public
   def undoSetup(self):

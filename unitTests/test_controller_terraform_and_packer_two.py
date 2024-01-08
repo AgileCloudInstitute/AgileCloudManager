@@ -708,7 +708,7 @@ class TestControllerPacker(unittest.TestCase):
 "file_secret_name": "acmSecretsFile", 
 "vault_name": "agentsFoundationVault", 
 "init_script": "userCallingDir\\\\\\\\azure-building-blocks\\\\scripts\\\\empty-cloudinit-packer.sh", 
-"new_image_name": "empty_image20220630135850568567", 
+"new_image_name": "empty_image20240630135850568567", 
 "region": "eastus", 
 "resource_group": "myEmptyTestRG2", 
 "tenant_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",  
@@ -728,7 +728,7 @@ class TestControllerPacker(unittest.TestCase):
 "first_output_var": "one-value", 
 "secondVar": "two-value", 
 "makePath": "userCallingDir\\\\\\\\azure-building-blocks\\\\arm", 
-"currentDateTimeAlphaNumeric": "20220630135850574988", 
+"currentDateTimeAlphaNumeric": "20240630135850574988", 
 "addOrgTest": "somestringtstaxy"
     }
 
@@ -766,7 +766,7 @@ class TestControllerPacker(unittest.TestCase):
 'first_output_var="one-value"',
 'secondVar="two-value"',
 'makePath="userCallingDir\\\\azure-building-blocks\\arm"',
-'now="20220629152616440812"',
+'now="20240629152616440812"',
 'imageId="empty_image"',
 'addOrgTest="somestringtstaxy"',
 'resourceGroupName="myEmptyTestRG2"',

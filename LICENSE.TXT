@@ -1,4 +1,4 @@
-Copyright (c) 2023 Agile Cloud Institute, Inc.  
+Copyright (c) 2024 Agile Cloud Institute, Inc.  
   
 With regard to the Agile Cloud Manager Software:  
   
@@ -61,6 +61,6 @@ CONSEQUENTIAL DAMAGES, EVEN IF AGILE CLOUD INSTITUTE HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.  
 
   
-Agile Cloud Manager copyright Agile Cloud Institute. Placerville CA USA, 2023.  
+Agile Cloud Manager copyright Agile Cloud Institute. Placerville CA USA, 2024.  
 https://AgileCloudInstitute.io  
   
